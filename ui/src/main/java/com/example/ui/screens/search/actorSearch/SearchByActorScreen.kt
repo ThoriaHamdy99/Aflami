@@ -118,19 +118,15 @@ private fun SearchByActorContent(
                     }
 
                 targetState.error != null -> {
-                    when (targetState.error) {
-                        ActorSearchUiState.SearchByActorError.NetworkError ->
-                            NoNetworkContainer(
-                                onClickRetry = interactionListener::onClickRetrySearch,
-                                modifier =
-                                    Modifier
-                                        .fillMaxSize()
-                                        .align(Alignment.CenterHorizontally)
-                            )
-
-                        null -> {}
+                    if (targetState.error == ActorSearchUiState.SearchByActorError.NetworkError) {
+                        NoNetworkContainer(
+                            onClickRetry = interactionListener::onClickRetrySearch,
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .align(Alignment.CenterHorizontally)
+                        )
                     }
-
                 }
 
                 targetState.keyword.isBlank() -> {
