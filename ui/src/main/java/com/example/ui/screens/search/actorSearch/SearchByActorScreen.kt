@@ -53,17 +53,17 @@ fun SearchByActorScreen(
     val navController = LocalNavController.current
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
-            when (effect) {
+            effect?.let {
+                when (it) {
 
-                SearchActorEffect.NavigateBack -> {
-                    navController.popBackStack()
+                    SearchActorEffect.NavigateBack -> {
+                        navController.popBackStack()
+                    }
+
+                    is SearchActorEffect.NavigateToDetailsScreen -> {
+                        navController.navigate(Route.MovieDetails(it.movieId))
+                    }
                 }
-
-                is SearchActorEffect.NavigateToDetailsScreen -> {
-                    navController.navigate(Route.MovieDetails(effect.movieId))
-                }
-
-                null -> {}
             }
         }
     }
@@ -110,7 +110,10 @@ private fun SearchByActorContent(
         ) { targetState ->
             when {
                 targetState.isLoading ->
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
                         LoadingContainer(modifier = Modifier)
                     }
 
@@ -157,7 +160,10 @@ private fun SearchByActorContent(
                         columns = GridCells.Adaptive(160.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
+                        contentPadding = PaddingValues(
+                            vertical = 12.dp,
+                            horizontal = 16.dp
+                        ),
                     ) {
                         items(targetState.movies) { movie ->
                             MovieCard(
