@@ -5,9 +5,9 @@ import com.example.domain.exceptions.AflamiException
 import com.example.domain.exceptions.NetworkException
 import com.example.domain.useCase.GetMoviesByActorUseCase
 import com.example.entity.Movie
-import com.example.viewmodel.BaseViewModel
 import com.example.viewmodel.search.actorSearch.ActorSearchUiState.SearchByActorError
-import com.example.viewmodel.search.mapper.toListOfUiState
+import com.example.viewmodel.search.mapper.toMoveUiStates
+import com.example.viewmodel.shared.BaseViewModel
 import com.example.viewmodel.utils.debounceSearch
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -56,7 +56,7 @@ class SearchActorViewModel(
     private fun handleSearchResults(movies: List<Movie>) {
         updateState {
             it.copy(
-                movies = movies.toListOfUiState(),
+                movies = movies.toMoveUiStates(),
                 isLoading = false,
                 error = null
             )
