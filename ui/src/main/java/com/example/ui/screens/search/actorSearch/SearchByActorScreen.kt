@@ -24,6 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.designsystem.components.ImageErrorIndicator
+import com.example.designsystem.components.ImageLoadingIndicator
 import com.example.designsystem.components.LoadingContainer
 import com.example.designsystem.components.TextField
 import com.example.designsystem.theme.AflamiTheme
@@ -181,7 +183,9 @@ private fun MovieImage(imageUrl: String) {
         model = imageUrl,
         contentScale = ContentScale.FillBounds,
         contentDescription = null,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        onLoading = { ImageLoadingIndicator() },
+        onError = { ImageErrorIndicator() },
     )
 }
 
