@@ -1,4 +1,4 @@
-package com.example.ui.screens.searchByActor
+package com.example.ui.screens.search.actorSearch
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
@@ -159,11 +159,11 @@ private fun SearchByActorContent(
                     ) {
                         items(targetState.movies) { movie ->
                             MovieCard(
-                                movieImage = { MovieImage(movie.poster) },
+                                movieImage = { MovieImage(movie.posterImageUrl) },
                                 movieType = stringResource(R.string.movie),
-                                movieYear = movie.productionYear,
+                                movieYear = movie.yearOfRelease,
                                 movieTitle = movie.name,
-                                movieRating = movie.rating,
+                                movieRating = movie.rate,
                             ) {
                                 interactionListener.onClickMovie(movie.id)
                             }

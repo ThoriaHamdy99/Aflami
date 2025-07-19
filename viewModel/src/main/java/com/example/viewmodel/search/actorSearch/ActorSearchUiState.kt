@@ -1,11 +1,12 @@
 package com.example.viewmodel.search.actorSearch
 
-import com.example.viewmodel.search.countrySearch.MovieUiState
+import com.example.viewmodel.shared.uiStates.MovieItemUiState
+
 
 data class ActorSearchUiState(
     val isLoading:Boolean = false,
     val keyword:String="",
-    val movies:List<MovieUiState> = emptyList(),
+    val movies:List<MovieItemUiState> = emptyList(),
     val error : SearchByActorError? = null
 ){
     sealed class SearchByActorError{
