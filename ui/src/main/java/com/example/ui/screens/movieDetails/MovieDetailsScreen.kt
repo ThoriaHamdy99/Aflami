@@ -252,7 +252,7 @@ fun MovieContent(
                         )
                         CastSection(
                             modifier = Modifier.padding(top = 24.dp),
-                            actors = state.actors,
+                            actors = state.actors.take(10),
                             onClickAllCast = interactionListener::onClickShowAllCast,
                         )
                         Spacer(
