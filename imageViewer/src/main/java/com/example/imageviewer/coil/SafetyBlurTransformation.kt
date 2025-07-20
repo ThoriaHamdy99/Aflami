@@ -21,7 +21,8 @@ internal class SafetyBlurTransformation(
             val isSafe = checkBitmapSafety(input)
 
             if (isSafe) {
-                input.copy(input.config!!, true)
+                val safeConfig = input.config ?: Bitmap.Config.ARGB_8888
+                input.copy(safeConfig, true)
             } else {
                 applyBlur(input, blurRadius)
                     ?: throw RuntimeException("Failed to apply blur to unsafe image.")
