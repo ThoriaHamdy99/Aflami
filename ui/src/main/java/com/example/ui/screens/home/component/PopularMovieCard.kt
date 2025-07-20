@@ -1,7 +1,6 @@
 package com.example.ui.screens.home.component
 
 import androidx.compose.runtime.Composable
-import com.example.viewmodel.home.HomeUiState.PopularMovie
 import androidx.compose.foundation.layout.Column
 import com.example.designsystem.components.Icon
 import com.example.designsystem.components.ImageErrorIndicator
@@ -28,9 +27,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.example.designsystem.R
 import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
+import com.example.viewmodel.home.HomeUiState.PopularMovieItemUiState
 
 @Composable
-fun PopularMovieCard(popularMovie: PopularMovie, modifier: Modifier = Modifier) {
+fun PopularMovieCard(popularMovie: PopularMovieItemUiState, modifier: Modifier = Modifier) {
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(modifier = modifier.clip(shape = RoundedCornerShape(24.dp))) {
@@ -75,7 +75,7 @@ fun PopularMovieCard(popularMovie: PopularMovie, modifier: Modifier = Modifier) 
 @ThemeAndLocalePreviews
 @Composable
 private fun PopularMovieCardPreview() {
-    val dummyMovie = PopularMovie(
+    val dummyMovie = PopularMovieItemUiState(
         name = "Inception",
         posterUrl = "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
         rating = "8.8"

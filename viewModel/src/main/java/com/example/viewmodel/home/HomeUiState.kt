@@ -1,11 +1,11 @@
 package com.example.viewmodel.home
 
 data class HomeUiState(
-    val popularMovies : List<PopularMovie> = emptyList(),
+    val popularMovies : List<PopularMovieItemUiState> = emptyList(),
     val isLoading : Boolean = false,
     val error : HomeError? = null
 ){
-    data class PopularMovie(
+    data class PopularMovieItemUiState(
         val name : String = "",
         val rating: String = "" ,
         val posterUrl : String = ""

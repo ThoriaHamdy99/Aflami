@@ -30,12 +30,12 @@ import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.theme.AppTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
 import com.example.imageviewer.ui.SafeImageView
-import com.example.viewmodel.home.HomeUiState.PopularMovie
+import com.example.viewmodel.home.HomeUiState.PopularMovieItemUiState
 import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 
 @SuppressLint("RestrictedApi", "ConfigurationScreenWidthHeight", "UnusedBoxWithConstraintsScope")
-fun LazyListScope.PopularSection(popularMovies: List<PopularMovie>) {
+fun LazyListScope.PopularSection(popularMovies: List<PopularMovieItemUiState>) {
     val pagerState = PagerState(currentPage = Int.MAX_VALUE / 2) { Int.MAX_VALUE }
     item {
         SectionTitle(
@@ -113,7 +113,7 @@ private fun AutoScrollingPager(
 @Composable
 private fun PopularSectionPreview() {
     val dummyMovies = List(5) {
-        PopularMovie(
+        PopularMovieItemUiState(
             name = "Movie $it",
             posterUrl = "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
             rating = (8.5f + it).toString()

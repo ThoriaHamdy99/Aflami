@@ -8,7 +8,7 @@ class HomeUiStateMapper {
         fun toUiState(movies: List<Movie>): HomeUiState {
             return HomeUiState(
                 popularMovies = movies.map { movie ->
-                    HomeUiState.PopularMovie(
+                    HomeUiState.PopularMovieItemUiState(
                         name = movie.name,
                         rating = String.format("%.1f", movie.rating),
                         posterUrl = movie.posterUrl
