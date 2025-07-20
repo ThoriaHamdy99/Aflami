@@ -2,6 +2,7 @@ package com.example.repository.repository
 
 import com.example.domain.repository.TvShowRepository
 import com.example.entity.TvShow
+import com.example.entity.category.TvShowGenre
 import com.example.repository.datasource.local.TvShowLocalSource
 import com.example.repository.datasource.remote.TvShowsRemoteSource
 import com.example.repository.dto.local.utils.SearchType
@@ -19,14 +20,22 @@ class TvShowRepositoryImpl(
     private val tvShowWithCategoryLocalMapper: TvShowWithCategoryLocalMapper,
     private val tvShowRemoteLocalMapper: TvShowRemoteLocalMapper
 ) : TvShowRepository {
-    override suspend fun getTvShowByKeyword(keyword: String): List<TvShow> {
+    override suspend fun getTvShowByKeyword(keyword: String, page: Int): List<TvShow> {
         return getCachedTvShows(keyword)
             ?: recentSearchHandler.deleteRecentSearch(keyword, SearchType.BY_KEYWORD)
-                .let { getTvShowsFromRemote(keyword) }
+                .let { getTvShowsFromRemote(keyword, page) }
                 .let { remoteTvShows ->
                     saveTvShowsToDatabase(remoteTvShows, keyword)
                     tvRemoteMapper.toEntityList(remoteTvShows.results)
                 }
+    }
+
+    override suspend fun incrementGenreInterest(genre: TvShowGenre) {
+        localTvDataSource.incrementGenreInterest(genre)
+    }
+
+    override suspend fun getAllGenreInterests(): Map<TvShowGenre, Int> {
+        return localTvDataSource.getAllGenreInterests()
     }
 
     private suspend fun getCachedTvShows(keyword: String): List<TvShow>? {
@@ -44,8 +53,8 @@ class TvShowRepositoryImpl(
         )
     }
 
-    private suspend fun getTvShowsFromRemote(keyword: String): RemoteTvShowResponse {
-        return remoteTvDataSource.getTvShowsByKeyword(keyword)
+    private suspend fun getTvShowsFromRemote(keyword: String, page: Int): RemoteTvShowResponse {
+        return remoteTvDataSource.getTvShowsByKeyword(keyword, page)
     }
 
     private suspend fun saveTvShowsToDatabase(
