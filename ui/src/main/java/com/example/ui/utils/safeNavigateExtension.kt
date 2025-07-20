@@ -11,5 +11,13 @@ fun NavController.safeNavigate(
     }
 ) {
     this.navigate(route, builder ?: {})
+}
 
+fun NavController.safeNavigate(
+    route: Any,
+    builder: (NavOptionsBuilder.() -> Unit)? = {
+        launchSingleTop = true
+    }
+) {
+    this.navigate(route, builder ?: {})
 }
