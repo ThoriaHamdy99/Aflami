@@ -104,13 +104,13 @@ private fun SearchByCountryContent(
         )
 
         AnimatedVisibility(
-            visible = state.isCountriesDropDownVisible,
+            visible = state.suggestedCountries.isNotEmpty(),
             enter = slideInVertically() + expandIn(),
             exit = slideOutVertically() + shrinkOut()
         ) {
             CountriesDropdownMenu(
                 items = state.suggestedCountries.take(4),
-                isVisible = true,
+                isVisible =  state.suggestedCountries.isNotEmpty(),
                 onItemClicked = interactionListener::onSelectCountry,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -125,7 +125,7 @@ private fun SearchByCountryContent(
             when {
                 uiState.isLoading -> LoadingContainer()
                 uiState.keyword.isEmpty() -> ExploreCountries()
-                uiState.movies.isEmpty() && !uiState.isCountriesDropDownVisible -> NoMoviesFound()
+                uiState.movies.isEmpty() && uiState.suggestedCountries.isNotEmpty() -> NoMoviesFound()
                 uiState.errorUiState is CountrySearchErrorState.NoNetworkConnection -> {
                     NoNetworkContainer(
                         onClickRetry = interactionListener::onClickRetry,

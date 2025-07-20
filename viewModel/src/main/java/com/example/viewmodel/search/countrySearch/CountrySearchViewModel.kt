@@ -37,7 +37,6 @@ class CountrySearchViewModel(
     }
 
     private fun fetchCountriesByKeyword(keyword: String): Job {
-        //updateState { it.copy(isLoading = true) }
         return tryToExecute(
             action = { getSuggestedCountriesUseCase(keyword) },
             onSuccess = ::onFetchCountriesSuccess,
@@ -46,7 +45,7 @@ class CountrySearchViewModel(
     }
     private fun onFetchCountriesSuccess(countries: List<Country>) {
         Log.e("bk", countries.toString())
-        updateState { it.copy(suggestedCountries = countries.toUiState(), isCountriesDropDownVisible = true, errorUiState = null) }
+        updateState { it.copy(suggestedCountries = countries.toUiState(), errorUiState = null) }
     }
 
     private fun onFetchError(exception: AflamiException) {
@@ -69,7 +68,6 @@ class CountrySearchViewModel(
             it.copy(
                 keyword = keyword,
                 isLoading = false,
-                isCountriesDropDownVisible = it.suggestedCountries.isNotEmpty(),
                 suggestedCountries = if (keyword.isBlank()) emptyList() else it.suggestedCountries,
                 errorUiState = null,
                 movies = emptyList()
@@ -82,7 +80,7 @@ class CountrySearchViewModel(
             it.copy(
                 keyword = country.countryName,
                 selectedCountryIsoCode = country.countryIsoCode,
-                isCountriesDropDownVisible = false
+                suggestedCountries = emptyList(),
             )
         }
         fetchMoviesByCountry(getSelectedCountry())
