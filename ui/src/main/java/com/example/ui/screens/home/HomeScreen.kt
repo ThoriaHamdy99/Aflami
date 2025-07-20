@@ -86,7 +86,7 @@ private fun HomeScreenContent(
                             contentAlignment = Alignment.Center
                         ) {
                             NoNetworkContainer(
-                                onClickRetry = interactionListener::onClickRetrySearch
+                                onClickRetry = interactionListener::onClickRetryLoading
                             )
                         }
                 }
@@ -121,7 +121,7 @@ private fun HomeScreenPreview() {
     AflamiTheme {
         HomeScreenContent(state = HomeUiState(),
             interactionListener = object : HomeInteractionListener{
-                override fun onClickRetrySearch() {
+                override fun onClickRetryLoading() {
                 }
 
                 override fun onClickSearch() {

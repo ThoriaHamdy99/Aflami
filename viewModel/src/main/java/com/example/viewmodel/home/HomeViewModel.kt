@@ -32,7 +32,7 @@ class HomeViewModel(
         updateState { homeUiStateMapper.toUiState(movies) }
     }
 
-    override fun onClickRetrySearch() {
+    override fun onClickRetryLoading() {
         getPopularMovies()
     }
 
