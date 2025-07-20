@@ -11,39 +11,31 @@ import com.example.domain.exceptions.AflamiException
 import com.example.domain.useCase.GetAndFilterMoviesByKeywordUseCase
 import com.example.domain.useCase.GetAndFilterTvShowsByKeywordUseCase
 import com.example.domain.useCase.RecentSearchesUseCase
-import com.example.entity.Movie
-import com.example.entity.TvShow
-import com.example.domain.useCase.search.AddRecentSearchUseCase
-import com.example.domain.useCase.search.ClearAllRecentSearchesUseCase
-import com.example.domain.useCase.search.ClearRecentSearchUseCase
-import com.example.domain.useCase.search.GetRecentSearchesUseCase
 import com.example.entity.category.MovieGenre
 import com.example.entity.category.TvShowGenre
 import com.example.paging.PagingSource
-import com.example.viewmodel.BaseViewModel
-import com.example.viewmodel.common.MediaItemUiState
-import com.example.viewmodel.common.toMediaItemUiState
 import com.example.viewmodel.search.mapper.getSelectedGenreType
 import com.example.viewmodel.search.mapper.selectByMovieGenre
 import com.example.viewmodel.search.mapper.selectByTvGenre
-import com.example.viewmodel.search.mapper.toMoveUiStates
-import com.example.viewmodel.search.mapper.toTvShowUiStates
+import com.example.viewmodel.search.mapper.toMediaItemUiState
 import com.example.viewmodel.shared.BaseViewModel
+import com.example.viewmodel.shared.uiStates.MovieItemUiState
+import com.example.viewmodel.shared.uiStates.TvShowItemUiState
 import com.example.viewmodel.utils.debounceSearch
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
 
 @OptIn(FlowPreview::class)
 class SearchViewModel(
     private val getAndFilterMoviesByKeywordUseCase: GetAndFilterMoviesByKeywordUseCase,
     private val getAndFilterTvShowsByKeywordUseCase: GetAndFilterTvShowsByKeywordUseCase,
     private val recentSearchesUseCase: RecentSearchesUseCase,
-    dispatcherProvider: DispatcherProvider
+    dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<SearchUiState, SearchUiEffect>(SearchUiState(), dispatcherProvider),
     SearchInteractionListener,
     FilterInteractionListener {
@@ -93,9 +85,7 @@ class SearchViewModel(
                             )
                         }
                     },
-                ).flow
-                    .map { it.map { movie -> movie.toMediaItemUiState() } }
-                    .cachedIn(viewModelScope)
+                ).flow.map { pagingData -> pagingData.map { it.toMediaItemUiState() } }.cachedIn(viewModelScope)
             },
             onSuccess = ::onFetchMoviesSuccess,
             onError = ::onFetchError,
@@ -103,7 +93,7 @@ class SearchViewModel(
         )
     }
 
-    private fun onFetchMoviesSuccess(movies: Flow<PagingData<MediaItemUiState>>) {
+    private fun onFetchMoviesSuccess(movies: Flow<PagingData<MovieItemUiState>>) {
         applyMoviesFilter()
         updateState { it.copy(movies = movies, errorUiState = null) }
     }
@@ -123,14 +113,15 @@ class SearchViewModel(
                             )
                         }
                     },
-                ).flow.map { it.map { tvShow -> tvShow.toMediaItemUiState() } }.cachedIn(viewModelScope) },
+                ).flow.map { pagingData -> pagingData.map { it.toMediaItemUiState() } }.cachedIn(viewModelScope)
+            },
             onSuccess = ::onFetchTvShowsSuccess,
             onError = ::onFetchError,
             onCompletion = ::onCompletion,
         )
     }
 
-    private fun onFetchTvShowsSuccess(tvShows: Flow<PagingData<MediaItemUiState>>) {
+    private fun onFetchTvShowsSuccess(tvShows: Flow<PagingData<TvShowItemUiState>>) {
         applyTvShowsFilter()
         updateState { it.copy(tvShows = tvShows, errorUiState = null) }
     }
@@ -151,12 +142,22 @@ class SearchViewModel(
                             )
                         }
                     },
-                ).flow.map { it.map { movie -> movie.toMediaItemUiState() } }.cachedIn(viewModelScope)
+                ).flow.map { pagingData -> pagingData.map { it.toMediaItemUiState() } }.cachedIn(viewModelScope)
             },
             onSuccess = ::onMoviesFilteredSuccess,
             onError = ::onFetchError,
-            onCompletion = ::onClickCancel
+            onCompletion = ::onClickCancel,
         )
+    }
+
+    private fun onMoviesFilteredSuccess(movies: Flow<PagingData<MovieItemUiState>>) {
+        updateState {
+            it.copy(
+                movies = movies,
+                filterItemUiState = it.filterItemUiState.copy(isLoading = false),
+                errorUiState = null,
+            )
+        }
     }
 
     private fun applyTvShowsFilter() {
@@ -175,12 +176,25 @@ class SearchViewModel(
                             )
                         }
                     },
-                ).flow.map { it.map { tvShow -> tvShow.toMediaItemUiState() } }.cachedIn(viewModelScope)
+                ).flow
+                    .map { pagingData ->
+                        pagingData.map { it.toMediaItemUiState() }
+                    }.cachedIn(viewModelScope)
             },
             onSuccess = ::onTvShowsFilteredSuccess,
             onError = ::onFetchError,
-            onCompletion = ::onClickCancel
+            onCompletion = ::onClickCancel,
         )
+    }
+
+    private fun onTvShowsFilteredSuccess(tvShows: Flow<PagingData<TvShowItemUiState>>) {
+        updateState {
+            it.copy(
+                tvShows = tvShows,
+                filterItemUiState = it.filterItemUiState.copy(isLoading = false),
+                errorUiState = null,
+            )
+        }
     }
 
     private fun onFetchError(exception: AflamiException) {
@@ -237,7 +251,6 @@ class SearchViewModel(
 
     override fun onClickRecentSearch(keyword: String) = onChangeSearchKeyword(keyword)
 
-
     override fun onClickClearRecentSearch(keyword: String) {
         startLoading()
         tryToExecute(
@@ -272,7 +285,6 @@ class SearchViewModel(
     }
 
     override fun onClickMovieCard(movieId: Long) {
-
         sendNewEffect(SearchUiEffect.NavigateToMovieDetails(movieId))
     }
 
@@ -301,11 +313,13 @@ class SearchViewModel(
     override fun onChangeTvShowGenre(genreType: TvShowGenre) {
         updateState {
             it.copy(
-                filterItemUiState = state.value.filterItemUiState.copy(
-                    selectableTvShowGenres = it.filterItemUiState.selectableTvShowGenres.selectByTvGenre(
-                        genreType
-                    )
-                )
+                filterItemUiState =
+                    state.value.filterItemUiState.copy(
+                        selectableTvShowGenres =
+                            it.filterItemUiState.selectableTvShowGenres.selectByTvGenre(
+                                genreType,
+                            ),
+                    ),
             )
         }
     }
@@ -314,7 +328,7 @@ class SearchViewModel(
         updateState {
             it.copy(
                 isDialogVisible = false,
-                filterItemUiState = it.filterItemUiState.copy(isLoading = false)
+                filterItemUiState = it.filterItemUiState.copy(isLoading = false),
             )
         }
     }

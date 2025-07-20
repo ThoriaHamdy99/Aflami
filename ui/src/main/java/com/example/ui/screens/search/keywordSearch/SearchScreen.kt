@@ -104,8 +104,8 @@ internal fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
 @Composable
 private fun SearchContent(
     state: SearchUiState,
-    movies: LazyPagingItems<MediaItemUiState>,
-    tvShows: LazyPagingItems<MediaItemUiState>,
+    movies: LazyPagingItems<MovieItemUiState>,
+    tvShows: LazyPagingItems<TvShowItemUiState>,
     interaction: SearchInteractionListener,
     filterInteraction: FilterInteractionListener,
 ) {
@@ -200,9 +200,9 @@ private fun SearchContent(
 
                 val isSelectedTabSearchResultEmpty =
                     if (state.selectedTabOption == TabOption.MOVIES) {
-                        state.movies.isEmpty()
+                        movies.itemSnapshotList.isEmpty()
                     } else {
-                        state.tvShows.isEmpty()
+                        tvShows.itemSnapshotList.isEmpty()
                     }
 
                 AnimatedVisibility(state.errorUiState == null && isSelectedTabSearchResultEmpty) {
@@ -221,16 +221,16 @@ private fun SearchContent(
 @Composable
 private fun SuccessMediaItems(
     selectedTabOption: TabOption,
-    moviesFlow: LazyPagingItems<MediaItemUiState>,
-    tvShowsFlow: LazyPagingItems<MediaItemUiState>,
+    moviesFlow: LazyPagingItems<MovieItemUiState>,
+    tvShowsFlow: LazyPagingItems<TvShowItemUiState>,
     onPageLoading: (Boolean) -> Unit,
     onMovieClicked: (movieId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val selectedItems = if (selectedTabOption == TabOption.MOVIES) {
-        movies
+        moviesFlow
     } else {
-        tvShows
+        tvShowsFlow
     }
 
     LazyVerticalGrid(
@@ -284,15 +284,17 @@ private fun SuccessMediaItems(
             }
         }
 
-        mediaData.apply {
-            when {
-                loadState.refresh is LoadState.Loading -> {
+        selectedItems.apply {
+            when (loadState.refresh) {
+                is LoadState.Loading -> {
                     onPageLoading(true)
                 }
 
-                loadState.refresh is LoadState.NotLoading -> {
+                is LoadState.NotLoading -> {
                     onPageLoading(false)
                 }
+
+                else -> onPageLoading(false)
             }
         }
     }

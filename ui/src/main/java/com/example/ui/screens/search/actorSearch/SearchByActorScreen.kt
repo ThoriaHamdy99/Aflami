@@ -27,7 +27,6 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.designsystem.R
 import com.example.designsystem.components.ImageErrorIndicator
 import com.example.designsystem.components.ImageLoadingIndicator
 import com.example.designsystem.components.LoadingContainer
@@ -35,23 +34,18 @@ import com.example.designsystem.components.TextField
 import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
 import com.example.imageviewer.ui.SafeImageView
+import com.example.ui.R
 import com.example.ui.application.LocalNavController
+import com.example.ui.components.MovieCard
 import com.example.ui.components.NoDataContainer
 import com.example.ui.components.NoNetworkContainer
+import com.example.ui.components.appBar.DefaultAppBar
 import com.example.ui.navigation.Route
+import com.example.viewmodel.search.actorSearch.ActorSearchUiState
 import com.example.viewmodel.search.actorSearch.SearchActorEffect
 import com.example.viewmodel.search.actorSearch.SearchActorInteractionListener
-import com.example.ui.R
-import com.example.ui.components.MovieCard
-import com.example.ui.components.appBar.DefaultAppBar
-import com.example.viewmodel.search.actorSearch.ActorSearchUiState
 import com.example.viewmodel.search.actorSearch.SearchActorViewModel
-import com.example.viewmodel.search.actorSearch.ActorSearchViewModel
-import com.example.viewmodel.search.countrySearch.MovieUiState
-import com.example.viewmodel.searchByActor.SearchByActorEffect
-import com.example.viewmodel.searchByActor.SearchByActorInteractionListener
-import com.example.viewmodel.searchByActor.SearchByActorScreenState
-import com.example.viewmodel.searchByActor.SearchByActorViewModel
+import com.example.viewmodel.shared.uiStates.MovieItemUiState
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.androidx.compose.koinViewModel
 
@@ -91,7 +85,7 @@ fun SearchByActorScreen(
 private fun SearchByActorContent(
     state: ActorSearchUiState,
     interactionListener: SearchActorInteractionListener,
-    moviesFlow: LazyPagingItems<MovieUiState>,
+    moviesFlow: LazyPagingItems<MovieItemUiState>,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -102,13 +96,13 @@ private fun SearchByActorContent(
     ) {
         DefaultAppBar(
             modifier = Modifier.padding(horizontal = 16.dp),
-            title = stringResource(R.string.find_by_actor),
+            title = stringResource(com.example.designsystem.R.string.find_by_actor),
             showNavigateBackButton = true,
             onNavigateBackClicked = interactionListener::onClickNavigateBack
         )
         TextField(
             text = state.keyword,
-            hintText = stringResource(R.string.find_by_actor),
+            hintText = stringResource(com.example.designsystem.R.string.find_by_actor),
             onValueChange = { interactionListener.onUserSearchChange(it) },
             modifier =
                 Modifier
@@ -148,8 +142,8 @@ private fun SearchByActorContent(
                 targetState.keyword.isBlank() -> {
                     NoDataContainer(
                         imageRes = painterResource(R.drawable.img_suggestion_magician),
-                        title = stringResource(R.string.find_by_actor),
-                        description = stringResource(R.string.find_by_actor_description),
+                        title = stringResource(com.example.designsystem.R.string.find_by_actor),
+                        description = stringResource(com.example.designsystem.R.string.find_by_actor_description),
                         modifier = Modifier
                             .padding(horizontal = 24.dp)
                             .padding(top = 144.dp)
@@ -216,7 +210,7 @@ private fun SearchByActorContentPreview() {
     AflamiTheme {
         SearchByActorContent(
             state = ActorSearchUiState(),
-            moviesFlow = emptyFlow<PagingData<MovieUiState>>().collectAsLazyPagingItems(),
+            moviesFlow = emptyFlow<PagingData<MovieItemUiState>>().collectAsLazyPagingItems(),
             interactionListener = object : SearchActorInteractionListener {
                 override fun onUserSearchChange(query: String) {
                 }
