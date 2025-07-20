@@ -121,11 +121,11 @@ private fun SearchByCountryContent(
         AnimatedContent(
             modifier = Modifier.fillMaxSize().weight(1f),
             targetState = state,
-            transitionSpec = { fadeIn(tween(1700)) togetherWith fadeOut(tween(1700)) }) { uiState ->
+            transitionSpec = { fadeIn() togetherWith fadeOut() }) { uiState ->
             when {
                 uiState.isLoading -> LoadingContainer()
                 uiState.keyword.isEmpty() -> ExploreCountries()
-                uiState.movies.isEmpty() && uiState.suggestedCountries.isNotEmpty() -> NoMoviesFound()
+                uiState.movies.isEmpty() && uiState.suggestedCountries.isEmpty() -> NoMoviesFound()
                 uiState.errorUiState is CountrySearchErrorState.NoNetworkConnection -> {
                     NoNetworkContainer(
                         onClickRetry = interactionListener::onClickRetry,
