@@ -98,6 +98,13 @@ class MovieRemoteSourceImpl(
         }
     }
 
+    override suspend fun getPopularMovies(): RemoteMovieResponse {
+        return safeCall<RemoteMovieResponse> {
+            val response = ktorClient.get("movie/popular")
+            return json.decodeFromString<RemoteMovieResponse>(response.bodyAsText())
+        }
+    }
+
     private companion object {
         const val SEARCH_MOVIE_URL = "search/movie"
         const val GET_ACTOR_NAME_BY_ID_URL = "search/person"

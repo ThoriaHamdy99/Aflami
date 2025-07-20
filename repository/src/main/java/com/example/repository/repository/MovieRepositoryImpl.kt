@@ -160,4 +160,8 @@ class MovieRepositoryImpl(
             expireDate = Clock.System.now()
         )
     }
+
+    override suspend fun getPopularMovies(): List<Movie> =
+     movieRemoteMapper.toEntityList(movieRemoteDataSource.getPopularMovies().results)
+
 }
