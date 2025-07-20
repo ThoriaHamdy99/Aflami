@@ -1,6 +1,5 @@
 package com.example.domain.useCase
 
-import com.example.domain.common.ContentFilteringExtensions.sortByPopularityDescending
 import com.example.domain.repository.MovieRepository
 import com.example.entity.Movie
 
@@ -12,5 +11,4 @@ class GetMoviesByActorUseCase(
         page: Int = 1,
     ): List<Movie> =
         movieRepository.getMoviesByActor(actorName, page)
-            .sortByPopularityDescending()
 }
