@@ -80,9 +80,7 @@ internal fun SearchScreen(
                     SearchUiEffect.NavigateBack -> navController.popBackStack()
                     SearchUiEffect.NavigateToActorSearch -> navController.safeNavigate(Route.SearchByActor)
                     is SearchUiEffect.NavigateToMovieDetails -> navController.safeNavigate(
-                        MovieDetails(
-                            effect.movieId
-                        )
+                        MovieDetails(effect.movieId)
                     )
 
                     SearchUiEffect.NavigateToWorldSearch -> navController.safeNavigate(Route.SearchByCountry)
@@ -138,12 +136,7 @@ private fun SearchContent(
             FilterDialog(
                 filterState = state.filterItemUiState,
                 selectedTabOption = state.selectedTabOption,
-                onCancelButtonClicked = filterInteraction::onClickCancel,
-                onRatingStarChanged = filterInteraction::onChangeRatingStar,
-                onMovieGenreButtonChanged = filterInteraction::onChangeMovieGenre,
-                onTvGenreButtonChanged = filterInteraction::onChangeTvShowGenre,
-                onApplyButtonClicked = filterInteraction::onClickApply,
-                onClearButtonClicked = filterInteraction::onClickClear
+                interaction = filterInteraction
             )
         }
 
