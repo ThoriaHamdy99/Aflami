@@ -134,7 +134,7 @@ private fun SearchByCountryContent(
             when {
                 uiState.isLoading -> LoadingContainer()
                 uiState.keyword.isEmpty() -> ExploreCountries()
-                uiState.movies.isEmpty() && uiState.suggestedCountries.isEmpty() -> NoMoviesFound()
+                movies.itemCount == 0 && uiState.suggestedCountries.isEmpty() -> NoMoviesFound()
                 uiState.errorUiState is CountrySearchErrorState.NoNetworkConnection -> {
                     NoNetworkContainer(
                         onClickRetry = interactionListener::onClickRetry,

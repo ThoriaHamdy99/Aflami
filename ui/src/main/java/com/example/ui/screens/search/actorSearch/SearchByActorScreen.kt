@@ -46,6 +46,8 @@ import com.example.ui.components.appBar.DefaultAppBar
 import com.example.ui.utils.safeNavigate
 import com.example.viewmodel.search.actorSearch.ActorSearchUiState
 import com.example.viewmodel.search.actorSearch.SearchActorViewModel
+import com.example.viewmodel.shared.uiStates.MovieItemUiState
+import kotlinx.coroutines.flow.emptyFlow
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
