@@ -78,16 +78,18 @@ private fun HomeScreenContent(
                     LoadingContainer(modifier = Modifier)
                 }
 
-            state.networkError ->
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    NoNetworkContainer(
-                        onClickRetry = interactionListener::onClickRetrySearch
-                    )
+            state.error != null ->
+                when(state.error!!){
+                    HomeUiState.HomeError.NetworkError ->
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            NoNetworkContainer(
+                                onClickRetry = interactionListener::onClickRetrySearch
+                            )
+                        }
                 }
-
 
             state.popularMovies.isNotEmpty() ->
                 LazyColumn(
@@ -106,7 +108,8 @@ private fun HomeScreenContent(
                     }
                     PopularSection(state.popularMovies)
                 }
-        }
+
+                }
     }
 
 }

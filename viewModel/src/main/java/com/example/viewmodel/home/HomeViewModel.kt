@@ -4,6 +4,7 @@ import com.example.domain.exceptions.AflamiException
 import com.example.domain.exceptions.NoInternetException
 import com.example.domain.useCase.GetPopularMoviesUseCase
 import com.example.entity.Movie
+import com.example.viewmodel.home.HomeUiState.HomeError
 import com.example.viewmodel.shared.BaseViewModel
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
 
@@ -44,7 +45,7 @@ class HomeViewModel(
             is NoInternetException -> updateState {
                 it.copy(
                     isLoading = false,
-                    networkError = true
+                    error = HomeError.NetworkError
                 )
             }
 
