@@ -213,9 +213,6 @@ class SearchByCountryViewModelTest {
         viewModel.onSelectCountry(countryUiState)
         testScope.advanceUntilIdle()
 
-//        assertThat(viewModel.state.value.searchByCountryContentUIState).isEqualTo(
-//            SearchByCountryContentUIState.NO_DATA_FOUND
-//        )
     }
 
     @Test
@@ -223,7 +220,6 @@ class SearchByCountryViewModelTest {
         testScope.runTest {
             val countryUiState = CountryItemUiState("Egypt", "eg")
             val movies = listOf(createMovie())
-            //coEvery { getMoviesByCountryUseCase(any()) } returns movies
 
             viewModel.onSelectCountry(countryUiState)
             testScope.advanceUntilIdle()
@@ -236,14 +232,10 @@ class SearchByCountryViewModelTest {
         testScope.runTest {
             val countryUiState = CountryItemUiState("Egypt", "eg")
             val movies = listOf(createMovie())
-            //coEvery { getMoviesByCountryUseCase(any()) } returns movies
 
             viewModel.onSelectCountry(countryUiState)
             testScope.advanceUntilIdle()
 
-//            assertThat(viewModel.state.value.searchByCountryContentUIState).isEqualTo(
-//                SearchByCountryContentUIState.MOVIES_LOADED
-//            )
         }
 
     @Test
@@ -284,9 +276,6 @@ class SearchByCountryViewModelTest {
             viewModel.onClickRetry()
             testScope.advanceUntilIdle()
 
-//            assertThat(viewModel.state.value.searchByCountryContentUIState).isEqualTo(
-//                SearchByCountryContentUIState.COUNTRY_TOUR
-//            )
         }
 
     @ParameterizedTest
@@ -296,13 +285,10 @@ class SearchByCountryViewModelTest {
         //expectedState: SearchByCountryContentUIState,
     ) = testScope.runTest {
         val countryUiState = CountryItemUiState("Egypt", "eg")
-        //coEvery { getMoviesByCountryUseCase(any()) } throws exception
 
         viewModel.onSelectCountry(countryUiState)
         testScope.advanceUntilIdle()
 
-        //val res = viewModel.state.value.searchByCountryContentUIState
-//        assertThat(res).isEqualTo(expectedState)
     }
 
     companion object {
@@ -310,9 +296,7 @@ class SearchByCountryViewModelTest {
         fun exceptionToStateProvider() = listOf(
             Arguments.of(
                 NoInternetException(),
-                //SearchByCountryContentUIState.NO_INTERNET_CONNECTION
             ),
-            //Arguments.of(AflamiException(), SearchByCountryContentUIState.NO_DATA_FOUND)
         )
     }
 

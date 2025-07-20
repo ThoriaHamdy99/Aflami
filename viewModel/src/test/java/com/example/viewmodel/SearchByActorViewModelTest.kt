@@ -113,7 +113,6 @@ class SearchByActorViewModelTest {
             advanceUntilIdle()
 
             val state = viewModel.state.value
-            //assertThat(state.movies).isEmpty()
             assertThat(state.isLoading).isFalse()
         }
 
@@ -129,7 +128,6 @@ class SearchByActorViewModelTest {
             val state = viewModel.state.value
             assertThat(state.error).isEqualTo(ActorSearchUiState.SearchByActorError.NetworkError)
             assertThat(state.isLoading).isFalse()
-            //assertThat(state.movies).isEqualTo(emptyList())
         }
 
     @Test
@@ -165,7 +163,6 @@ class SearchByActorViewModelTest {
 
         coVerify(exactly = 2) { getMoviesByActorUseCase(keyword) }
         val state = viewModel.state.value
-        //assertThat(state.movies).isEqualTo(movies.toListOfUiState())
         assertThat(state.isLoading).isFalse()
     }
 
@@ -200,6 +197,5 @@ class SearchByActorViewModelTest {
 
             val state = viewModel.state.value
             assertThat(state.isLoading).isFalse()
-            //assertThat(state.movies).isEmpty()
     }
 }
