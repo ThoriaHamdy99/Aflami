@@ -37,7 +37,7 @@ class CountrySearchViewModel(
     }
 
     private fun fetchCountriesByKeyword(keyword: String): Job {
-        updateState { it.copy(isLoading = true) }
+        //updateState { it.copy(isLoading = true) }
         return tryToExecute(
             action = { getSuggestedCountriesUseCase(keyword) },
             onSuccess = ::onFetchCountriesSuccess,
@@ -68,7 +68,7 @@ class CountrySearchViewModel(
         updateState {
             it.copy(
                 keyword = keyword,
-                isLoading = keyword.isNotBlank(),
+                isLoading = false,
                 isCountriesDropDownVisible = it.suggestedCountries.isNotEmpty(),
                 suggestedCountries = if (keyword.isBlank()) emptyList() else it.suggestedCountries,
                 errorUiState = null,
@@ -95,13 +95,7 @@ class CountrySearchViewModel(
         when {
             !hasSelectedCountry && hasKeyword -> fetchCountriesByKeyword(state.value.keyword)
             hasSelectedCountry -> fetchMoviesByCountry(getSelectedCountry())
-
         }
-    }
-
-    override fun onClickMovieCard(movieId: Long) {
-        updateState { it.copy(selectedMovieId = movieId) }
-        sendNewEffect(CountrySearchEffect.NavigateToMovieDetails)
     }
 
     private fun fetchMoviesByCountry(selectedCountry: Country) {
@@ -114,6 +108,11 @@ class CountrySearchViewModel(
             onSuccess = ::onFetchMoviesSuccess,
             onError = ::onFetchError
         )
+    }
+
+    override fun onClickMovieCard(movieId: Long) {
+        updateState { it.copy(selectedMovieId = movieId) }
+        sendNewEffect(CountrySearchEffect.NavigateToMovieDetails)
     }
 
     private fun getSelectedCountry(): Country {
