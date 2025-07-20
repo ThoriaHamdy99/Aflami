@@ -101,7 +101,7 @@ private fun HomeScreenContent(
                             onSearchClicked = interactionListener::onClickSearch,
                             modifier = Modifier
                                 .statusBarsPadding()
-                                .padding(vertical = 0.dp, horizontal = 16.dp),
+                                .padding(horizontal = 16.dp),
                         )
                     }
                     PopularSection(state.popularMovies)
