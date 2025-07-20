@@ -14,6 +14,7 @@ import com.example.ui.navigation.BottomNavigation
 import com.example.ui.navigation.NavGraph
 import com.example.ui.navigation.Route
 import com.example.ui.utils.safeNavigate
+import com.example.ui.utils.safeNavigateToTab
 
 @Composable
 fun AflamiApp(){
@@ -27,7 +28,7 @@ fun AflamiApp(){
                 bottomBar = {
                     BottomNavigation(
                         currentDestination = currentDestination,
-                        onNavigate = { navController.safeNavigate(it) },
+                        onNavigate = { navController.safeNavigateToTab(it) },
                     )
                 }
             ) {

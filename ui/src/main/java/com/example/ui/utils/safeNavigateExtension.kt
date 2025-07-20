@@ -13,11 +13,10 @@ fun NavController.safeNavigate(
     this.navigate(route, builder ?: {})
 }
 
-fun NavController.safeNavigate(
-    route: Any,
-    builder: (NavOptionsBuilder.() -> Unit)? = {
+fun NavController.safeNavigateToTab(route: Any) {
+    navigate(route) {
+        popUpTo(graph.startDestinationId) { saveState = true }
         launchSingleTop = true
+        restoreState = true
     }
-) {
-    this.navigate(route, builder ?: {})
 }
