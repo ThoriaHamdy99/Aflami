@@ -111,7 +111,7 @@ private fun AutoScrollingPager(
 
 @ThemeAndLocalePreviews
 @Composable
-fun PopularSectionPreview() {
+private fun PopularSectionPreview() {
     val dummyMovies = List(5) {
         PopularMovie(
             name = "Movie $it",

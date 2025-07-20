@@ -74,7 +74,7 @@ fun PopularMovieCard(popularMovie: PopularMovie, modifier: Modifier = Modifier) 
 
 @ThemeAndLocalePreviews
 @Composable
-fun PopularMovieCardPreview() {
+private fun PopularMovieCardPreview() {
     val dummyMovie = PopularMovie(
         name = "Inception",
         posterUrl = "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
