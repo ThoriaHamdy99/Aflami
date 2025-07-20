@@ -39,6 +39,7 @@ import com.example.ui.screens.search.countrySearch.components.CountrySearchField
 import com.example.ui.screens.search.countrySearch.components.ExploreCountries
 import com.example.ui.screens.search.countrySearch.components.MoviesVerticalGrid
 import com.example.ui.screens.search.countrySearch.components.NoMoviesFound
+import com.example.ui.utils.safeNavigate
 import com.example.viewmodel.search.countrySearch.CountryItemUiState
 import com.example.viewmodel.search.countrySearch.CountrySearchEffect
 import com.example.viewmodel.search.countrySearch.CountrySearchErrorState
@@ -62,7 +63,7 @@ internal fun SearchByCountryScreen(
                         navController.popBackStack()
                     }
 
-                    CountrySearchEffect.NavigateToMovieDetails -> navController.navigate(
+                    CountrySearchEffect.NavigateToMovieDetails -> navController.safeNavigate(
                         MovieDetails(state.selectedMovieId)
                     )
                 }

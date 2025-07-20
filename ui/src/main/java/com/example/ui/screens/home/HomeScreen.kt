@@ -13,13 +13,14 @@ import com.example.designsystem.theme.AppTheme
 import com.example.ui.application.LocalNavController
 import com.example.ui.components.appBar.HomeAppBar
 import com.example.ui.navigation.Route
+import com.example.ui.utils.safeNavigate
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
     val navController = LocalNavController.current
     HomeScreenContent(
         modifier = modifier,
-        onSearchClicked = { navController.navigate(Route.Search) },
+        onSearchClicked = { navController.safeNavigate(Route.Search) },
     )
 }
 

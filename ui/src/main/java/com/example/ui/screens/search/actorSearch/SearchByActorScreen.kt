@@ -40,6 +40,7 @@ import com.example.viewmodel.search.actorSearch.SearchActorInteractionListener
 import com.example.ui.R
 import com.example.ui.components.MovieCard
 import com.example.ui.components.appBar.DefaultAppBar
+import com.example.ui.utils.safeNavigate
 import com.example.viewmodel.search.actorSearch.ActorSearchUiState
 import com.example.viewmodel.search.actorSearch.SearchActorViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -55,13 +56,12 @@ fun SearchByActorScreen(
         viewModel.effect.collect { effect ->
             effect?.let {
                 when (it) {
-
                     SearchActorEffect.NavigateBack -> {
                         navController.popBackStack()
                     }
 
                     is SearchActorEffect.NavigateToDetailsScreen -> {
-                        navController.navigate(Route.MovieDetails(it.movieId))
+                        navController.safeNavigate(Route.MovieDetails(it.movieId))
                     }
                 }
             }
