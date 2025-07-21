@@ -9,8 +9,8 @@ import com.example.viewmodel.utils.dispatcher.DispatcherProvider
 
 class MovieDetailsViewModel(
     private val args: MovieDetailsArgs,
-    private val movieDetailsUiStateMapper : MovieDetailsUiStateMapper,
-    private val getMovieDetailsUseCase : GetMovieDetailsUseCase,
+    private val movieDetailsUiStateMapper: MovieDetailsUiStateMapper,
+    private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<MovieDetailsUiState, MovieDetailsEffect>(
     MovieDetailsUiState(),
@@ -23,11 +23,11 @@ class MovieDetailsViewModel(
         loadMovieDetails()
     }
 
-    private fun loadMovieDetails(){
+    private fun loadMovieDetails() {
         updateState { it.copy(isLoading = true, networkError = false) }
         tryToExecute(
             action = ::getMovieDetails,
-            onSuccess =::onGetMovieDetailsSuccess,
+            onSuccess = ::onGetMovieDetailsSuccess,
             onError = ::onError
         )
     }
@@ -61,9 +61,32 @@ class MovieDetailsViewModel(
         loadMovieDetails()
     }
 
+    override fun onFirstOptionClicked(title: String) {
+       updateState { it.copy(isDialogVisible = true, dialogTitle = title) }
+    }
+
+    override fun onLoginClicked() {
+        sendNewEffect(MovieDetailsEffect.NavigateToLoginScreenEffect)
+    }
+
+    override fun onCancelClicked() {
+        updateState { it.copy(isDialogVisible = false) }
+    }
+
+    override fun onLastOptionClicked(title: String) {
+        updateState { it.copy(isDialogVisible = true, dialogTitle = title) }
+    }
+
+
     private fun onError(exception: AflamiException) {
-         when (exception) {
-            is NoInternetException -> updateState { it.copy(isLoading = false , networkError = true) }
+        when (exception) {
+            is NoInternetException -> updateState {
+                it.copy(
+                    isLoading = false,
+                    networkError = true
+                )
+            }
+
             else -> {}
         }
     }
