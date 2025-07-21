@@ -5,9 +5,9 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.pager.HorizontalPager
@@ -58,7 +58,7 @@ fun LazyListScope.PopularSection(popularMovies: List<PopularMovieItemUiState>) {
                     onError = { },
                     modifier = Modifier
                         .fillMaxSize()
-                        .requiredHeight(470.dp)
+                        .height(470.dp)
                         .offset(y = -200.dp)
                         .blur(10f, edgeTreatment = BlurEdgeTreatment.UNBOUNDED)
                 )
