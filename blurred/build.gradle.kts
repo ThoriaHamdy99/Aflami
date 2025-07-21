@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.amsterdam.blurred"
-
+    ndkVersion = "29.0.13599879"
     defaultConfig {
         ndk {
             abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64"))

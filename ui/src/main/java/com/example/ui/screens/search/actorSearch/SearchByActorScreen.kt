@@ -193,7 +193,7 @@ private fun SearchByActorContent(
 }
 
 @Composable
-private fun MovieImage(imageUrl: String) {
+internal fun MovieImage(imageUrl: String) {
     SafeImageView(
         model = imageUrl,
         contentScale = ContentScale.FillBounds,

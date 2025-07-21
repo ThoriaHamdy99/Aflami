@@ -15,7 +15,7 @@ import com.example.designsystem.theme.AppTheme
 @Composable
 fun LoadingContainer(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.background(AppTheme.color.surface),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

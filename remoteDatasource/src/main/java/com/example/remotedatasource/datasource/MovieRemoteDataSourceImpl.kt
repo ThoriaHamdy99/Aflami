@@ -97,6 +97,19 @@ class MovieRemoteDataSourceImpl(
         }
     }
 
+    override suspend fun getPopularMovies(): RemoteMovieResponse {
+        return responseCall<RemoteMovieResponse> {
+            networkClient.get("movie/popular")
+        }
+    }
+
+    override suspend fun getTopRatedMovies(): RemoteMovieResponse {
+        return responseCall<RemoteMovieResponse> {
+            networkClient.get("movie/top_rated")
+        }
+    }
+
+
     private companion object {
         const val SEARCH_MOVIE_URL = "search/movie"
         const val GET_ACTOR_NAME_BY_ID_URL = "search/person"
