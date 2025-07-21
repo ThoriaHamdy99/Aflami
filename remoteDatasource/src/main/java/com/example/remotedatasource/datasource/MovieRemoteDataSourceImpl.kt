@@ -103,11 +103,14 @@ class MovieRemoteDataSourceImpl(
         }
     }
 
+    override suspend fun getUpcomingMovies(): RemoteMovieResponse {
+        return responseCall<RemoteMovieResponse> { networkClient.get(UPCOMING_MOVIE_URL) }
+    }
 
     private companion object {
         const val SEARCH_MOVIE_URL = "search/movie"
         const val GET_ACTOR_NAME_BY_ID_URL = "search/person"
-
+        const val UPCOMING_MOVIE_URL = "movie/upcoming"
         const val DISCOVER_MOVIE = "discover/movie"
 
         const val WITH_CAST_KEY = "with_cast"

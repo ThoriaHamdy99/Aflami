@@ -186,4 +186,8 @@ class MovieRepositoryImpl(
     }
     override suspend fun getPopularMovies(): List<Movie> =
         movieRemoteMapper.toEntityList(movieRemoteDataSource.getPopularMovies().results)
+
+    override suspend fun getUpcomingMovies(): List<Movie> {
+        return movieRemoteMapper.toEntityList(movieRemoteDataSource.getUpcomingMovies().results)
+    }
 }
