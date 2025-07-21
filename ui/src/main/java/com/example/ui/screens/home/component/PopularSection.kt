@@ -22,8 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.zIndex
-import com.amsterdam.blurred.blurProcessor.BlurEdgeTreatment
-import com.amsterdam.blurred.ui.modifier.blur
+import io.sifr.shaded.blurProcessor.BlurEdgeTreatment
+import io.sifr.shaded.modifiers.blur
 import com.example.designsystem.R
 import com.example.designsystem.components.SectionTitle
 import com.example.designsystem.theme.AflamiTheme
