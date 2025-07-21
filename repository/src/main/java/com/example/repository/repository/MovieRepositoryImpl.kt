@@ -11,6 +11,7 @@ import com.example.repository.datasource.local.MovieLocalSource
 import com.example.repository.datasource.remote.MovieRemoteSource
 import com.example.repository.dto.local.utils.SearchType
 import com.example.repository.dto.remote.RemoteMovieResponse
+import com.example.repository.mapper.local.MovieGenreLocalMapper
 import com.example.repository.mapper.local.MovieWithCategoriesLocalMapper
 import com.example.repository.mapper.remote.CastRemoteMapper
 import com.example.repository.mapper.remote.GalleryRemoteMapper
@@ -34,6 +35,7 @@ class MovieRepositoryImpl(
     private val remoteProductionCompanyMapper: ProductionCompanyRemoteMapper,
     private val movieWithCategoriesLocalMapper: MovieWithCategoriesLocalMapper,
     private val movieRemoteLocalMapper: MovieRemoteLocalMapper,
+    private val movieGenreLocalMapper: MovieGenreLocalMapper,
 ) : MovieRepository {
     override suspend fun getMoviesByKeyword(
         keyword: String,
@@ -186,4 +188,10 @@ class MovieRepositoryImpl(
     }
     override suspend fun getPopularMovies(): List<Movie> =
         movieRemoteMapper.toEntityList(movieRemoteDataSource.getPopularMovies().results)
+
+    override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>): List<Movie> {
+        return movieGenreLocalMapper.toDtoList(movieGenres).let { genresIds ->
+            movieRemoteMapper.toEntityList(movieRemoteDataSource.getMoviesByGenreIds(genresIds).results)
+        }
+    }
 }

@@ -103,6 +103,14 @@ class MovieRemoteDataSourceImpl(
         }
     }
 
+    override suspend fun getMoviesByGenreIds(genresIds: List<Long>): RemoteMovieResponse {
+        return responseCall<RemoteMovieResponse> {
+            networkClient.get(DISCOVER_MOVIE){
+                parameter(GENRES, genresIds.joinToString(","))
+            }
+        }
+    }
+
 
     private companion object {
         const val SEARCH_MOVIE_URL = "search/movie"
@@ -113,6 +121,7 @@ class MovieRemoteDataSourceImpl(
         const val WITH_CAST_KEY = "with_cast"
         const val QUERY_KEY = "query"
         const val PAGE = "page"
+        const val GENRES = "with_genres"
 
         const val WITH_ORIGIN_COUNTRY = "with_origin_country"
     }

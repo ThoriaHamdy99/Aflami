@@ -30,4 +30,6 @@ interface MovieRemoteSource {
     suspend fun getMoviePosters(movieId : Long) : RemoteMovieGalleryResponse
 
     suspend fun getPopularMovies(): RemoteMovieResponse
+
+    suspend fun getMoviesByGenreIds(genresIds: List<Long>): RemoteMovieResponse
 }

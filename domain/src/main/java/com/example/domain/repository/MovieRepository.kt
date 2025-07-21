@@ -24,4 +24,5 @@ interface MovieRepository {
     suspend fun incrementGenreInterest(genre: MovieGenre)
     suspend fun getAllGenreInterests(): Map<MovieGenre, Int>
     suspend fun getPopularMovies(): List<Movie>
+    suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>): List<Movie>
 }
