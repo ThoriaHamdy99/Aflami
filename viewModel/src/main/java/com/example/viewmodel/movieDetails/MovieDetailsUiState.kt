@@ -30,7 +30,9 @@ data class MovieDetailsUiState(
     val gallery: List<String> = emptyList(),
     val reviews: List<ReviewUiState> = emptyList(),
     val isLoading: Boolean = false,
-    val networkError : Boolean = false
+    val networkError : Boolean = false,
+    val isDialogVisible : Boolean = false,
+    val dialogTitle : String = ""
 ) {
 
     enum class MovieExtras {
