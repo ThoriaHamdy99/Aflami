@@ -75,6 +75,9 @@ interface MovieApiService {
         @Path("movieId") movieId: Long
     ): RemoteMovieItemDto
 
+    @GET(TOP_RATED_MOVIES)
+    suspend fun getTopRatedMovies() : RemoteMovieResponse
+
     companion object {
         private const val MOVIE_POPULAR = "movie/popular"
         private const val SEARCH_MOVIE_URL = "search/movie"
@@ -93,5 +96,6 @@ interface MovieApiService {
         private const val PAGE_KEY = "page"
         private const val WITH_CAST_KEY = "with_cast"
         private const val WITH_ORIGIN_COUNTRY_KEY = "with_origin_country"
+        private const val TOP_RATED_MOVIES = "movie/top_rated"
     }
 }

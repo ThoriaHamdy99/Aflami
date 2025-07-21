@@ -1,7 +1,6 @@
 package com.example.remotedatasource.datasource
 
-import com.example.remotedatasource.client.NetworkClient
-import com.example.remotedatasource.utils.apiHandler.responseCall
+import com.example.remotedatasource.serviceProvider.MovieServiceProvider
 import com.example.repository.datasource.remote.MovieRemoteSource
 import com.example.repository.dto.remote.ProductionCompanyResponse
 import com.example.repository.dto.remote.RemoteActorSearchResponse
@@ -70,7 +69,6 @@ class MovieRemoteDataSourceImpl(
         return movieServiceProvider.getPopularMovies()
     }
   override suspend fun getTopRatedMovies(): RemoteMovieResponse {
-    return responseCall<RemoteMovieResponse> {
-        networkClient.get("movie/top_rated")
-    }
+     return movieServiceProvider.getTopRatedMovies()
+  }
 }
