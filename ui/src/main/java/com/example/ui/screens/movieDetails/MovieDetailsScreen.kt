@@ -39,7 +39,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.example.designsystem.R
 import com.example.designsystem.components.ImageErrorIndicator
 import com.example.designsystem.components.ImageLoadingIndicator
 import com.example.designsystem.components.LoadingContainer
@@ -49,6 +48,7 @@ import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.theme.AppTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
 import com.example.imageviewer.ui.SafeImageView
+import com.example.ui.R
 import com.example.ui.application.LocalNavController
 import com.example.ui.components.NoNetworkContainer
 import com.example.ui.components.appBar.DefaultAppBar
@@ -64,6 +64,7 @@ import com.example.ui.screens.movieDetails.components.MovieInfoSection
 import com.example.ui.screens.movieDetails.components.PageIndicator
 import com.example.ui.screens.movieDetails.components.PlayButton
 import com.example.ui.screens.movieDetails.components.ReviewSection
+import com.example.ui.screens.movieDetails.sections.CustomDialog
 import com.example.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.example.viewmodel.movieDetails.MovieDetailsEffect
 import com.example.viewmodel.movieDetails.MovieDetailsInteractionListener
@@ -91,8 +92,11 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = koinViewModel()) {
                     navController.navigate(
                         Route.Cast(state.value.movieId),
                     )
-
+                MovieDetailsEffect.NavigateToLoginScreenEffect->navController.navigate(
+                    Route.Search
+                )
                 null -> {}
+
             }
         }
     }
@@ -137,7 +141,16 @@ fun MovieContent(
             )
         }
     }
-
+    AnimatedVisibility(
+        modifier = Modifier,
+        visible = state.isDialogVisible
+    ) {
+     CustomDialog(
+         title = state.dialogTitle,
+         onDismiss = interactionListener::onCancelClicked,
+         onLoginClicked = interactionListener::onLoginClicked,
+     )
+    }
     AnimatedVisibility(
         !state.isLoading && !state.networkError,
         enter = fadeIn(tween(animationDuration)),
@@ -191,9 +204,11 @@ fun MovieContent(
                             Modifier
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                                 .statusBarsPadding(),
-                        firstOption = painterResource(R.drawable.ic_outlined_star),
-                        lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
+                        firstOption = painterResource(com.example.designsystem.R.drawable.ic_outlined_star),
+                        lastOption = painterResource(com.example.designsystem.R.drawable.ic_outlined_add_to_favourite),
                         onNavigateBackClicked = interactionListener::onClickBack,
+                        onFirstOptionClicked = { interactionListener.onFirstOptionClicked("Rate") },
+                        onLastOptionClicked = { interactionListener.onLastOptionClicked("Add to list") },
                     )
                     RatingChip(
                         state.rating,
@@ -308,6 +323,23 @@ private fun SearchByActorContentPreview() {
 
                     override fun onClickRetryRequest() {
                     }
+
+                    override fun onLastOptionClicked(title: String) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onFirstOptionClicked(title: String) {
+
+                    }
+
+                    override fun onLoginClicked() {
+
+                    }
+
+                    override fun onCancelClicked() {
+
+                    }
+
                 },
         )
     }
