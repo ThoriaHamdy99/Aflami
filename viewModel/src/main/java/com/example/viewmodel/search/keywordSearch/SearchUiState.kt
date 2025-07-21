@@ -3,7 +3,6 @@ package com.example.viewmodel.search.keywordSearch
 import androidx.paging.PagingData
 import com.example.domain.exceptions.AflamiException
 import com.example.domain.exceptions.NetworkException
-import com.example.entity.category.MovieGenre
 import com.example.entity.category.TvShowGenre
 import com.example.viewmodel.shared.Selectable
 import com.example.viewmodel.shared.defaultMovieGenres

@@ -1,10 +1,8 @@
 package com.example.viewmodel.home
 
-import android.R.attr.action
 import android.util.Log
 import com.example.domain.exceptions.AflamiException
 import com.example.domain.exceptions.NetworkException
-import com.example.domain.exceptions.NoInternetException
 import com.example.domain.useCase.GetPopularMoviesUseCase
 import com.example.domain.useCase.GetUpcomingMoviesUseCase
 import com.example.entity.Movie
