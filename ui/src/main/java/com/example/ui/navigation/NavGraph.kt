@@ -11,6 +11,7 @@ import com.example.ui.screens.lists.listsScreenRoute
 import com.example.ui.screens.login.loginScreenRoute
 import com.example.ui.screens.movieDetails.movieDetailsScreenRoute
 import com.example.ui.screens.profile.profileScreenRoute
+import com.example.ui.screens.register.registerScreenRoute
 import com.example.ui.screens.search.keywordSearch.searchScreenRoute
 import com.example.ui.screens.search.actorSearch.searchByActorScreenRoute
 import com.example.ui.screens.search.countrySearch.searchByCountryScreenRoute
@@ -36,5 +37,6 @@ fun NavGraph(
         seriesDetailsScreenRoute()
         castScreenRoute()
         topRatedScreenRoute()
+        registerScreenRoute()
     }
 }
