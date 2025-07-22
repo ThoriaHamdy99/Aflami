@@ -3,7 +3,6 @@ package com.example.domain.useCase
 import com.example.domain.exceptions.AflamiException
 import com.example.domain.repository.MovieRepository
 import com.example.domain.useCase.utils.fakeMovieList
-import com.example.domain.useCase.utils.specificMovieList
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -12,7 +11,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-
 
 class GetPopularMoviesUseCaseTest {
     private lateinit var movieRepository: MovieRepository
@@ -34,16 +32,8 @@ class GetPopularMoviesUseCaseTest {
     @Test
     fun `should return list of popular movies when data is available`() = runTest {
         coEvery { movieRepository.getPopularMovies() } returns fakeMovieList
-    fun `should return popular movies when repository returns them`() = runTest {
-        // Given
-        coEvery { movieRepository.getPopularMovies() } returns specificMovieList
-
-        // When
         val result = getPopularMoviesUseCase()
         assertThat(result).isEqualTo(fakeMovieList)
-
-        // Then
-        assertThat(result).isEqualTo(specificMovieList)
     }
 
     @Test
@@ -52,21 +42,10 @@ class GetPopularMoviesUseCaseTest {
         val result = getPopularMoviesUseCase()
         assertThat(result).isEmpty()
     }
-    fun `should throw exception when repository throw exception`() = runTest {
-        // Given
-        val expectedMessage = "Repository failure"
-        coEvery { movieRepository.getPopularMovies() } throws Exception(expectedMessage)
-
-        // When
-        val exception = assertThrows<Exception> {
-            getPopularMoviesUseCase()
-        }
 
     @Test
     fun `should throw AflamiException when getPopularMovies fails`() = runTest {
         coEvery { movieRepository.getPopularMovies() } throws AflamiException()
         assertThrows<AflamiException> { getPopularMoviesUseCase() }
-        // Then
-        assertThat(exception).hasMessageThat().isEqualTo(expectedMessage)
     }
 }
