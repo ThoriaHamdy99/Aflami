@@ -1,4 +1,4 @@
-package com.example.ui.components
+package com.example.ui.screens.home.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
@@ -36,11 +35,13 @@ import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.theme.AppTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
 import com.example.ui.R
+import com.example.ui.screens.home.model.CardMood
 
 @Composable
 fun MoodPickerCard(
+    cardMoods: List<CardMood>,
     modifier: Modifier = Modifier,
-    onMoodSelected: (Int) -> Unit = {},
+    onMoodSelected: (CardMood) -> Unit = {},
 ) {
     Box(
         modifier =
@@ -80,6 +81,7 @@ fun MoodPickerCard(
         }
 
         MoodOptionsSection(
+            cardMoods,
             modifier =
                 Modifier
                     .padding(top = 76.dp, start = 2.dp, end = 2.dp, bottom = 2.dp),
@@ -90,8 +92,9 @@ fun MoodPickerCard(
 
 @Composable
 private fun MoodOptionsSection(
+    cardMoods: List<CardMood>,
     modifier: Modifier = Modifier,
-    onMoodSelected: (Int) -> Unit = {},
+    onMoodSelected: (CardMood) -> Unit = {},
 ) {
     var selectedIndex by remember { mutableStateOf(-1) }
 
@@ -129,13 +132,13 @@ private fun MoodOptionsSection(
             modifier = Modifier.padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            moodIcons.forEachIndexed { index, iconRes ->
+            cardMoods.forEachIndexed { index, mood ->
                 MoodIcon(
-                    iconRes = iconRes,
+                    iconRes = mood.iconResourceId,
                     isSelected = selectedIndex == index,
                     onClick = {
                         selectedIndex = index
-                        onMoodSelected(index)
+                        onMoodSelected(mood)
                     },
                 )
             }
@@ -209,6 +212,8 @@ private fun CustomMoodPickerCardPreview() {
     AflamiTheme {
         MoodPickerCard(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 100.dp),
+            cardMoods = TODO(),
+            onMoodSelected = TODO(),
         )
     }
 }
