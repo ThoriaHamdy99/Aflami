@@ -16,11 +16,11 @@ import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
 import com.example.ui.components.MovieCard
 import com.example.ui.screens.search.actorSearch.MovieImage
-import com.example.viewmodel.home.HomeUiState.TopRatedMovieItemUiState
+import com.example.viewmodel.shared.uiStates.MovieItemUiState
 
 @Composable
 fun TopRatedMoviesGrid(
-    topRatedMovies: List<TopRatedMovieItemUiState>,
+    topRatedMovies: List<MovieItemUiState>,
     onClickMovie: (Long) -> Unit,
     modifier: Modifier = Modifier,
     gridState: LazyGridState = rememberLazyGridState()
@@ -40,7 +40,7 @@ fun TopRatedMoviesGrid(
                 movieType = stringResource(com.example.ui.R.string.movie),
                 movieYear = movie.yearOfRelease,
                 movieTitle = movie.name,
-                movieRating = movie.rating
+                movieRating = movie.rate
             ) {
                 onClickMovie(movie.id)
             }
@@ -53,12 +53,12 @@ fun TopRatedMoviesGrid(
 private fun TopRatedMoviesGridPreview() {
     AflamiTheme {
         val mockMovies = List(4) { index ->
-            TopRatedMovieItemUiState(
+            MovieItemUiState(
                 id = index.toLong(),
                 name = "Movie $index",
                 posterImageUrl = "",
                 yearOfRelease = "202${index}",
-                rating = (7 + index * 0.5).toString()
+                rate = (7 + index * 0.5).toString()
             )
         }
         TopRatedMoviesGrid(

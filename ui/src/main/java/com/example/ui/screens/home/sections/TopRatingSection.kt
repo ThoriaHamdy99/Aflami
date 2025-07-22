@@ -2,7 +2,6 @@ package com.example.ui.screens.home.sections
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
@@ -17,10 +16,10 @@ import com.example.designsystem.components.SectionTitle
 import com.example.designsystem.theme.AppTheme
 import com.example.ui.components.MovieCard
 import com.example.ui.screens.search.actorSearch.MovieImage
-import com.example.viewmodel.home.HomeUiState.TopRatedMovieItemUiState
+import com.example.viewmodel.shared.uiStates.MovieItemUiState
 
 fun LazyListScope.TopRatingSection(
-    topRatedMovies: List<TopRatedMovieItemUiState>, onClickMovie: (Long) -> Unit,
+    topRatedMovies: List<MovieItemUiState>, onClickMovie: (Long) -> Unit,
     onClickShowAll: () -> Unit
 ) {
     item {
@@ -30,7 +29,7 @@ fun LazyListScope.TopRatingSection(
                 tintColor = AppTheme.color.secondary,
                 modifier = Modifier
                     .zIndex(1f)
-                    .padding(top = 24.dp, bottom = 12.dp).offset(y = -160.dp),
+                    .padding(top = 24.dp, bottom = 12.dp),
                 showAllLabel = true,
                 onAllLabelClicked = onClickShowAll
             )
@@ -39,7 +38,6 @@ fun LazyListScope.TopRatingSection(
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
-            modifier = Modifier.offset(y = -160.dp)
         ) {
             items(topRatedMovies) { movie ->
                 MovieCard(
@@ -47,7 +45,7 @@ fun LazyListScope.TopRatingSection(
                     movieType = stringResource(com.example.ui.R.string.movie),
                     movieYear = movie.yearOfRelease,
                     movieTitle = movie.name,
-                    movieRating = movie.rating
+                    movieRating = movie.rate
                 ) {
                     onClickMovie(movie.id)
                 }

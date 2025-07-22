@@ -1,9 +1,9 @@
 package com.example.viewmodel.topRated
 
-import com.example.viewmodel.home.HomeUiState.TopRatedMovieItemUiState
+import com.example.viewmodel.shared.uiStates.MovieItemUiState
 
 data class TopRatedUiState(
-    val topRatedMovies: List<TopRatedMovieItemUiState> = emptyList(),
+    val topRatedMovies: List<MovieItemUiState> = emptyList(),
     val isLoading: Boolean = false,
     val error: TopRatedError? = null
 ){

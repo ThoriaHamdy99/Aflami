@@ -1,9 +1,6 @@
 package com.example.viewmodel.home
 
-import android.util.Log
 import com.example.domain.exceptions.AflamiException
-import com.example.domain.exceptions.NetworkException
-import com.example.domain.useCase.GetPopularMoviesUseCase
 import com.example.domain.useCase.GetUpcomingMoviesUseCase
 import com.example.entity.Movie
 import com.example.entity.category.MovieGenre
@@ -12,47 +9,38 @@ import com.example.domain.useCase.GetHomeScreenDataUseCase
 import com.example.domain.useCase.GetHomeScreenDataUseCase.HomeScreenData
 import com.example.viewmodel.home.HomeUiState.HomeError
 import com.example.viewmodel.search.mapper.selectByMovieGenre
-import com.example.viewmodel.search.mapper.toMoveUiStates
 import com.example.viewmodel.shared.BaseViewModel
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
 
 class HomeViewModel(
-    private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
-    private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
     private val getHomeScreenDataUseCase: GetHomeScreenDataUseCase,
+    private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
     private val homeUiStateMapper: HomeUiStateMapper, dispatcherProvider: DispatcherProvider
 ) :
     BaseViewModel<HomeUiState, HomeEffect>(HomeUiState(), dispatcherProvider),
     HomeInteractionListener {
 
-    init {
-        getPopularMovies()
-        getUpcomingMoviesBySelectedGenre()
-        getHomeScreenData()
-    }
+
+        init {
+            getHomeScreenData()
+        }
 
     private fun getHomeScreenData() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             action = { getHomeScreenDataUseCase() },
-            onSuccess = ::onGetPopularMovieSuccess,
+            onSuccess = ::onGetHomeScreenDataSuccess,
             onError = ::onError,
             onCompletion = ::onCompletion
         )
     }
 
-    private fun onGetPopularMovieSuccess(movies: List<Movie>) {
-        Log.e("bkh", "onGetPopularMovieSuccess: $movies")
-        updateState { homeUiStateMapper.toUiState(movies) }
-    private fun onGetPopularMovieSuccess(homeScreenData: HomeScreenData) {
+    fun onGetHomeScreenDataSuccess(homeScreenData: HomeScreenData){
         updateState { homeUiStateMapper.toUiState(homeScreenData) }
     }
-
     override fun onClickRetryLoading() {
-        getHomeScreenData()
         updateState { it.copy(error = null) }
-        getPopularMovies()
-        getUpcomingMoviesBySelectedGenre()
+        getHomeScreenData()
     }
 
     override fun onClickSearch() {
@@ -60,11 +48,11 @@ class HomeViewModel(
     }
 
     override fun onClickMovie(movieId: Long) {
-        sendNewEffect(HomeEffect.NavigateToMovieDetailsScreen(movieId))
+        sendNewEffect(HomeEffect.NavigateToMovieDetailsEffect(movieId))
     }
 
     override fun onClickShowAllToRatedMovies() {
-        sendNewEffect(HomeEffect.NavigateToTopRatedMoviesScreen)
+        sendNewEffect(HomeEffect.NavigateToTopRatedMoviesEffect)
     }
 
     private fun getUpcomingMoviesBySelectedGenre(selectedUpcomingGenre: MovieGenre = MovieGenre.ALL) {
@@ -78,7 +66,7 @@ class HomeViewModel(
     }
 
     private fun onGetUpcomingMovieSuccess(movies: List<Movie>) {
-        updateState { it.copy(upcomingMovies = movies.toMoveUiStates()) }
+        updateState { it.copy(upcomingMovies = homeUiStateMapper.moviesToMoviesItemsUiState(movies)) }
     }
 
     override fun onClickUpcomingMovieCard(id: Long) {
@@ -96,7 +84,6 @@ class HomeViewModel(
         when (exception) {
             is NoInternetException -> updateState {
                 it.copy(
-                    isLoading = false,
                     error = HomeError.NetworkError
                 )
             }

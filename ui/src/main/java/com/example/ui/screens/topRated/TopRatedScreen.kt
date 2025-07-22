@@ -73,6 +73,7 @@ fun TopRatedContent(
         TopRatedBackgroundComponent()
 
         val gridState = rememberLazyGridState()
+
         val scrollOffset = remember {
             derivedStateOf { gridState.firstVisibleItemScrollOffset }
         }
