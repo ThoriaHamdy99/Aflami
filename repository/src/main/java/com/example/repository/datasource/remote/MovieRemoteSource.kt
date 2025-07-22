@@ -31,5 +31,7 @@ interface MovieRemoteSource {
 
     suspend fun getPopularMovies(): RemoteMovieResponse
 
+    suspend fun getUpcomingMovies(): RemoteMovieResponse
+
     suspend fun getTopRatedMovies(): RemoteMovieResponse
 }

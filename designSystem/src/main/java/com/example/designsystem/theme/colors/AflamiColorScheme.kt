@@ -46,6 +46,7 @@ data class AflamiColorScheme(
     val findByActorGradient: List<Color>,
     val guessCardGradient: List<Color>,
     val primaryEnd: Color,
+    val loginGradient: List<Color>,
     val topRatedGradientBackground: List<Color>
 )
 
