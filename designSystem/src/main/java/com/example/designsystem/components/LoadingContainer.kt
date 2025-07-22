@@ -13,10 +13,10 @@ import com.example.designsystem.R
 import com.example.designsystem.theme.AppTheme
 import androidx.compose.ui.graphics.Color
 @Composable
-fun LoadingContainer(modifier: Modifier = Modifier, backgroundColor: Color? = null ) {
+fun LoadingContainer(modifier: Modifier = Modifier) {
 
     Column(
-        modifier = modifier.background(backgroundColor ?: AppTheme.color.surface),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

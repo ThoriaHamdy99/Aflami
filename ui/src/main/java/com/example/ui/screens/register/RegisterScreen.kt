@@ -79,7 +79,7 @@ private fun RegisterContent(
         )
 
         AnimatedSectionVisibility(state.isLoading) {
-            LoadingContainer(backgroundColor = Color.Transparent)
+            LoadingContainer()
         }
 
     }
