@@ -128,9 +128,15 @@ private fun HomeScreenContent(
             )
         }
         AnimatedSectionVisibility(visible = state.isLoading) {
-            LoadingContainer(modifier = Modifier
-                .zIndex(10f)
-                .align(Alignment.Center))
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                LoadingContainer(
+                    modifier = Modifier
+                        .zIndex(10f)
+                )
+            }
         }
         AnimatedSectionVisibility(visible = state.error != null) {
             NoNetworkContainer(

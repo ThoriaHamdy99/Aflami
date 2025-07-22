@@ -75,4 +75,3 @@ class MovieServiceProviderImpl(
     }
 
 }
-//remove the rate  , make the card at bottom , fix the background image

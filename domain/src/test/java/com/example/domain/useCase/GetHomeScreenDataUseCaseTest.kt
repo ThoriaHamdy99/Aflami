@@ -1,6 +1,7 @@
 package com.example.domain.useCase
 
 import com.example.domain.useCase.utils.specificMovieList
+import com.example.entity.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -14,28 +15,37 @@ class GetHomeScreenDataUseCaseTest {
     private lateinit var getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase
     private lateinit var getPopularMoviesUseCase: GetPopularMoviesUseCase
     private lateinit var getHomeScreenDataUseCase: GetHomeScreenDataUseCase
-
+    private lateinit var  getUpcomingMoviesUseCase :  GetUpcomingMoviesUseCase
     @BeforeEach
     fun setUp() {
         getTopRatedMoviesUseCase = mockk(relaxed = true)
         getPopularMoviesUseCase = mockk(relaxed = true)
+        getUpcomingMoviesUseCase = mockk(relaxed = true)
         getHomeScreenDataUseCase = GetHomeScreenDataUseCase(
             getTopRatedMoviesUseCase = getTopRatedMoviesUseCase,
-            getPopularMoviesUseCase = getPopularMoviesUseCase
+            getPopularMoviesUseCase = getPopularMoviesUseCase,
+            getUpcomingMoviesUseCase = getUpcomingMoviesUseCase
         )
     }
 
     @Test
-    fun `should return home screen data when both use cases return data`() = runTest {
+    fun `should return all data when top rated, popular, and upcoming return data`() = runTest {
         // Given
-        coEvery {  getTopRatedMoviesUseCase () } returns specificMovieList
-        coEvery {  getPopularMoviesUseCase () } returns specificMovieList
+        coEvery { getTopRatedMoviesUseCase() } returns specificMovieList
+        coEvery { getPopularMoviesUseCase() } returns specificMovieList
+        coEvery { getUpcomingMoviesUseCase(MovieGenre.ALL) } returns specificMovieList
 
         // When
         val result = getHomeScreenDataUseCase()
 
         // Then
-        assertThat(result).isEqualTo(GetHomeScreenDataUseCase.HomeScreenData(specificMovieList , specificMovieList))
+        assertThat(result).isEqualTo(
+            GetHomeScreenDataUseCase.HomeScreenData(
+                topRatedMovies = specificMovieList,
+                popularMovies = specificMovieList,
+                upComingMovies = specificMovieList
+            )
+        )
     }
 
     @Test
@@ -70,57 +80,20 @@ class GetHomeScreenDataUseCaseTest {
     }
 
     @Test
-    fun `should return empty lists when both use cases return empty lists`() = runTest {
+    fun `should throw exception when getUpcomingMoviesUseCase throws`() = runTest {
         // Given
-        coEvery { getTopRatedMoviesUseCase() } returns emptyList()
-        coEvery { getPopularMoviesUseCase() } returns emptyList()
-
-        // When
-        val result = getHomeScreenDataUseCase()
-
-        // Then
-        assertThat(result).isEqualTo(
-            GetHomeScreenDataUseCase.HomeScreenData(
-                topRatedMovies = emptyList(),
-                popularMovies = emptyList()
-            )
-        )
-    }
-
-    @Test
-    fun `should return home screen data with topRated empty and popular non-empty`() = runTest {
-        // Given
-        coEvery { getTopRatedMoviesUseCase() } returns emptyList()
-        coEvery { getPopularMoviesUseCase() } returns specificMovieList
-
-        // When
-        val result = getHomeScreenDataUseCase()
-
-        // Then
-        assertThat(result).isEqualTo(
-            GetHomeScreenDataUseCase.HomeScreenData(
-                topRatedMovies = emptyList(),
-                popularMovies = specificMovieList
-            )
-        )
-    }
-
-    @Test
-    fun `should return home screen data with popular empty and topRated non-empty`() = runTest {
-        // Given
+        val expectedMessage = "Upcoming error"
         coEvery { getTopRatedMoviesUseCase() } returns specificMovieList
-        coEvery { getPopularMoviesUseCase() } returns emptyList()
+        coEvery { getPopularMoviesUseCase() } returns specificMovieList
+        coEvery { getUpcomingMoviesUseCase(MovieGenre.ALL) } throws Exception(expectedMessage)
 
         // When
-        val result = getHomeScreenDataUseCase()
+        val exception = assertThrows<Exception> {
+            getHomeScreenDataUseCase()
+        }
 
         // Then
-        assertThat(result).isEqualTo(
-            GetHomeScreenDataUseCase.HomeScreenData(
-                topRatedMovies = specificMovieList,
-                popularMovies = emptyList()
-            )
-        )
+        assertThat(exception).hasMessageThat().isEqualTo(expectedMessage)
     }
 
 }
