@@ -42,9 +42,7 @@ import com.example.ui.navigation.Route
 import com.example.ui.navigation.Route.MovieDetails
 import com.example.ui.screens.home.sections.AnimatedSectionVisibility
 import com.example.ui.screens.home.sections.BlurredMoviePoster
-import com.example.ui.screens.home.sections.TopRatingSection
-import com.example.ui.screens.home.sections.homeErrorContent
-import com.example.ui.screens.home.sections.homeLoadingContent
+import com.example.ui.screens.home.sections.topRatingSection
 import com.example.ui.screens.home.sections.popularSection
 import com.example.ui.screens.home.sections.upcomingMoviesSection
 import com.example.ui.utils.safeNavigate
@@ -162,7 +160,7 @@ private fun HomeScreenContent(
                         popularMovies = state.popularMovies,
                         pagerState = pagerState
                     )
-                    TopRatingSection(
+                    topRatingSection(
                         topRatedMovies = state.topRatedMovies,
                         onClickMovie = interactionListener::onClickMovie,
                         onClickShowAll = interactionListener::onClickShowAllToRatedMovies
@@ -175,13 +173,6 @@ private fun HomeScreenContent(
                         onMovieClicked = interactionListener::onClickUpcomingMovieCard,
                         isVisible = isSectionsVisible && state.upcomingMovies.isNotEmpty()
                     )
-
-                    homeErrorContent(
-                        error = state.error,
-                        onClickRetryLoading = interactionListener::onClickRetryLoading
-                    )
-
-                    homeLoadingContent(isLoading = state.isLoading)
                 }
             }
         }

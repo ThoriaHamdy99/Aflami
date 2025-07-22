@@ -18,7 +18,7 @@ import com.example.ui.components.MovieCard
 import com.example.ui.screens.search.actorSearch.MovieImage
 import com.example.viewmodel.shared.uiStates.MovieItemUiState
 
-fun LazyListScope.TopRatingSection(
+fun LazyListScope.topRatingSection(
     topRatedMovies: List<MovieItemUiState>, onClickMovie: (Long) -> Unit,
     onClickShowAll: () -> Unit
 ) {

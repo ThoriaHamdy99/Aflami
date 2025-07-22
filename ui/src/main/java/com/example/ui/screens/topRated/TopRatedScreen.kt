@@ -33,6 +33,7 @@ import com.example.ui.components.appBar.DefaultAppBar
 import com.example.ui.navigation.Route
 import com.example.ui.screens.home.sections.AnimatedSectionVisibility
 import com.example.ui.screens.topRated.component.TopRatedMoviesGrid
+import com.example.ui.utils.safeNavigate
 import com.example.viewmodel.topRated.TopRatedEffect
 import com.example.viewmodel.topRated.TopRatedInteractionListener
 import com.example.viewmodel.topRated.TopRatedUiState
@@ -50,7 +51,7 @@ fun TopRatedScreen(viewModel: TopRatedViewModel = koinViewModel()) {
             it?.let {
                 when (it) {
                     is TopRatedEffect.NavigateToMovieDetailsScreen -> {
-                        navController.navigate(Route.MovieDetails(it.movieId))
+                        navController.safeNavigate(Route.MovieDetails(it.movieId))
                     }
 
                     TopRatedEffect.NavigateBack -> {
