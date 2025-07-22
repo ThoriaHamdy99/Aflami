@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -28,7 +27,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.designsystem.components.LoadingContainer
 import com.example.designsystem.theme.AflamiTheme
@@ -125,16 +123,8 @@ private fun HomeScreenContent(
                 modifier = Modifier.offset { IntOffset(x = 0, y = blurOffsetY.roundToInt()) }
             )
         }
-        AnimatedSectionVisibility(visible = state.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                LoadingContainer(
-                    modifier = Modifier
-                        .zIndex(10f)
-                )
-            }
+        AnimatedSectionVisibility(state.isLoading) {
+            LoadingContainer(modifier = modifier.fillMaxSize())
         }
         AnimatedSectionVisibility(visible = state.error != null) {
             NoNetworkContainer(
