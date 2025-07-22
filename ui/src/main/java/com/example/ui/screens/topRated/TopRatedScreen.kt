@@ -63,7 +63,7 @@ fun TopRatedScreen(viewModel: TopRatedViewModel = koinViewModel()) {
 }
 
 @Composable
-fun TopRatedContent(
+private fun TopRatedContent(
     state: TopRatedUiState,
     interactionListener: TopRatedInteractionListener
 ) {

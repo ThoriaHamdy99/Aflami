@@ -134,6 +134,12 @@ class MovieRepositoryImpl(
         return movieRemoteMapper.toEntityList(movieRemoteDataSource.getUpcomingMovies().results)
     }
 
+    override suspend fun getPopularMovies(): List<Movie> =
+        movieRemoteMapper.toEntityList(movieRemoteDataSource.getPopularMovies().results)
+
+    override suspend fun getTopRatedMovies() : List<Movie> =
+        movieRemoteMapper.toEntityList(movieRemoteDataSource.getTopRatedMovies().results)
+
     private suspend fun getCachedMovies(
         keyword: String,
         searchType: SearchType,
@@ -229,10 +235,5 @@ class MovieRepositoryImpl(
             expireDate = Clock.System.now()
         )
     }
-    override suspend fun getPopularMovies(): List<Movie> =
-        movieRemoteMapper.toEntityList(movieRemoteDataSource.getPopularMovies().results)
-
-    override suspend fun getTopRatedMovies() : List<Movie> =
-        movieRemoteMapper.toEntityList(movieRemoteDataSource.getTopRatedMovies().results)
 
 }
