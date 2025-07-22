@@ -7,6 +7,7 @@ import com.example.viewmodel.home.HomeUiStateMapper
 import com.example.viewmodel.home.HomeViewModel
 import com.example.viewmodel.login.LoginViewModel
 import com.example.viewmodel.movieDetails.MovieDetailsUiStateMapper
+import com.example.viewmodel.register.RegisterViewModel
 import com.example.viewmodel.search.actorSearch.SearchActorViewModel
 import com.example.viewmodel.search.countrySearch.CountrySearchViewModel
 import com.example.viewmodel.search.keywordSearch.SearchViewModel
@@ -27,6 +28,7 @@ val viewModelModule = module {
     viewModelOf(::MovieDetailsViewModel)
     viewModelOf(::CastViewModel)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::RegisterViewModel)
     // mappers
     factoryOf(::MovieDetailsUiStateMapper)
     factoryOf(::HomeUiStateMapper)
