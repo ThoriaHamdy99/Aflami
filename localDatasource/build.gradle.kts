@@ -4,10 +4,16 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.aflami.custom.plugin)
     alias(libs.plugins.kover)
+    id("de.mannodermaus.android-junit5")
 }
 
 android {
     namespace = "com.example.localdatasource"
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments["runnerBuilder"] =
+            "de.mannodermaus.junit5.AndroidJUnit5Builder"
+    }
 }
 
 ksp {
@@ -36,4 +42,16 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit.jupiter)
     testImplementation(kotlin("test"))
+
+    // android test
+    androidTestImplementation(libs.androidx.junit)
+
+    // junit 5
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    androidTestImplementation("de.mannodermaus.junit5:android-test-core:1.7.0")
+    androidTestRuntimeOnly("de.mannodermaus.junit5:android-test-runner:1.7.0")
+    androidTestImplementation(libs.truth.v101)
+
+    androidTestImplementation(libs.kotlinx.coroutines.test.v171)
 }
