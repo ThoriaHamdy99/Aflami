@@ -15,6 +15,7 @@ import com.example.ui.screens.register.registerScreenRoute
 import com.example.ui.screens.search.keywordSearch.searchScreenRoute
 import com.example.ui.screens.search.actorSearch.searchByActorScreenRoute
 import com.example.ui.screens.search.countrySearch.searchByCountryScreenRoute
+import com.example.ui.screens.topRated.topRatedScreenRoute
 
 @Composable
 fun NavGraph(
@@ -33,6 +34,7 @@ fun NavGraph(
         searchByCountryScreenRoute()
         movieDetailsScreenRoute()
         castScreenRoute()
+        topRatedScreenRoute()
         registerScreenRoute()
     }
 }

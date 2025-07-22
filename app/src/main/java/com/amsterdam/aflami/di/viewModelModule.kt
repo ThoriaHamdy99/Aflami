@@ -11,6 +11,8 @@ import com.example.viewmodel.register.RegisterViewModel
 import com.example.viewmodel.search.actorSearch.SearchActorViewModel
 import com.example.viewmodel.search.countrySearch.CountrySearchViewModel
 import com.example.viewmodel.search.keywordSearch.SearchViewModel
+import com.example.viewmodel.topRated.TopRatedUiStateMapper
+import com.example.viewmodel.topRated.TopRatedViewModel
 import com.example.viewmodel.utils.dispatcher.DefaultDispatcherProvider
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
 import org.koin.core.module.dsl.bind
@@ -25,13 +27,17 @@ val viewModelModule = module {
     viewModelOf(::SearchViewModel)
     viewModelOf(::CountrySearchViewModel)
     viewModelOf(::SearchActorViewModel)
+    factoryOf(::MovieDetailsArgs)
+    factoryOf(::MovieDetailsUiStateMapper)
     viewModelOf(::MovieDetailsViewModel)
     viewModelOf(::CastViewModel)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::TopRatedViewModel)
     viewModelOf(::RegisterViewModel)
     // mappers
     factoryOf(::MovieDetailsUiStateMapper)
     factoryOf(::HomeUiStateMapper)
+    factoryOf(::TopRatedUiStateMapper)
     // args
     factoryOf(::MovieDetailsArgs)
 }
