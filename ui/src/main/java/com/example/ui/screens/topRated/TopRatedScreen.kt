@@ -17,7 +17,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -99,25 +98,15 @@ fun TopRatedContent(
             AnimatedSectionVisibility(
                 visible = state.isLoading
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    LoadingContainer(modifier = Modifier.zIndex(10f))
-                }
+                    LoadingContainer(modifier = Modifier.fillMaxSize().zIndex(10f))
             }
 
             AnimatedSectionVisibility(
                 visible = state.error == TopRatedUiState.TopRatedError.NetworkError
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize().zIndex(10f),
-                    contentAlignment = Alignment.Center
-                ) {
                     NoNetworkContainer(
                         onClickRetry = interactionListener::onClickRetryLoading
                     )
-                }
             }
 
             AnimatedSectionVisibility(
