@@ -5,11 +5,12 @@ import com.example.viewmodel.shared.BaseViewModel
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
 
 
-class ResetPasswordViewModel : BaseViewModel<ResetPasswordUiState, ResetPasswordEffect> {
-    constructor(dispatcherProvider: DispatcherProvider) : super(
-        dispatcherProvider = dispatcherProvider,
-        initialState = ResetPasswordUiState()
-    )
+class ResetPasswordViewModel(dispatcherProvider: DispatcherProvider) :
+    BaseViewModel<ResetPasswordUiState, ResetPasswordEffect>(
+        ResetPasswordUiState(),
+        dispatcherProvider
+    ) {
+
 
     init {
 
