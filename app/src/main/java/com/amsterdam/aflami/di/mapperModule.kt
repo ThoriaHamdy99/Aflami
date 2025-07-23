@@ -10,6 +10,7 @@ import com.example.repository.mapper.local.TvShowCategoryLocalMapper
 import com.example.repository.mapper.local.TvShowGenreLocalMapper
 import com.example.repository.mapper.local.TvShowLocalMapper
 import com.example.repository.mapper.local.TvShowWithCategoryLocalMapper
+import com.example.repository.mapper.local.UserLoginTypeMapper
 import com.example.repository.mapper.remote.CastRemoteMapper
 import com.example.repository.mapper.remote.CategoryRemoteMapper
 import com.example.repository.mapper.remote.CountryRemoteMapper
@@ -34,6 +35,7 @@ import org.koin.dsl.module
 val mapperModule = module {
     singleOf(::DateParser)
 
+    singleOf(::UserLoginTypeMapper)
     singleOf(::CountryLocalMapper)
     singleOf(::CountryRemoteMapper)
     singleOf(::MovieCategoryLocalMapper)
