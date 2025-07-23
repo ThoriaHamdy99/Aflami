@@ -6,17 +6,18 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.localdatasource.roomDataBase.converter.InstantConverter
+import com.example.localdatasource.roomDataBase.converter.LocalDateConverter
 import com.example.localdatasource.roomDataBase.converter.SearchTypeConverter
 import com.example.localdatasource.roomDataBase.daos.CategoryDao
-import com.example.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.example.localdatasource.roomDataBase.daos.CountryDao
+import com.example.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.example.localdatasource.roomDataBase.daos.MovieDao
 import com.example.localdatasource.roomDataBase.daos.RecentSearchDao
 import com.example.localdatasource.roomDataBase.daos.TvShowCategoryInterestDao
 import com.example.localdatasource.roomDataBase.daos.TvShowDao
-import com.example.repository.dto.local.LocalMovieCategoryInterestDto
 import com.example.repository.dto.local.LocalCountryDto
 import com.example.repository.dto.local.LocalMovieCategoryDto
+import com.example.repository.dto.local.LocalMovieCategoryInterestDto
 import com.example.repository.dto.local.LocalMovieDto
 import com.example.repository.dto.local.LocalSearchDto
 import com.example.repository.dto.local.LocalTvShowCategoryDto
@@ -43,7 +44,7 @@ import com.example.repository.dto.local.TvShowCategoryCrossRefDto
     version = 1,
     exportSchema = false
 )
-@TypeConverters(InstantConverter::class, SearchTypeConverter::class)
+@TypeConverters(InstantConverter::class, SearchTypeConverter::class, LocalDateConverter::class)
 abstract class AflamiDatabase : RoomDatabase() {
     abstract fun recentSearchDao(): RecentSearchDao
     abstract fun countryDao(): CountryDao
