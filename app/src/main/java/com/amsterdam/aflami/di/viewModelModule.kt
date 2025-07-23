@@ -1,5 +1,8 @@
 package com.amsterdam.aflami.di
 
+import com.example.viewmodel.application.ApplicationViewModel
+import com.example.viewmodel.movieDetails.MovieDetailsArgs
+import com.example.viewmodel.movieDetails.MovieDetailsViewModel
 import com.example.viewmodel.cast.CastViewModel
 import com.example.viewmodel.home.HomeUiStateMapper
 import com.example.viewmodel.home.HomeViewModel
@@ -23,11 +26,14 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
     singleOf(::DefaultDispatcherProvider) { bind<DispatcherProvider>() }
+    viewModelOf(::ApplicationViewModel)
     viewModelOf(::LoginViewModel)
+    viewModelOf(::RegisterViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::CountrySearchViewModel)
     viewModelOf(::SearchActorViewModel)

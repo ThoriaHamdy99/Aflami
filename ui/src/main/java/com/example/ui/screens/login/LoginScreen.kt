@@ -36,13 +36,16 @@ import com.example.ui.R
 import com.example.ui.application.LocalNavController
 import com.example.ui.navigation.Route
 import com.example.ui.screens.login.components.LoginBackground
+import com.example.ui.screens.login.components.getPasswordErrorMessage
 import com.example.ui.screens.login.components.getPasswordTextFieldIcon
+import com.example.ui.screens.login.components.getUserNameErrorMessage
 import com.example.ui.utils.safeNavigate
 import com.example.ui.utils.safeNavigateToTab
 import com.example.viewmodel.login.LoginEffect
 import com.example.viewmodel.login.LoginInteractionListener
 import com.example.viewmodel.login.LoginUiState
 import com.example.viewmodel.login.LoginViewModel
+import com.example.viewmodel.login.PasswordErrorState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -51,6 +54,7 @@ fun LoginScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
+    val usernameOrPasswordError = stringResource(R.string.incorrect_username_or_password)
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             effect?.let {
@@ -116,8 +120,8 @@ private fun LoginScreenContent(
                     text = state.username,
                     onValueChange = interactionListener::onUserNameUpdated,
                     hintText = stringResource(R.string.user_name_hint),
-                    errorMessage = state.usernameError,
-                    isError = state.usernameError.isNotBlank(),
+                    errorMessage = getUserNameErrorMessage(state.usernameError),
+                    isError = state.usernameError != null,
                     leadingIcon = com.example.designsystem.R.drawable.ic_user_square,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
@@ -125,8 +129,8 @@ private fun LoginScreenContent(
                     text = state.password,
                     onValueChange = interactionListener::onPasswordUpdate,
                     hintText = stringResource(R.string.password_hint),
-                    errorMessage = state.passwordError,
-                    isError = state.passwordError.isNotBlank(),
+                    errorMessage = getPasswordErrorMessage(state.passwordError),
+                    isError = state.passwordError != null,
                     isTrailingClickEnabled = true,
                     onTrailingClick = interactionListener::onShowPasswordClicked,
                     leadingIcon = com.example.designsystem.R.drawable.ic_door_lock,
@@ -196,8 +200,8 @@ private fun LoginScreenContentPreview() {
     AflamiTheme {
         LoginScreenContent(
             state = LoginUiState(
-                password = "mypassword",
-                passwordError = "Password is incorrect",
+                password = "password",
+                passwordError = PasswordErrorState.InvalidCredentials,
             ),
             interactionListener = object : LoginInteractionListener {
                 override fun onUserNameUpdated(username: String) {
