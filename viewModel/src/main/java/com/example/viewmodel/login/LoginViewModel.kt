@@ -1,6 +1,10 @@
 package com.example.viewmodel.login
 
 import androidx.lifecycle.viewModelScope
+import com.example.domain.exceptions.AflamiException
+import com.example.domain.exceptions.AuthenticationException
+import com.example.domain.exceptions.InvalidCredentialsException
+import com.example.domain.useCase.authentication.LoginWithPasswordUseCase
 import com.example.viewmodel.shared.BaseViewModel
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
 import kotlinx.coroutines.delay
@@ -8,11 +12,11 @@ import kotlinx.coroutines.launch
 import org.jetbrains.annotations.TestOnly
 import kotlin.random.Random
 
-class LoginViewModel : BaseViewModel<LoginUiState, LoginEffect>, LoginInteractionListener {
-
-    constructor(dispatcherProvider: DispatcherProvider): super(dispatcherProvider = dispatcherProvider, initialState = LoginUiState())
-
-    private constructor(dispatcherProvider: DispatcherProvider, loginUiState: LoginUiState): super(loginUiState, dispatcherProvider)
+class LoginViewModel(
+    dispatcherProvider: DispatcherProvider,
+    private val loginWithPasswordUseCase: LoginWithPasswordUseCase
+) : BaseViewModel<LoginUiState, LoginEffect>(LoginUiState(), dispatcherProvider),
+    LoginInteractionListener {
 
     override fun onUserNameUpdated(username: String) {
         updateState {
@@ -28,6 +32,18 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginEffect>, LoginInteractio
         shouldEnableLoginButton()
     }
 
+    override fun onSetUserNameError(usernameError: String) {
+        updateState {
+            it.copy(usernameError = usernameError)
+        }
+    }
+
+    override fun onSetPasswordError(passwordError: String) {
+        updateState {
+            it.copy(passwordError = passwordError)
+        }
+    }
+
     override fun onShowPasswordClicked() {
         updateState {
             it.copy(isPasswordShown = !state.value.isPasswordShown)
@@ -35,24 +51,13 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginEffect>, LoginInteractio
     }
 
     override fun onLoginClicked() {
-        viewModelScope.launch {
-            updateState { it.copy(isLoginButtonLoading = true) }
-            delay(3000)
-            if (Random.nextBoolean()){
-                updateState {
-                    it.copy(isLoginButtonLoading = false)
-                }
-                sendNewEffect(LoginEffect.NavigateToHome)
-            } else {
-                updateState {
-                    it.copy(
-                        isLoginButtonLoading = false,
-                        usernameError = "Incorrect Username",
-                        passwordError = "Incorrect Password"
-                    )
-                }
-            }
-        }
+        tryToExecute(
+            action = ::onLoginStart,
+            onSuccess = { onLoginSuccess() },
+            onError = ::onLoginWithPasswordError,
+            onCompletion = ::onLoginComplete
+
+        )
     }
 
     override fun onContinueAsGuestClicked() {
@@ -70,8 +75,8 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginEffect>, LoginInteractio
 
     }
 
-    private fun shouldEnableLoginButton(){
-        if (state.value.username.isNotBlank() && state.value.password.isNotBlank()){
+    private fun shouldEnableLoginButton() {
+        if (state.value.username.isNotBlank() && state.value.password.isNotBlank()) {
             updateState {
                 it.copy(
                     isLoginButtonEnabled = true
@@ -84,13 +89,24 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginEffect>, LoginInteractio
         }
     }
 
-    @TestOnly
-    companion object{
-        fun getViewModel(
-            dispatcherProvider: DispatcherProvider,
-            loginUiState: LoginUiState
-        ): LoginViewModel {
-            return LoginViewModel(dispatcherProvider, loginUiState)
+    private suspend fun onLoginStart() {
+        updateState { it.copy(isLoginButtonLoading = true) }
+        loginWithPasswordUseCase.invoke(state.value.username, state.value.password)
+    }
+
+    private fun onLoginSuccess() {
+        sendNewEffect(LoginEffect.NavigateToHome)
+    }
+
+    private fun onLoginWithPasswordError(exception: AflamiException) {
+        when(exception){
+            is InvalidCredentialsException -> {
+                sendNewEffect(LoginEffect.InvalidCredentialsError)
+            }
         }
+    }
+
+    private fun onLoginComplete() {
+        updateState { it.copy(isLoginButtonLoading = false) }
     }
 }
