@@ -24,16 +24,15 @@ import com.example.repository.mapper.remote.TvShowDetailsRemoteMapper
 import com.example.repository.mapper.remote.TvShowRemoteMapper
 import com.example.repository.mapper.remoteToLocal.CountryRemoteLocalMapper
 import com.example.repository.mapper.remoteToLocal.MovieCategoryRemoteLocalMapper
+import com.example.repository.mapper.remoteToLocal.MovieGenreIdsRemoteLocalMapper
 import com.example.repository.mapper.remoteToLocal.MovieRemoteLocalMapper
 import com.example.repository.mapper.remoteToLocal.TvShowCategoryRemoteLocalMapper
+import com.example.repository.mapper.remoteToLocal.TvShowGenreIdsRemoteLocalMapper
 import com.example.repository.mapper.remoteToLocal.TvShowRemoteLocalMapper
-import com.example.repository.utils.DateParser
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val mapperModule = module {
-    singleOf(::DateParser)
-
     singleOf(::CountryLocalMapper)
     singleOf(::CountryRemoteMapper)
     singleOf(::MovieCategoryLocalMapper)
@@ -48,6 +47,8 @@ val mapperModule = module {
     singleOf(::GalleryRemoteMapper)
     singleOf(::ProductionCompanyRemoteMapper)
     singleOf(::CountryRemoteLocalMapper)
+    singleOf(::MovieGenreIdsRemoteLocalMapper)
+    singleOf(::TvShowGenreIdsRemoteLocalMapper)
     singleOf(::MovieCategoryRemoteLocalMapper)
     singleOf(::MovieRemoteLocalMapper)
     singleOf(::TvShowCategoryRemoteLocalMapper)

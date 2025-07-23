@@ -11,8 +11,6 @@ import com.example.domain.useCase.GetPopularMoviesUseCase
 import com.example.domain.useCase.GetSuggestedCountriesUseCase
 import com.example.domain.useCase.GetUpcomingMoviesUseCase
 import com.example.domain.useCase.GetTopRatedMoviesUseCase
-import com.example.domain.useCase.IncrementMovieGenreInterestUseCase
-import com.example.domain.useCase.IncrementTvShowGenreInterestUseCase
 import com.example.domain.useCase.RecentSearchesUseCase
 import com.example.domain.useCase.GetTvShowDetailsUseCase
 import com.example.domain.useCase.GetEpisodesBySeasonNumberUseCase
@@ -28,8 +26,6 @@ val useCaseModule = module {
     singleOf(::GetSuggestedCountriesUseCase)
     singleOf(::RecentSearchesUseCase)
     singleOf(::GetAndFilterTvShowsByKeywordUseCase)
-    singleOf(::IncrementMovieGenreInterestUseCase)
-    singleOf(::IncrementTvShowGenreInterestUseCase)
     singleOf(::GetPopularMoviesUseCase)
     singleOf(::GetEpisodesBySeasonNumberUseCase)
     singleOf(::GetTvShowDetailsUseCase)
