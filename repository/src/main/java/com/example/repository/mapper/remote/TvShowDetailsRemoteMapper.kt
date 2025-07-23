@@ -4,12 +4,9 @@ import com.example.entity.TvShow
 import com.example.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.example.repository.mapper.shared.EntityMapper
 import com.example.repository.mapper.shared.toTvShowCategory
-import com.example.repository.utils.DateParser
 import kotlinx.datetime.toLocalDate
 
-class TvShowDetailsRemoteMapper(
-    private val dateParser: DateParser,
-) : EntityMapper<TvShowDetailsRemoteResponse, TvShow> {
+class TvShowDetailsRemoteMapper() : EntityMapper<TvShowDetailsRemoteResponse, TvShow> {
     override fun toEntity(dto: TvShowDetailsRemoteResponse): TvShow {
         return TvShow(
             id = dto.id,

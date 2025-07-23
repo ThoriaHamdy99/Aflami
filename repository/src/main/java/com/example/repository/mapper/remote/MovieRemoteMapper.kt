@@ -5,12 +5,9 @@ import com.example.entity.category.MovieGenre
 import com.example.repository.dto.remote.RemoteMovieItemDto
 import com.example.repository.mapper.shared.EntityMapper
 import com.example.repository.mapper.shared.toMovieCategory
-import com.example.repository.utils.DateParser
 import kotlinx.datetime.toLocalDate
 
-class MovieRemoteMapper(
-    private val dateParser: DateParser
-) : EntityMapper<RemoteMovieItemDto, Movie> {
+class MovieRemoteMapper() : EntityMapper<RemoteMovieItemDto, Movie> {
     override fun toEntity(dto: RemoteMovieItemDto): Movie {
         val genresIds = dto.genreIds.ifEmpty { dto.genres.map { it.id } }
         return Movie(

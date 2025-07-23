@@ -27,13 +27,10 @@ import com.example.repository.mapper.remoteToLocal.MovieCategoryRemoteLocalMappe
 import com.example.repository.mapper.remoteToLocal.MovieRemoteLocalMapper
 import com.example.repository.mapper.remoteToLocal.TvShowCategoryRemoteLocalMapper
 import com.example.repository.mapper.remoteToLocal.TvShowRemoteLocalMapper
-import com.example.repository.utils.DateParser
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val mapperModule = module {
-    singleOf(::DateParser)
-
     singleOf(::CountryLocalMapper)
     singleOf(::CountryRemoteMapper)
     singleOf(::MovieCategoryLocalMapper)
