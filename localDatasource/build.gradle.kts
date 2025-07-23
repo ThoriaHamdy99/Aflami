@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.aflami.custom.plugin)
     alias(libs.plugins.kover)
-    id("de.mannodermaus.android-junit5")
+    alias(libs.plugins.android.junit5)
 }
 
 android {
@@ -41,15 +41,15 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.truth.v101)
+    testImplementation(libs.truth)
     testImplementation(kotlin("test"))
 
     // android test junit 5
     androidTestImplementation(libs.androidx.runner)
-    androidTestImplementation(libs.junit.jupiter.api.v572)
+    androidTestImplementation(libs.junit.jupiter.api)
     androidTestImplementation(libs.android.test.core)
     androidTestRuntimeOnly(libs.android.test.runner)
-    androidTestImplementation(libs.truth.v101)
+    androidTestImplementation(libs.truth)
 
     androidTestImplementation(libs.kotlinx.coroutines.test.v171)
 }

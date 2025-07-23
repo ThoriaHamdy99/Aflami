@@ -4,7 +4,6 @@ androidTestCore = "1.7.0"
 coilCompose = "2.6.0"
 firebaseBom = "33.16.0"
 foundation = "1.8.3"
-junitJupiterApiVersion = "5.7.2"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
 kotlinxCoroutinesTestVersion = "1.7.1"
@@ -29,7 +28,6 @@ firebasePreferences = "1.4.2"
 ksp = "2.0.21-1.0.27"
 shaded = "0.1.0-alpha"
 runner = "1.6.2"
-truthVersion = "1.0.1"
 uiToolingPreviewAndroid = "1.8.3"
 kotlinxDatetime = "0.5.0"
 androidJunit5 = "1.12.0.0"
@@ -67,7 +65,6 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-junit-jupiter-api-v572 = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiterApiVersion" }
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
@@ -107,7 +104,6 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 jupiter-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
-truth-v101 = { module = "com.google.truth:truth", version.ref = "truthVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
