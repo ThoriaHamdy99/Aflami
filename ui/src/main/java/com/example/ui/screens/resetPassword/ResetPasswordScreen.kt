@@ -67,7 +67,7 @@ private fun ResetPasswordContent(
             modifier = Modifier.fillMaxSize(),
             onLoadingStateChanged = onLoadingChanged,
             urlToLoad = state.resetPasswordUrl,
-            onRegistrationComplete = onResetPasswordComplete
+            onResetPasswordComplete = onResetPasswordComplete
         )
 
         AnimatedSectionVisibility(state.isLoading) {

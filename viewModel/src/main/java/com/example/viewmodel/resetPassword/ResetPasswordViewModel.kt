@@ -13,8 +13,8 @@ class ResetPasswordViewModel : BaseViewModel<ResetPasswordUiState, ResetPassword
 
     private constructor(
         dispatcherProvider: DispatcherProvider,
-        ResetPasswordUiState: ResetPasswordUiState
-    ) : super(ResetPasswordUiState, dispatcherProvider)
+        resetPasswordUiState: ResetPasswordUiState
+    ) : super(resetPasswordUiState, dispatcherProvider)
 
     init {
 
