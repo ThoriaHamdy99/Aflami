@@ -1,6 +1,5 @@
 package com.example.localdatasource.roomDataBase.datasource
 
-import androidx.room.Transaction
 import com.example.entity.category.MovieGenre
 import com.example.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.example.localdatasource.roomDataBase.daos.MovieDao

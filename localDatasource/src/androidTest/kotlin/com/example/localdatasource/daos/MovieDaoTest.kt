@@ -5,7 +5,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.example.localdatasource.roomDataBase.AflamiDatabase
 import com.example.localdatasource.roomDataBase.daos.MovieDao
 import com.example.localdatasource.utils.createMovie
-import com.example.repository.dto.local.LocalMovieDto
 import com.example.repository.dto.local.SearchMovieCrossRefDto
 import com.example.repository.dto.local.utils.SearchType
 import com.google.common.truth.Truth.assertThat
@@ -139,6 +138,4 @@ class MovieDaoTest {
         assertThat(page2).hasSize(1)
         assertThat((page1 + page2).map { it.movie }).isEqualTo(listOf(movie1, movie2, movie3))
     }
-
-
 }

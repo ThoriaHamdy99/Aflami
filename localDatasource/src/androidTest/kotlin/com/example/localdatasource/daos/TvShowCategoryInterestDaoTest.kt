@@ -2,11 +2,9 @@ package com.example.localdatasource.daos
 
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.entity.category.MovieGenre
 import com.example.entity.category.TvShowGenre
 import com.example.localdatasource.roomDataBase.AflamiDatabase
 import com.example.localdatasource.roomDataBase.daos.TvShowCategoryInterestDao
-import com.example.repository.dto.local.LocalMovieCategoryInterestDto
 import com.example.repository.dto.local.LocalTvShowCategoryInterestDto
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
