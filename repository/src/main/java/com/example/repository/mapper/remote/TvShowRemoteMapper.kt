@@ -6,6 +6,7 @@ import com.example.repository.dto.remote.RemoteTvShowItemDto
 import com.example.repository.mapper.shared.EntityMapper
 import com.example.repository.mapper.shared.toTvShowCategory
 import com.example.repository.utils.DateParser
+import kotlinx.datetime.toLocalDate
 
 class TvShowRemoteMapper(
     private val dateParser: DateParser
@@ -16,7 +17,7 @@ class TvShowRemoteMapper(
             name = dto.title,
             description = dto.overview,
             posterUrl = dto.fullPosterPath.orEmpty(),
-            productionYear = dateParser.parseYear(dto.releaseDate).toUInt(),
+            airDate = dto.releaseDate.toLocalDate(),
             categories = mapGenreIdsToCategories(dto.genreIds),
             rating = dto.voteAverage.toFloat(),
             popularity = dto.popularity,

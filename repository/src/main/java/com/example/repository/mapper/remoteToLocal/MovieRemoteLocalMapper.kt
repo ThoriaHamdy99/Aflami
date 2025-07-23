@@ -4,6 +4,7 @@ import com.example.repository.dto.local.LocalMovieDto
 import com.example.repository.dto.remote.RemoteMovieItemDto
 import com.example.repository.mapper.shared.RemoteToLocalMapper
 import com.example.repository.utils.DateParser
+import kotlinx.datetime.toLocalDate
 
 class MovieRemoteLocalMapper(
     private val dateParser: DateParser
@@ -15,7 +16,7 @@ class MovieRemoteLocalMapper(
             name = remote.title,
             description = remote.overview,
             poster = remote.fullPosterUrl.orEmpty(),
-            productionYear = dateParser.parseYear(remote.releaseDate),
+            releaseDate = remote.releaseDate.toLocalDate(),
             rating = remote.voteAverage.toFloat(),
             popularity = remote.popularity,
             movieLength = remote.runtime,
