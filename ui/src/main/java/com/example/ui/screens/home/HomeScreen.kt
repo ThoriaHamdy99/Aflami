@@ -1,6 +1,5 @@
 package com.example.ui.screens.home
 
-import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -26,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,6 +40,7 @@ import com.example.ui.components.appBar.HomeAppBar
 import com.example.ui.navigation.Route
 import com.example.ui.navigation.Route.MovieDetails
 import com.example.ui.screens.home.component.MoodPickerCard
+import com.example.ui.screens.home.component.MovieMoodPickerDialogDialog
 import com.example.ui.screens.home.model.CardMood
 import com.example.ui.screens.home.sections.AnimatedSectionVisibility
 import com.example.ui.screens.home.sections.BlurredMoviePoster
@@ -136,45 +135,53 @@ private fun HomeScreenContent(
                 onClickRetry = interactionListener::onClickRetryLoading
             )
         }
-        Column(modifier = Modifier.padding(bottom = 100.dp)) {
-            HomeAppBar(
-                modifier = Modifier
-                    .background(appBarColor)
-                    .statusBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                onSearchClicked = interactionListener::onClickSearch,
-            )
-            AnimatedSectionVisibility(visible = state.popularMovies.isNotEmpty()) {
-                LazyColumn(
-                    modifier = modifier
-                        .fillMaxSize(),
-                    state = lazyListState,
-                ) {
+        Box {
+            Column(modifier = Modifier.padding(bottom = 100.dp)) {
+                HomeAppBar(
+                    modifier = Modifier
+                        .background(appBarColor)
+                        .statusBarsPadding()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    onSearchClicked = interactionListener::onClickSearch,
+                )
+                AnimatedSectionVisibility(visible = state.popularMovies.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = modifier
+                            .fillMaxSize(),
+                        state = lazyListState,
+                    ) {
 
-                    popularSection(
-                        popularMovies = state.popularMovies,
-                        pagerState = pagerState
-                    )
-                    topRatingSection(
-                        topRatedMovies = state.topRatedMovies,
-                        onClickMovie = interactionListener::onClickMovie,
-                        onClickShowAll = interactionListener::onClickShowAllToRatedMovies
-                    )
+                        popularSection(
+                            popularMovies = state.popularMovies,
+                            pagerState = pagerState
+                        )
+                        topRatingSection(
+                            topRatedMovies = state.topRatedMovies,
+                            onClickMovie = interactionListener::onClickMovie,
+                            onClickShowAll = interactionListener::onClickShowAllToRatedMovies
+                        )
 
-                    item { MoodPickerSection(state, interactionListener) }
-                    item {
-                        if (state.moodPickerUiState.openMovieDialog) {
-                            Toast.makeText(LocalContext.current.applicationContext, state.moodPickerUiState.movies[0].name, Toast.LENGTH_SHORT).show()
-                        }
+                        item { MoodPickerSection(state, interactionListener) }
+
+                        upcomingMoviesSection(
+                            moviesGenres = state.upcomingMovieGenres,
+                            onChangeMovieGenre = interactionListener::onChangeUpcomingMovieGenre,
+                            movies = state.upcomingMovies,
+                            onMovieClicked = interactionListener::onClickUpcomingMovieCard,
+                            isVisible = isSectionsVisible && state.upcomingMovies.isNotEmpty()
+                        )
                     }
-                    upcomingMoviesSection(
-                        moviesGenres = state.upcomingMovieGenres,
-                        onChangeMovieGenre = interactionListener::onChangeUpcomingMovieGenre,
-                        movies = state.upcomingMovies,
-                        onMovieClicked = interactionListener::onClickUpcomingMovieCard,
-                        isVisible = isSectionsVisible && state.upcomingMovies.isNotEmpty()
-                    )
                 }
+            }
+
+            AnimatedSectionVisibility (visible = state.moodPickerUiState.openMovieDialog) {
+                MovieMoodPickerDialogDialog(
+                    movie = state.moodPickerUiState.selectedMovie,
+                    onClickViewDetails = interactionListener::onClickViewDetails,
+                    onClickGetAnotherMovie = interactionListener::onClickGetAnotherMovie,
+                    onDismiss = interactionListener::onDismissMoodPickerDialog,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     }
@@ -218,6 +225,9 @@ private fun HomeScreenPreview() {
 
                 override fun onClickMood(mood: Mood) {}
                 override fun onClickGetNow() {}
+                override fun onDismissMoodPickerDialog() {}
+                override fun onClickViewDetails() {}
+                override fun onClickGetAnotherMovie() {}
             }
         )
     }
