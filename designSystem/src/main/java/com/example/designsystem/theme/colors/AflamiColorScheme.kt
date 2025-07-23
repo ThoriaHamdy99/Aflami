@@ -34,6 +34,7 @@ data class AflamiColorScheme(
     val yellowCard: Color,
     val backgroundCircles: Color,
     val profileOverlay: Color,
+    val dialogBackground: Color,
     val overlayGradient: List<Color>,
     val streakGradient: List<Color>,
     val pointsOverlayGradient: List<Color>,
