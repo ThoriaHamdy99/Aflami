@@ -43,4 +43,6 @@ sealed interface Route {
 
     @Serializable
     data object TopRated: Route
+    @Serializable
+    data object Register : Route
 }
