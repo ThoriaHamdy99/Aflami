@@ -12,11 +12,11 @@ enum class CardMood(@DrawableRes val iconResourceId: Int) {
     CONFUSED(R.drawable.ic_mood_saddizzy);
 
     companion object {
-        fun getModeByName(moodName: String): CardMood? {
+        fun getModeByName(moodName: String): CardMood {
             entries.forEach { mood ->
                 if (mood.name == moodName) return mood
             }
-            return null
+            return SAD
         }
     }
 }
