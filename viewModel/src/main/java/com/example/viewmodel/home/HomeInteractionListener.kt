@@ -1,5 +1,6 @@
 package com.example.viewmodel.home
 
+import com.example.domain.models.Mood
 import com.example.entity.category.MovieGenre
 
 interface HomeInteractionListener {
@@ -10,4 +11,7 @@ interface HomeInteractionListener {
     fun onChangeUpcomingMovieGenre(genre: MovieGenre)
     fun onClickMovie(movieId : Long)
     fun onClickShowAllToRatedMovies()
+
+    fun onClickMood(mood: Mood)
+    fun onClickGetNow()
 }

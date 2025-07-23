@@ -9,4 +9,14 @@ enum class Mood(val movieGenres: List<MovieGenre>) {
     ANGRY(listOf(MovieGenre.ACTION, MovieGenre.THRILLER)),
     UN_HAPPY(listOf(MovieGenre.DRAMA, MovieGenre.WAR)),
     CONFUSED(listOf(MovieGenre.DRAMA, MovieGenre.THRILLER));
+
+    companion object {
+        fun getMoodByName(moodName: String): Mood {
+            entries.forEach { mood ->
+                if (mood.name == moodName)
+                    return mood
+            }
+            return SAD
+        }
+    }
 }

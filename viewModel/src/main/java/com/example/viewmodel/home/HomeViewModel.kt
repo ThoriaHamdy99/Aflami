@@ -5,16 +5,20 @@ import com.example.domain.useCase.GetUpcomingMoviesUseCase
 import com.example.entity.Movie
 import com.example.entity.category.MovieGenre
 import com.example.domain.exceptions.NoInternetException
+import com.example.domain.models.Mood
 import com.example.domain.useCase.GetHomeScreenDataUseCase
 import com.example.domain.useCase.GetHomeScreenDataUseCase.HomeScreenData
+import com.example.domain.useCase.GetMoviesByMoodUseCase
 import com.example.viewmodel.home.HomeUiState.HomeError
 import com.example.viewmodel.search.mapper.selectByMovieGenre
 import com.example.viewmodel.shared.BaseViewModel
+import com.example.viewmodel.shared.uiStates.MovieItemUiState
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
 
 class HomeViewModel(
     private val getHomeScreenDataUseCase: GetHomeScreenDataUseCase,
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
+    private val getMoviesByMoodUseCase: GetMoviesByMoodUseCase,
     private val homeUiStateMapper: HomeUiStateMapper, dispatcherProvider: DispatcherProvider
 ) :
     BaseViewModel<HomeUiState, HomeEffect>(HomeUiState(), dispatcherProvider),
@@ -53,6 +57,45 @@ class HomeViewModel(
 
     override fun onClickShowAllToRatedMovies() {
         sendNewEffect(HomeEffect.NavigateToTopRatedMoviesEffect)
+    }
+
+    override fun onClickMood(mood: Mood) {
+        updateState {
+            it.copy(
+                moodPickerUiState = it.moodPickerUiState.copy(
+                    selectedMood = mood,
+                    openMovieDialog = false
+                )
+            )
+        }
+    }
+
+    override fun onClickGetNow() {
+        updateState { it.copy(moodPickerUiState = it.moodPickerUiState.copy(isLoadingMovies = true)) }
+        val selectedMood = state.value.moodPickerUiState.selectedMood ?: return
+        tryToExecute(
+            action = {getMoviesByMoodUseCase(selectedMood)},
+            onSuccess = ::onGetMoviesByMoodSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onGetMoviesByMoodSuccess(movies: List<Movie>) {
+        if (movies.isEmpty()) {
+            updateState { it.copy(moodPickerUiState = it.moodPickerUiState.copy(isLoadingMovies = false)) }
+            return
+        }
+        val moviesUiStates = homeUiStateMapper.moviesToMoviesItemsUiState(movies)
+        updateState {
+            it.copy(
+                moodPickerUiState = it.moodPickerUiState
+                    .copy(isLoadingMovies = false,
+                        movies = moviesUiStates,
+                        selectedMovieId = moviesUiStates.getOrNull(0) ?: MovieItemUiState(),
+                        openMovieDialog = true
+                    )
+            )
+        }
     }
 
     private fun getUpcomingMoviesBySelectedGenre(selectedUpcomingGenre: MovieGenre = MovieGenre.ALL) {

@@ -1,5 +1,6 @@
 package com.example.ui.screens.home
 
+import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,12 +34,15 @@ import com.example.designsystem.components.LoadingContainer
 import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.theme.AppTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
+import com.example.domain.models.Mood
 import com.example.entity.category.MovieGenre
 import com.example.ui.application.LocalNavController
 import com.example.ui.components.NoNetworkContainer
 import com.example.ui.components.appBar.HomeAppBar
 import com.example.ui.navigation.Route
 import com.example.ui.navigation.Route.MovieDetails
+import com.example.ui.screens.home.component.MoodPickerCard
+import com.example.ui.screens.home.model.CardMood
 import com.example.ui.screens.home.sections.AnimatedSectionVisibility
 import com.example.ui.screens.home.sections.BlurredMoviePoster
 import com.example.ui.screens.home.sections.topRatingSection
@@ -156,6 +161,12 @@ private fun HomeScreenContent(
                         onClickShowAll = interactionListener::onClickShowAllToRatedMovies
                     )
 
+                    item { MoodPickerSection(state, interactionListener) }
+                    item {
+                        if (state.moodPickerUiState.openMovieDialog) {
+                            Toast.makeText(LocalContext.current.applicationContext, state.moodPickerUiState.movies[0].name, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                     upcomingMoviesSection(
                         moviesGenres = state.upcomingMovieGenres,
                         onChangeMovieGenre = interactionListener::onChangeUpcomingMovieGenre,
@@ -169,6 +180,27 @@ private fun HomeScreenContent(
     }
 }
 
+@Composable
+private fun MoodPickerSection(
+    state: HomeUiState,
+    interactionListener: HomeInteractionListener
+) {
+    MoodPickerCard(
+        cardMoods = state.moodPickerUiState.moods.map {
+            CardMood.getModeByName(
+                it.name
+            )
+        },
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp),
+        onSelectMood = {
+            val mood =
+                Mood.getMoodByName(it.name)
+            interactionListener.onClickMood(mood)
+        },
+        onClickGetNow = interactionListener::onClickGetNow
+    )
+}
+
 @ThemeAndLocalePreviews
 @Composable
 private fun HomeScreenPreview() {
@@ -178,10 +210,14 @@ private fun HomeScreenPreview() {
             interactionListener = object : HomeInteractionListener {
                 override fun onClickRetryLoading() {}
                 override fun onClickSearch() {}
+
                 override fun onClickUpcomingMovieCard(id: Long) {}
                 override fun onChangeUpcomingMovieGenre(genre: MovieGenre) {}
                 override fun onClickMovie(movieId: Long) {}
                 override fun onClickShowAllToRatedMovies() {}
+
+                override fun onClickMood(mood: Mood) {}
+                override fun onClickGetNow() {}
             }
         )
     }
