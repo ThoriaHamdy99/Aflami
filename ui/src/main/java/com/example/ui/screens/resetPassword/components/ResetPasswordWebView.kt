@@ -7,19 +7,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.ui.utils.buildFormExistenceCheckScript
+import com.example.ui.utils.buildResetPasswordFormExistenceCheckScript
 import com.example.ui.utils.createFormDetector
 
 
 @Composable
-fun RegisterWebView(
+fun ResetPasswordWebView(
     modifier: Modifier = Modifier,
     urlToLoad: String,
     onLoadingStateChanged: (isLoading: Boolean) -> Unit,
-    onRegistrationComplete: () -> Unit,
+    onResetPasswordComplete: () -> Unit,
 ) {
-    val registrationDetector = remember(onRegistrationComplete) {
-        createFormDetector(onRegistrationComplete)
+    val resetPasswordDetector = remember(onResetPasswordComplete) {
+        createFormDetector(onResetPasswordComplete)
     }
     AndroidView(
         modifier = modifier,
@@ -38,10 +38,10 @@ fun RegisterWebView(
                         super.onPageFinished(view, url)
                         onLoadingStateChanged(false)
                         view ?: return
-                        val script = buildFormExistenceCheckScript()
+                        val script = buildResetPasswordFormExistenceCheckScript()
                         view.evaluateJavascript(script) { result ->
                             val isFormPresent = result?.toBoolean() ?: false
-                            registrationDetector(isFormPresent)
+                            resetPasswordDetector(isFormPresent)
                         }
                     }
                 }

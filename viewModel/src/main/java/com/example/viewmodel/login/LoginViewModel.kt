@@ -54,7 +54,7 @@ class LoginViewModel(
     }
 
     override fun onForgotPasswordClicked() {
-
+        sendNewEffect(LoginEffect.NavigateToResetPassword)
     }
 
     override fun onCreateAccountClicked() {

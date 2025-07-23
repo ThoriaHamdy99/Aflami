@@ -63,7 +63,8 @@ fun LoginScreen(
                         navController.safeNavigateToTab(Route.Tab.Home)
                     }
 
-                    LoginEffect.NavigateToRegister ->  navController.safeNavigate(Route.Register)
+                    LoginEffect.NavigateToRegister -> navController.safeNavigate(Route.Register)
+                    LoginEffect.NavigateToResetPassword -> navController.safeNavigate(Route.ResetPassword)
                 }
             }
         }

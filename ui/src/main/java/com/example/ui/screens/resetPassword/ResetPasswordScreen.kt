@@ -1,4 +1,4 @@
-package com.example.ui.screens.register
+package com.example.ui.screens.ResetPassword
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -16,16 +16,16 @@ import com.example.designsystem.components.LoadingContainer
 import com.example.designsystem.theme.AppTheme
 import com.example.ui.application.LocalNavController
 import com.example.ui.screens.home.sections.AnimatedSectionVisibility
-import com.example.ui.screens.register.components.RegisterWebView
-import com.example.viewmodel.register.RegisterEffect
-import com.example.viewmodel.register.RegisterUiState
-import com.example.viewmodel.register.RegisterViewModel
+import com.example.ui.screens.register.components.ResetPasswordWebView
+import com.example.viewmodel.resetPassword.ResetPasswordEffect
+import com.example.viewmodel.resetPassword.ResetPasswordUiState
+import com.example.viewmodel.resetPassword.ResetPasswordViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun RegisterScreen(
-    viewModel: RegisterViewModel = koinViewModel()
+fun ResetPasswordScreen(
+    viewModel: ResetPasswordViewModel = koinViewModel()
 ) {
     val navController = LocalNavController.current
     val state by viewModel.state.collectAsState()
@@ -34,25 +34,25 @@ fun RegisterScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                RegisterEffect.NavigateToSignIn -> navController.popBackStack()
+                ResetPasswordEffect.NavigateToSignIn -> navController.popBackStack()
                 else -> {}
             }
         }
     }
 
-    RegisterContent(
+    ResetPasswordContent(
         state = state,
         onLoadingChanged = viewModel::setLoading,
-        onRegistrationComplete = viewModel::onRegistrationComplete
+        onResetPasswordComplete = viewModel::onResetPasswordComplete
     )
 }
 
 @SuppressLint("JavascriptInterface")
 @Composable
-private fun RegisterContent(
-    state: RegisterUiState,
+private fun ResetPasswordContent(
+    state: ResetPasswordUiState,
     onLoadingChanged: (Boolean) -> Unit,
-    onRegistrationComplete: () -> Unit
+    onResetPasswordComplete: () -> Unit
 ) {
 
     Box(
@@ -63,11 +63,11 @@ private fun RegisterContent(
             .navigationBarsPadding(),
         contentAlignment = Alignment.Center
     ) {
-        RegisterWebView(
+        ResetPasswordWebView(
             modifier = Modifier.fillMaxSize(),
             onLoadingStateChanged = onLoadingChanged,
-            urlToLoad = state.signUpUrl,
-            onRegistrationComplete = onRegistrationComplete
+            urlToLoad = state.resetPasswordUrl,
+            onResetPasswordComplete = onResetPasswordComplete
         )
 
         AnimatedSectionVisibility(state.isLoading) {
