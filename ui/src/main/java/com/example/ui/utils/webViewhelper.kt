@@ -8,7 +8,7 @@ fun buildResetPasswordFormExistenceCheckScript(): String {
     return "(function() { return document.querySelector('form[action=\"/reset-password\"]') !== null; })();"
 }
 
-fun createFormDetectorDetector(
+fun createFormDetector(
     onFormSubmittingComplete: () -> Unit
 ): (isFormPresent: Boolean) -> Unit {
     var hasInitialFormLoaded = false

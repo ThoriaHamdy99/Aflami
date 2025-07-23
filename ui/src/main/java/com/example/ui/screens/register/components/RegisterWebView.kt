@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.ui.utils.buildFormExistenceCheckScript
-import com.example.ui.utils.createFormDetectorDetector
+import com.example.ui.utils.createFormDetector
 
 
 @Composable
@@ -19,7 +19,7 @@ fun RegisterWebView(
     onRegistrationComplete: () -> Unit,
 ) {
     val registrationDetector = remember(onRegistrationComplete) {
-        createFormDetectorDetector(onRegistrationComplete)
+        createFormDetector(onRegistrationComplete)
     }
     AndroidView(
         modifier = modifier,
