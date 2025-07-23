@@ -1,12 +1,12 @@
 package com.example.domain.useCase.authentication
 
 import com.example.domain.repository.AuthenticationRepository
-import com.example.domain.utils.UserLoginType
+import com.example.domain.utils.SessionType
 
-class GetUserLoginType(
+class GetsSessionType(
     private val authenticationRepository: AuthenticationRepository
 ) {
-    suspend operator fun invoke(): UserLoginType{
-        return authenticationRepository.getLoginType()
+    suspend operator fun invoke(): SessionType{
+        return authenticationRepository.getSessionType()
     }
 }

@@ -1,12 +1,12 @@
 package com.example.domain.useCase.authentication
 
 import com.example.domain.repository.AuthenticationRepository
-import com.example.domain.utils.UserLoginType
+import com.example.domain.utils.SessionType
 
 class LoginAsGuestUseCase(
     private val authenticationRepository: AuthenticationRepository,
 ) {
     suspend operator fun invoke(){
-        authenticationRepository.setLoginType(UserLoginType.GUEST)
+        authenticationRepository.setSessionType(SessionType.GUEST)
     }
 }

@@ -1,21 +1,21 @@
 package com.example.repository.mapper.local
 
-import com.example.domain.utils.UserLoginType
+import com.example.domain.utils.SessionType
 
 class UserLoginTypeMapper {
-    fun toLocalLoginType(loginType: UserLoginType): String{
+    fun toLocalLoginType(loginType: SessionType): String{
         return when(loginType){
-            UserLoginType.NONE -> NONE
-            UserLoginType.USER -> USER
-            UserLoginType.GUEST -> GUEST
+            SessionType.NOT_LOGGED_IN -> NONE
+            SessionType.LOGGED_IN -> USER
+            SessionType.GUEST -> GUEST
         }
     }
 
-    fun fromLocalLoginType(loginType: String): UserLoginType{
+    fun fromLocalLoginType(loginType: String): SessionType{
         return when(loginType){
-            USER -> UserLoginType.USER
-            GUEST -> UserLoginType.GUEST
-            else -> UserLoginType.NONE
+            USER -> SessionType.LOGGED_IN
+            GUEST -> SessionType.GUEST
+            else -> SessionType.NOT_LOGGED_IN
         }
     }
 

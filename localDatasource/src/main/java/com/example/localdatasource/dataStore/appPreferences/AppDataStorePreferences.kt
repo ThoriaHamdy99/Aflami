@@ -4,26 +4,27 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.example.localdatasource.dataStore.appPreferences.AppPreferencesImpl.PreferenceKeys.LOGIN_TYPE
+import com.example.localdatasource.dataStore.appPreferences.AppDataStorePreferences.PreferenceKeys.SESSION_TYPE
+import com.example.localdatasource.dataStore.datasource.AppPreferences
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class AppPreferencesImpl(
+class AppDataStorePreferences(
     private val datastore: DataStore<Preferences>
 ): AppPreferences {
     private object PreferenceKeys {
-        val LOGIN_TYPE = stringPreferencesKey("loginType")
+        val SESSION_TYPE = stringPreferencesKey("sessionType")
     }
 
-    override suspend fun getLoginType(): String {
+    override suspend fun getSessionType(): String {
         return datastore.data.map { settings ->
-            settings[LOGIN_TYPE] ?: ""
+            settings[SESSION_TYPE] ?: ""
         }.first()
     }
 
-    override suspend fun setLoginType(loginType: String) {
+    override suspend fun setSessionType(sessionType: String) {
         datastore.edit { settings ->
-            settings[LOGIN_TYPE] = loginType
+            settings[SESSION_TYPE] = sessionType
         }
     }
 }

@@ -1,15 +1,15 @@
 package com.example.viewmodel.application
 
 import androidx.lifecycle.viewModelScope
-import com.example.domain.useCase.authentication.GetUserLoginType
-import com.example.domain.utils.UserLoginType
+import com.example.domain.useCase.authentication.GetsSessionType
+import com.example.domain.utils.SessionType
 import com.example.viewmodel.shared.BaseViewModel
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
 import kotlinx.coroutines.launch
 
 class ApplicationViewModel(
     dispatcherProvider: DispatcherProvider,
-    private val getUserLoginType: GetUserLoginType
+    private val getsSessionType: GetsSessionType
 ): BaseViewModel<ApplicationUiState, Unit>(ApplicationUiState(), dispatcherProvider) {
     init {
         viewModelScope.launch {
@@ -18,11 +18,11 @@ class ApplicationViewModel(
     }
 
     private suspend fun setStartDestination(){
-        val loginType = getUserLoginType()
-        when(loginType){
-            UserLoginType.NONE -> updateState { it.copy(startDestination = ApplicationUiState.StartDestinations.LOGIN) }
-            UserLoginType.USER -> updateState { it.copy(startDestination = ApplicationUiState.StartDestinations.HOME) }
-            UserLoginType.GUEST -> updateState { it.copy(startDestination = ApplicationUiState.StartDestinations.HOME) }
+        val sessionType = getsSessionType()
+        when(sessionType){
+            SessionType.NOT_LOGGED_IN -> updateState { it.copy(startDestination = ApplicationUiState.StartDestinations.LOGIN) }
+            SessionType.LOGGED_IN -> updateState { it.copy(startDestination = ApplicationUiState.StartDestinations.HOME) }
+            SessionType.GUEST -> updateState { it.copy(startDestination = ApplicationUiState.StartDestinations.HOME) }
         }
     }
 }

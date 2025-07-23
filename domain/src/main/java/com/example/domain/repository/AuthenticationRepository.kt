@@ -1,6 +1,6 @@
 package com.example.domain.repository
 
-import com.example.domain.utils.UserLoginType
+import com.example.domain.utils.SessionType
 
 interface AuthenticationRepository {
     suspend fun loginWithPassword(
@@ -8,6 +8,6 @@ interface AuthenticationRepository {
         password: String,
     )
 
-    suspend fun setLoginType(loginType: UserLoginType)
-    suspend fun getLoginType(): UserLoginType
+    suspend fun setSessionType(sessionType: SessionType)
+    suspend fun getSessionType(): SessionType
 }
