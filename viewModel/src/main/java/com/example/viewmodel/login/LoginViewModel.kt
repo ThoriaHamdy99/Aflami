@@ -1,9 +1,11 @@
 package com.example.viewmodel.login
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.domain.exceptions.AflamiException
 import com.example.domain.exceptions.AuthenticationException
 import com.example.domain.exceptions.InvalidCredentialsException
+import com.example.domain.useCase.authentication.LoginAsGuestUseCase
 import com.example.domain.useCase.authentication.LoginWithPasswordUseCase
 import com.example.viewmodel.shared.BaseViewModel
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
@@ -14,7 +16,8 @@ import kotlin.random.Random
 
 class LoginViewModel(
     dispatcherProvider: DispatcherProvider,
-    private val loginWithPasswordUseCase: LoginWithPasswordUseCase
+    private val loginWithPasswordUseCase: LoginWithPasswordUseCase,
+    private val loginAsGuestUseCase: LoginAsGuestUseCase
 ) : BaseViewModel<LoginUiState, LoginEffect>(LoginUiState(), dispatcherProvider),
     LoginInteractionListener {
 
@@ -61,10 +64,12 @@ class LoginViewModel(
     }
 
     override fun onContinueAsGuestClicked() {
-        viewModelScope.launch {
-            delay(1000)
-            sendNewEffect(LoginEffect.NavigateToHome)
-        }
+        tryToExecute(
+            action = { onLoginAsGuestStart() },
+            onSuccess = { onLoginSuccess() },
+            onError = {},
+            onCompletion = ::onLoginComplete
+        )
     }
 
     override fun onForgotPasswordClicked() {
@@ -89,6 +94,11 @@ class LoginViewModel(
         }
     }
 
+    private suspend fun onLoginAsGuestStart(){
+        updateState { it.copy(isLoginButtonLoading = true) }
+        loginAsGuestUseCase()
+    }
+
     private suspend fun onLoginStart() {
         updateState { it.copy(isLoginButtonLoading = true) }
         loginWithPasswordUseCase.invoke(state.value.username, state.value.password)
@@ -99,7 +109,7 @@ class LoginViewModel(
     }
 
     private fun onLoginWithPasswordError(exception: AflamiException) {
-        when(exception){
+        when (exception) {
             is InvalidCredentialsException -> {
                 sendNewEffect(LoginEffect.InvalidCredentialsError)
             }
