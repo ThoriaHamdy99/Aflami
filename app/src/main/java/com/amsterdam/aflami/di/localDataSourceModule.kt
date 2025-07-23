@@ -4,9 +4,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import com.example.localdatasource.dataStore.datasource.AppPreferences
 import com.example.localdatasource.dataStore.appPreferences.AppDataStorePreferences
+import com.example.localdatasource.dataStore.datasource.AppPreferences
 import com.example.localdatasource.dataStore.datasource.AuthenticationLocalDataSourceImpl
+import com.example.localdatasource.dataStore.utils.CryptoData
+import com.example.localdatasource.dataStore.utils.CryptoDataImpl
 import com.example.localdatasource.roomDataBase.AflamiDatabase
 import com.example.localdatasource.roomDataBase.datasource.CategoryLocalDataSourceImpl
 import com.example.localdatasource.roomDataBase.datasource.CountryLocalDataSourceImpl
@@ -45,6 +47,9 @@ val localDataSourceModule = module {
     single { get<AflamiDatabase>().recentSearchDao() }
     single { get<AflamiDatabase>().movieCategoryInterestDao() }
     single { get<AflamiDatabase>().tvShowCategoryInterestDao()}
+
+    // crypto
+    singleOf(::CryptoDataImpl) bind CryptoData::class
 
 // Local sources using singleOf with interface binding
     singleOf(::AuthenticationLocalDataSourceImpl) bind AuthenticationLocalSource::class
