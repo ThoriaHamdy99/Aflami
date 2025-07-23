@@ -27,8 +27,9 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     singleOf(::DefaultDispatcherProvider) { bind<DispatcherProvider>() }
-    singleOf(::ApplicationViewModel)
+    viewModelOf(::ApplicationViewModel)
     viewModelOf(::LoginViewModel)
+    viewModelOf(::RegisterViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::CountrySearchViewModel)
     viewModelOf(::SearchActorViewModel)

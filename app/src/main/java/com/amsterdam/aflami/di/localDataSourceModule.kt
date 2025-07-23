@@ -1,7 +1,9 @@
 package com.amsterdam.aflami.di
 
-
-import com.example.localdatasource.dataStore.DatastoreProvider
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStoreFile
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
 import com.example.localdatasource.dataStore.datasource.AppPreferences
 import com.example.localdatasource.dataStore.appPreferences.AppDataStorePreferences
 import com.example.localdatasource.dataStore.datasource.AuthenticationLocalDataSourceImpl
@@ -24,7 +26,11 @@ import org.koin.dsl.module
 
 val localDataSourceModule = module {
     // App Preferences
-    single { DatastoreProvider.getInstance(androidApplication()) }
+    single<DataStore<Preferences>> {
+        PreferenceDataStoreFactory.create(
+            produceFile = { androidApplication().dataStoreFile("app.preferences_pb") }
+        )
+    }
 
     singleOf(::AppDataStorePreferences) bind AppPreferences::class
 
