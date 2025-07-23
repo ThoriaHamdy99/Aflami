@@ -12,7 +12,7 @@ class MovieGenreLocalMapper : EntityMapper<LocalMovieCategoryDto, MovieGenre>,
         return dto.categoryId.toMovieCategory()
     }
 
-    override fun toDto(entity: MovieGenre): Long {
+    override fun toDto(entity: MovieGenre, args: List<Any>): Long {
         return when (entity) {
             MovieGenre.ACTION -> 28L
             MovieGenre.ADVENTURE -> 12L
