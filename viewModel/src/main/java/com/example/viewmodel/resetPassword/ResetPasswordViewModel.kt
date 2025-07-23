@@ -11,11 +11,6 @@ class ResetPasswordViewModel : BaseViewModel<ResetPasswordUiState, ResetPassword
         initialState = ResetPasswordUiState()
     )
 
-    private constructor(
-        dispatcherProvider: DispatcherProvider,
-        resetPasswordUiState: ResetPasswordUiState
-    ) : super(resetPasswordUiState, dispatcherProvider)
-
     init {
 
         updateState { it.copy(resetPasswordUrl = BuildConfig.MOVIE_RESET_PASSWORD_URL) }
