@@ -1,14 +1,14 @@
 package com.example.viewmodel.home
 
 import com.example.domain.exceptions.AflamiException
-import com.example.domain.useCase.GetUpcomingMoviesUseCase
-import com.example.entity.Movie
-import com.example.entity.category.MovieGenre
 import com.example.domain.exceptions.NoInternetException
 import com.example.domain.models.Mood
 import com.example.domain.useCase.GetHomeScreenDataUseCase
 import com.example.domain.useCase.GetHomeScreenDataUseCase.HomeScreenData
 import com.example.domain.useCase.GetMoviesByMoodUseCase
+import com.example.domain.useCase.GetUpcomingMoviesUseCase
+import com.example.entity.Movie
+import com.example.entity.category.MovieGenre
 import com.example.viewmodel.home.HomeUiState.HomeError
 import com.example.viewmodel.search.mapper.selectByMovieGenre
 import com.example.viewmodel.shared.BaseViewModel
@@ -80,6 +80,28 @@ class HomeViewModel(
         )
     }
 
+    override fun onDismissMoodPickerDialog() {
+        updateState { it.copy(moodPickerUiState = it.moodPickerUiState.copy(openMovieDialog = false)) }
+    }
+
+    override fun onClickViewDetails() {
+        onDismissMoodPickerDialog()
+        sendNewEffect(HomeEffect.NavigateToMovieDetailsEffect(movieId = state.value.moodPickerUiState.selectedMovie.id))
+    }
+
+    override fun onClickGetAnotherMovie() {
+        val currentMovieIndex = state.value.moodPickerUiState.movies.indexOf(
+            state.value.moodPickerUiState.selectedMovie
+        )
+        val nextMovie: MovieItemUiState
+        if (currentMovieIndex == state.value.moodPickerUiState.movies.size - 1){
+            nextMovie = state.value.moodPickerUiState.movies[0]
+            return
+        }
+        nextMovie = state.value.moodPickerUiState.movies[currentMovieIndex + 1]
+        updateState { it.copy(moodPickerUiState = it.moodPickerUiState.copy(selectedMovie = nextMovie)) }
+    }
+
     private fun onGetMoviesByMoodSuccess(movies: List<Movie>) {
         if (movies.isEmpty()) {
             updateState { it.copy(moodPickerUiState = it.moodPickerUiState.copy(isLoadingMovies = false)) }
@@ -91,7 +113,7 @@ class HomeViewModel(
                 moodPickerUiState = it.moodPickerUiState
                     .copy(isLoadingMovies = false,
                         movies = moviesUiStates,
-                        selectedMovieId = moviesUiStates.getOrNull(0) ?: MovieItemUiState(),
+                        selectedMovie = moviesUiStates.getOrNull(0) ?: MovieItemUiState(),
                         openMovieDialog = true
                     )
             )

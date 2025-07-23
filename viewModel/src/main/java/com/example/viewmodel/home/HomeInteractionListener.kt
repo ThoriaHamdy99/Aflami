@@ -14,4 +14,8 @@ interface HomeInteractionListener {
 
     fun onClickMood(mood: Mood)
     fun onClickGetNow()
+    fun onDismissMoodPickerDialog()
+
+    fun onClickViewDetails()
+    fun onClickGetAnotherMovie()
 }

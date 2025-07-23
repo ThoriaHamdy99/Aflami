@@ -30,9 +30,8 @@ data class HomeUiState(
             Mood.CONFUSED
         ),
         val selectedMood: Mood? = null,
-        val selectedMovieId: MovieItemUiState = MovieItemUiState(),
+        val selectedMovie: MovieItemUiState = MovieItemUiState(),
         val movies: List<MovieItemUiState> = emptyList(),
-        val isLoadingNextMovie: Boolean = false,
         val isLoadingMovies: Boolean = false,
         val openMovieDialog: Boolean = false,
     )
