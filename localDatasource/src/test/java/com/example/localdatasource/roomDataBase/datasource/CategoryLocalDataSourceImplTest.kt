@@ -1,24 +1,22 @@
-package com.example.localdatasource
-
+package com.example.localdatasource.roomDataBase.datasource
 
 import com.example.localdatasource.roomDataBase.daos.CategoryDao
-import com.example.localdatasource.roomDataBase.datasource.CategoryLocalDataSourceImpl
+import com.google.common.truth.Truth.assertThat
 import com.example.repository.dto.local.LocalMovieCategoryDto
 import com.example.repository.dto.local.LocalTvShowCategoryDto
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class CategoryLocalDataSourceImplTest {
 
     private lateinit var dao: CategoryDao
     private lateinit var categoryLocalDataSourceImpl: CategoryLocalDataSourceImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         dao = mockk(relaxed = true)
         categoryLocalDataSourceImpl = CategoryLocalDataSourceImpl(dao)
@@ -26,30 +24,30 @@ class CategoryLocalDataSourceImplTest {
 
     @Test
     fun `upsertMovieCategories should call dao with correct data`() = runTest {
-        val categories = listOf(LocalMovieCategoryDto(1, "Action"))
+        val categories = listOf(LocalMovieCategoryDto(1, "Action", "en"))
 
         categoryLocalDataSourceImpl.upsertMovieCategories(categories)
 
-        coVerify { dao.upsertAllMovieCategories(categories) }
+        coVerify (exactly = 1) { dao.upsertAllMovieCategories(categories) }
     }
 
     @Test
     fun `upsertTvShowCategories should call dao with correct data`() = runTest {
-        val categories = listOf(LocalTvShowCategoryDto(1, "Drama"))
+        val categories = listOf(LocalTvShowCategoryDto( 1, "Drama","en"))
 
         categoryLocalDataSourceImpl.upsertTvShowCategories(categories)
 
-        coVerify { dao.upsertAllTvShowCategories(categories) }
+        coVerify (exactly = 1) { dao.upsertAllTvShowCategories(categories) }
     }
 
     @Test
     fun `getMovieCategories should return data from dao`() = runTest {
-        val expected = listOf(LocalMovieCategoryDto(1, "Comedy"))
+        val expected = listOf(LocalMovieCategoryDto(1, "Comedy","en"))
         coEvery { dao.getAllMovieCategories() } returns expected
 
         val result = categoryLocalDataSourceImpl.getMovieCategories()
 
-        assertEquals(expected, result)
+        assertThat(result).isEqualTo(expected)
     }
     @Test
     fun `getMovieCategories should return emptyList from dao`() = runTest {
@@ -59,18 +57,17 @@ class CategoryLocalDataSourceImplTest {
         coEvery { dao.getAllMovieCategories() } returns expected
         val result = categoryLocalDataSourceImpl.getMovieCategories()
         //Then
-        assertEquals(expected, result)
-
+        assertThat(result).isEmpty()
     }
 
     @Test
     fun `getTvShowCategories should return data from dao`() = runTest {
         //Given
-        val expected = listOf(LocalTvShowCategoryDto(1, "All"))
+        val expected = listOf(LocalTvShowCategoryDto(1, "All","en"))
         //When
         coEvery { dao.getAllTvShowCategories() } returns expected
         val result = categoryLocalDataSourceImpl.getTvShowCategories()
         //Then
-        assertEquals(expected, result)
+        assertThat(result).isEqualTo(expected)
     }
 }

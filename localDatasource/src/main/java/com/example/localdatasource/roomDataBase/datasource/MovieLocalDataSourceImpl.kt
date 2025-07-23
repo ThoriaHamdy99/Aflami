@@ -26,7 +26,6 @@ class MovieLocalDataSourceImpl(
         return movieDao.getMoviesByKeywordAndSearchType(keyword, searchType, storedLanguage, limit, offset)
     }
 
-    @Transaction
     override suspend fun addMoviesBySearchData(
         movies: List<LocalMovieDto>,
         searchKeyword: String,

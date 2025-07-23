@@ -33,19 +33,19 @@ class MovieDaoTest {
 
     @Test
     fun insertMovies_shouldInsertMovies() = runTest {
-        // Arrange
+        // Given
         val movie = createMovie(movieId = 1L, storedLanguage = "en")
 
         // Act
         dao.insertMovies(listOf(movie))
-        // Assert
+        // Then
         val result = dao.getMovieById(1L)
         assertThat(result).isEqualTo(movie)
     }
 
     @Test
     fun insertMovies_shouldUpdateMovieWithoutDuplication_WhenMovieAlreadyStored() = runTest {
-        // Arrange
+        // Given
         val originalMovie = createMovie(movieId = 1L, storedLanguage = "en", name = "Original")
         dao.insertMovies(listOf(originalMovie))
 
@@ -53,7 +53,7 @@ class MovieDaoTest {
         val updatedMovie = originalMovie.copy(name = "Updated")
         dao.insertMovies(listOf(updatedMovie))
 
-        // Assert
+        // Then
         val result = dao.getMovieById(1L)
         assertThat(result.name).isEqualTo("Updated")
     }
@@ -61,7 +61,7 @@ class MovieDaoTest {
 
     @Test
     fun insertSearchEntries_shouldAssociateMovieWithKeyword() = runTest {
-        // Arrange
+        // Given
         val movie = createMovie(movieId = 1L, storedLanguage = "en")
         val crossRef = SearchMovieCrossRefDto(
             searchKeyword = "superman",
@@ -74,7 +74,7 @@ class MovieDaoTest {
         // Act
         dao.insertSearchEntries(listOf(crossRef))
 
-        // Assert
+        // Then
         val result = dao.getMoviesByKeywordAndSearchType(
             keyword = "superman",
             searchType = SearchType.BY_KEYWORD,
@@ -88,7 +88,7 @@ class MovieDaoTest {
 
     @Test
     fun getMoviesByKeywordAndSearchType_shouldReturnEmpty_whenNoMatch() = runTest {
-        // Arrange
+        // Given
         val movie = createMovie(movieId = 1L, storedLanguage = "en")
         val crossRef = SearchMovieCrossRefDto(
             searchKeyword = "batman",
@@ -99,7 +99,7 @@ class MovieDaoTest {
         dao.insertMovies(listOf(movie))
         dao.insertSearchEntries(listOf(crossRef))
 
-        // Act
+        // When
         val result = dao.getMoviesByKeywordAndSearchType(
             keyword = "superman",
             searchType = SearchType.BY_KEYWORD,
@@ -108,13 +108,13 @@ class MovieDaoTest {
             offset = 0
         )
 
-        // Assert
+        // Then
         assertThat(result).isEmpty()
     }
 
     @Test
     fun getMoviesByKeywordAndSearchType_shouldRespectPagination() = runTest {
-        // Arrange
+        // Given
         val movie1 = createMovie(movieId = 1L, storedLanguage = "en", name = "Movie 1")
         val movie2 = createMovie(movieId = 2L, storedLanguage = "en", name = "Movie 2")
         val movie3 = createMovie(movieId = 3L, storedLanguage = "en", name = "Movie 3")
@@ -130,11 +130,11 @@ class MovieDaoTest {
             )
         )
 
-        // Act
+        // When
         val page1 = dao.getMoviesByKeywordAndSearchType(keyword, searchType, "en", limit = 2, offset = 0)
         val page2 = dao.getMoviesByKeywordAndSearchType(keyword, searchType, "en", limit = 2, offset = 2)
 
-        // Assert
+        // Then
         assertThat(page1).hasSize(2)
         assertThat(page2).hasSize(1)
         assertThat((page1 + page2).map { it.movie }).isEqualTo(listOf(movie1, movie2, movie3))

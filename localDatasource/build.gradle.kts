@@ -41,16 +41,14 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.truth.v101)
     testImplementation(kotlin("test"))
 
-    // android test
-    androidTestImplementation(libs.androidx.junit)
-
-    // junit 5
-    androidTestImplementation("androidx.test:runner:1.6.2")
-    androidTestImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
-    androidTestImplementation("de.mannodermaus.junit5:android-test-core:1.7.0")
-    androidTestRuntimeOnly("de.mannodermaus.junit5:android-test-runner:1.7.0")
+    // android test junit 5
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.junit.jupiter.api.v572)
+    androidTestImplementation(libs.android.test.core)
+    androidTestRuntimeOnly(libs.android.test.runner)
     androidTestImplementation(libs.truth.v101)
 
     androidTestImplementation(libs.kotlinx.coroutines.test.v171)

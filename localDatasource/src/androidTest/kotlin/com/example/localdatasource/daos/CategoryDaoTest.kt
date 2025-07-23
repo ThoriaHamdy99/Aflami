@@ -31,25 +31,25 @@ class CategoryDaoTest {
 
     @Test
     fun upsertAllMovieCategories_shouldInsertMovieCategories_whenCalled() = runTest {
-        // Arrange
+        // Given
         val categories = listOf(
             createLocalMovieCategoryDto(categoryId = 1, name = "A"),
             createLocalMovieCategoryDto(categoryId = 2, name = "B")
         )
 
-        // Act
+        // When
         categoryDao.upsertAllMovieCategories(categories)
 
-        // Assert
+        // Then
         val stored = categoryDao.getAllMovieCategories()
         assertThat(stored).isEqualTo(categories)
     }
 
     @Test
     fun upsertAllMovieCategories_shouldUpdateMovieCategories_whenAlreadyStored() = runTest {
-        // Arrange
+        // Given
         val initial = listOf(
-            createLocalMovieCategoryDto(categoryId = 1, name = "Action", storedLanguage = "en"),
+            createLocalMovieCategoryDto(categoryId = 1, name = "Whenion", storedLanguage = "en"),
             createLocalMovieCategoryDto(categoryId = 2, name = "Drama", storedLanguage = "en")
         )
         categoryDao.upsertAllMovieCategories(initial)
@@ -59,26 +59,26 @@ class CategoryDaoTest {
             createLocalMovieCategoryDto(categoryId = 2, name = "Comedy", storedLanguage = "en")
         )
 
-        // Act
+        // When
         categoryDao.upsertAllMovieCategories(updated)
 
-        // Assert
+        // Then
         val stored = categoryDao.getAllMovieCategories()
         assertThat(stored).isEqualTo(updated)
     }
 
     @Test
     fun getAllMovieCategories_shouldReturnEmptyList_whenNoDataInserted() = runTest {
-        // Act
+        // When
         val result = categoryDao.getAllMovieCategories()
 
-        // Assert
+        // Then
         assertThat(result).isEmpty()
     }
 
     @Test
     fun upsertAllMovieCategories_shouldReplaceDuplicateCategory_whenSamePrimaryKeyExists() = runTest {
-        // Arrange
+        // Given
         val original = listOf(
             createLocalMovieCategoryDto(categoryId = 5, name = "Sci-Fi", storedLanguage = "en")
         )
@@ -88,65 +88,65 @@ class CategoryDaoTest {
             createLocalMovieCategoryDto(categoryId = 5, name = "Fantasy", storedLanguage = "en")
         )
 
-        // Act
+        // When
         categoryDao.upsertAllMovieCategories(updated)
 
-        // Assert
+        // Then
         val stored = categoryDao.getAllMovieCategories()
         assertThat(stored).containsExactly(updated.first())
     }
 
     @Test
     fun upsertAllMovieCategories_shouldInsertOnlyOne_whenDuplicateNameExists() = runTest {
-        // Arrange
+        // Given
         val categories = listOf(
             createLocalMovieCategoryDto(categoryId = 1, name = "Old", storedLanguage = "en"),
             createLocalMovieCategoryDto(categoryId = 2, name = "Old", storedLanguage = "en")
         )
 
-        // Act
+        // When
         categoryDao.upsertAllMovieCategories(categories)
 
-        // Assert
+        // Then
         val stored = categoryDao.getAllMovieCategories()
         assertThat(stored).containsExactly(categories.first())
     }
 
     @Test
     fun upsertAllTvShowCategories_shouldInsertTvShowCategories_whenCalled() = runTest {
-        // Arrange
+        // Given
         val categories = listOf(
             createLocalTvShowCategoryDto(categoryId = 1, name = "Popular"),
             createLocalTvShowCategoryDto(categoryId = 2, name = "Trending")
         )
 
-        // Act
+        // When
         categoryDao.upsertAllTvShowCategories(categories)
 
-        // Assert
+        // Then
         val stored = categoryDao.getAllTvShowCategories()
         assertThat(stored).isEqualTo(categories)
     }
 
     @Test
     fun upsertAllTvShowCategories_shouldInsertOnlyOne_whenDuplicateNameExists() = runTest {
-        // Arrange
+        // Given
         val categories = listOf(
             createLocalTvShowCategoryDto(categoryId = 1, name = "Old", storedLanguage = "en"),
             createLocalTvShowCategoryDto(categoryId = 2, name = "Old", storedLanguage = "en")
         )
 
-        // Act
+        // When
         categoryDao.upsertAllTvShowCategories(categories)
 
-        // Assert
+        // Then
         val stored = categoryDao.getAllTvShowCategories()
         assertThat(stored).containsExactly(categories.first())
     }
 
     @Test
     fun getAllTvShowCategories_shouldReturnEmptyList_whenNoDataInserted() = runTest {
-        // Act
+        // When
         val result = categoryDao.getAllTvShowCategories()
 
         // Assert
@@ -155,7 +155,7 @@ class CategoryDaoTest {
 
     @Test
     fun upsertAllTvShowCategories_shouldReplaceDuplicateCategory_whenSamePrimaryKeyExists() = runTest {
-        // Arrange
+        // Given
         val original = listOf(
             createLocalTvShowCategoryDto(categoryId = 10, name = "Original", storedLanguage = "en")
         )
@@ -165,10 +165,10 @@ class CategoryDaoTest {
             createLocalTvShowCategoryDto(categoryId = 10, name = "Updated", storedLanguage = "en")
         )
 
-        // Act
+        // When
         categoryDao.upsertAllTvShowCategories(updated)
 
-        // Assert
+        // Then
         val stored = categoryDao.getAllTvShowCategories()
         assertThat(stored).containsExactly(updated.first())
     }

@@ -17,12 +17,6 @@ interface RecentSearchLocalSource {
 
     suspend fun deleteRecentSearches()
 
-    suspend fun deleteRecentSearchByKeyword(
-        keyword: String,
-        searchType: SearchType,
-        storedLanguage: String
-    )
-
     suspend fun deleteRecentSearchByKeywordAndType(
         keyword: String,
         searchType: SearchType,

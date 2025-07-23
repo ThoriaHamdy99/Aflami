@@ -29,23 +29,23 @@ class CountryDaoTest {
 
     @Test
     fun upsertAllCountries_shouldAddLocalCountryDtoList_whenCalled() = runTest {
-        // Arrange
+        // Given
         val countries = listOf(
             LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "United States"),
             LocalCountryDto(isoCode = "FR", storedLanguage = "en", name = "France")
         )
 
-        // Act
+        // When
         countryDao.upsertAllCountries(countries)
 
-        // Assert
+        // Then
         val stored = countryDao.getAllCountries("en")
         assertThat(stored).isEqualTo(countries)
     }
 
     @Test
     fun upsertAllCountries_shouldUpdateItem_whenPrimaryKeyExists() = runTest {
-        // Arrange
+        // Given
         val initial = listOf(
             LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "United States")
         )
@@ -55,28 +55,28 @@ class CountryDaoTest {
             LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "USA")
         )
 
-        // Act
+        // When
         countryDao.upsertAllCountries(updated)
 
-        // Assert
+        // Then
         val stored = countryDao.getAllCountries("en")
         assertThat(stored).containsExactly(updated.first())
     }
 
     @Test
     fun getAllCountries_shouldReturnOnlyMatchingLanguageEntries() = runTest {
-        // Arrange
+        // Given
         val countries = listOf(
             LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "USA"),
             LocalCountryDto(isoCode = "EG", storedLanguage = "ar", name = "مصر")
         )
         countryDao.upsertAllCountries(countries)
 
-        // Act
+        // When
         val resultEn = countryDao.getAllCountries("en")
         val resultAr = countryDao.getAllCountries("ar")
 
-        // Assert
+        // Then
         assertThat(resultEn).containsExactly(
             LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "USA")
         )
@@ -87,25 +87,25 @@ class CountryDaoTest {
 
     @Test
     fun getAllCountries_shouldReturnEmpty_whenNoDataMatchesLanguage() = runTest {
-        // Arrange
+        // Given
         val countries = listOf(
             LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "USA")
         )
         countryDao.upsertAllCountries(countries)
 
-        // Act
+        // When
         val result = countryDao.getAllCountries("fr")
 
-        // Assert
+        // Then
         assertThat(result).isEmpty()
     }
 
     @Test
     fun getAllCountries_shouldReturnEmpty_whenNoDataInserted() = runTest {
-        // Act
+        // When
         val result = countryDao.getAllCountries("en")
 
-        // Assert
+        // Then
         assertThat(result).isEmpty()
     }
 }

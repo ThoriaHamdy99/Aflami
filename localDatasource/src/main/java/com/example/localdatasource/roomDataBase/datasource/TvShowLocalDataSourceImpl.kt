@@ -1,6 +1,5 @@
 package com.example.localdatasource.roomDataBase.datasource
 
-import androidx.room.Transaction
 import com.example.entity.category.TvShowGenre
 import com.example.localdatasource.roomDataBase.daos.TvShowCategoryInterestDao
 import com.example.localdatasource.roomDataBase.daos.TvShowDao
@@ -30,7 +29,6 @@ class TvShowLocalDataSourceImpl(
         )
     }
 
-    @Transaction
     override suspend fun addTvShows(
         tvShows: List<LocalTvShowDto>,
         storedLanguage: String,
