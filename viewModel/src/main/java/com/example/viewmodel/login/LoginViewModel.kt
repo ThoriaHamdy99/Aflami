@@ -1,18 +1,10 @@
 package com.example.viewmodel.login
 
-import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.example.domain.exceptions.AflamiException
-import com.example.domain.exceptions.AuthenticationException
-import com.example.domain.exceptions.InvalidCredentialsException
 import com.example.domain.useCase.authentication.LoginAsGuestUseCase
 import com.example.domain.useCase.authentication.LoginWithPasswordUseCase
 import com.example.viewmodel.shared.BaseViewModel
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.jetbrains.annotations.TestOnly
-import kotlin.random.Random
 
 class LoginViewModel(
     dispatcherProvider: DispatcherProvider,
@@ -23,29 +15,18 @@ class LoginViewModel(
 
     override fun onUserNameUpdated(username: String) {
         updateState {
-            it.copy(username = username, usernameError = "")
+            it.copy(username = username, usernameError = null)
         }
         shouldEnableLoginButton()
     }
 
     override fun onPasswordUpdate(password: String) {
         updateState {
-            it.copy(password = password, passwordError = "")
+            it.copy(password = password, passwordError = null)
         }
         shouldEnableLoginButton()
     }
 
-    override fun onSetUserNameError(usernameError: String) {
-        updateState {
-            it.copy(usernameError = usernameError)
-        }
-    }
-
-    override fun onSetPasswordError(passwordError: String) {
-        updateState {
-            it.copy(passwordError = passwordError)
-        }
-    }
 
     override fun onShowPasswordClicked() {
         updateState {
@@ -109,10 +90,11 @@ class LoginViewModel(
     }
 
     private fun onLoginWithPasswordError(exception: AflamiException) {
-        when (exception) {
-            is InvalidCredentialsException -> {
-                sendNewEffect(LoginEffect.InvalidCredentialsError)
-            }
+        updateState {
+            it.copy(
+                usernameError = UsernameErrorState.toUsernameErrorState(exception),
+                passwordError = PasswordErrorState.toPasswordErrorState(exception)
+            )
         }
     }
 
