@@ -72,7 +72,7 @@ class LoginViewModel(
     }
 
     override fun onCreateAccountClicked() {
-
+        sendNewEffect(LoginEffect.NavigateToRegister)
     }
 
     private fun shouldEnableLoginButton() {
