@@ -52,14 +52,15 @@ fun LoginScreen(
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
     LaunchedEffect(Unit) {
-        viewModel.effect.collect{ effect ->
+        viewModel.effect.collect { effect ->
             effect?.let {
-                when(it){
+                when (it) {
                     LoginEffect.NavigateToHome -> {
                         navController.safeNavigateToTab(Route.Tab.Home)
                     }
 
-                    LoginEffect.NavigateToRegister ->  navController.safeNavigate(Route.Register)
+                    LoginEffect.NavigateToRegister -> navController.safeNavigate(Route.Register)
+                    LoginEffect.NavigateToResetPassword -> navController.safeNavigate(Route.ResetPassword)
                 }
             }
         }
@@ -85,8 +86,7 @@ private fun LoginScreenContent(
                 .padding(horizontal = 12.dp)
                 .statusBarsPadding()
                 .navigationBarsPadding()
-                .verticalScroll(scrollState)
-            ,
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
@@ -141,7 +141,9 @@ private fun LoginScreenContent(
                     isLoading = false,
                     isEnabled = true,
                     isNegative = false,
-                    modifier = Modifier.align(Alignment.End).padding(bottom = 48.dp),
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(bottom = 48.dp),
                 )
                 ConfirmButton(
                     title = stringResource(R.string.login),
@@ -161,7 +163,9 @@ private fun LoginScreenContent(
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
