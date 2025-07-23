@@ -17,7 +17,10 @@ class AuthenticationRepositoryImpl(
     ) {
         val sessionId = authenticationRemoteSource.loginWithPassword(username, password)
         authenticationLocalSource.cacheSessionId(sessionId)
+        authenticationLocalSource.setSessionType(sessionTypeMapper.toLocalSessionType(SessionType.LOGGED_IN))
     }
+
+    override suspend fun getSessionId(): String = authenticationLocalSource.getCachedSessionId()
 
     override suspend fun setSessionType(sessionType: SessionType) {
         authenticationLocalSource.setSessionType(sessionTypeMapper.toLocalSessionType(sessionType))
@@ -25,5 +28,10 @@ class AuthenticationRepositoryImpl(
 
     override suspend fun getSessionType(): SessionType {
         return sessionTypeMapper.fromLocalSessionType(authenticationLocalSource.getSessionType())
+    }
+
+    override suspend fun logout() {
+        authenticationLocalSource.clearCachedSessionId()
+        authenticationLocalSource.setSessionType(sessionTypeMapper.toLocalSessionType(SessionType.NOT_LOGGED_IN))
     }
 }
