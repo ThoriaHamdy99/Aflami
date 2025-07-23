@@ -1,6 +1,7 @@
 package com.example.localdatasource.utils
 
 import com.example.repository.dto.local.LocalMovieDto
+import kotlinx.datetime.LocalDate
 
 fun createMovie(
         movieId: Long,
@@ -13,7 +14,7 @@ fun createMovie(
             name = name,
             description = "Test description",
             poster = "poster.jpg",
-            productionYear = 2023,
+            releaseDate = LocalDate.parse("2020-01-01"),
             popularity = 9.5,
             rating = 4.3f,
             originCountry = "US",

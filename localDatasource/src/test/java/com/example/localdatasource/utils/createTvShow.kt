@@ -1,6 +1,7 @@
 package com.example.localdatasource.utils
 
 import com.example.repository.dto.local.LocalTvShowDto
+import kotlinx.datetime.LocalDate
 
 fun createTvShow(
     id: Long = 1L,
@@ -12,7 +13,9 @@ fun createTvShow(
     name = name,
     description = "Test Description",
     poster = "poster.jpg",
-    productionYear = 2022,
     rating = 8.5f,
-    popularity = 123.4
+    popularity = 123.4,
+    airDate = LocalDate.parse("2020-01-01"),
+    seasonCount = 5,
+    originCountry = "eg"
 )

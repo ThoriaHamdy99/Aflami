@@ -1,13 +1,12 @@
 package com.example.localdatasource.roomDataBase.datasource
 
-import com.example.entity.category.TvShowGenre
 import com.example.localdatasource.roomDataBase.daos.TvShowCategoryInterestDao
 import com.example.localdatasource.roomDataBase.daos.TvShowDao
+import com.example.localdatasource.utils.createLocalTvShowCategoryDto
 import com.example.localdatasource.utils.createTvShow
-import com.example.repository.dto.local.LocalTvShowCategoryInterestDto
-import com.example.repository.dto.local.LocalTvShowWithSearchDto
+import com.example.repository.dto.local.SearchTvShowCrossRefDto
+import com.example.repository.dto.local.TvShowCategoryCrossRefDto
 import com.example.repository.dto.local.relation.TvShowWithCategory
-import com.example.repository.dto.local.utils.SearchType
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -34,9 +33,8 @@ class TvShowLocalDataSourceImplTest {
         // Given
         val expected = listOf(mockk<TvShowWithCategory>())
         coEvery {
-            tvShowDao.getTvShowsBySearchKeyword(
+            tvShowDao.getTvShowsBySearchKeywordSortedByInterest(
                 keyword = "action",
-                searchType = SearchType.BY_KEYWORD,
                 storedLanguage = "en",
                 limit = 10,
                 offset = 0
@@ -44,9 +42,8 @@ class TvShowLocalDataSourceImplTest {
         } returns expected
 
         // When
-        val result = dataSource.getTvShowsByKeywordAndSearchType(
+        val result = dataSource.getTvShowsBySearchKeywordSortedByInterest(
             searchKeyword = "action",
-            searchType = SearchType.BY_KEYWORD,
             storedLanguage = "en",
             limit = 10,
             offset = 0
@@ -65,49 +62,55 @@ class TvShowLocalDataSourceImplTest {
         val language = "en"
         val keyword = "test"
 
-        // When
-        dataSource.addTvShows(shows, language, keyword)
-
-        // Then
-        coVerify { tvShowDao.addAllTvShows(shows) }
-
         val expectedMappings = shows.map {
-            LocalTvShowWithSearchDto(
+            SearchTvShowCrossRefDto(
                 tvShowId = it.tvShowId,
                 storedLanguage = language,
                 searchKeyword = keyword
             )
         }
 
-        coVerify { tvShowDao.insertTvShowSearchMappings(expectedMappings) }
+        // When
+        dataSource.addTvShows(shows,keyword,language)
+
+        // Then
+        coVerify { tvShowDao.addAllTvShows(shows) }
+
+        coVerify { tvShowDao.insertTvShowSearchEntries(expectedMappings) }
     }
 
     @Test
     fun `incrementGenreInterest should call dao`() = runTest {
         // Given
-        val genre = TvShowGenre.KIDS
+        val categoryId = 1L
 
         // When
-        dataSource.incrementGenreInterest(genre)
+        dataSource.incrementGenreInterest(categoryId)
 
         // Then
-        coVerify { tvShowCategoryInterestDao.incrementInterest(genre) }
+        coVerify { tvShowCategoryInterestDao.incrementInterest(categoryId) }
     }
 
     @Test
-    fun `getAllGenreInterests should return map of genre to interest count`() = runTest {
-        // Given
-        val interestEntity = listOf(LocalTvShowCategoryInterestDto(TvShowGenre.KIDS, 3))
-        coEvery { tvShowCategoryInterestDao.getAllInterests() } returns interestEntity
-
-        // When
-        val result = dataSource.getAllGenreInterests()
-
-        // Then
-        assertThat(result).isEqualTo(
-            mapOf(
-                TvShowGenre.KIDS to 3
+    fun `addTvShowWithCategories should insert the tvShow and corresponding category cross-references`()=
+        runTest {
+            // Given
+            val tvShow = createTvShow(id = 1L, language = "en")
+            val categories = listOf(createLocalTvShowCategoryDto(categoryId = 1L))
+            val expectedCrossRefs = listOf(
+                TvShowCategoryCrossRefDto(
+                    tvShowId = tvShow.tvShowId,
+                    categoryId = categories.first().categoryId,
+                    storedLanguage = "en"
+                )
             )
-        )
-    }
+
+            // When
+            dataSource.addTvShowWithCategories(tvShow, categories, "en")
+
+            // Then
+            coVerify(exactly = 1) { tvShowDao.insertTvShow(tvShow) }
+            coVerify(exactly = 1) { tvShowDao.insertTvShowCategoryCrossRefs(expectedCrossRefs) }
+
+        }
 }
