@@ -52,4 +52,7 @@ dependencies {
     androidTestImplementation(libs.truth)
 
     androidTestImplementation(libs.kotlinx.coroutines.test.v171)
+
+    //Datastore
+    implementation(libs.androidx.datastore.preferences)
 }
