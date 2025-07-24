@@ -4,7 +4,7 @@ import com.example.entity.Movie
 import com.example.entity.category.MovieGenre
 import com.example.repository.dto.remote.RemoteMovieItemDto
 import com.example.repository.mapper.shared.EntityMapper
-import com.example.repository.mapper.shared.toMovieCategory
+import com.example.repository.mapper.shared.mapCategoryIdToMovieGenre
 import kotlinx.datetime.toLocalDate
 
 class MovieRemoteMapper() : EntityMapper<RemoteMovieItemDto, Movie> {
@@ -26,6 +26,6 @@ class MovieRemoteMapper() : EntityMapper<RemoteMovieItemDto, Movie> {
     }
 
     private fun mapGenreIdsToCategories(genreIds: List<Int>): List<MovieGenre> {
-        return genreIds.map { it.toLong().toMovieCategory() }
+        return genreIds.map { mapCategoryIdToMovieGenre(it.toLong()) }
     }
 }

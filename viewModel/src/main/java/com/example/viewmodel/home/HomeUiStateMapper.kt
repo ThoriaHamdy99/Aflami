@@ -3,24 +3,26 @@ package com.example.viewmodel.home
 import android.annotation.SuppressLint
 import com.example.domain.useCase.GetHomeScreenDataUseCase
 import com.example.entity.Movie
-import com.example.viewmodel.home.HomeUiState.PopularMovieItemUiState
 import com.example.viewmodel.shared.uiStates.MovieItemUiState
+import com.example.viewmodel.home.HomeUiState.PopularMovieItemUiState
 
 class HomeUiStateMapper {
+
     @SuppressLint("DefaultLocale")
     fun toUiState(homeScreenData: GetHomeScreenDataUseCase.HomeScreenData): HomeUiState {
         return HomeUiState(
             popularMovies = moviesToPopularMoviesUiState(homeScreenData.popularMovies),
             topRatedMovies = moviesToMoviesItemsUiState(homeScreenData.topRatedMovies),
-            upcomingMovies =  moviesToMoviesItemsUiState(homeScreenData.upComingMovies)
+            upcomingMovies = moviesToMoviesItemsUiState(homeScreenData.upComingMovies),
+            continueWatchingMovies = moviesToMoviesItemsUiState(homeScreenData.continueWatchingMovies)
         )
     }
 
-    fun moviesToMoviesItemsUiState(movies: List<Movie>) = movies.map(::movieToMovieItemUiState)
     fun moviesToPopularMoviesUiState(movies: List<Movie>) = movies.map(::movieToPopularMovieUiState)
+    fun moviesToMoviesItemsUiState(movies: List<Movie>) = movies.map(::movieToMovieItemUiState)
 
     @SuppressLint("DefaultLocale")
-    fun movieToPopularMovieUiState(movie: Movie): PopularMovieItemUiState {
+    private fun movieToPopularMovieUiState(movie: Movie): PopularMovieItemUiState {
         return PopularMovieItemUiState(
             name = movie.name,
             rating = String.format("%.1f", movie.rating),
@@ -29,7 +31,7 @@ class HomeUiStateMapper {
     }
 
     @SuppressLint("DefaultLocale")
-    fun movieToMovieItemUiState(movie: Movie): MovieItemUiState {
+    private fun movieToMovieItemUiState(movie: Movie): MovieItemUiState {
         return MovieItemUiState(
             id = movie.id,
             name = movie.name,
@@ -38,5 +40,4 @@ class HomeUiStateMapper {
             yearOfRelease = movie.releaseDate.year.toString()
         )
     }
-
 }
