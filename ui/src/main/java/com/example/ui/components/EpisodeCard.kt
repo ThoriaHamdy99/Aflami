@@ -212,6 +212,7 @@ private fun PlayEpisodeButton(onPlayEpisodeClick: () -> Unit) {
                     color = AppTheme.color.stroke,
                     shape = CircleShape,
                 ).size(40.dp),
+        shape = CircleShape
     )
 }
 
