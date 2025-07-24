@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.aflami.custom.plugin)
+    alias(libs.plugins.kover)
 }
 
 android {
@@ -36,4 +37,6 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(kotlin("test"))
 
+    //Datastore
+    implementation(libs.androidx.datastore.preferences)
 }

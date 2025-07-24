@@ -1,16 +1,24 @@
 package com.example.repository.dto.local
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.example.repository.dto.local.utils.DatabaseContract
+import androidx.room.Index
+import com.example.repository.dto.local.utils.DatabaseConstants
+import kotlinx.datetime.LocalDate
 
-@Entity(tableName = DatabaseContract.MOVIE_TABLE)
+@Entity(
+    tableName = DatabaseConstants.MOVIE_TABLE,
+    primaryKeys = ["movieId", "storedLanguage"],
+    indices = [
+        Index(value = ["movieId", "storedLanguage"], unique = true),
+    ]
+)
 data class LocalMovieDto(
-    @PrimaryKey(autoGenerate = false) val movieId: Long,
+    val movieId: Long,
+    val storedLanguage: String,
     val name: String,
     val description: String,
     val poster: String,
-    val productionYear: Int,
+    val releaseDate: LocalDate,
     val popularity: Double,
     val rating: Float,
     val originCountry: String,

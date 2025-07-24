@@ -6,23 +6,24 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.localdatasource.roomDataBase.converter.InstantConverter
+import com.example.localdatasource.roomDataBase.converter.LocalDateConverter
 import com.example.localdatasource.roomDataBase.converter.SearchTypeConverter
 import com.example.localdatasource.roomDataBase.daos.CategoryDao
-import com.example.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.example.localdatasource.roomDataBase.daos.CountryDao
+import com.example.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.example.localdatasource.roomDataBase.daos.MovieDao
 import com.example.localdatasource.roomDataBase.daos.RecentSearchDao
 import com.example.localdatasource.roomDataBase.daos.TvShowCategoryInterestDao
 import com.example.localdatasource.roomDataBase.daos.TvShowDao
-import com.example.repository.dto.local.LocalMovieCategoryInterestDto
 import com.example.repository.dto.local.LocalCountryDto
 import com.example.repository.dto.local.LocalMovieCategoryDto
+import com.example.repository.dto.local.LocalMovieCategoryInterestDto
 import com.example.repository.dto.local.LocalMovieDto
 import com.example.repository.dto.local.LocalSearchDto
 import com.example.repository.dto.local.LocalTvShowCategoryDto
 import com.example.repository.dto.local.LocalTvShowCategoryInterestDto
 import com.example.repository.dto.local.LocalTvShowDto
-import com.example.repository.dto.local.LocalTvShowWithSearchDto
+import com.example.repository.dto.local.SearchTvShowCrossRefDto
 import com.example.repository.dto.local.MovieCategoryCrossRefDto
 import com.example.repository.dto.local.SearchMovieCrossRefDto
 import com.example.repository.dto.local.TvShowCategoryCrossRefDto
@@ -34,16 +35,16 @@ import com.example.repository.dto.local.TvShowCategoryCrossRefDto
         LocalTvShowCategoryDto::class,
         LocalMovieDto::class,
         LocalTvShowDto::class,
-        LocalTvShowWithSearchDto::class,
+        SearchTvShowCrossRefDto::class,
         MovieCategoryCrossRefDto::class,
         TvShowCategoryCrossRefDto::class,
         SearchMovieCrossRefDto::class,
         LocalMovieCategoryInterestDto::class,
         LocalTvShowCategoryInterestDto::class],
     version = 1,
-    exportSchema = true
+    exportSchema = false
 )
-@TypeConverters(InstantConverter::class, SearchTypeConverter::class)
+@TypeConverters(InstantConverter::class, SearchTypeConverter::class, LocalDateConverter::class)
 abstract class AflamiDatabase : RoomDatabase() {
     abstract fun recentSearchDao(): RecentSearchDao
     abstract fun countryDao(): CountryDao
@@ -54,7 +55,7 @@ abstract class AflamiDatabase : RoomDatabase() {
     abstract fun tvShowCategoryInterestDao(): TvShowCategoryInterestDao
 
     companion object {
-        private const val DATABASE_NAME = "AflamiDatabase"
+        private const val DATABASE_NAME = "AflamiDatabase.db"
 
         @Volatile
         private var instance: AflamiDatabase? = null

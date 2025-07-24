@@ -1,18 +1,26 @@
 package com.example.repository.dto.local
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.example.repository.dto.local.utils.DatabaseContract
+import androidx.room.Index
+import com.example.repository.dto.local.utils.DatabaseConstants
+import kotlinx.datetime.LocalDate
 
 @Entity(
-    tableName = DatabaseContract.TV_SHOW_TABLE
+    tableName = DatabaseConstants.TV_SHOW_TABLE,
+    primaryKeys = ["tvShowId", "storedLanguage"],
+    indices = [
+        Index(value = ["tvShowId", "storedLanguage"], unique = true),
+    ]
 )
 data class LocalTvShowDto(
-    @PrimaryKey(autoGenerate = false) val tvShowId: Long,
+    val tvShowId: Long,
+    val storedLanguage: String,
     val name: String,
     val description: String,
     val poster: String,
-    val productionYear: Int,
+    val airDate: LocalDate,
     val rating: Float,
-    val popularity: Double
+    val popularity: Double,
+    val seasonCount: Int,
+    val originCountry: String
 )

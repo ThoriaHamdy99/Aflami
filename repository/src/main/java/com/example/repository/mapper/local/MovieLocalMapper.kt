@@ -13,7 +13,7 @@ class MovieLocalMapper : EntityMapper<LocalMovieDto, Movie>,
             name = dto.name,
             description = dto.description,
             posterUrl = dto.poster,
-            productionYear = dto.productionYear.toUInt(),
+            releaseDate = dto.releaseDate,
             rating = dto.rating,
             categories = emptyList(),
             popularity = dto.popularity,
@@ -23,13 +23,14 @@ class MovieLocalMapper : EntityMapper<LocalMovieDto, Movie>,
         )
     }
 
-    override fun toDto(entity: Movie): LocalMovieDto {
+    override fun toDto(entity: Movie, args: List<Any>): LocalMovieDto {
         return LocalMovieDto(
             movieId = entity.id,
+            storedLanguage = args.first().toString(),
             name = entity.name,
             description = entity.description,
             poster = entity.posterUrl,
-            productionYear = entity.productionYear.toInt(),
+            releaseDate = entity.releaseDate,
             rating = entity.rating,
             popularity = entity.popularity,
             movieLength = entity.runTime,

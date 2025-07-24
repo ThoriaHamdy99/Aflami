@@ -52,9 +52,11 @@ import com.example.ui.components.NoNetworkContainer
 import com.example.ui.components.appBar.DefaultAppBar
 import com.example.ui.navigation.Route
 import com.example.ui.navigation.Route.MovieDetails
+import com.example.ui.navigation.Route.SeriesDetails
 import com.example.ui.screens.search.keywordSearch.sections.RecentSearchesSection
 import com.example.ui.screens.search.keywordSearch.sections.SuggestionsHubSection
 import com.example.ui.screens.search.keywordSearch.sections.filterDialog.FilterDialog
+import com.example.ui.utils.safeNavigate
 import com.example.viewmodel.search.keywordSearch.FilterInteractionListener
 import com.example.viewmodel.search.keywordSearch.SearchErrorState
 import com.example.viewmodel.search.keywordSearch.SearchInteractionListener
@@ -79,14 +81,16 @@ internal fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
             effect?.let {
                 when (effect) {
                     SearchUiEffect.NavigateBack -> navController.popBackStack()
-                    SearchUiEffect.NavigateToActorSearch -> navController.navigate(Route.SearchByActor)
-                    is SearchUiEffect.NavigateToMovieDetails -> navController.navigate(
-                        MovieDetails(
-                            effect.movieId
-                        )
-                    )
-
-                    SearchUiEffect.NavigateToWorldSearch -> navController.navigate(Route.SearchByCountry)
+                    SearchUiEffect.NavigateToActorSearch -> navController.safeNavigate(Route.SearchByActor)
+                    SearchUiEffect.NavigateToWorldSearch -> navController.safeNavigate(Route.SearchByCountry)
+                    is SearchUiEffect.NavigateToMovieDetails -> {
+                        viewModel.onSaveSearchHistory()
+                        navController.safeNavigate(MovieDetails(effect.movieId))
+                    }
+                    is SearchUiEffect.NavigateToTvShowDetails -> {
+                        viewModel.onSaveSearchHistory()
+                        navController.navigate(SeriesDetails(effect.tvShowId))
+                    }
                 }
             }
         }
@@ -129,8 +133,8 @@ private fun SearchContent(
             onNavigateBackClicked = interaction::onClickNavigateBack,
             onKeywordValuedChanged = interaction::onChangeSearchKeyword,
             onFilterButtonClicked = interaction::onClickFilterButton,
-            onSearchActionClicked = interaction::onClickSearchAction,
             onTabOptionClicked = interaction::onClickTabOption,
+            onSaveSearchHistory = interaction::onSaveSearchHistory,
             onHeaderSizeChanged = {
                 headerHeight = it.height.dp
             },
@@ -151,12 +155,7 @@ private fun SearchContent(
             FilterDialog(
                 filterState = state.filterItemUiState,
                 selectedTabOption = state.selectedTabOption,
-                onCancelButtonClicked = filterInteraction::onClickCancel,
-                onRatingStarChanged = filterInteraction::onChangeRatingStar,
-                onMovieGenreButtonChanged = filterInteraction::onChangeMovieGenre,
-                onTvGenreButtonChanged = filterInteraction::onChangeTvShowGenre,
-                onApplyButtonClicked = filterInteraction::onClickApply,
-                onClearButtonClicked = filterInteraction::onClickClear
+                interaction = filterInteraction
             )
         }
 
@@ -167,6 +166,7 @@ private fun SearchContent(
                 tvShowsFlow = tvShows,
                 onPageLoading = { isPageStillLoading = it },
                 onMovieClicked = interaction::onClickMovieCard,
+                onTvShowClicked = interaction::onClickTvShowCard,
             )
         }
 
@@ -225,6 +225,7 @@ private fun SuccessMediaItems(
     tvShowsFlow: LazyPagingItems<TvShowItemUiState>,
     onPageLoading: (Boolean) -> Unit,
     onMovieClicked: (movieId: Long) -> Unit,
+    onTvShowClicked: (tvShowId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val selectedItems = if (selectedTabOption == TabOption.MOVIES) {
@@ -240,7 +241,10 @@ private fun SuccessMediaItems(
         contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
         modifier = modifier,
     ) {
-        items(selectedItems.itemCount) { index ->
+        items(
+            selectedItems.itemCount,
+            key = { index -> getItemKey(selectedTabOption, index, selectedItems) },
+        ) { index ->
             val mediaItem = selectedItems[index] ?: return@items
             when (mediaItem) {
                 is MovieItemUiState -> {
@@ -279,6 +283,7 @@ private fun SuccessMediaItems(
                         movieYear = mediaItem.yearOfRelease,
                         movieTitle = mediaItem.name,
                         movieRating = mediaItem.rate,
+                        onClick = {onTvShowClicked(mediaItem.id)}
                     )
                 }
             }
@@ -300,6 +305,17 @@ private fun SuccessMediaItems(
     }
 }
 
+private fun getItemKey(
+    selectedTabOption: TabOption,
+    index: Int,
+    selectedItems: LazyPagingItems<out Any>
+): String {
+    val item = selectedItems[index]
+    val id = if (selectedTabOption == TabOption.MOVIES) (item as MovieItemUiState).id
+             else (item as TvShowItemUiState).id
+    return "${id}-${index}"
+}
+
 @Composable
 private fun SearchScreenHeader(
     keyword: String,
@@ -307,8 +323,8 @@ private fun SearchScreenHeader(
     onNavigateBackClicked: () -> Unit,
     onKeywordValuedChanged: (String) -> Unit,
     onFilterButtonClicked: () -> Unit,
-    onSearchActionClicked: () -> Unit,
     onTabOptionClicked: (TabOption) -> Unit,
+    onSaveSearchHistory: () -> Unit,
     modifier: Modifier = Modifier,
     onHeaderSizeChanged: (IntSize) -> Unit = {},
 ) {
@@ -341,7 +357,8 @@ private fun SearchScreenHeader(
                 KeyboardActions(
                     onSearch = {
                         keyboardController?.hide()
-                        onSearchActionClicked()
+                        onKeywordValuedChanged(keyword)
+                        onSaveSearchHistory()
                     },
                 ),
             imeAction = ImeAction.Search,

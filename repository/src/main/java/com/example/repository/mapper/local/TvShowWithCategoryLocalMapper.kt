@@ -13,10 +13,12 @@ class TvShowWithCategoryLocalMapper(
             name = dto.tvShow.name,
             description = dto.tvShow.description,
             posterUrl = dto.tvShow.poster,
-            productionYear = dto.tvShow.productionYear.toUInt(),
+            airDate = dto.tvShow.airDate,
             rating = dto.tvShow.rating,
             categories = tvShowGenreLocalMapper.toEntityList(dto.categories),
-            popularity = dto.tvShow.popularity
+            popularity = dto.tvShow.popularity,
+            seasonCount = dto.tvShow.seasonCount,
+            originCountry = dto.tvShow.originCountry,
         )
     }
 }

@@ -6,7 +6,7 @@ import com.example.entity.category.TvShowGenre
 interface SearchInteractionListener {
     fun onClickNavigateBack()
     fun onChangeSearchKeyword(keyword: String)
-    fun onClickSearchAction()
+    fun onSaveSearchHistory()
     fun onClickFilterButton()
     fun onClickWorldSearchCard()
     fun onClickActorSearchCard()
@@ -14,6 +14,7 @@ interface SearchInteractionListener {
 
     fun onClickTabOption(tabOption: TabOption)
     fun onClickMovieCard(movieId : Long)
+    fun onClickTvShowCard(tvShowId: Long)
 
     fun onClickRecentSearch(keyword: String)
     fun onClickClearRecentSearch(keyword: String)

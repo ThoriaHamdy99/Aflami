@@ -1,45 +1,44 @@
 package com.example.remotedatasource
 
-import com.example.remotedatasource.client.NetworkClient
+import com.example.domain.exceptions.NetworkException
+import com.example.domain.exceptions.NoInternetException
+import com.example.domain.exceptions.ServerErrorException
 import com.example.remotedatasource.datasource.MovieRemoteDataSourceImpl
+import com.example.remotedatasource.serviceProvider.MovieServiceProvider
+import com.example.repository.dto.remote.ProductionCompanyResponse
 import com.example.repository.dto.remote.RemoteActorSearchResponse
 import com.example.repository.dto.remote.RemoteCastAndCrewResponse
 import com.example.repository.dto.remote.RemoteMovieItemDto
 import com.example.repository.dto.remote.RemoteMovieResponse
-import com.example.repository.dto.remote.movieGallery.RemoteMovieGalleryResponse
+import com.example.repository.dto.remote.movieGallery.RemoteGalleryResponse
 import com.example.repository.dto.remote.review.ReviewsResponse
-import io.ktor.client.call.body
-import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.client.statement.HttpResponse
-import io.ktor.http.HttpStatusCode
+import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.slot
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class MovieRemoteDataSourceImplTest {
 
-    private lateinit var networkClient: NetworkClient
+    private lateinit var movieServiceProvider: MovieServiceProvider
     private lateinit var movieRemoteDataSourceImpl: MovieRemoteDataSourceImpl
 
     private val jsonSerializer = Json { ignoreUnknownKeys = true }
 
-    @Before
+    @BeforeEach
     fun setUp() {
-        networkClient = mockk()
-        movieRemoteDataSourceImpl = MovieRemoteDataSourceImpl(networkClient)
+        movieServiceProvider = mockk()
+        movieRemoteDataSourceImpl = MovieRemoteDataSourceImpl(movieServiceProvider)
     }
 
     @Test
     fun `getMoviesByKeyword should return a list of movies when executed`() = runTest {
-        // Given
         val keyword = "Inception"
+        val page = 1
         val jsonString = """
             {
               "page": 1,
@@ -69,39 +68,25 @@ class MovieRemoteDataSourceImplTest {
         val expectedMovieResponse =
             jsonSerializer.decodeFromString<RemoteMovieResponse>(jsonString)
 
-        val mockHttpResponse = mockk<HttpResponse>(relaxed = true)
-
-        coEvery { mockHttpResponse.status } returns HttpStatusCode.OK
-        coEvery { mockHttpResponse.body<RemoteMovieResponse>() } returns expectedMovieResponse
-
-        val requestBuilderSlot = slot<HttpRequestBuilder.() -> Unit>()
 
         coEvery {
-            networkClient.get(
-                "search/movie",
-                capture(requestBuilderSlot)
-            )
-        } returns mockHttpResponse
+            movieServiceProvider.getMoviesByKeyword(keyword, page)
+        } returns expectedMovieResponse
 
-        // When
-        val movies = movieRemoteDataSourceImpl.getMoviesByKeyword(keyword, 1)
+        val movies = movieRemoteDataSourceImpl.getMoviesByKeyword(keyword, page)
 
-        // Then
-        coVerify(exactly = 1) { networkClient.get("search/movie", any()) }
+        coVerify(exactly = 1) { movieServiceProvider.getMoviesByKeyword(keyword, page) }
 
-        val dummyBuilder = HttpRequestBuilder()
-        requestBuilderSlot.captured.invoke(dummyBuilder)
-        assertEquals(keyword, dummyBuilder.url.parameters["query"])
 
-        assertEquals(1, movies.results.size)
-        assertEquals("Inception", movies.results[0].title)
-        assertEquals(27205, movies.results[0].id)
+        assertThat(movies.results).hasSize(1)
+        assertThat(movies.results[0].title).isEqualTo("Inception")
+        assertThat(movies.results[0].id).isEqualTo(27205)
     }
 
     @Test
     fun `getMoviesByActorName should return movies for a given actor when executed`() = runTest {
-        // Given
         val actorName = "Leonardo DiCaprio"
+        val page = 1
         val actorId = 6193
         val actorSearchJson = """
             {
@@ -155,56 +140,31 @@ class MovieRemoteDataSourceImplTest {
         val expectedMovieResponse =
             jsonSerializer.decodeFromString<RemoteMovieResponse>(discoverMovieJson)
 
-        val mockActorSearchHttpResponse = mockk<HttpResponse>(relaxed = true)
-        coEvery { mockActorSearchHttpResponse.status } returns HttpStatusCode.OK
-        coEvery { mockActorSearchHttpResponse.body<RemoteActorSearchResponse>() } returns expectedActorSearchResponse
+        coEvery {
+            movieServiceProvider.getActorIdByName(actorName, page)
+        } returns expectedActorSearchResponse
 
-        val mockDiscoverMovieHttpResponse = mockk<HttpResponse>(relaxed = true)
-        coEvery { mockDiscoverMovieHttpResponse.status } returns HttpStatusCode.OK
-        coEvery { mockDiscoverMovieHttpResponse.body<RemoteMovieResponse>() } returns expectedMovieResponse
-
-        val actorSearchRequestBuilderSlot = slot<HttpRequestBuilder.() -> Unit>()
-        val discoverMovieRequestBuilderSlot = slot<HttpRequestBuilder.() -> Unit>()
 
         coEvery {
-            networkClient.get(
-                "search/person",
-                capture(actorSearchRequestBuilderSlot)
-            )
-        } returns mockActorSearchHttpResponse
+            movieServiceProvider.getMoviesByActorId(actorId.toString())
+        } returns expectedMovieResponse
 
-        coEvery {
-            networkClient.get(
-                "discover/movie",
-                capture(discoverMovieRequestBuilderSlot)
-            )
-        } returns mockDiscoverMovieHttpResponse
+        val movies = movieRemoteDataSourceImpl.getMoviesByActorName(actorName, page)
 
-        // When
-        val movies = movieRemoteDataSourceImpl.getMoviesByActorName(actorName, 1)
+        coVerify(exactly = 1) { movieServiceProvider.getActorIdByName(actorName, page) }
+        coVerify(exactly = 1) { movieServiceProvider.getMoviesByActorId(actorId.toString()) }
 
-        // Then
-        coVerify(exactly = 1) { networkClient.get("search/person", any()) }
-        coVerify(exactly = 1) { networkClient.get("discover/movie", any()) }
 
-        val dummyActorSearchBuilder = HttpRequestBuilder()
-        actorSearchRequestBuilderSlot.captured.invoke(dummyActorSearchBuilder)
-        assertEquals(actorName, dummyActorSearchBuilder.url.parameters["query"])
-
-        val dummyDiscoverMovieBuilder = HttpRequestBuilder()
-        discoverMovieRequestBuilderSlot.captured.invoke(dummyDiscoverMovieBuilder)
-        assertEquals(actorId.toString(), dummyDiscoverMovieBuilder.url.parameters["with_cast"])
-
-        assertEquals(1, movies.results.size)
-        assertEquals("The Revenant", movies.results[0].title)
-        assertEquals(12345, movies.results[0].id)
+        assertThat(movies.results).hasSize(1)
+        assertThat(movies.results[0].title).isEqualTo("The Revenant")
+        assertThat(movies.results[0].id).isEqualTo(12345)
     }
 
     @Test
     fun `getMoviesByCountryIsoCode should return movies from a specific country when executed`() =
         runTest {
-            // Given
             val countryIsoCode = "US"
+            val page = 1
             val jsonString = """
             {
               "page": 1,
@@ -234,37 +194,27 @@ class MovieRemoteDataSourceImplTest {
             val expectedMovieResponse =
                 jsonSerializer.decodeFromString<RemoteMovieResponse>(jsonString)
 
-            val mockHttpResponse = mockk<HttpResponse>(relaxed = true)
-            coEvery { mockHttpResponse.status } returns HttpStatusCode.OK
-            coEvery { mockHttpResponse.body<RemoteMovieResponse>() } returns expectedMovieResponse
-
-            val requestBuilderSlot = slot<HttpRequestBuilder.() -> Unit>()
-
             coEvery {
-                networkClient.get(
-                    "discover/movie",
-                    capture(requestBuilderSlot)
+                movieServiceProvider.getMoviesByCountryIsoCode(countryIsoCode, page)
+            } returns expectedMovieResponse
+
+            val movies = movieRemoteDataSourceImpl.getMoviesByCountryIsoCode(countryIsoCode, page)
+
+            coVerify(exactly = 1) {
+                movieServiceProvider.getMoviesByCountryIsoCode(
+                    countryIsoCode,
+                    page
                 )
-            } returns mockHttpResponse
+            }
 
-            // When
-            val movies = movieRemoteDataSourceImpl.getMoviesByCountryIsoCode(countryIsoCode, 1)
 
-            // Then
-            coVerify(exactly = 1) { networkClient.get("discover/movie", any()) }
-
-            val dummyBuilder = HttpRequestBuilder()
-            requestBuilderSlot.captured.invoke(dummyBuilder)
-            assertEquals(countryIsoCode, dummyBuilder.url.parameters["with_origin_country"])
-
-            assertEquals(1, movies.results.size)
-            assertEquals("American Beauty", movies.results[0].title)
-            assertEquals(67890, movies.results[0].id)
+            assertThat(movies.results).hasSize(1)
+            assertThat(movies.results[0].title).isEqualTo("American Beauty")
+            assertThat(movies.results[0].id).isEqualTo(67890)
         }
 
     @Test
     fun `getCastByMovieId should return cast and crew for a movie when executed`() = runTest {
-        // Given
         val movieId = 550L
         val jsonString = """
             {
@@ -306,31 +256,24 @@ class MovieRemoteDataSourceImplTest {
         val expectedCastAndCrewResponse =
             jsonSerializer.decodeFromString<RemoteCastAndCrewResponse>(jsonString)
 
-        val mockHttpResponse = mockk<HttpResponse>(relaxed = true)
-        coEvery { mockHttpResponse.status } returns HttpStatusCode.OK
-        coEvery { mockHttpResponse.body<RemoteCastAndCrewResponse>() } returns expectedCastAndCrewResponse
-
         coEvery {
-            networkClient.get("movie/$movieId/credits", any())
-        } returns mockHttpResponse
+            movieServiceProvider.getCastByMovieId(movieId)
+        } returns expectedCastAndCrewResponse
 
-        // When
         val castAndCrew = movieRemoteDataSourceImpl.getCastByMovieId(movieId)
 
-        // Then
-        coVerify(exactly = 1) { networkClient.get("movie/$movieId/credits", any()) }
+        coVerify(exactly = 1) { movieServiceProvider.getCastByMovieId(movieId) }
 
-        assertEquals(movieId.toInt(), castAndCrew.id)
-        assertEquals(1, castAndCrew.cast.size)
-        assertEquals("Edward Norton", castAndCrew.cast[0].name)
-        assertEquals(1, castAndCrew.crew.size)
-        assertEquals("David Fincher", castAndCrew.crew[0].name)
-        assertEquals("Director", castAndCrew.crew[0].job)
+        assertThat(castAndCrew.id).isEqualTo(movieId.toInt())
+        assertThat(castAndCrew.cast).hasSize(1)
+        assertThat(castAndCrew.cast[0].name).isEqualTo("Edward Norton")
+        assertThat(castAndCrew.crew).hasSize(1)
+        assertThat(castAndCrew.crew[0].name).isEqualTo("David Fincher")
+        assertThat(castAndCrew.crew[0].job).isEqualTo("Director")
     }
 
     @Test
     fun `getMovieReviews should return reviews for a movie when executed`() = runTest {
-        // Given
         val movieId = 550L
         val jsonString = """
             {
@@ -360,29 +303,22 @@ class MovieRemoteDataSourceImplTest {
         val expectedReviewsResponse =
             jsonSerializer.decodeFromString<ReviewsResponse>(jsonString)
 
-        val mockHttpResponse = mockk<HttpResponse>(relaxed = true)
-        coEvery { mockHttpResponse.status } returns HttpStatusCode.OK
-        coEvery { mockHttpResponse.body<ReviewsResponse>() } returns expectedReviewsResponse
-
         coEvery {
-            networkClient.get("movie/$movieId/reviews", any())
-        } returns mockHttpResponse
+            movieServiceProvider.getMovieReviews(movieId)
+        } returns expectedReviewsResponse
 
-        // When
         val reviews = movieRemoteDataSourceImpl.getMovieReviews(movieId)
 
-        // Then
-        coVerify(exactly = 1) { networkClient.get("movie/$movieId/reviews", any()) }
+        coVerify(exactly = 1) { movieServiceProvider.getMovieReviews(movieId) }
 
-        assertEquals(movieId, reviews.id)
-        assertEquals(1, reviews.results.size)
-        assertEquals("John Doe", reviews.results[0].author)
-        assertEquals("This movie was fantastic!", reviews.results[0].content)
+        assertThat(reviews.id).isEqualTo(movieId)
+        assertThat(reviews.results).hasSize(1)
+        assertThat(reviews.results[0].author).isEqualTo("John Doe")
+        assertThat(reviews.results[0].content).isEqualTo("This movie was fantastic!")
     }
 
     @Test
     fun `getSimilarMovies should return similar movies when executed`() = runTest {
-        // Given
         val movieId = 550L
         val jsonString = """
             {
@@ -413,28 +349,21 @@ class MovieRemoteDataSourceImplTest {
         val expectedMovieResponse =
             jsonSerializer.decodeFromString<RemoteMovieResponse>(jsonString)
 
-        val mockHttpResponse = mockk<HttpResponse>(relaxed = true)
-        coEvery { mockHttpResponse.status } returns HttpStatusCode.OK
-        coEvery { mockHttpResponse.body<RemoteMovieResponse>() } returns expectedMovieResponse
-
         coEvery {
-            networkClient.get("movie/$movieId/similar", any())
-        } returns mockHttpResponse
+            movieServiceProvider.getSimilarMovies(movieId)
+        } returns expectedMovieResponse
 
-        // When
         val similarMovies = movieRemoteDataSourceImpl.getSimilarMovies(movieId)
 
-        // Then
-        coVerify(exactly = 1) { networkClient.get("movie/$movieId/similar", any()) }
+        coVerify(exactly = 1) { movieServiceProvider.getSimilarMovies(movieId) }
 
-        assertEquals(1, similarMovies.results.size)
-        assertEquals("Se7en", similarMovies.results[0].title)
-        assertEquals(98765, similarMovies.results[0].id)
+        assertThat(similarMovies.results).hasSize(1)
+        assertThat(similarMovies.results[0].title).isEqualTo("Se7en")
+        assertThat(similarMovies.results[0].id).isEqualTo(98765)
     }
 
     @Test
     fun `getMovieGallery should return movie images when executed`() = runTest {
-        // Given
         val movieId = 550L
         val jsonString = """
             {
@@ -451,32 +380,25 @@ class MovieRemoteDataSourceImplTest {
         """.trimIndent()
 
         val expectedGalleryResponse =
-            jsonSerializer.decodeFromString<RemoteMovieGalleryResponse>(jsonString)
-
-        val mockHttpResponse = mockk<HttpResponse>(relaxed = true)
-        coEvery { mockHttpResponse.status } returns HttpStatusCode.OK
-        coEvery { mockHttpResponse.body<RemoteMovieGalleryResponse>() } returns expectedGalleryResponse
+            jsonSerializer.decodeFromString<RemoteGalleryResponse>(jsonString)
 
         coEvery {
-            networkClient.get("movie/$movieId/images", any())
-        } returns mockHttpResponse
+            movieServiceProvider.getMovieGallery(movieId)
+        } returns expectedGalleryResponse
 
-        // When
         val gallery = movieRemoteDataSourceImpl.getMovieGallery(movieId)
 
-        // Then
-        coVerify(exactly = 1) { networkClient.get("movie/$movieId/images", any()) }
+        coVerify(exactly = 1) { movieServiceProvider.getMovieGallery(movieId) }
 
-        assertEquals(movieId, gallery.id)
-        assertEquals(2, gallery.backdrops?.size)
-        assertEquals(1, gallery.posters?.size)
-        assertTrue(gallery.backdrops?.any { it.filePath == "/backdrop1.jpg" } ?: false)
-        assertTrue(gallery.posters?.any { it.filePath == "/poster1.jpg" } ?: false)
+        assertThat(gallery.id).isEqualTo(movieId)
+        assertThat(gallery.backdrops).hasSize(2)
+        assertThat(gallery.posters).hasSize(1)
+        assertThat(gallery.backdrops?.any { it.filePath == "/backdrop1.jpg" }).isTrue()
+        assertThat(gallery.posters?.any { it.filePath == "/poster1.jpg" }).isTrue()
     }
 
     @Test
     fun `getMovieDetailsById should return detailed movie information when executed`() = runTest {
-        // Given
         val movieId = 550L
         val jsonString = """
             {
@@ -513,29 +435,22 @@ class MovieRemoteDataSourceImplTest {
         val expectedMovieItemDto =
             jsonSerializer.decodeFromString<RemoteMovieItemDto>(jsonString)
 
-        val mockHttpResponse = mockk<HttpResponse>(relaxed = true)
-        coEvery { mockHttpResponse.status } returns HttpStatusCode.OK
-        coEvery { mockHttpResponse.body<RemoteMovieItemDto>() } returns expectedMovieItemDto
-
         coEvery {
-            networkClient.get("movie/$movieId", any())
-        } returns mockHttpResponse
+            movieServiceProvider.getMovieDetailsById(movieId)
+        } returns expectedMovieItemDto
 
-        // When
         val movieDetails = movieRemoteDataSourceImpl.getMovieDetailsById(movieId)
 
-        // Then
-        coVerify(exactly = 1) { networkClient.get("movie/$movieId", any()) }
+        coVerify(exactly = 1) { movieServiceProvider.getMovieDetailsById(movieId) }
 
-        assertEquals(movieId, movieDetails.id)
-        assertEquals("Fight Club", movieDetails.title)
-        assertEquals("A depressed man...", movieDetails.overview)
-        assertEquals(139, movieDetails.runtime)
+        assertThat(movieDetails.id).isEqualTo(movieId)
+        assertThat(movieDetails.title).isEqualTo("Fight Club")
+        assertThat(movieDetails.overview).isEqualTo("A depressed man...")
+        assertThat(movieDetails.runtime).isEqualTo(139)
     }
 
     @Test
     fun `getMoviePosters should return movie images for posters when executed`() = runTest {
-        // Given
         val movieId = 550L
         val jsonString = """
             {
@@ -550,25 +465,568 @@ class MovieRemoteDataSourceImplTest {
         """.trimIndent()
 
         val expectedGalleryResponse =
-            jsonSerializer.decodeFromString<RemoteMovieGalleryResponse>(jsonString)
-
-        val mockHttpResponse = mockk<HttpResponse>(relaxed = true)
-        coEvery { mockHttpResponse.status } returns HttpStatusCode.OK
-        coEvery { mockHttpResponse.body<RemoteMovieGalleryResponse>() } returns expectedGalleryResponse
+            jsonSerializer.decodeFromString<RemoteGalleryResponse>(jsonString)
 
         coEvery {
-            networkClient.get("movie/$movieId/images", any())
-        } returns mockHttpResponse
+            movieServiceProvider.getMoviePosters(movieId)
+        } returns expectedGalleryResponse
 
-        // When
         val posters = movieRemoteDataSourceImpl.getMoviePosters(movieId)
 
-        // Then
-        coVerify(exactly = 1) { networkClient.get("movie/$movieId/images", any()) }
+        coVerify(exactly = 1) { movieServiceProvider.getMoviePosters(movieId) }
 
-        assertEquals(movieId, posters.id)
-        assertEquals(0, posters.backdrops?.size)
-        assertEquals(2, posters.posters?.size)
-        assertTrue(posters.posters?.any { it.filePath == "/poster1.jpg" } ?: false)
+        assertThat(posters.id).isEqualTo(movieId)
+        assertThat(posters.backdrops).isEmpty()
+        assertThat(posters.posters).hasSize(2)
+        assertThat(posters.posters?.any { it.filePath == "/poster1.jpg" }).isTrue()
+    }
+
+
+    @Test
+    fun `getPopularMovies should return popular movies when executed`() = runTest {
+        val jsonString = """
+            {
+              "page": 1,
+              "results": [
+                {
+                  "adult": false,
+                  "backdrop_path": "/path/to/popular_backdrop.jpg",
+                  "genre_ids": [28],
+                  "id": 112233,
+                  "original_language": "en",
+                  "original_title": "Popular Movie",
+                  "overview": "An overview of a popular movie.",
+                  "popularity": 500.0,
+                  "poster_path": "/path/to/popular_poster.jpg",
+                  "release_date": "2024-01-01",
+                  "title": "Popular Movie",
+                  "video": false,
+                  "vote_average": 8.5,
+                  "vote_count": 50000
+                }
+              ],
+              "total_pages": 1,
+              "total_results": 1
+            }
+        """.trimIndent()
+
+        val expectedMovieResponse =
+            jsonSerializer.decodeFromString<RemoteMovieResponse>(jsonString)
+
+        coEvery {
+            movieServiceProvider.getPopularMovies()
+        } returns expectedMovieResponse
+
+        val popularMovies = movieRemoteDataSourceImpl.getPopularMovies()
+
+        coVerify(exactly = 1) { movieServiceProvider.getPopularMovies() }
+
+        assertThat(popularMovies.results).hasSize(1)
+        assertThat(popularMovies.results[0].title).isEqualTo("Popular Movie")
+        assertThat(popularMovies.results[0].id).isEqualTo(112233)
+    }
+
+    @Test
+    fun `getProductionCompany should return production company details when executed`() = runTest {
+        val movieId = 550L
+        val jsonString = """
+            {
+              "adult": false,
+              "backdrop_path": "/path/to/backdrop.jpg",
+              "belongs_to_collection": null,
+              "budget": 63000000,
+              "genres": [
+                {"id": 18, "name": "Drama"}
+              ],
+              "homepage": "http://www.foxmovies.com/movies/fight-club",
+              "id": 550,
+              "imdb_id": "tt0137523",
+              "original_language": "en",
+              "original_title": "Fight Club",
+              "overview": "A depressed man...",
+              "popularity": 45.0,
+              "poster_path": "/path/to/poster.jpg",
+              "production_companies": [
+                {
+                  "id": 508,
+                  "logo_path": "/path/to/regency_logo.png",
+                  "name": "Regency Enterprises",
+                  "origin_country": "US"
+                }
+              ],
+              "production_countries": [],
+              "release_date": "1999-10-15",
+              "revenue": 100853753,
+              "runtime": 139,
+              "spoken_languages": [],
+              "status": "Released",
+              "tagline": "Mischief. Mayhem. Soap.",
+                  "title": "Fight Club",
+                  "video": false,
+                  "vote_average": 8.433,
+                  "vote_count": 27000
+            }
+        """.trimIndent()
+
+        val expectedProductionCompanyResponse =
+            jsonSerializer.decodeFromString<ProductionCompanyResponse>(jsonString)
+
+        coEvery {
+            movieServiceProvider.getProductionCompany(movieId)
+        } returns expectedProductionCompanyResponse
+
+        val productionCompany = movieRemoteDataSourceImpl.getProductionCompany(movieId)
+
+        coVerify(exactly = 1) { movieServiceProvider.getProductionCompany(movieId) }
+
+        assertThat(productionCompany.productionCompanies).hasSize(1)
+        assertThat(productionCompany.productionCompanies[0].name).isEqualTo("Regency Enterprises")
+        assertThat(productionCompany.productionCompanies[0].id).isEqualTo(508)
+    }
+
+    @Test
+    fun `getPopularMovies should rethrow ServerErrorException from service provider`() = runTest {
+        coEvery { movieServiceProvider.getPopularMovies() } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getPopularMovies()
+        }
+    }
+
+    @Test
+    fun `getPopularMovies should rethrow NoInternetException from service provider`() = runTest {
+        coEvery { movieServiceProvider.getPopularMovies() } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getPopularMovies()
+        }
+    }
+
+    @Test
+    fun `getPopularMovies should rethrow NetworkException from service provider`() = runTest {
+        coEvery { movieServiceProvider.getPopularMovies() } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getPopularMovies()
+        }
+    }
+    @Test
+    fun `getMoviesByActorName should rethrow NetworkException if actor search fails`() = runTest {
+        val actorName = "Leonardo DiCaprio"
+        val page = 1
+        coEvery { movieServiceProvider.getActorIdByName(actorName, page) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getMoviesByActorName(actorName, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByActorName should rethrow ServerErrorException if actor search fails`() = runTest {
+        val actorName = "Leonardo DiCaprio"
+        val page = 1
+        coEvery { movieServiceProvider.getActorIdByName(actorName, page) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getMoviesByActorName(actorName, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByActorName should rethrow NoInternetException if actor search fails`() = runTest {
+        val actorName = "Leonardo DiCaprio"
+        val page = 1
+        coEvery { movieServiceProvider.getActorIdByName(actorName, page) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getMoviesByActorName(actorName, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByActorName should rethrow NetworkException if movie discovery by actor fails`() = runTest {
+        val actorName = "Leonardo DiCaprio"
+        val page = 1
+        val actorId = 6193
+        val actorSearchJson = """
+            {
+              "page": 1,
+              "results": [
+                {
+                  "adult": false,
+                  "gender": 2,
+                  "id": $actorId,
+                  "known_for": [],
+                  "known_for_department": "Acting",
+                  "name": "Leonardo DiCaprio",
+                  "original_name": "Leonardo DiCaprio",
+                  "popularity": 70.0,
+                  "profile_path": "/xxC9VdC8Yw40vI0yM6M8o2E5C9W.jpg"
+                }
+              ],
+              "total_pages": 1,
+              "total_results": 1
+            }
+        """.trimIndent()
+
+        val expectedActorSearchResponse =
+            jsonSerializer.decodeFromString<RemoteActorSearchResponse>(actorSearchJson)
+
+        coEvery { movieServiceProvider.getActorIdByName(actorName, page) } returns expectedActorSearchResponse
+        coEvery { movieServiceProvider.getMoviesByActorId(actorId.toString()) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getMoviesByActorName(actorName, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByActorName should rethrow ServerErrorException if movie discovery by actor fails`() = runTest {
+        val actorName = "Leonardo DiCaprio"
+        val page = 1
+        val actorId = 6193
+        val actorSearchJson = """
+            {
+              "page": 1,
+              "results": [
+                {
+                  "adult": false,
+                  "gender": 2,
+                  "id": $actorId,
+                  "known_for": [],
+                  "known_for_department": "Acting",
+                  "name": "Leonardo DiCaprio",
+                  "original_name": "Leonardo DiCaprio",
+                  "popularity": 70.0,
+                  "profile_path": "/xxC9VdC8Yw40vI0yM6M8o2E5C9W.jpg"
+                }
+              ],
+              "total_pages": 1,
+              "total_results": 1
+            }
+        """.trimIndent()
+
+        val expectedActorSearchResponse =
+            jsonSerializer.decodeFromString<RemoteActorSearchResponse>(actorSearchJson)
+
+        coEvery { movieServiceProvider.getActorIdByName(actorName, page) } returns expectedActorSearchResponse
+        coEvery { movieServiceProvider.getMoviesByActorId(actorId.toString()) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getMoviesByActorName(actorName, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByActorName should rethrow NoInternetException if movie discovery by actor fails`() = runTest {
+        val actorName = "Leonardo DiCaprio"
+        val page = 1
+        val actorId = 6193
+        val actorSearchJson = """
+            {
+              "page": 1,
+              "results": [
+                {
+                  "adult": false,
+                  "gender": 2,
+                  "id": $actorId,
+                  "known_for": [],
+                  "known_for_department": "Acting",
+                  "name": "Leonardo DiCaprio",
+                  "original_name": "Leonardo DiCaprio",
+                  "popularity": 70.0,
+                  "profile_path": "/xxC9VdC8Yw40vI0yM6M8o2E5C9W.jpg"
+                }
+              ],
+              "total_pages": 1,
+              "total_results": 1
+            }
+        """.trimIndent()
+
+        val expectedActorSearchResponse =
+            jsonSerializer.decodeFromString<RemoteActorSearchResponse>(actorSearchJson)
+
+        coEvery { movieServiceProvider.getActorIdByName(actorName, page) } returns expectedActorSearchResponse
+        coEvery { movieServiceProvider.getMoviesByActorId(actorId.toString()) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getMoviesByActorName(actorName, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByKeyword should rethrow ServerErrorException from service provider`() = runTest {
+        val keyword = "test"
+        val page = 1
+        coEvery { movieServiceProvider.getMoviesByKeyword(keyword, page) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getMoviesByKeyword(keyword, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByKeyword should rethrow NoInternetException from service provider`() = runTest {
+        val keyword = "test"
+        val page = 1
+        coEvery { movieServiceProvider.getMoviesByKeyword(keyword, page) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getMoviesByKeyword(keyword, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByKeyword should rethrow NetworkException from service provider`() = runTest {
+        val keyword = "test"
+        val page = 1
+        coEvery { movieServiceProvider.getMoviesByKeyword(keyword, page) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getMoviesByKeyword(keyword, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByCountryIsoCode should rethrow ServerErrorException from service provider`() = runTest {
+        val countryIsoCode = "US"
+        val page = 1
+        coEvery { movieServiceProvider.getMoviesByCountryIsoCode(countryIsoCode, page) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getMoviesByCountryIsoCode(countryIsoCode, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByCountryIsoCode should rethrow NoInternetException from service provider`() = runTest {
+        val countryIsoCode = "US"
+        val page = 1
+        coEvery { movieServiceProvider.getMoviesByCountryIsoCode(countryIsoCode, page) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getMoviesByCountryIsoCode(countryIsoCode, page)
+        }
+    }
+
+    @Test
+    fun `getMoviesByCountryIsoCode should rethrow NetworkException from service provider`() = runTest {
+        val countryIsoCode = "US"
+        val page = 1
+        coEvery { movieServiceProvider.getMoviesByCountryIsoCode(countryIsoCode, page) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getMoviesByCountryIsoCode(countryIsoCode, page)
+        }
+    }
+
+    @Test
+    fun `getCastByMovieId should rethrow ServerErrorException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getCastByMovieId(movieId) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getCastByMovieId(movieId)
+        }
+    }
+
+    @Test
+    fun `getCastByMovieId should rethrow NoInternetException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getCastByMovieId(movieId) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getCastByMovieId(movieId)
+        }
+    }
+
+    @Test
+    fun `getCastByMovieId should rethrow NetworkException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getCastByMovieId(movieId) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getCastByMovieId(movieId)
+        }
+    }
+
+    @Test
+    fun `getMovieReviews should rethrow ServerErrorException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMovieReviews(movieId) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getMovieReviews(movieId)
+        }
+    }
+
+    @Test
+    fun `getMovieReviews should rethrow NoInternetException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMovieReviews(movieId) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getMovieReviews(movieId)
+        }
+    }
+
+    @Test
+    fun `getMovieReviews should rethrow NetworkException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMovieReviews(movieId) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getMovieReviews(movieId)
+        }
+    }
+
+    @Test
+    fun `getSimilarMovies should rethrow ServerErrorException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getSimilarMovies(movieId) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getSimilarMovies(movieId)
+        }
+    }
+
+    @Test
+    fun `getSimilarMovies should rethrow NoInternetException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getSimilarMovies(movieId) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getSimilarMovies(movieId)
+        }
+    }
+
+    @Test
+    fun `getSimilarMovies should rethrow NetworkException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getSimilarMovies(movieId) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getSimilarMovies(movieId)
+        }
+    }
+
+    @Test
+    fun `getMovieGallery should rethrow ServerErrorException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMovieGallery(movieId) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getMovieGallery(movieId)
+        }
+    }
+
+    @Test
+    fun `getMovieGallery should rethrow NoInternetException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMovieGallery(movieId) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getMovieGallery(movieId)
+        }
+    }
+
+    @Test
+    fun `getMovieGallery should rethrow NetworkException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMovieGallery(movieId) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getMovieGallery(movieId)
+        }
+    }
+
+    @Test
+    fun `getMovieDetailsById should rethrow ServerErrorException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMovieDetailsById(movieId) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getMovieDetailsById(movieId)
+        }
+    }
+
+    @Test
+    fun `getMovieDetailsById should rethrow NoInternetException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMovieDetailsById(movieId) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getMovieDetailsById(movieId)
+        }
+    }
+
+    @Test
+    fun `getMovieDetailsById should rethrow NetworkException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMovieDetailsById(movieId) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getMovieDetailsById(movieId)
+        }
+    }
+
+    @Test
+    fun `getMoviePosters should rethrow ServerErrorException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMoviePosters(movieId) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getMoviePosters(movieId)
+        }
+    }
+
+    @Test
+    fun `getMoviePosters should rethrow NoInternetException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMoviePosters(movieId) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getMoviePosters(movieId)
+        }
+    }
+
+    @Test
+    fun `getMoviePosters should rethrow NetworkException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getMoviePosters(movieId) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getMoviePosters(movieId)
+        }
+    }
+
+    @Test
+    fun `getProductionCompany should rethrow ServerErrorException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getProductionCompany(movieId) } throws ServerErrorException()
+
+        assertThrows<ServerErrorException> {
+            movieRemoteDataSourceImpl.getProductionCompany(movieId)
+        }
+    }
+
+    @Test
+    fun `getProductionCompany should rethrow NoInternetException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getProductionCompany(movieId) } throws NoInternetException()
+
+        assertThrows<NoInternetException> {
+            movieRemoteDataSourceImpl.getProductionCompany(movieId)
+        }
+    }
+
+    @Test
+    fun `getProductionCompany should rethrow NetworkException from service provider`() = runTest {
+        val movieId = 550L
+        coEvery { movieServiceProvider.getProductionCompany(movieId) } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            movieRemoteDataSourceImpl.getProductionCompany(movieId)
+        }
     }
 }

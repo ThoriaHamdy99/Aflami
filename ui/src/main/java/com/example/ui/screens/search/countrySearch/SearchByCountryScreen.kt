@@ -2,7 +2,6 @@ package com.example.ui.screens.search.countrySearch
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -21,11 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -43,6 +40,7 @@ import com.example.ui.screens.search.countrySearch.components.CountrySearchField
 import com.example.ui.screens.search.countrySearch.components.ExploreCountries
 import com.example.ui.screens.search.countrySearch.components.MoviesVerticalGrid
 import com.example.ui.screens.search.countrySearch.components.NoMoviesFound
+import com.example.ui.utils.safeNavigate
 import com.example.viewmodel.search.countrySearch.CountryItemUiState
 import com.example.viewmodel.search.countrySearch.CountrySearchEffect
 import com.example.viewmodel.search.countrySearch.CountrySearchErrorState
@@ -69,7 +67,7 @@ internal fun SearchByCountryScreen(
                         navController.popBackStack()
                     }
 
-                    CountrySearchEffect.NavigateToMovieDetails -> navController.navigate(
+                    CountrySearchEffect.NavigateToMovieDetails -> navController.safeNavigate(
                         MovieDetails(state.selectedMovieId)
                     )
                 }
@@ -90,8 +88,6 @@ private fun SearchByCountryContent(
     movies: LazyPagingItems<MovieItemUiState>,
     interactionListener: CountrySearchInteractionListener,
 ) {
-    val focusManager = LocalFocusManager.current
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -108,17 +104,16 @@ private fun SearchByCountryContent(
         CountrySearchField(
             keyword = state.keyword,
             onKeywordValueChanged = interactionListener::onChangeSearchKeyword,
-            focusManager = focusManager
         )
 
         AnimatedVisibility(
-            visible = state.isCountriesDropDownVisible,
+            visible = state.suggestedCountries.isNotEmpty(),
             enter = slideInVertically() + expandIn(),
             exit = slideOutVertically() + shrinkOut()
         ) {
             CountriesDropdownMenu(
                 items = state.suggestedCountries.take(4),
-                isVisible = true,
+                isVisible =  state.suggestedCountries.isNotEmpty(),
                 onItemClicked = interactionListener::onSelectCountry,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -127,15 +122,13 @@ private fun SearchByCountryContent(
         }
 
         AnimatedContent(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f),
+            modifier = Modifier.fillMaxSize().weight(1f),
             targetState = state,
-            transitionSpec = { fadeIn(tween(1700)) togetherWith fadeOut(tween(1700)) }) { uiState ->
+            transitionSpec = { fadeIn() togetherWith fadeOut() }) { uiState ->
             when {
+                uiState.isLoading -> LoadingContainer()
                 uiState.keyword.isEmpty() -> ExploreCountries()
-                uiState.isLoading || movies.loadState.refresh is LoadState.Loading -> LoadingContainer()
-                movies.itemSnapshotList.isEmpty() -> NoMoviesFound()
+                movies.itemCount == 0 && uiState.suggestedCountries.isEmpty() -> NoMoviesFound()
                 uiState.errorUiState is CountrySearchErrorState.NoNetworkConnection -> {
                     NoNetworkContainer(
                         onClickRetry = interactionListener::onClickRetry,

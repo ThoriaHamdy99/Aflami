@@ -14,13 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
@@ -34,16 +37,17 @@ import com.example.designsystem.components.TextField
 import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
 import com.example.imageviewer.ui.SafeImageView
-import com.example.ui.R
 import com.example.ui.application.LocalNavController
-import com.example.ui.components.MovieCard
 import com.example.ui.components.NoDataContainer
 import com.example.ui.components.NoNetworkContainer
-import com.example.ui.components.appBar.DefaultAppBar
 import com.example.ui.navigation.Route
-import com.example.viewmodel.search.actorSearch.ActorSearchUiState
 import com.example.viewmodel.search.actorSearch.SearchActorEffect
 import com.example.viewmodel.search.actorSearch.SearchActorInteractionListener
+import com.example.ui.R
+import com.example.ui.components.MovieCard
+import com.example.ui.components.appBar.DefaultAppBar
+import com.example.ui.utils.safeNavigate
+import com.example.viewmodel.search.actorSearch.ActorSearchUiState
 import com.example.viewmodel.search.actorSearch.SearchActorViewModel
 import com.example.viewmodel.shared.uiStates.MovieItemUiState
 import kotlinx.coroutines.flow.emptyFlow
@@ -61,13 +65,10 @@ fun SearchByActorScreen(
         viewModel.effect.collect { effect ->
             effect?.let {
                 when (it) {
-
-                    SearchActorEffect.NavigateBack -> {
-                        navController.popBackStack()
-                    }
-
+                    SearchActorEffect.NavigateBack -> navController.popBackStack()
                     is SearchActorEffect.NavigateToDetailsScreen -> {
-                        navController.navigate(Route.MovieDetails(it.movieId))
+                        viewModel.onSaveSearchHistory()
+                        navController.safeNavigate(Route.MovieDetails(it.movieId))
                     }
                 }
             }
@@ -88,6 +89,7 @@ private fun SearchByActorContent(
     moviesFlow: LazyPagingItems<MovieItemUiState>,
     modifier: Modifier = Modifier,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         modifier =
             modifier
@@ -104,6 +106,14 @@ private fun SearchByActorContent(
             text = state.keyword,
             hintText = stringResource(com.example.designsystem.R.string.find_by_actor),
             onValueChange = { interactionListener.onUserSearchChange(it) },
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    keyboardController?.hide()
+                    interactionListener.onUserSearchChange(state.keyword)
+                    interactionListener.onSaveSearchHistory()
+                },
+            ),
+            imeAction = ImeAction.Search,
             modifier =
                 Modifier
                     .padding(top = 8.dp)
@@ -173,7 +183,10 @@ private fun SearchByActorContent(
                             horizontal = 16.dp
                         ),
                     ) {
-                        items(moviesFlow.itemCount) { index ->
+                        items(
+                            count = moviesFlow.itemCount,
+                            key = { index -> "${moviesFlow[index]?.id}-$index" },
+                        ) { index ->
                             val movie = moviesFlow[index] ?: return@items
                             MovieCard(
                                 movieImage = { MovieImage(movie.posterImageUrl) },
@@ -193,7 +206,7 @@ private fun SearchByActorContent(
 }
 
 @Composable
-private fun MovieImage(imageUrl: String) {
+internal fun MovieImage(imageUrl: String) {
     SafeImageView(
         model = imageUrl,
         contentScale = ContentScale.FillBounds,
@@ -212,18 +225,12 @@ private fun SearchByActorContentPreview() {
             state = ActorSearchUiState(),
             moviesFlow = emptyFlow<PagingData<MovieItemUiState>>().collectAsLazyPagingItems(),
             interactionListener = object : SearchActorInteractionListener {
-                override fun onUserSearchChange(query: String) {
-                }
-
-                override fun onClickNavigateBack() {
-                }
-
-                override fun onClickRetrySearch() {
-                }
-
-                override fun onClickMovie(movieId: Long) {
-                }
-            }
+                override fun onUserSearchChange(query: String) {}
+                override fun onClickNavigateBack() {}
+                override fun onClickRetrySearch() {}
+                override fun onClickMovie(movieId: Long) {}
+                override fun onSaveSearchHistory() {}
+            },
         )
     }
 }

@@ -1,14 +1,17 @@
 package com.example.entity
 
 import com.example.entity.category.TvShowGenre
+import kotlinx.datetime.LocalDate
 
 data class TvShow(
     val id: Long,
     val name: String,
     val description: String,
     val posterUrl: String,
-    val productionYear: UInt,
+    val airDate: LocalDate,
     val categories: List<TvShowGenre>,
     val rating: Float,
-    val popularity: Double
+    val popularity: Double,
+    val seasonCount: Int,
+    val originCountry: String,
 )

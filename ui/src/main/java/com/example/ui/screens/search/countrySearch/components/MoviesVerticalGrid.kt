@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
 import com.example.designsystem.R
 import com.example.designsystem.components.ImageErrorIndicator
 import com.example.designsystem.components.ImageLoadingIndicator
@@ -42,7 +41,7 @@ internal fun MoviesVerticalGrid(
         ) {
             items(
                 count = movies.itemCount,
-                key = movies.itemKey { it.id },
+                key = { index -> "${movies[index]?.id}-${index}" },
             ) { index ->
                 val movie = movies[index] ?: return@items
                 MovieCard(

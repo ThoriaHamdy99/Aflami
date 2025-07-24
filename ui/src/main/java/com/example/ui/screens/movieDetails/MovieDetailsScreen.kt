@@ -23,7 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.VerticalPager
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -66,6 +66,7 @@ import com.example.ui.screens.movieDetails.components.PlayButton
 import com.example.ui.screens.movieDetails.components.ReviewSection
 import com.example.ui.screens.movieDetails.sections.CustomDialog
 import com.example.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
+import com.example.ui.utils.safeNavigate
 import com.example.viewmodel.movieDetails.MovieDetailsEffect
 import com.example.viewmodel.movieDetails.MovieDetailsInteractionListener
 import com.example.viewmodel.movieDetails.MovieDetailsUiState
@@ -85,18 +86,16 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = koinViewModel()) {
         interactionListener = viewModel,
     )
     LaunchedEffect(Unit) {
-        viewModel.effect.collectLatest {
-            when (it) {
-                MovieDetailsEffect.NavigateBackEffect -> navController.popBackStack()
-                MovieDetailsEffect.NavigateToCastsScreenEffect ->
-                    navController.navigate(
-                        Route.Cast(state.value.movieId),
+        viewModel.effect.collectLatest { effect ->
+            effect?.let {
+                when (effect) {
+                    MovieDetailsEffect.NavigateBackEffect -> navController.popBackStack()
+                    MovieDetailsEffect.NavigateToCastsScreenEffect ->
+                        navController.safeNavigate(Route.Cast(state.value.movieId),)
+                    MovieDetailsEffect.NavigateToLoginScreenEffect->navController.safeNavigate(
+                        Route.Search
                     )
-                MovieDetailsEffect.NavigateToLoginScreenEffect->navController.navigate(
-                    Route.Search
-                )
-                null -> {}
-
+                }
             }
         }
     }
@@ -171,7 +170,7 @@ fun MovieContent(
                             .fillMaxWidth()
                             .height(263.dp),
                 ) {
-                    VerticalPager(
+                    HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.fillMaxSize()
                     ) { page ->
@@ -268,7 +267,7 @@ fun MovieContent(
                         )
                         CastSection(
                             modifier = Modifier.padding(top = 24.dp),
-                            actors = state.actors,
+                            actors = state.actors.take(10),
                             onClickAllCast = interactionListener::onClickShowAllCast,
                         )
                         Spacer(

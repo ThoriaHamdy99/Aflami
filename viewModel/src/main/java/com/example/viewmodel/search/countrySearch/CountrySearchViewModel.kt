@@ -40,9 +40,7 @@ class CountrySearchViewModel(
     CountrySearchInteractionListener {
     private val _keyword = MutableStateFlow("")
 
-    init {
-        observeKeywordFlow()
-    }
+    init { observeKeywordFlow() }
 
     private fun observeKeywordFlow() {
         viewModelScope.launch { _keyword.debounceSearch(::fetchCountriesByKeyword) }
@@ -52,19 +50,12 @@ class CountrySearchViewModel(
         return tryToExecute(
             action = { getSuggestedCountriesUseCase(keyword) },
             onSuccess = ::onFetchCountriesSuccess,
-            onError = ::onFetchError,
+            onError = ::onFetchError
         )
     }
-
     private fun onFetchCountriesSuccess(countries: List<Country>) {
         Log.e("bk", countries.toString())
-        updateState {
-            it.copy(
-                suggestedCountries = countries.toUiState(),
-                isCountriesDropDownVisible = true,
-                errorUiState = null,
-            )
-        }
+        updateState { it.copy(suggestedCountries = countries.toUiState(), errorUiState = null) }
     }
 
     private fun onFetchError(exception: AflamiException) {
@@ -86,7 +77,7 @@ class CountrySearchViewModel(
         updateState {
             it.copy(
                 keyword = keyword,
-                isCountriesDropDownVisible = it.suggestedCountries.isNotEmpty(),
+                isLoading = false,
                 suggestedCountries = if (keyword.isBlank()) emptyList() else it.suggestedCountries,
                 errorUiState = null,
                 movies = emptyFlow(),
@@ -95,15 +86,14 @@ class CountrySearchViewModel(
     }
 
     override fun onSelectCountry(country: CountryItemUiState) {
-        updateState { it.copy(isLoading = true) }
         updateState {
             it.copy(
                 keyword = country.countryName,
                 selectedCountryIsoCode = country.countryIsoCode,
-                isCountriesDropDownVisible = false,
             )
         }
         fetchMoviesByCountry(getSelectedCountry())
+        saveSearchHistory()
     }
 
     override fun onClickRetry() {
@@ -116,16 +106,16 @@ class CountrySearchViewModel(
         }
     }
 
-    override fun onClickMovieCard(movieId: Long) {
-        updateState { it.copy(selectedMovieId = movieId) }
-        sendNewEffect(CountrySearchEffect.NavigateToMovieDetails)
+    private fun saveSearchHistory() {
+        tryToExecute(
+            action = { recentSearchesUseCase.addRecentSearchForCountry(getSelectedCountry()) },
+            onSuccess = {},
+            onError = {}
+        )
     }
 
     private fun fetchMoviesByCountry(selectedCountry: Country) {
         updateState { it.copy(isLoading = true) }
-
-        viewModelScope.launch { recentSearchesUseCase.addRecentSearchForCountry(selectedCountry) }
-
         tryToExecute(
             action = {
                 Pager(
@@ -141,18 +131,29 @@ class CountrySearchViewModel(
                 ).flow.map { pagingData -> pagingData.map { it.toMediaItemUiState() } }.cachedIn(viewModelScope)
             },
             onSuccess = ::onFetchMoviesSuccess,
-            onError = ::onFetchError,
+            onError = ::onFetchError
         )
     }
 
-    private fun getSelectedCountry(): Country =
-        state.value.suggestedCountries
-            .find {
-                state.value.selectedCountryIsoCode == it.countryIsoCode
-            }.toCountry()
+    override fun onClickMovieCard(movieId: Long) {
+        updateState { it.copy(selectedMovieId = movieId) }
+        sendNewEffect(CountrySearchEffect.NavigateToMovieDetails)
+    }
+
+    private fun getSelectedCountry(): Country {
+        return state.value.suggestedCountries.find {
+            state.value.selectedCountryIsoCode == it.countryIsoCode
+        }.toCountry()
+    }
 
     private fun onFetchMoviesSuccess(movies: Flow<PagingData<MovieItemUiState>>) {
-        updateState { it.copy(movies = movies, isLoading = false) }
+        updateState {
+            it.copy(
+                movies = movies,
+                isLoading = false,
+                suggestedCountries = emptyList()
+            )
+        }
     }
 
     override fun onClickNavigateBack() {

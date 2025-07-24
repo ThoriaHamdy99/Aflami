@@ -71,7 +71,7 @@
     <string name="continue_as_guest">المتابعة كضيف</string>
     <string name="dont_have_account">ليس لديك حساب؟</string>
     <string name="create_account">إنشاء حساب</string>
-    <string name="incorrect_password">كلمة مرور خاطئة</string>
+    <string name="incorrect_username_or_password">كلمة مرور او اسم المستخدم خاطئة</string>
     <!-- -   -->
     <!-- - Mood Picker  -->
     <string name="mood_picker_title">محدد المزاج (احصل على فيلم)</string>
@@ -209,4 +209,9 @@
     <string name="search_error_unknown">حدث خطأ غير متوقع.</string>
     <string name="there_is_no_production_company">لا توجد شركة إنتاج!</string>
     <string name="there_is_no_reviews">لا توجد مراجعات!</string>
+    <string name="there_is_no_similar_content">لا يوجد محتوى مشابه!</string>
+
+    <!-- - Home  -->
+    <string name="upcoming">القادمة</string>
+
 </resources>

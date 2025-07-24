@@ -1,7 +1,15 @@
 package com.example.viewmodel.home
 
+import com.example.entity.category.MovieGenre
+import com.example.viewmodel.shared.defaultMovieGenres
+import com.example.viewmodel.shared.uiStates.MovieGenreItemUiState
+import com.example.viewmodel.shared.uiStates.MovieItemUiState
+
 data class HomeUiState(
     val popularMovies : List<PopularMovieItemUiState> = emptyList(),
+    val upcomingMovies : List<MovieItemUiState> = emptyList(),
+    val upcomingMovieGenres: List<MovieGenreItemUiState> = defaultMovieGenres,
+    val topRatedMovies : List<MovieItemUiState> = emptyList(),
     val isLoading : Boolean = false,
     val error : HomeError? = null
 ){
@@ -10,7 +18,14 @@ data class HomeUiState(
         val rating: String = "" ,
         val posterUrl : String = ""
     )
+
     sealed class HomeError{
         data object NetworkError : HomeError()
+    }
+
+    fun getSelectedUpcomingMovieGenre(): MovieGenre {
+        return upcomingMovieGenres
+            .firstOrNull { it.selectableMovieGenre.isSelected }
+            ?.selectableMovieGenre?.item ?: MovieGenre.ALL
     }
 }
