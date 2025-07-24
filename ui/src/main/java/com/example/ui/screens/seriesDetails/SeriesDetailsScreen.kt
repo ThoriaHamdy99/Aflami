@@ -169,7 +169,7 @@ fun SeriesDetailsContent(
         MustLoginDialog(
             title = state.dialogType.getMovieAndSeriesDetailsDialogTitle(),
             onDismiss = interaction::onCancelClicked,
-            onLoginClicked = interaction::onNavigateToLoginClicked,
+            onClickLogin = interaction::onNavigateToLoginClicked,
         )
     }
 

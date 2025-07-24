@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -32,7 +33,7 @@ import com.example.ui.R
 fun MustLoginDialog(
     title: String,
     onDismiss: () -> Unit,
-    onLoginClicked: () -> Unit,
+    onClickLogin: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Dialog(
@@ -93,7 +94,7 @@ fun MustLoginDialog(
             )
             Text(
                 modifier = Modifier.padding(vertical = 12.dp),
-                text = "Please login to access your account details and other features!",
+                text = stringResource(R.string.login_message),
                 style = AppTheme.textStyle.body.small,
                 color = AppTheme.color.body,
                 textAlign = TextAlign.Center
@@ -101,8 +102,8 @@ fun MustLoginDialog(
             )
             OutlinedButton(
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
-                title = "Login",
-                onClick = { onLoginClicked() },
+                title = stringResource(R.string.login),
+                onClick = { onClickLogin() },
                 isEnabled = true,
                 isLoading = false,
                 isNegative = false,
@@ -118,7 +119,7 @@ fun CustomDialogPreview() {
         MustLoginDialog(
             onDismiss = { },
             title = "Rate",
-            onLoginClicked = { }
+            onClickLogin = { }
         )
 
     }
