@@ -1,5 +1,6 @@
 package com.example.localdatasource.dataStore.datasource
 
+import com.example.domain.exceptions.UnauthorizedException
 import com.example.repository.datasource.local.AuthenticationLocalSource
 
 class AuthenticationLocalDataSourceImpl(
@@ -11,5 +12,15 @@ class AuthenticationLocalDataSourceImpl(
 
     override suspend fun getSessionType(): String {
         return appPreferences.getSessionType()
+    }
+
+    override suspend fun cacheSessionId(sessionId: String) {
+        appPreferences.cacheSessionId(sessionId = sessionId)
+    }
+
+    override suspend fun getCachedSessionId(): String = appPreferences.getSessionId() ?: throw UnauthorizedException()
+
+    override suspend fun clearCachedSessionId() {
+        appPreferences.clearSessionId()
     }
 }

@@ -11,6 +11,7 @@ data class HomeUiState(
     val upcomingMovies : List<MovieItemUiState> = emptyList(),
     val upcomingMovieGenres: List<MovieGenreItemUiState> = defaultMovieGenres,
     val topRatedMovies : List<MovieItemUiState> = emptyList(),
+    val continueWatchingMovies : List<MovieItemUiState> = emptyList(),
     val moodPickerUiState: MoodPickerUiState = MoodPickerUiState(),
     val isLoading : Boolean = false,
     val error : HomeError? = null
