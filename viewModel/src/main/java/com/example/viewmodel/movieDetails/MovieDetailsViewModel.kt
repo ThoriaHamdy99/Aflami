@@ -33,8 +33,9 @@ class MovieDetailsViewModel(
         updateState { it.copy(isLoading = true, networkError = false) }
         tryToExecute(
             action = ::getMovieDetails,
-            onSuccess = ::onGetMovieDetailsSuccess,
-            onError = ::onError
+            onSuccess =::onGetMovieDetailsSuccess,
+            onError = ::onError,
+            onCompletion = ::onCompletion
         )
     }
 
@@ -110,14 +111,11 @@ class MovieDetailsViewModel(
 
     private fun onError(exception: AflamiException) {
         when (exception) {
-            is NoInternetException -> updateState {
-                it.copy(
-                    isLoading = false,
-                    networkError = true
-                )
-            }
-
+            is NoInternetException -> updateState { it.copy(networkError = true) }
             else -> {}
         }
     }
+
+    private fun onCompletion() = updateState { it.copy(isLoading = false) }
+
 }
