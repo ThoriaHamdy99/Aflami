@@ -1,4 +1,4 @@
-package com.example.localdatasource.dataStore.utils
+package com.example.repository.security
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
@@ -46,14 +46,14 @@ class CryptoDataImpl : CryptoData {
                 )
             }.generateKey()
 
-    private fun encrypt(bytes: ByteArray): ByteArray {
+    override fun encrypt(bytes: ByteArray): ByteArray {
         cipher.init(Cipher.ENCRYPT_MODE, getKey())
         val iv = cipher.iv
         val encrypted = cipher.doFinal(bytes)
         return iv + encrypted
     }
 
-    private fun decrypt(bytes: ByteArray): ByteArray? {
+    override fun decrypt(bytes: ByteArray): ByteArray? {
         val iv = bytes.copyOfRange(0, cipher.blockSize)
         val data = bytes.copyOfRange(cipher.blockSize, bytes.size)
         cipher.init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
