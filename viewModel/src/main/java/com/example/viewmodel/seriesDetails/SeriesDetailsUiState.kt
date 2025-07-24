@@ -3,6 +3,7 @@ package com.example.viewmodel.seriesDetails
 import com.example.entity.category.TvShowGenre
 import com.example.viewmodel.shared.Selectable
 import com.example.viewmodel.shared.movieAndSeriseDetails.ActorUiState
+import com.example.viewmodel.shared.movieAndSeriseDetails.MovieAndSeriesDetailsDialogType
 import com.example.viewmodel.shared.movieAndSeriseDetails.ProductionCompanyUiState
 import com.example.viewmodel.shared.movieAndSeriseDetails.ReviewUiState
 import com.example.viewmodel.shared.movieAndSeriseDetails.SimilarMovieUiState
@@ -35,6 +36,8 @@ data class SeriesDetailsUiState(
     val isLoading: Boolean = false,
     val networkError: Boolean = false,
     val hasVideo: Boolean = false,
+    val isLoginDialogVisible : Boolean = false,
+    val dialogType: MovieAndSeriesDetailsDialogType? = null
 ) {
     enum class SeriesExtras {
         SEASONS,
