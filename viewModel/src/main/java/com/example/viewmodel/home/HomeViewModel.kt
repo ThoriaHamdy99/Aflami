@@ -3,8 +3,8 @@ package com.example.viewmodel.home
 import androidx.lifecycle.viewModelScope
 import com.example.domain.exceptions.AflamiException
 import com.example.domain.exceptions.NetworkException
-import com.example.domain.useCase.GetContinueWatchingMoviesUseCase
 import com.example.domain.models.Mood
+import com.example.domain.useCase.GetContinueWatchingMoviesUseCase
 import com.example.domain.useCase.GetHomeScreenDataUseCase
 import com.example.domain.useCase.GetHomeScreenDataUseCase.HomeScreenData
 import com.example.domain.useCase.GetMoviesByMoodUseCase
@@ -24,9 +24,8 @@ class HomeViewModel(
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
     private val getContinueWatchingMoviesUseCase: GetContinueWatchingMoviesUseCase,
     private val homeUiStateMapper: HomeUiStateMapper,
-    private val dispatcherProvider: DispatcherProvider
     private val getMoviesByMoodUseCase: GetMoviesByMoodUseCase,
-    private val homeUiStateMapper: HomeUiStateMapper, dispatcherProvider: DispatcherProvider
+    private val dispatcherProvider: DispatcherProvider,
 ) :
     BaseViewModel<HomeUiState, HomeEffect>(HomeUiState(), dispatcherProvider),
     HomeInteractionListener {
@@ -46,7 +45,7 @@ class HomeViewModel(
         )
     }
 
-    fun onGetHomeScreenDataSuccess(homeScreenData: HomeScreenData){
+    fun onGetHomeScreenDataSuccess(homeScreenData: HomeScreenData) {
         updateState { homeUiStateMapper.toUiState(homeScreenData) }
     }
 
@@ -86,7 +85,7 @@ class HomeViewModel(
         updateState { it.copy(moodPickerUiState = it.moodPickerUiState.copy(isLoadingMovies = true)) }
         val selectedMood = state.value.moodPickerUiState.selectedMood ?: return
         tryToExecute(
-            action = {getMoviesByMoodUseCase(selectedMood)},
+            action = { getMoviesByMoodUseCase(selectedMood) },
             onSuccess = ::onGetMoviesByMoodSuccess,
             onError = ::onError
         )
@@ -106,7 +105,7 @@ class HomeViewModel(
             state.value.moodPickerUiState.selectedMovie
         )
         val nextMovie: MovieItemUiState
-        if (currentMovieIndex == state.value.moodPickerUiState.movies.size - 1){
+        if (currentMovieIndex == state.value.moodPickerUiState.movies.size - 1) {
             nextMovie = state.value.moodPickerUiState.movies[0]
             return
         }
@@ -123,7 +122,8 @@ class HomeViewModel(
         updateState {
             it.copy(
                 moodPickerUiState = it.moodPickerUiState
-                    .copy(isLoadingMovies = false,
+                    .copy(
+                        isLoadingMovies = false,
                         movies = moviesUiStates,
                         selectedMovie = moviesUiStates.getOrNull(0) ?: MovieItemUiState(),
                         openMovieDialog = true
