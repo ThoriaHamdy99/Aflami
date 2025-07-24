@@ -5,6 +5,7 @@ import com.example.entity.category.TvShowGenre
 import com.example.repository.dto.remote.RemoteTvShowItemDto
 import com.example.repository.mapper.shared.EntityMapper
 import com.example.repository.mapper.shared.mapCategoryIdToTvShowGenre
+import com.example.repository.utils.toSafeLocalDate
 import kotlinx.datetime.toLocalDate
 
 class TvShowRemoteMapper() : EntityMapper<RemoteTvShowItemDto, TvShow> {
@@ -14,7 +15,7 @@ class TvShowRemoteMapper() : EntityMapper<RemoteTvShowItemDto, TvShow> {
             name = dto.title,
             description = dto.overview,
             posterUrl = dto.fullPosterPath.orEmpty(),
-            airDate = dto.releaseDate.toLocalDate(),
+            airDate = dto.releaseDate.toSafeLocalDate(),
             categories = mapGenreIdsToCategories(dto.genreIds),
             rating = dto.voteAverage.toFloat(),
             popularity = dto.popularity,
