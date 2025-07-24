@@ -45,6 +45,7 @@ import com.example.ui.screens.home.component.MovieMoodPickerDialogDialog
 import com.example.ui.screens.home.model.CardMood
 import com.example.ui.screens.home.sections.AnimatedSectionVisibility
 import com.example.ui.screens.home.sections.BlurredMoviePoster
+import com.example.ui.screens.home.sections.MoodPickerSection
 import com.example.ui.screens.home.sections.topRatingSection
 import com.example.ui.screens.home.sections.popularSection
 import com.example.ui.screens.home.sections.upcomingMoviesSection
@@ -186,27 +187,6 @@ private fun HomeScreenContent(
             }
         }
     }
-}
-
-@Composable
-private fun MoodPickerSection(
-    state: HomeUiState,
-    interactionListener: HomeInteractionListener
-) {
-    MoodPickerCard(
-        cardMoods = state.moodPickerUiState.moods.map {
-            CardMood.getModeByName(
-                it.name
-            )
-        },
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp),
-        onSelectMood = {
-            val mood =
-                Mood.getMoodByName(it.name)
-            interactionListener.onClickMood(mood)
-        },
-        onClickGetNow = interactionListener::onClickGetNow
-    )
 }
 
 @ThemeAndLocalePreviews
