@@ -55,7 +55,6 @@ fun EpisodeCard(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier =
             modifier
-                .fillMaxWidth()
                 .wrapContentHeight()
                 .padding(horizontal = 16.dp)
                 .animateContentSize(),
@@ -131,7 +130,8 @@ private fun EpisodeInfo(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(2.dp),
-        modifier = Modifier.padding(vertical = 9.dp),
+        modifier = Modifier
+            .padding(vertical = 9.dp)
     ) {
         Text(
             text = stringResource(R.string.episode, episodeNumber),
@@ -143,6 +143,9 @@ private fun EpisodeInfo(
             text = episodeTitle,
             color = AppTheme.color.hint,
             style = AppTheme.textStyle.label.small,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.fillMaxWidth(0.8f)
         )
 
         Row(
@@ -211,7 +214,8 @@ private fun PlayEpisodeButton(onPlayEpisodeClick: () -> Unit) {
                     width = 1.dp,
                     color = AppTheme.color.stroke,
                     shape = CircleShape,
-                ).size(40.dp),
+                )
+                .size(40.dp),
         shape = CircleShape
     )
 }
