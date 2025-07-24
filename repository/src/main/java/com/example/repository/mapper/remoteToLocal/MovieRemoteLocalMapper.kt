@@ -3,7 +3,7 @@ package com.example.repository.mapper.remoteToLocal
 import com.example.repository.dto.local.LocalMovieDto
 import com.example.repository.dto.remote.RemoteMovieItemDto
 import com.example.repository.mapper.shared.RemoteToLocalMapper
-import kotlinx.datetime.toLocalDate
+import com.example.repository.utils.toSafeLocalDate
 
 class MovieRemoteLocalMapper() : RemoteToLocalMapper<RemoteMovieItemDto, LocalMovieDto> {
     override fun toLocal(remote: RemoteMovieItemDto, args: List<Any>): LocalMovieDto {
@@ -13,7 +13,7 @@ class MovieRemoteLocalMapper() : RemoteToLocalMapper<RemoteMovieItemDto, LocalMo
             name = remote.title,
             description = remote.overview,
             poster = remote.fullPosterUrl.orEmpty(),
-            releaseDate = remote.releaseDate.toLocalDate(),
+            releaseDate = remote.releaseDate.toSafeLocalDate(),
             rating = remote.voteAverage.toFloat(),
             popularity = remote.popularity,
             movieLength = remote.runtime,

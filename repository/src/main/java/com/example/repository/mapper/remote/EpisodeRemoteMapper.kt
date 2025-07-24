@@ -3,6 +3,7 @@ package com.example.repository.mapper.remote
 import com.example.entity.Episode
 import com.example.repository.dto.remote.EpisodeDto
 import com.example.repository.mapper.shared.EntityMapper
+import com.example.repository.utils.toSafeLocalDate
 import kotlinx.datetime.toLocalDate
 
 class EpisodeRemoteMapper : EntityMapper<EpisodeDto, Episode> {
@@ -14,7 +15,7 @@ class EpisodeRemoteMapper : EntityMapper<EpisodeDto, Episode> {
             description = dto.overview,
             episodeImageUrl = dto.fullStillPath.orEmpty(),
             rating = dto.voteAverage.toFloat(),
-            airDate = dto.airDate?.toLocalDate(),
+            airDate = dto.airDate?.toSafeLocalDate(),
             seasonNumber = dto.seasonNumber,
             runtime = dto.runtime?.toInt() ?: 0,
         )
