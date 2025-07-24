@@ -36,7 +36,7 @@ class RecentSearchRepositoryImpl(
     }
 
     override suspend fun deleteRecentSearch(searchKeyword: String) {
-        recentSearchLocalSource.deleteRecentSearchByKeyword(
+        recentSearchLocalSource.deleteRecentSearchByKeywordAndType(
             searchKeyword,
             SearchType.BY_KEYWORD,
             getDeviceLanguage()

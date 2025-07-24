@@ -1,20 +1,20 @@
-package com.example.localdatasource
+package com.example.localdatasource.roomDataBase.datasource
 
 import com.example.localdatasource.roomDataBase.daos.CountryDao
-import com.example.localdatasource.roomDataBase.datasource.CountryLocalDataSourceImpl
+import com.google.common.truth.Truth.assertThat
 import com.example.repository.dto.local.LocalCountryDto
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class CountryLocalDataSourceImplTest {
     private lateinit var dao: CountryDao
     private lateinit var countryLocalDataSourceImpl: CountryLocalDataSourceImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         dao = mockk(relaxed = true)
         countryLocalDataSourceImpl = CountryLocalDataSourceImpl(dao)
@@ -23,13 +23,12 @@ class CountryLocalDataSourceImplTest {
     @Test
     fun `getCountries should return data from dao`() = runTest {
         //Given
-        val expected = listOf(LocalCountryDto("1", "Egypt"), LocalCountryDto("2", "Palestine"))
+        val expected = listOf(LocalCountryDto("1", "Egypt","en"), LocalCountryDto("2", "Palestine","en"))
         //When
-        coEvery { dao.getAllCountries() } returns expected
-        val result = countryLocalDataSourceImpl.getCountries()
+        coEvery { dao.getAllCountries("en") } returns expected
+        val result = countryLocalDataSourceImpl.getCountries("en")
         //Then
-        assertEquals(expected, result)
-
+        assertThat(result).isEqualTo(expected)
     }
 
     @Test
@@ -37,20 +36,20 @@ class CountryLocalDataSourceImplTest {
         //Given
         val expected = emptyList<LocalCountryDto>()
         //When
-        coEvery { dao.getAllCountries() } returns expected
-        val result = countryLocalDataSourceImpl.getCountries()
+        coEvery { dao.getAllCountries("en") } returns expected
+        val result = countryLocalDataSourceImpl.getCountries("en")
         //Then
-        assertEquals(expected, result)
+        assertThat(result).isEmpty()
     }
 
     @Test
     fun `addCountries should call dao with correct data`() = runTest {
         //Given
-        val countries = listOf(LocalCountryDto("1", "Egypt"), LocalCountryDto("2", "Palestine"))
+        val countries = listOf(LocalCountryDto("1", "Egypt","en"), LocalCountryDto("2", "Palestine","en"))
         //When
         countryLocalDataSourceImpl.addCountries(countries)
         //Then
-        coEvery { dao.upsertAllCountries(countries) }
+        coVerify (exactly = 1) { dao.upsertAllCountries(countries) }
 
     }
 }
