@@ -13,7 +13,8 @@ class HomeUiStateMapper {
         return HomeUiState(
             popularMovies = moviesToPopularMoviesUiState(homeScreenData.popularMovies),
             topRatedMovies = moviesToMoviesItemsUiState(homeScreenData.topRatedMovies),
-            upcomingMovies =  moviesToMoviesItemsUiState(homeScreenData.upComingMovies)
+            upcomingMovies = moviesToMoviesItemsUiState(homeScreenData.upComingMovies),
+            continueWatchingMovies = moviesToMoviesItemsUiState(homeScreenData.continueWatchingMovies)
         )
     }
 
@@ -39,5 +40,4 @@ class HomeUiStateMapper {
             yearOfRelease = movie.releaseDate.year.toString()
         )
     }
-
 }
