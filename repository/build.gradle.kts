@@ -26,7 +26,7 @@ android {
         buildConfigField(
             "String",
             "BASE_IMAGE_URL",
-            "\"$baseImageUrl\""
+            baseImageUrl
         )
     }
 }

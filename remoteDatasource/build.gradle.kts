@@ -25,14 +25,14 @@ android {
         buildConfigField(
             "String",
             "BEARER_TOKEN",
-            "\"$bearerToken\""
+            bearerToken
 
         )
 
         buildConfigField(
             "String",
             "BASE_URL",
-            "\"$baseUrl\""
+            baseUrl
 
         )
     }
