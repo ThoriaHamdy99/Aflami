@@ -1,4 +1,4 @@
-package com.example.ui.screens.movieDetails.sections
+package com.example.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,7 +29,7 @@ import com.example.designsystem.utils.modifierExtensions.dropShadow
 import com.example.ui.R
 
 @Composable
-fun CustomDialog(
+fun MustLoginDialog(
     title: String,
     onDismiss: () -> Unit,
     onLoginClicked: () -> Unit,
@@ -115,7 +115,7 @@ fun CustomDialog(
 @ThemeAndLocalePreviews
 fun CustomDialogPreview() {
     AflamiTheme {
-        CustomDialog(
+        MustLoginDialog(
             onDismiss = { },
             title = "Rate",
             onLoginClicked = { }

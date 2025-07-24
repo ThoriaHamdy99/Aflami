@@ -3,6 +3,7 @@ package com.example.viewmodel.movieDetails
 import com.example.entity.category.MovieGenre
 import com.example.viewmodel.shared.Selectable
 import com.example.viewmodel.shared.movieAndSeriseDetails.ActorUiState
+import com.example.viewmodel.shared.movieAndSeriseDetails.MovieAndSeriesDetailsDialogType
 import com.example.viewmodel.shared.movieAndSeriseDetails.ProductionCompanyUiState
 import com.example.viewmodel.shared.movieAndSeriseDetails.ReviewUiState
 import com.example.viewmodel.shared.movieAndSeriseDetails.SimilarMovieUiState
@@ -31,8 +32,8 @@ data class MovieDetailsUiState(
     val reviews: List<ReviewUiState> = emptyList(),
     val isLoading: Boolean = false,
     val networkError : Boolean = false,
-    val isDialogVisible : Boolean = false,
-    val dialogTitle : String = ""
+    val isLoginDialogVisible : Boolean = false,
+    val dialogType: MovieAndSeriesDetailsDialogType? = null
 ) {
 
     enum class MovieExtras {

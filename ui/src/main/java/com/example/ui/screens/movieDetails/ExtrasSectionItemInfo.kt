@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.designsystem.R
 import com.example.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
-import com.example.viewmodel.seriesDetails.SeriesDetailsUiState
 import com.example.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 
 data class ExtrasSectionItemInfo(

@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import com.example.designsystem.R
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.designsystem.components.ImageErrorIndicator
@@ -48,7 +50,6 @@ import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.theme.AppTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
 import com.example.imageviewer.ui.SafeImageView
-import com.example.ui.R
 import com.example.ui.application.LocalNavController
 import com.example.ui.components.NoNetworkContainer
 import com.example.ui.components.appBar.DefaultAppBar
@@ -64,7 +65,7 @@ import com.example.ui.screens.movieDetails.components.MovieInfoSection
 import com.example.ui.screens.movieDetails.components.PageIndicator
 import com.example.ui.screens.movieDetails.components.PlayButton
 import com.example.ui.screens.movieDetails.components.ReviewSection
-import com.example.ui.screens.movieDetails.sections.CustomDialog
+import com.example.ui.components.MustLoginDialog
 import com.example.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.example.ui.utils.safeNavigate
 import com.example.viewmodel.movieDetails.MovieDetailsEffect
@@ -91,9 +92,10 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = koinViewModel()) {
                 when (effect) {
                     MovieDetailsEffect.NavigateBackEffect -> navController.popBackStack()
                     MovieDetailsEffect.NavigateToCastsScreenEffect ->
-                        navController.safeNavigate(Route.Cast(state.value.movieId),)
-                    MovieDetailsEffect.NavigateToLoginScreenEffect->navController.safeNavigate(
-                        Route.Search
+                        navController.safeNavigate(Route.Cast(state.value.movieId))
+
+                    MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
+                        Route.Login
                     )
                 }
             }
@@ -142,13 +144,13 @@ fun MovieContent(
     }
     AnimatedVisibility(
         modifier = Modifier,
-        visible = state.isDialogVisible
+        visible = state.isLoginDialogVisible
     ) {
-     CustomDialog(
-         title = state.dialogTitle,
-         onDismiss = interactionListener::onCancelClicked,
-         onLoginClicked = interactionListener::onLoginClicked,
-     )
+        MustLoginDialog(
+            title = state.dialogType.getMovieAndSeriesDetailsDialogTitle(),
+            onDismiss = interactionListener::onCancelClicked,
+            onLoginClicked = interactionListener::onNavigateToLoginClicked,
+        )
     }
     AnimatedVisibility(
         !state.isLoading && !state.networkError,
@@ -203,11 +205,11 @@ fun MovieContent(
                             Modifier
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                                 .statusBarsPadding(),
-                        firstOption = painterResource(com.example.designsystem.R.drawable.ic_outlined_star),
-                        lastOption = painterResource(com.example.designsystem.R.drawable.ic_outlined_add_to_favourite),
+                        firstOption = painterResource(R.drawable.ic_outlined_star),
+                        lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
                         onNavigateBackClicked = interactionListener::onClickBack,
-                        onFirstOptionClicked = { interactionListener.onFirstOptionClicked("Rate") },
-                        onLastOptionClicked = { interactionListener.onLastOptionClicked("Add to list") },
+                        onFirstOptionClicked = interactionListener::onRateClicked,
+                        onLastOptionClicked = interactionListener::onAddToListClicked,
                     )
                     RatingChip(
                         state.rating,
@@ -311,34 +313,14 @@ private fun SearchByActorContentPreview() {
             MovieDetailsUiState(),
             interactionListener =
                 object : MovieDetailsInteractionListener {
-                    override fun onClickMovieExtras(movieExtras: MovieExtras) {
-                    }
-
-                    override fun onClickShowAllCast() {
-                    }
-
-                    override fun onClickBack() {
-                    }
-
-                    override fun onClickRetryRequest() {
-                    }
-
-                    override fun onLastOptionClicked(title: String) {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onFirstOptionClicked(title: String) {
-
-                    }
-
-                    override fun onLoginClicked() {
-
-                    }
-
-                    override fun onCancelClicked() {
-
-                    }
-
+                    override fun onClickMovieExtras(movieExtras: MovieExtras) {}
+                    override fun onClickShowAllCast() {}
+                    override fun onClickBack() {}
+                    override fun onClickRetryRequest() {}
+                    override fun onAddToListClicked() {}
+                    override fun onRateClicked() {}
+                    override fun onNavigateToLoginClicked() {}
+                    override fun onCancelClicked() {}
                 },
         )
     }
