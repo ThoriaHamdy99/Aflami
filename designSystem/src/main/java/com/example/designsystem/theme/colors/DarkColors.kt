@@ -44,7 +44,7 @@ internal val darkThemeColors =
         findByActorGradient = listOf(Color(0xFF53ABF9), Color(0xFF336490)),
         guessCardGradient = listOf(Color(0x1FD85895), Color(0xFF0D090B)),
         primaryEnd = Color(0xFF973A66),
-        droppedShadowColor = Color(0x3DD85895)
+        droppedShadowColor = Color(0x3DD85895),
         loginGradient = listOf(Color(0x3DD85895), Color(0x00D85895)),
         topRatedGradientBackground = listOf(Color(0xCC64163B), Color(0x0064163B))
     )
