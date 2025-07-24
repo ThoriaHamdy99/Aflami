@@ -15,6 +15,7 @@ import com.example.localdatasource.roomDataBase.daos.MovieDao
 import com.example.localdatasource.roomDataBase.daos.RecentSearchDao
 import com.example.localdatasource.roomDataBase.daos.TvShowCategoryInterestDao
 import com.example.localdatasource.roomDataBase.daos.TvShowDao
+import com.example.localdatasource.roomDataBase.daos.WatchHistoryDao
 import com.example.repository.dto.local.LocalCountryDto
 import com.example.repository.dto.local.LocalMovieCategoryDto
 import com.example.repository.dto.local.LocalMovieCategoryInterestDto
@@ -27,6 +28,7 @@ import com.example.repository.dto.local.SearchTvShowCrossRefDto
 import com.example.repository.dto.local.MovieCategoryCrossRefDto
 import com.example.repository.dto.local.SearchMovieCrossRefDto
 import com.example.repository.dto.local.TvShowCategoryCrossRefDto
+import com.example.repository.dto.local.WatchHistoryDto
 
 @Database(
     entities = [LocalSearchDto::class,
@@ -35,6 +37,7 @@ import com.example.repository.dto.local.TvShowCategoryCrossRefDto
         LocalTvShowCategoryDto::class,
         LocalMovieDto::class,
         LocalTvShowDto::class,
+        WatchHistoryDto::class,
         SearchTvShowCrossRefDto::class,
         MovieCategoryCrossRefDto::class,
         TvShowCategoryCrossRefDto::class,
@@ -51,6 +54,7 @@ abstract class AflamiDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun movieDao(): MovieDao
     abstract fun tvShowDao(): TvShowDao
+    abstract fun watchHistoryDao() : WatchHistoryDao
     abstract fun movieCategoryInterestDao(): MovieCategoryInterestDao
     abstract fun tvShowCategoryInterestDao(): TvShowCategoryInterestDao
 

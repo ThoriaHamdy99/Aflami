@@ -49,4 +49,7 @@ sealed interface Route {
 
     @Serializable
     data object ResetPassword : Route
+
+    @Serializable
+    data object ContinueWatching: Route
 }
