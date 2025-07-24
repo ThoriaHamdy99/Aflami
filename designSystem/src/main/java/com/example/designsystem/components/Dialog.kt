@@ -25,11 +25,11 @@ import com.example.designsystem.utils.ThemeAndLocalePreviews
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun Dialog(
-    content: @Composable () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     isDismissible: Boolean = true,
     behindDialogColor: Color = AppTheme.color.dialogBackground,
+    content: @Composable () -> Unit,
 ) {
     val activity: Activity = LocalContext.current as Activity
 

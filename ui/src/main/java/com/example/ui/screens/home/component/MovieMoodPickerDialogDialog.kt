@@ -46,19 +46,18 @@ fun MovieMoodPickerDialogDialog(
 ) {
 
     Dialog(
-        content = {
-            DialogContent(
-                movie,
-                onDismiss,
-                onClickGetAnotherMovie,
-                onClickViewDetails
-            )
-        },
         onDismiss = onDismiss,
         isDismissible = true,
         modifier = modifier,
         behindDialogColor = AppTheme.color.dialogBackground
-    )
+    ) {
+        DialogContent(
+            movie,
+            onDismiss,
+            onClickGetAnotherMovie,
+            onClickViewDetails
+        )
+    }
 }
 
 @Composable
