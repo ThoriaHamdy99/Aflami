@@ -3,7 +3,7 @@ package com.example.repository.mapper.remote
 import com.example.entity.TvShow
 import com.example.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.example.repository.mapper.shared.EntityMapper
-import com.example.repository.mapper.shared.toTvShowCategory
+import com.example.repository.mapper.shared.mapCategoryIdToTvShowGenre
 import kotlinx.datetime.toLocalDate
 
 class TvShowDetailsRemoteMapper() : EntityMapper<TvShowDetailsRemoteResponse, TvShow> {
@@ -14,7 +14,7 @@ class TvShowDetailsRemoteMapper() : EntityMapper<TvShowDetailsRemoteResponse, Tv
             description = dto.overview,
             posterUrl = dto.fullPosterPath.orEmpty(),
             airDate = dto.releaseDate.toLocalDate(),
-            categories = dto.genres.map { it.id.toLong().toTvShowCategory() },
+            categories = dto.genres.map { mapCategoryIdToTvShowGenre(it.id.toLong()) },
             rating = dto.voteAverage.toFloat(),
             popularity = dto.popularity,
             seasonCount = dto.seasonCount,
