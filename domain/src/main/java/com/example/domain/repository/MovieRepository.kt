@@ -20,9 +20,6 @@ interface MovieRepository {
     suspend fun getMovieGallery(movieId : Long) : List<String>
     suspend fun getMoviePosters(movieId : Long) : List<String>
     suspend fun getProductionCompany(movieId : Long) : List<ProductionCompany>
-
-    suspend fun incrementGenreInterest(genre: MovieGenre)
-    suspend fun getAllGenreInterests(): Map<MovieGenre, Int>
     suspend fun getPopularMovies(): List<Movie>
     suspend fun getTopRatedMovies(): List<Movie>
     suspend fun getUpcomingMovies(): List<Movie>
