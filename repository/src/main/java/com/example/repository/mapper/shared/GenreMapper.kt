@@ -3,8 +3,8 @@ package com.example.repository.mapper.shared
 import com.example.entity.category.MovieGenre
 import com.example.entity.category.TvShowGenre
 
-fun Long.toMovieCategory(): MovieGenre {
-    return when (this) {
+fun mapCategoryIdToMovieGenre(genreId: Long): MovieGenre {
+    return when (genreId) {
         28L -> MovieGenre.ACTION
         12L -> MovieGenre.ADVENTURE
         16L -> MovieGenre.ANIMATION
@@ -28,8 +28,8 @@ fun Long.toMovieCategory(): MovieGenre {
     }
 }
 
-fun Long.toTvShowCategory(): TvShowGenre {
-    return when (this) {
+fun mapCategoryIdToTvShowGenre(genreId: Long): TvShowGenre {
+    return when (genreId) {
         10759L -> TvShowGenre.ACTION_ADVENTURE
         16L -> TvShowGenre.ANIMATION
         35L -> TvShowGenre.COMEDY

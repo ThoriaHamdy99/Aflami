@@ -4,7 +4,7 @@ import com.example.entity.TvShow
 import com.example.entity.category.TvShowGenre
 import com.example.repository.dto.remote.RemoteTvShowItemDto
 import com.example.repository.mapper.shared.EntityMapper
-import com.example.repository.mapper.shared.toTvShowCategory
+import com.example.repository.mapper.shared.mapCategoryIdToTvShowGenre
 import kotlinx.datetime.toLocalDate
 
 class TvShowRemoteMapper() : EntityMapper<RemoteTvShowItemDto, TvShow> {
@@ -24,6 +24,6 @@ class TvShowRemoteMapper() : EntityMapper<RemoteTvShowItemDto, TvShow> {
     }
 
     private fun mapGenreIdsToCategories(genreIds: List<Int>): List<TvShowGenre> {
-        return genreIds.map { it.toLong().toTvShowCategory() }
+        return genreIds.map { mapCategoryIdToTvShowGenre(it.toLong()) }
     }
 }
