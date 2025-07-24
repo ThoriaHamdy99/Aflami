@@ -13,6 +13,8 @@ import com.example.repository.repository.CountryRepositoryImpl
 import com.example.repository.repository.MovieRepositoryImpl
 import com.example.repository.repository.RecentSearchRepositoryImpl
 import com.example.repository.repository.TvShowRepositoryImpl
+import com.example.repository.security.CryptoData
+import com.example.repository.security.CryptoDataImpl
 import com.example.repository.repository.WatchHistoryRepositoryImpl
 import com.example.repository.utils.RecentSearchHandler
 import com.example.repository.utils.RecentSearchHandlerImpl
@@ -21,6 +23,8 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val repositoryModule = module {
+    // crypto
+    singleOf(::CryptoDataImpl) bind CryptoData::class
 
     // Handler
     singleOf(::RecentSearchHandlerImpl) bind RecentSearchHandler::class
