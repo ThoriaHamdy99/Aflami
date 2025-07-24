@@ -16,6 +16,7 @@ import com.example.domain.useCase.AddWatchHistoryUseCase
 import com.example.domain.useCase.GetContinueWatchingMoviesUseCase
 import com.example.domain.useCase.RecentSearchesUseCase
 import com.example.domain.useCase.GetEpisodesBySeasonNumberUseCase
+import com.example.domain.useCase.GetMoviesByMoodUseCase
 import com.example.domain.useCase.authentication.GetsSessionType
 import com.example.domain.useCase.authentication.LoginAsGuestUseCase
 import com.example.domain.useCase.authentication.LoginWithPasswordUseCase
@@ -42,4 +43,5 @@ val useCaseModule = module {
     singleOf(::GetContinueWatchingMoviesUseCase)
     singleOf(::GetHomeScreenDataUseCase)
     singleOf(::AddWatchHistoryUseCase)
+    singleOf(::GetMoviesByMoodUseCase)
 }

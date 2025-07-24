@@ -76,4 +76,7 @@ class MovieRemoteDataSourceImpl(
   override suspend fun getTopRatedMovies(): RemoteMovieResponse {
      return movieServiceProvider.getTopRatedMovies()
   }
+    override suspend fun getMoviesByGenreIds(genresIds: List<Long>): RemoteMovieResponse {
+        return movieServiceProvider.getMoviesByGenreIds(genresIds)
+    }
 }

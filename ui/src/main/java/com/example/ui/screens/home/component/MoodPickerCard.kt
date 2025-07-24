@@ -1,10 +1,12 @@
-package com.example.ui.components
+package com.example.ui.screens.home.component
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,25 +24,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import io.sifr.shaded.modifiers.blur
 import com.example.designsystem.components.Icon
 import com.example.designsystem.components.Text
 import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.theme.AppTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
 import com.example.ui.R
+import com.example.ui.screens.home.model.CardMood
+import io.sifr.shaded.modifiers.blur
 
 @Composable
 fun MoodPickerCard(
+    cardMoods: List<CardMood>,
     modifier: Modifier = Modifier,
-    onMoodSelected: (Int) -> Unit = {},
+    onSelectMood: (CardMood) -> Unit = {},
+    onClickGetNow: () -> Unit = {},
 ) {
     Box(
         modifier =
@@ -56,7 +60,8 @@ fun MoodPickerCard(
                                 AppTheme.color.yellowAccent,
                             ),
                     ),
-                ).border(1.dp, AppTheme.color.stroke, RoundedCornerShape(24.dp)),
+                )
+                .border(1.dp, AppTheme.color.stroke, RoundedCornerShape(24.dp)),
     ) {
         Image(
             painter = painterResource(R.drawable.img_mood_fun_clown),
@@ -80,30 +85,25 @@ fun MoodPickerCard(
         }
 
         MoodOptionsSection(
+            cardMoods,
             modifier =
                 Modifier
                     .padding(top = 76.dp, start = 2.dp, end = 2.dp, bottom = 2.dp),
-            onMoodSelected = onMoodSelected,
+            onSelectMood = onSelectMood,
+            onClickGetNow = onClickGetNow
         )
     }
 }
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 private fun MoodOptionsSection(
+    cardMoods: List<CardMood>,
     modifier: Modifier = Modifier,
-    onMoodSelected: (Int) -> Unit = {},
+    onSelectMood: (CardMood) -> Unit = {},
+    onClickGetNow: () -> Unit = {},
 ) {
     var selectedIndex by remember { mutableStateOf(-1) }
-
-    val moodIcons =
-        listOf(
-            R.drawable.ic_mood_sad,
-            R.drawable.ic_mood_lookup,
-            R.drawable.ic_mood_inlove,
-            R.drawable.ic_mood_angry,
-            R.drawable.ic_mood_unhappy,
-            R.drawable.ic_mood_saddizzy,
-        )
 
     val buttonColor by animateColorAsState(
         if (selectedIndex != -1) AppTheme.color.primary else AppTheme.color.disable,
@@ -129,13 +129,13 @@ private fun MoodOptionsSection(
             modifier = Modifier.padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            moodIcons.forEachIndexed { index, iconRes ->
+            cardMoods.forEachIndexed { index, mood ->
                 MoodIcon(
-                    iconRes = iconRes,
+                    iconRes = mood.iconResourceId,
                     isSelected = selectedIndex == index,
                     onClick = {
                         selectedIndex = index
-                        onMoodSelected(index)
+                        onSelectMood(mood)
                     },
                 )
             }
@@ -143,13 +143,20 @@ private fun MoodOptionsSection(
 
         Text(
             text = stringResource(R.string.get_now),
-            style = AppTheme.textStyle.body.medium,
+            style = AppTheme.textStyle.label.medium,
             color = buttonColor,
-            modifier = Modifier.padding(vertical = 12.dp),
+            modifier = Modifier
+                .padding(vertical = 12.dp)
+                .clickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = null,
+                    onClick = onClickGetNow,
+                ),
         )
     }
 }
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 private fun MoodIcon(
     iconRes: Int,
@@ -168,7 +175,11 @@ private fun MoodIcon(
             Modifier
                 .padding(4.dp)
                 .size(24.dp)
-                .clickable(onClick = onClick),
+                .clickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = null,
+                    onClick = onClick,
+                ),
     )
 }
 
@@ -189,7 +200,8 @@ private fun BlurredBoxWithIcon(modifier: Modifier = Modifier) {
                         width = 0.5.dp,
                         brush = Brush.linearGradient(AppTheme.color.borderLinearGradient),
                         shape = CircleShape,
-                    ).blur(8f),
+                    )
+                    .blur(8f),
         )
         Icon(
             painter = painterResource(R.drawable.ic_filled_favourite),
@@ -209,6 +221,15 @@ private fun CustomMoodPickerCardPreview() {
     AflamiTheme {
         MoodPickerCard(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 100.dp),
+            cardMoods = listOf(
+                CardMood.SAD,
+                CardMood.ANGRY,
+                CardMood.IN_LOVE,
+                CardMood.CONFUSED,
+                CardMood.THINKING,
+                CardMood.UN_HAPPY
+            ),
+            onSelectMood = {},
         )
     }
 }

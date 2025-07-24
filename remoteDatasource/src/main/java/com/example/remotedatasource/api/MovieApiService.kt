@@ -77,6 +77,12 @@ interface MovieApiService {
         @Path("movieId") movieId: Long
     ): RemoteMovieItemDto
 
+    @GET(DISCOVER_MOVIE)
+    suspend fun getMoviesByGenreIds(
+        @Query(GENRES) genresIds: List<Long>
+    ): RemoteMovieResponse
+
+
     @GET(TOP_RATED_MOVIES)
     suspend fun getTopRatedMovies() : RemoteMovieResponse
 
@@ -89,6 +95,8 @@ interface MovieApiService {
         private const val SEARCH_PERSON_URL =
             "search/person"
         private const val DISCOVER_MOVIE = "discover/movie"
+
+        const val GENRES = "with_genres"
 
         private const val MOVIE_CREDITS_ENDPOINT = "movie/{movieId}/credits"
         private const val MOVIE_REVIEWS_ENDPOINT = "movie/{movieId}/reviews"
