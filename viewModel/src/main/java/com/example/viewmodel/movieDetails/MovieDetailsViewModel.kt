@@ -1,16 +1,22 @@
 package com.example.viewmodel.movieDetails
 
+import androidx.lifecycle.viewModelScope
 import com.example.domain.exceptions.AflamiException
 import com.example.domain.exceptions.NoInternetException
 import com.example.domain.useCase.GetMovieDetailsUseCase
+import com.example.domain.useCase.authentication.GetsSessionType
+import com.example.domain.utils.SessionType
 import com.example.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
 import com.example.viewmodel.shared.BaseViewModel
+import com.example.viewmodel.shared.movieAndSeriseDetails.MovieAndSeriesDetailsDialogType
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
+import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel(
-    private val args: MovieDetailsArgs,
-    private val movieDetailsUiStateMapper : MovieDetailsUiStateMapper,
-    private val getMovieDetailsUseCase : GetMovieDetailsUseCase,
+    args: MovieDetailsArgs,
+    private val movieDetailsUiStateMapper: MovieDetailsUiStateMapper,
+    private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
+    private val getsSessionType: GetsSessionType,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<MovieDetailsUiState, MovieDetailsEffect>(
     MovieDetailsUiState(),
@@ -23,12 +29,13 @@ class MovieDetailsViewModel(
         loadMovieDetails()
     }
 
-    private fun loadMovieDetails(){
+    private fun loadMovieDetails() {
         updateState { it.copy(isLoading = true, networkError = false) }
         tryToExecute(
             action = ::getMovieDetails,
             onSuccess =::onGetMovieDetailsSuccess,
-            onError = ::onError
+            onError = ::onError,
+            onCompletion = ::onCompletion
         )
     }
 
@@ -61,10 +68,54 @@ class MovieDetailsViewModel(
         loadMovieDetails()
     }
 
+    override fun onRateClicked() {
+        viewModelScope.launch {
+            runIfLoggedIn(
+                onLoggedIn = {},
+                onGuest = { showMustLoginDialog(MovieAndSeriesDetailsDialogType.Rate) }
+            )
+        }
+    }
+
+    override fun onNavigateToLoginClicked() {
+        sendNewEffect(MovieDetailsEffect.NavigateToLoginScreenEffect)
+    }
+
+    override fun onCancelClicked() {
+        updateState { it.copy(isLoginDialogVisible = false) }
+    }
+
+    override fun onAddToListClicked() {
+        viewModelScope.launch {
+            runIfLoggedIn(
+                onLoggedIn = {},
+                onGuest = { showMustLoginDialog(MovieAndSeriesDetailsDialogType.AddToList) }
+            )
+        }
+    }
+
+    private suspend fun runIfLoggedIn(
+        onLoggedIn: () -> Unit,
+        onGuest: () -> Unit
+    ) {
+        if (getsSessionType() != SessionType.GUEST) {
+            onLoggedIn()
+        } else {
+            onGuest()
+        }
+    }
+
+    private fun showMustLoginDialog(dialogType: MovieAndSeriesDetailsDialogType){
+        updateState { it.copy(isLoginDialogVisible = true, dialogType = dialogType) }
+    }
+
     private fun onError(exception: AflamiException) {
          when (exception) {
-            is NoInternetException -> updateState { it.copy(isLoading = false , networkError = true) }
+            is NoInternetException -> updateState { it.copy(networkError = true) }
             else -> {}
         }
     }
+
+    private fun onCompletion() = updateState { it.copy(isLoading = false) }
+
 }

@@ -23,4 +23,5 @@ interface MovieServiceProvider {
     suspend fun getProductionCompany(movieId: Long): ProductionCompanyResponse
     suspend fun getMovieDetailsById(movieId: Long): RemoteMovieItemDto
     suspend fun getTopRatedMovies() : RemoteMovieResponse
+    suspend fun getMoviesByGenreIds(genresIds: List<Long>): RemoteMovieResponse
 }

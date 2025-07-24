@@ -7,4 +7,8 @@ interface MovieDetailsInteractionListener  {
     fun onClickShowAllCast()
     fun onClickBack()
     fun onClickRetryRequest()
+    fun onAddToListClicked()
+    fun onRateClicked()
+    fun onNavigateToLoginClicked()
+    fun onCancelClicked()
 }

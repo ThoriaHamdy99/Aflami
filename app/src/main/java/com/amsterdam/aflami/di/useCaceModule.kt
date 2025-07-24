@@ -11,9 +11,12 @@ import com.example.domain.useCase.GetPopularMoviesUseCase
 import com.example.domain.useCase.GetSuggestedCountriesUseCase
 import com.example.domain.useCase.GetUpcomingMoviesUseCase
 import com.example.domain.useCase.GetTopRatedMoviesUseCase
-import com.example.domain.useCase.RecentSearchesUseCase
 import com.example.domain.useCase.GetTvShowDetailsUseCase
+import com.example.domain.useCase.AddWatchHistoryUseCase
+import com.example.domain.useCase.GetContinueWatchingMoviesUseCase
+import com.example.domain.useCase.RecentSearchesUseCase
 import com.example.domain.useCase.GetEpisodesBySeasonNumberUseCase
+import com.example.domain.useCase.GetMoviesByMoodUseCase
 import com.example.domain.useCase.authentication.GetsSessionType
 import com.example.domain.useCase.authentication.LoginAsGuestUseCase
 import com.example.domain.useCase.authentication.LoginWithPasswordUseCase
@@ -37,5 +40,8 @@ val useCaseModule = module {
     singleOf(::GetTvShowDetailsUseCase)
     singleOf(::GetUpcomingMoviesUseCase)
     singleOf(::GetTopRatedMoviesUseCase)
+    singleOf(::GetContinueWatchingMoviesUseCase)
     singleOf(::GetHomeScreenDataUseCase)
+    singleOf(::AddWatchHistoryUseCase)
+    singleOf(::GetMoviesByMoodUseCase)
 }

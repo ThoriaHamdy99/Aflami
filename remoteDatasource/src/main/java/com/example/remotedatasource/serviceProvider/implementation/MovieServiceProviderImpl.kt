@@ -73,4 +73,8 @@ class MovieServiceProviderImpl(
         return responseCall { movieApiService.getTopRatedMovies() }
     }
 
+    override suspend fun getMoviesByGenreIds(genresIds: List<Long>): RemoteMovieResponse {
+        return responseCall { movieApiService.getMoviesByGenreIds(genresIds) }
+    }
+
 }

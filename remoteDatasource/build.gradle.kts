@@ -26,12 +26,14 @@ android {
             "String",
             "BEARER_TOKEN",
             bearerToken
+
         )
 
         buildConfigField(
             "String",
             "BASE_URL",
             baseUrl
+
         )
     }
 }

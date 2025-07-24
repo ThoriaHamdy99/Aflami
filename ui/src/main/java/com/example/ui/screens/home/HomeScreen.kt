@@ -27,22 +27,27 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.designsystem.components.LoadingContainer
 import com.example.designsystem.theme.AflamiTheme
 import com.example.designsystem.theme.AppTheme
 import com.example.designsystem.utils.ThemeAndLocalePreviews
+import com.example.domain.models.Mood
 import com.example.entity.category.MovieGenre
 import com.example.ui.application.LocalNavController
 import com.example.ui.components.NoNetworkContainer
 import com.example.ui.components.appBar.HomeAppBar
 import com.example.ui.navigation.Route
 import com.example.ui.navigation.Route.MovieDetails
+import com.example.ui.screens.home.component.MoodPickerCard
+import com.example.ui.screens.home.component.MovieMoodPickerDialogDialog
+import com.example.ui.screens.home.model.CardMood
 import com.example.ui.screens.home.sections.AnimatedSectionVisibility
 import com.example.ui.screens.home.sections.BlurredMoviePoster
-import com.example.ui.screens.home.sections.topRatingSection
+import com.example.ui.screens.home.sections.MoodPickerSection
+import com.example.ui.screens.home.sections.continueWatchingSection
 import com.example.ui.screens.home.sections.popularSection
+import com.example.ui.screens.home.sections.topRatingSection
 import com.example.ui.screens.home.sections.upcomingMoviesSection
 import com.example.ui.utils.safeNavigate
 import com.example.viewmodel.home.HomeEffect
@@ -63,13 +68,17 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = koi
         homeViewModel.effect.collectLatest { effect ->
             effect?.let {
                 when (effect) {
-                    NavigateToSearchScreenEffect -> navController.safeNavigate(Route.Search)
+                    is NavigateToSearchScreenEffect -> navController.safeNavigate(Route.Search)
                     is NavigateToMovieDetailsEffect -> {
                         navController.safeNavigate(MovieDetails(movieId = effect.movieId))
                     }
 
-                    HomeEffect.NavigateToTopRatedMoviesEffect -> {
+                    is HomeEffect.NavigateToTopRatedMoviesEffect -> {
                         navController.safeNavigate(Route.TopRated)
+                    }
+
+                    is HomeEffect.NavigateToContinueWatchingMoviesScreen -> {
+                        navController.safeNavigate(Route.ContinueWatching)
                     }
                 }
             }
@@ -115,9 +124,11 @@ private fun HomeScreenContent(
         }
     }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .nestedScroll(nestedScrollConnection)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(nestedScrollConnection)
+    ) {
         AnimatedSectionVisibility(visible = state.popularMovies.isNotEmpty()) {
             BlurredMoviePoster(
                 posterUrl = state.popularMovies[pagerState.currentPage % state.popularMovies.size].posterUrl,
@@ -132,39 +143,59 @@ private fun HomeScreenContent(
                 onClickRetry = interactionListener::onClickRetryLoading
             )
         }
-        Column(modifier = Modifier.padding(bottom = 100.dp)) {
-            HomeAppBar(
-                modifier = Modifier
-                    .background(appBarColor)
-                    .statusBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                onSearchClicked = interactionListener::onClickSearch,
-            )
-            AnimatedSectionVisibility(visible = state.popularMovies.isNotEmpty()) {
-                LazyColumn(
-                    modifier = modifier
-                        .fillMaxSize(),
-                    state = lazyListState,
-                ) {
+        Box {
+            Column(modifier = Modifier.padding(bottom = 100.dp)) {
+                HomeAppBar(
+                    modifier = Modifier
+                        .background(appBarColor)
+                        .statusBarsPadding()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    onSearchClicked = interactionListener::onClickSearch,
+                )
+                AnimatedSectionVisibility(visible = state.popularMovies.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = modifier
+                            .fillMaxSize(),
+                        state = lazyListState,
+                    ) {
 
-                    popularSection(
-                        popularMovies = state.popularMovies,
-                        pagerState = pagerState
-                    )
-                    topRatingSection(
-                        topRatedMovies = state.topRatedMovies,
-                        onClickMovie = interactionListener::onClickMovie,
-                        onClickShowAll = interactionListener::onClickShowAllToRatedMovies
-                    )
+                        popularSection(
+                            popularMovies = state.popularMovies,
+                            pagerState = pagerState
+                        )
+                        topRatingSection(
+                            topRatedMovies = state.topRatedMovies,
+                            onClickMovie = interactionListener::onClickMovie,
+                            onClickShowAll = interactionListener::onClickShowAllToRatedMovies
+                        )
+                    if (state.continueWatchingMovies.isNotEmpty())
+                        continueWatchingSection(
+                            continueWatchingMovies = state.continueWatchingMovies,
+                            onClickMovie = interactionListener::onClickMovie,
+                            onClickShowAll = interactionListener::onClickShowAllContinueWatchingMovies
+                        )
 
-                    upcomingMoviesSection(
-                        moviesGenres = state.upcomingMovieGenres,
-                        onChangeMovieGenre = interactionListener::onChangeUpcomingMovieGenre,
-                        movies = state.upcomingMovies,
-                        onMovieClicked = interactionListener::onClickUpcomingMovieCard,
-                        isVisible = isSectionsVisible
-                    )
+                        item { MoodPickerSection(state, interactionListener) }
+
+                        upcomingMoviesSection(
+                            moviesGenres = state.upcomingMovieGenres,
+                            onChangeMovieGenre = interactionListener::onChangeUpcomingMovieGenre,
+                            movies = state.upcomingMovies,
+                            onMovieClicked = interactionListener::onClickUpcomingMovieCard,
+                            isVisible = isSectionsVisible
+                        )
+                    }
                 }
+            }
+
+            AnimatedSectionVisibility (visible = state.moodPickerUiState.openMovieDialog) {
+                MovieMoodPickerDialogDialog(
+                    movie = state.moodPickerUiState.selectedMovie,
+                    onClickViewDetails = interactionListener::onClickViewDetails,
+                    onClickGetAnotherMovie = interactionListener::onClickGetAnotherMovie,
+                    onDismiss = interactionListener::onDismissMoodPickerDialog,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     }
@@ -179,10 +210,18 @@ private fun HomeScreenPreview() {
             interactionListener = object : HomeInteractionListener {
                 override fun onClickRetryLoading() {}
                 override fun onClickSearch() {}
+
                 override fun onClickUpcomingMovieCard(id: Long) {}
                 override fun onChangeUpcomingMovieGenre(genre: MovieGenre) {}
                 override fun onClickMovie(movieId: Long) {}
                 override fun onClickShowAllToRatedMovies() {}
+                override fun onClickShowAllContinueWatchingMovies() {}
+
+                override fun onClickMood(mood: Mood) {}
+                override fun onClickGetNow() {}
+                override fun onDismissMoodPickerDialog() {}
+                override fun onClickViewDetails() {}
+                override fun onClickGetAnotherMovie() {}
             }
         )
     }

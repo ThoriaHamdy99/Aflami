@@ -9,6 +9,7 @@ import com.example.entity.category.MovieGenre
 
 class GetMovieDetailsUseCase(
     private val movieRepository: MovieRepository,
+    private val addWatchHistoryUseCase: AddWatchHistoryUseCase,
 ) {
     suspend operator fun invoke(movieId: Long): MovieDetails {
         val movie = movieRepository.getMovieDetailsById(movieId)
@@ -28,7 +29,9 @@ class GetMovieDetailsUseCase(
             movieGallery = movieGallery,
             moviePosters = moviePosters,
             productionsCompanies = productionsCompanies
-        )
+        ).also {
+            addWatchHistoryUseCase(movieId)
+        }
     }
 
     data class MovieDetails(

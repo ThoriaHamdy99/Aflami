@@ -19,4 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keepdirectories com.amsterdam.aflami.*
+
+# Kotlinx Serializatione.
+-keep @kotlinx.serialization.Serializable class *
+-keepnames class * { @kotlinx.serialization.SerialName *; }
+
+# Room DB
+-keep class * extends androidx.room.RoomDatabase { *; }

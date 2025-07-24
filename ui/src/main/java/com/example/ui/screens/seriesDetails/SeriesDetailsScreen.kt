@@ -42,8 +42,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemKey
 import com.example.designsystem.R
 import com.example.designsystem.components.Icon
 import com.example.designsystem.components.ImageErrorIndicator
@@ -59,6 +57,7 @@ import com.example.designsystem.utils.ThemeAndLocalePreviews
 import com.example.imageviewer.ui.SafeImageView
 import com.example.ui.application.LocalNavController
 import com.example.ui.components.EpisodeCard
+import com.example.ui.components.MustLoginDialog
 import com.example.ui.components.NoNetworkContainer
 import com.example.ui.components.appBar.DefaultAppBar
 import com.example.ui.navigation.Route
@@ -70,8 +69,10 @@ import com.example.ui.screens.movieDetails.components.GallerySection
 import com.example.ui.screens.movieDetails.components.MoreLikeSection
 import com.example.ui.screens.movieDetails.components.PlayButton
 import com.example.ui.screens.movieDetails.components.ReviewSection
+import com.example.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.example.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.example.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
+import com.example.ui.utils.safeNavigate
 import com.example.viewmodel.seriesDetails.SeriesDetailsEffect
 import com.example.viewmodel.seriesDetails.SeriesDetailsInteractionListener
 import com.example.viewmodel.seriesDetails.SeriesDetailsUiState
@@ -80,6 +81,7 @@ import com.example.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState.Ep
 import com.example.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 import com.example.viewmodel.seriesDetails.SeriesDetailsViewModel
 import com.example.viewmodel.shared.Selectable
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -93,11 +95,13 @@ fun SeriesDetailsScreen(
         interaction = viewModel
     )
     LaunchedEffect(Unit) {
-        viewModel.effect.collect {
-            when (it) {
-                SeriesDetailsEffect.NavigateBack -> navController.popBackStack()
-                SeriesDetailsEffect.NavigateToCastScreen -> navController.navigate(Route.Cast(state.tvShowId))
-                null -> {}
+        viewModel.effect.collectLatest { effect ->
+            effect?.let {
+                when (it) {
+                    SeriesDetailsEffect.NavigateBack -> navController.popBackStack()
+                    SeriesDetailsEffect.NavigateToCastScreen -> navController.safeNavigate(Route.Cast(state.tvShowId))
+                    SeriesDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(Route.Login)
+                }
             }
         }
     }
@@ -157,6 +161,18 @@ fun SeriesDetailsContent(
             )
         }
     }
+
+    AnimatedVisibility(
+        modifier = Modifier,
+        visible = state.isLoginDialogVisible
+    ) {
+        MustLoginDialog(
+            title = state.dialogType.getMovieAndSeriesDetailsDialogTitle(),
+            onDismiss = interaction::onCancelClicked,
+            onClickLogin = interaction::onNavigateToLoginClicked,
+        )
+    }
+
     AnimatedVisibility(
         !state.isLoading && !state.networkError,
         enter = fadeIn(tween(animationDuration)),
@@ -269,7 +285,7 @@ fun SeriesDetailsContent(
                     ?.item
                     ?.let { selectedExtra ->
                         when (selectedExtra) {
-                            SeriesExtras.SEASONS -> SeasonsSection(
+                            SeriesExtras.SEASONS -> seasonsSection(
                                 seasons = state.seasons,
                                 state = state,
                                 interaction = interaction
@@ -296,7 +312,9 @@ fun SeriesDetailsContent(
                         .statusBarsPadding(),
                     firstOption = painterResource(R.drawable.ic_outlined_star),
                     lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
-                    onNavigateBackClicked = interaction::onNavigateBack
+                    onNavigateBackClicked = interaction::onNavigateBack,
+                    onFirstOptionClicked = interaction::onRateClicked,
+                    onLastOptionClicked = interaction::onAddToListClicked
                 )
                 HorizontalDivider(color = dividerColor)
             }
@@ -357,7 +375,7 @@ private fun SeriesExtrasSection(
     }
 }
 
-private fun LazyListScope.SeasonsSection(
+private fun LazyListScope.seasonsSection(
     seasons: List<SeasonUiState>,
     state: SeriesDetailsUiState,
     interaction: SeriesDetailsInteractionListener
@@ -451,7 +469,14 @@ private fun SeriesDetailsContentPreview() {
                 override fun onNavigateBack() {}
                 override fun onClickRetryButton() {}
                 override fun onClickShowAllCast() {}
+                override fun onAddToListClicked() {}
+
+                override fun onRateClicked() {}
+
                 override fun onClickSeasonMenu(seasonNumber: Int) {}
+                override fun onNavigateToLoginClicked() {}
+
+                override fun onCancelClicked() {}
             }
         )
     }

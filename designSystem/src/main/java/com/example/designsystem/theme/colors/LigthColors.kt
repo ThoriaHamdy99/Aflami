@@ -32,6 +32,7 @@ internal val lightThemeColors =
         yellowCard = Color(0x3dfad291),
         backgroundCircles = Color(0x3dd85895),
         profileOverlay = Color(0x80faf5f7),
+        dialogBackground = Color(0xB3000000),
         overlayGradient = listOf(Color(0x00faf5f7), Color(0xFFFAF5F7)),
         streakGradient = listOf(Color(0xFFD85895), Color(0x52d85895)),
         pointsOverlayGradient = listOf(Color(0xFFD02C7A), Color(0xFF7D1C4A)),
@@ -44,6 +45,7 @@ internal val lightThemeColors =
         guessCardGradient = listOf(Color(0x1FD85895), Color(0xFFFAF5F7)),
         primaryEnd = Color(0xFF973A66),
         overlayDark = listOf(Color(0x000D090B), Color(0xFF0D090B)),
+        droppedShadowColor = Color(0x3DD85895),
         loginGradient = listOf(Color(0x3DD85895), Color(0x00D85895)),
         topRatedGradientBackground = listOf(Color(0xCC64163B), Color(0x0064163B))
     )

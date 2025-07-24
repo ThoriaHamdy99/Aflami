@@ -34,6 +34,7 @@ data class AflamiColorScheme(
     val yellowCard: Color,
     val backgroundCircles: Color,
     val profileOverlay: Color,
+    val dialogBackground: Color,
     val overlayGradient: List<Color>,
     val streakGradient: List<Color>,
     val pointsOverlayGradient: List<Color>,
@@ -47,7 +48,8 @@ data class AflamiColorScheme(
     val guessCardGradient: List<Color>,
     val primaryEnd: Color,
     val loginGradient: List<Color>,
-    val topRatedGradientBackground: List<Color>
+    val topRatedGradientBackground: List<Color>,
+    val droppedShadowColor: Color,
 )
 
 internal val LocalAflamiAppColors = staticCompositionLocalOf { lightThemeColors }

@@ -1,21 +1,27 @@
 package com.example.viewmodel.seriesDetails
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.example.domain.exceptions.AflamiException
 import com.example.domain.exceptions.NoInternetException
 import com.example.domain.useCase.GetEpisodesBySeasonNumberUseCase
 import com.example.domain.useCase.GetTvShowDetailsUseCase
 import com.example.domain.useCase.GetTvShowDetailsUseCase.TvShowDetails
+import com.example.domain.useCase.authentication.GetsSessionType
+import com.example.domain.utils.SessionType
 import com.example.entity.Episode
 import com.example.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 import com.example.viewmodel.shared.BaseViewModel
+import com.example.viewmodel.shared.movieAndSeriseDetails.MovieAndSeriesDetailsDialogType
 import com.example.viewmodel.utils.dispatcher.DispatcherProvider
+import kotlinx.coroutines.launch
 
 class SeriesDetailsViewModel(
     args: SeriesDetailsArgs,
     private val seriesDetailsStateMapper: SeriesDetailsStateMapper,
     private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase,
     private val getEpisodesBySeasonNumberUseCase: GetEpisodesBySeasonNumberUseCase,
+    private val getsSessionType: GetsSessionType,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<SeriesDetailsUiState, SeriesDetailsEffect>(
     SeriesDetailsUiState(),
@@ -69,12 +75,38 @@ class SeriesDetailsViewModel(
         sendNewEffect(SeriesDetailsEffect.NavigateToCastScreen)
     }
 
+    override fun onAddToListClicked() {
+        viewModelScope.launch {
+            runIfLoggedIn(
+                onLoggedIn = {},
+                onGuest = { showMustLoginDialog(MovieAndSeriesDetailsDialogType.AddToList) }
+            )
+        }
+    }
+
+    override fun onRateClicked() {
+        viewModelScope.launch {
+            runIfLoggedIn(
+                onLoggedIn = {},
+                onGuest = { showMustLoginDialog(MovieAndSeriesDetailsDialogType.Rate) }
+            )
+        }
+    }
+
     override fun onClickSeasonMenu(seasonNumber: Int) {
         tryToExecute(
             action = { getEpisodesForSeason(seasonNumber) },
             onSuccess = { episodes -> onGetEpisodesSuccess(seasonNumber, episodes) },
             onError = ::onError,
         )
+    }
+
+    override fun onNavigateToLoginClicked() {
+        sendNewEffect(SeriesDetailsEffect.NavigateToLoginScreenEffect)
+    }
+
+    override fun onCancelClicked() {
+        updateState { it.copy(isLoginDialogVisible = false) }
     }
 
     private suspend fun getEpisodesForSeason(seasonNumber: Int): List<Episode> {
@@ -110,6 +142,21 @@ class SeriesDetailsViewModel(
         updateState {
             it.copy(seasons = updatedSeasons)
         }
+    }
+
+    private suspend fun runIfLoggedIn(
+        onLoggedIn: () -> Unit,
+        onGuest: () -> Unit
+    ) {
+        if (getsSessionType() == SessionType.LOGGED_IN) {
+            onLoggedIn()
+        } else {
+            onGuest()
+        }
+    }
+
+    private fun showMustLoginDialog(dialogType: MovieAndSeriesDetailsDialogType){
+        updateState { it.copy(isLoginDialogVisible = true, dialogType = dialogType) }
     }
 
     private fun onError(exception: AflamiException) {
