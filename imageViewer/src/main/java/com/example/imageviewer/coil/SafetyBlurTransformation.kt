@@ -4,30 +4,28 @@ import android.graphics.Bitmap
 import android.util.Log
 import coil.size.Size
 import coil.transform.Transformation
-import com.example.imageviewer.classification.ImageClassifier
+import com.example.imageviewer.classification.CustomImageClassifier
 import com.example.imageviewer.util.OpenGLBlurProcessor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 internal class SafetyBlurTransformation(
-    private val classifier: ImageClassifier,
+    private val classifier: CustomImageClassifier,
     private val blurRadius: Float = 25f,
 ) : Transformation {
 
     override val cacheKey: String = "SafetyBlurTransformation(radius=${blurRadius})"
 
     override suspend fun transform(input: Bitmap, size: Size): Bitmap {
-        return withContext(Dispatchers.IO) {
+
             val isSafe = checkBitmapSafety(input)
 
-            if (isSafe) {
+            return if (isSafe) {
                 val safeConfig = input.config ?: Bitmap.Config.ARGB_8888
                 input.copy(safeConfig, true)
             } else {
                 applyBlur(input, blurRadius)
                     ?: throw RuntimeException("Failed to apply blur to unsafe image.")
             }
-        }
+
     }
 
     private fun checkBitmapSafety(bitmap: Bitmap): Boolean {

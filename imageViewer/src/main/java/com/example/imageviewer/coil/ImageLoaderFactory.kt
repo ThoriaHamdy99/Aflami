@@ -3,23 +3,23 @@ package com.example.imageviewer.coil
 
 import android.content.Context
 import coil.ImageLoader
-import com.example.imageviewer.classification.ImageClassifier
-import com.example.imageviewer.classification.SFWImageClassifier
+import com.example.imageviewer.classification.CustomImageClassifier
+import com.example.imageviewer.classification.NsfwDetectorClassifier
 import com.example.imageviewer.classification.policy.SafetyPolicy
 
 internal object ImageLoaderFactory {
 
     fun build(
         context: Context,
-        classifier: SFWImageClassifier,
+        classifier: NsfwDetectorClassifier,
         policy: SafetyPolicy
     ): ImageLoader {
-        val classifier: ImageClassifier = when (policy) {
+        val classifier: CustomImageClassifier = when (policy) {
             is SafetyPolicy.SFWPolicy -> classifier
         }
 
         return ImageLoader.Builder(context).components {
-                add(SafetyInterceptor(classifier))
-            }.build()
+            add(SafetyInterceptor(classifier))
+        }.build()
     }
 }

@@ -1,6 +1,5 @@
 package com.example.imageviewer.ui
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,7 +23,7 @@ fun SafeImageView(
     onError: (@Composable () -> Unit),
     isClassified: Boolean = true
 ) {
-    val imageLoader = rememberSafeImageLoader(isClassified=isClassified)
+    val imageLoader = rememberSafeImageLoader(isClassified = isClassified)
 
     imageLoader?.let { imageLoaders ->
         SubcomposeAsyncImage(
@@ -45,7 +44,6 @@ fun SafeImageView(
 private fun rememberSafeImageLoader(isClassified: Boolean): ImageLoader? {
     val context = LocalContext.current.applicationContext
     var imageLoader by remember { mutableStateOf<ImageLoader?>(null) }
-    Log.w("imageSafe", "rememberSafeImageLoader init")
     LaunchedEffect(isClassified) {
         imageLoader = ImageLoaderProvider.getInstance(context)
     }

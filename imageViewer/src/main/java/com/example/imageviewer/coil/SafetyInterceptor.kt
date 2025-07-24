@@ -3,10 +3,10 @@ package com.example.imageviewer.coil
 
 import coil.intercept.Interceptor
 import coil.request.ImageResult
-import com.example.imageviewer.classification.ImageClassifier
+import com.example.imageviewer.classification.CustomImageClassifier
 
 internal class SafetyInterceptor(
-    private val classifier: ImageClassifier
+    private val classifier: CustomImageClassifier
 ) : Interceptor {
 
     override suspend fun intercept(chain: Interceptor.Chain): ImageResult {
