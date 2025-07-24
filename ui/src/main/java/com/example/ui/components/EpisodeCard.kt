@@ -150,7 +150,7 @@ private fun EpisodeInfo(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "$episodeTime m",
+                text = episodeTime,
                 color = AppTheme.color.hint,
                 style = AppTheme.textStyle.label.small,
             )
