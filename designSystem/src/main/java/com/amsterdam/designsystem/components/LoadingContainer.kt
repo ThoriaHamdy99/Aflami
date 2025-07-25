@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.theme.AppTheme
+import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 
 @Composable
 fun LoadingContainer(modifier: Modifier = Modifier) {
@@ -27,4 +28,10 @@ fun LoadingContainer(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(top = 8.dp),
         )
     }
+}
+
+@Composable
+@ThemeAndLocalePreviews
+private fun LoadingContainerPreview() {
+    LoadingContainer()
 }
