@@ -23,8 +23,8 @@ data class TvShowDetailsRemoteResponse(
     @SerialName("number_of_seasons") val seasonCount: Int = 0,
 ) {
     val fullPosterPath: String?
-        get() = posterPath?.let { BuildConfig.BASE_IMAGE_URL + it }
+        get() = posterPath?.let { BuildConfig.BASE_IMAGE_URL_W500 + it }
 
     val fullBackdropPath: String?
-        get() = backdropPath?.let { BuildConfig.BASE_IMAGE_URL + it }
+        get() = backdropPath?.let { BuildConfig.BASE_IMAGE_URL_W300 + it }
 }

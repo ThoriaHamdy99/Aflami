@@ -126,7 +126,7 @@ class MovieRepositoryImpl(
     }
 
     override suspend fun getSimilarMovies(movieId: Long): List<Movie> {
-        return movieRemoteMapper.toEntityList(movieRemoteDataSource.getSimilarMovies(movieId).results)
+        return movieRemoteMapper.toEntityList(movieRemoteDataSource.getSimilarMovies(movieId).results,isPoster = false)
     }
 
     override suspend fun getMovieGallery(movieId: Long): List<String> {
@@ -143,7 +143,7 @@ class MovieRepositoryImpl(
     }
 
     override suspend fun getUpcomingMovies(): List<Movie> {
-        return movieRemoteMapper.toEntityList(movieRemoteDataSource.getUpcomingMovies().results)
+        return movieRemoteMapper.toEntityList(movieRemoteDataSource.getUpcomingMovies().results,isPoster = false)
     }
 
     override suspend fun getPopularMovies(): List<Movie> =

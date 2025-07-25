@@ -2,7 +2,8 @@ import java.util.Properties
 
 val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
-val baseImageUrl: String = properties.getProperty("baseImageUrl") ?: ""
+val baseImageUrlWidth500: String = properties.getProperty("baseImageUrlWidth500") ?: ""
+val baseImageUrlWidth300: String = properties.getProperty("baseImageUrlWidth300") ?: ""
 
 plugins {
     alias(libs.plugins.android.library)
@@ -25,8 +26,14 @@ android {
 
         buildConfigField(
             "String",
-            "BASE_IMAGE_URL",
-            baseImageUrl
+            "BASE_IMAGE_URL_W500",
+            baseImageUrlWidth500
+        )
+
+        buildConfigField(
+            "String",
+            "BASE_IMAGE_URL_W300",
+            baseImageUrlWidth300
         )
     }
 }

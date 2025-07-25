@@ -15,5 +15,5 @@ data class GalleryImageDto(
     @SerialName("width") val width: Int
 ){
     val fullFilePath: String?
-        get() = filePath.let { BuildConfig.BASE_IMAGE_URL + it }
+        get() = filePath.let { BuildConfig.BASE_IMAGE_URL_W500 + it }
 }

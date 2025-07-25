@@ -16,5 +16,5 @@ data class ProductionCompanyDto(
     val originCountry: String
 ){
     val fullLogoPath: String?
-        get() = logoPath?.let { BuildConfig.BASE_IMAGE_URL + it }
+        get() = logoPath?.let { BuildConfig.BASE_IMAGE_URL_W500 + it }
 }

@@ -16,5 +16,5 @@ data class AuthorDetailsDto(
     val rating: Float? = null
 ){
     val fullAvatarPath: String?
-        get() = avatarPath.let { BuildConfig.BASE_IMAGE_URL + it }
+        get() = avatarPath.let { BuildConfig.BASE_IMAGE_URL_W500 + it }
 }

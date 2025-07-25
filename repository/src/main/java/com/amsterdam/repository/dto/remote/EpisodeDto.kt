@@ -17,5 +17,5 @@ data class EpisodeDto(
     @SerialName("season_number") val seasonNumber: Int,
 ) {
     val fullStillPath: String?
-        get() = stillPath?.let { BuildConfig.BASE_IMAGE_URL + it }
+        get() = stillPath?.let { BuildConfig.BASE_IMAGE_URL_W500 + it }
 }

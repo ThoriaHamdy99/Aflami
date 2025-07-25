@@ -16,5 +16,5 @@ data class EpisodeResponse(
     @SerialName("vote_average") val voteAverage: Double,
 ) {
     val fullPosterPath: String?
-        get() = posterPath?.let { BuildConfig.BASE_IMAGE_URL + it }
+        get() = posterPath?.let { BuildConfig.BASE_IMAGE_URL_W500 + it }
 }

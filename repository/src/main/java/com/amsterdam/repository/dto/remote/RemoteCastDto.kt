@@ -43,5 +43,5 @@ data class RemoteCastDto(
     val order: Int
 ){
     val fullProfilePath: String?
-        get() = profilePath.let { BuildConfig.BASE_IMAGE_URL + it }
+        get() = profilePath.let { BuildConfig.BASE_IMAGE_URL_W500 + it }
 }
