@@ -5,6 +5,7 @@ import com.example.entity.category.MovieGenre
 import com.example.repository.dto.remote.RemoteMovieItemDto
 import com.example.repository.mapper.shared.EntityMapper
 import com.example.repository.mapper.shared.mapCategoryIdToMovieGenre
+import com.example.repository.utils.toSafeLocalDate
 import kotlinx.datetime.toLocalDate
 
 class MovieRemoteMapper() : EntityMapper<RemoteMovieItemDto, Movie> {
@@ -15,7 +16,7 @@ class MovieRemoteMapper() : EntityMapper<RemoteMovieItemDto, Movie> {
             name = dto.title,
             description = dto.overview,
             posterUrl = dto.fullPosterUrl.orEmpty(),
-            releaseDate = dto.releaseDate.toLocalDate(),
+            releaseDate = dto.releaseDate.toSafeLocalDate(),
             categories = mapGenreIdsToCategories(genresIds),
             rating = dto.voteAverage.toFloat(),
             popularity = dto.popularity,
