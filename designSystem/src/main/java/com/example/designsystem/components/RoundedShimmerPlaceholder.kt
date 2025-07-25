@@ -33,7 +33,7 @@ fun RoundedShimmerPlaceholder(
 
 @ThemeAndLocalePreviews
 @Composable
-fun RoundedShimmerPlaceholderPreview(modifier: Modifier = Modifier) {
+fun RoundedShimmerPlaceholderPreview() {
     RoundedShimmerPlaceholder(
         height = 244.dp,
         width = 300.dp,

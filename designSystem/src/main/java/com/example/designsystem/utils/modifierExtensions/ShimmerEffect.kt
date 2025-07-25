@@ -1,6 +1,5 @@
 package com.example.designsystem.utils.modifierExtensions
 
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
