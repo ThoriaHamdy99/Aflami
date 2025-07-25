@@ -1,15 +1,15 @@
 package com.amsterdam.aflami.di
 
-import com.example.remotedatasource.datasource.AuthenticationRemoteDataSourceImpl
-import com.example.remotedatasource.datasource.CategoryRemoteDataSourceImpl
-import com.example.remotedatasource.datasource.CountryRemoteDataSourceImpl
-import com.example.remotedatasource.datasource.MovieRemoteDataSourceImpl
-import com.example.remotedatasource.datasource.TvRemoteDataSourceImpl
-import com.example.repository.datasource.remote.AuthenticationRemoteSource
-import com.example.repository.datasource.remote.CategoryRemoteSource
-import com.example.repository.datasource.remote.CountryRemoteSource
-import com.example.repository.datasource.remote.MovieRemoteSource
-import com.example.repository.datasource.remote.TvShowsRemoteSource
+import com.amsterdam.remotedatasource.datasource.AuthenticationRemoteDataSourceImpl
+import com.amsterdam.remotedatasource.datasource.CategoryRemoteDataSourceImpl
+import com.amsterdam.remotedatasource.datasource.CountryRemoteDataSourceImpl
+import com.amsterdam.remotedatasource.datasource.MovieRemoteDataSourceImpl
+import com.amsterdam.remotedatasource.datasource.TvRemoteDataSourceImpl
+import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
+import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
+import com.amsterdam.repository.datasource.remote.CountryRemoteSource
+import com.amsterdam.repository.datasource.remote.MovieRemoteSource
+import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
