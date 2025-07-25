@@ -12,7 +12,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.viewmodel"
+    namespace = "com.amsterdam.viewmodel"
     buildFeatures {
         buildConfig = true
     }

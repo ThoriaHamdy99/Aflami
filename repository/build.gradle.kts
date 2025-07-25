@@ -15,7 +15,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.repository"
+    namespace = "com.amsterdam.repository"
     buildFeatures {
         buildConfig = true
     }
