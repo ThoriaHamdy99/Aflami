@@ -28,7 +28,6 @@ fun CenterOfScreenContainer(
     content: @Composable () -> Unit,
 ) {
     var paddingValueDp by remember { mutableStateOf(0.dp) }
-    var containerHeight by remember { mutableStateOf(0.dp) }
     val screenHeight = getAppScreenHeight()
     Box(
         modifier =
@@ -43,9 +42,7 @@ fun CenterOfScreenContainer(
                     .onSizeChanged {
                         paddingValueDp =
                             getContainerSize(
-                                containerHeight,
                                 it,
-                                paddingValueDp,
                                 screenHeight,
                                 unneededSpace,
                             )
@@ -70,22 +67,16 @@ private fun getAppScreenHeight(): Dp {
 }
 
 private fun getContainerSize(
-    containerHeight: Dp,
     size: IntSize,
-    paddingValueDp: Dp,
     screenHeight: Dp,
     headerHeight: Dp,
 ): Dp {
-    var containerHeight1 = containerHeight
-    var paddingValueDp1 = paddingValueDp
-    containerHeight1 = size.height.dp
-    paddingValueDp1 =
-        if (screenHeight > headerHeight * 2 + containerHeight1) {
+    val containerHeight = size.height.dp
+    return if (screenHeight > headerHeight * 2 + containerHeight) {
             headerHeight / 2
         } else {
             0.dp
         }
-    return paddingValueDp1
 }
 
 @ThemeAndLocalePreviews
