@@ -1,22 +1,12 @@
 package com.example.viewmodel.home
 
+//import com.example.domain.useCase.GetHomeScreenDataUseCase
 import android.annotation.SuppressLint
-import com.example.domain.useCase.GetHomeScreenDataUseCase
 import com.example.entity.Movie
-import com.example.viewmodel.shared.uiStates.MovieItemUiState
 import com.example.viewmodel.home.HomeUiState.PopularMovieItemUiState
+import com.example.viewmodel.shared.uiStates.MovieItemUiState
 
 class HomeUiStateMapper {
-
-    @SuppressLint("DefaultLocale")
-    fun toUiState(homeScreenData: GetHomeScreenDataUseCase.HomeScreenData): HomeUiState {
-        return HomeUiState(
-            popularMovies = moviesToPopularMoviesUiState(homeScreenData.popularMovies),
-            topRatedMovies = moviesToMoviesItemsUiState(homeScreenData.topRatedMovies),
-            upcomingMovies = moviesToMoviesItemsUiState(homeScreenData.upComingMovies),
-            continueWatchingMovies = moviesToMoviesItemsUiState(homeScreenData.continueWatchingMovies)
-        )
-    }
 
     fun moviesToPopularMoviesUiState(movies: List<Movie>) = movies.map(::movieToPopularMovieUiState)
     fun moviesToMoviesItemsUiState(movies: List<Movie>) = movies.map(::movieToMovieItemUiState)

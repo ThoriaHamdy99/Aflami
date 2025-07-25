@@ -45,12 +45,13 @@ fun NoNetworkContainer(
             style = AppTheme.textStyle.title.medium,
             color = AppTheme.color.title,
         )
-
-        Text(
-            text = description,
-            style = AppTheme.textStyle.body.small,
-            color = AppTheme.color.body,
-        )
+        if(description.isNotEmpty()){
+            Text(
+                text = description,
+                style = AppTheme.textStyle.body.small,
+                color = AppTheme.color.body,
+            )
+        }
         OutlinedButton(
             title = stringResource(R.string.retry),
             onClick = onClickRetry,

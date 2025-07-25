@@ -2,7 +2,7 @@ package com.amsterdam.aflami.di
 
 import com.example.domain.useCase.GetAndFilterMoviesByKeywordUseCase
 import com.example.domain.useCase.GetAndFilterTvShowsByKeywordUseCase
-import com.example.domain.useCase.GetHomeScreenDataUseCase
+//import com.example.domain.useCase.GetHomeScreenDataUseCase
 import com.example.domain.useCase.GetMovieCastUseCase
 import com.example.domain.useCase.GetMovieDetailsUseCase
 import com.example.domain.useCase.GetMoviesByActorUseCase
@@ -41,7 +41,7 @@ val useCaseModule = module {
     singleOf(::GetUpcomingMoviesUseCase)
     singleOf(::GetTopRatedMoviesUseCase)
     singleOf(::GetContinueWatchingMoviesUseCase)
-    singleOf(::GetHomeScreenDataUseCase)
+    //singleOf(::GetHomeScreenDataUseCase)
     singleOf(::AddWatchHistoryUseCase)
     singleOf(::GetMoviesByMoodUseCase)
 }
