@@ -1,4 +1,4 @@
-package com.amsterdam.designsystem.components.customSnackBar
+package com.amsterdam.designsystem.components.snackBar
 
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarVisuals

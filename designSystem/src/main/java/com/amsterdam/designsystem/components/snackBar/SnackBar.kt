@@ -1,4 +1,4 @@
-package com.amsterdam.designsystem.components.customSnackBar
+package com.amsterdam.designsystem.components.snackBar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
