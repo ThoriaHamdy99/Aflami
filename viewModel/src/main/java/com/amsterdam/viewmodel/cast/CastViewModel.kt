@@ -2,7 +2,7 @@ package com.amsterdam.viewmodel.cast
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
-import com.amsterdam.domain.useCase.common.GetMovieCastUseCase
+import com.amsterdam.domain.useCase.details.GetMovieCastUseCase
 import com.amsterdam.entity.Actor
 import com.amsterdam.viewmodel.cast.CastUiState.CastErrorUiState
 import com.amsterdam.viewmodel.cast.mapper.toUiState

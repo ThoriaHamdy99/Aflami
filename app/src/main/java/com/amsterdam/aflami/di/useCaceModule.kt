@@ -6,7 +6,7 @@ import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
-import com.amsterdam.domain.useCase.common.GetMovieCastUseCase
+import com.amsterdam.domain.useCase.details.GetMovieCastUseCase
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByCountryUseCase
