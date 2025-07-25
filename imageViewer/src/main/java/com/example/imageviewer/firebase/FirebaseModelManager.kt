@@ -9,7 +9,7 @@ import java.io.IOException
 
 internal object FirebaseModelManager {
 
-    private const val MODEL_NAME = "NSFW-Detector"
+    private const val MODEL_NAME = "NSFW"
 
     @Volatile
     var modelFile: File? = null

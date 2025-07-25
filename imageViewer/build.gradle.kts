@@ -17,8 +17,7 @@ dependencies {
     implementation(libs.coil.compose)
 
     // TensorFlow Lite for on-device ML
-    implementation(files("libs/tensorflow-lite.aar"))
-    implementation(files("libs/tensorflowlite_support_java.aar"))
+    implementation(libs.tensorflow.lite.task.vision)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.ml.modeldownloader)

@@ -21,8 +21,9 @@ fun SafeImageView(
     contentScale: ContentScale = ContentScale.Crop,
     onLoading: (@Composable () -> Unit),
     onError: (@Composable () -> Unit),
+    isClassified: Boolean = true
 ) {
-    val imageLoader = rememberSafeImageLoader()
+    val imageLoader = rememberSafeImageLoader(isClassified = isClassified)
 
     imageLoader?.let { imageLoaders ->
         SubcomposeAsyncImage(
@@ -33,17 +34,17 @@ fun SafeImageView(
             contentScale = contentScale,
             loading = { onLoading() },
             error = { onError() },
-        )
+
+            )
     } ?: onLoading()
 }
 
 
 @Composable
-private fun rememberSafeImageLoader(): ImageLoader? {
+private fun rememberSafeImageLoader(isClassified: Boolean): ImageLoader? {
     val context = LocalContext.current.applicationContext
     var imageLoader by remember { mutableStateOf<ImageLoader?>(null) }
-
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isClassified) {
         imageLoader = ImageLoaderProvider.getInstance(context)
     }
 

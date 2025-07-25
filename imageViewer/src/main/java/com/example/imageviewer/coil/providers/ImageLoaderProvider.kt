@@ -20,7 +20,8 @@ internal object ImageLoaderProvider {
     }
 
     private suspend fun createInstance(context: Context): ImageLoader {
-        val classifier = ImageClassifierProvider.getInstance()
+        val classifier = ImageClassifierProvider.getInstance(context)
+
         return ImageLoaderFactory.build(context, classifier, SafetyPolicy.SFWPolicy).also {
             instance = it
         }
