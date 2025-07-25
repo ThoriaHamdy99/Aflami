@@ -26,7 +26,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.amsterdam.designsystem.components.Icon
-import com.amsterdam.designsystem.components.RatingChip
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
