@@ -1,6 +1,7 @@
-package com.amsterdam.domain.useCase
+package com.amsterdam.domain.useCase.details
 
 import com.amsterdam.domain.repository.MovieRepository
+import com.amsterdam.domain.useCase.common.AddWatchHistoryUseCase
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.ProductionCompany

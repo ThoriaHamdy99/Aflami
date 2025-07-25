@@ -4,11 +4,11 @@ import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.models.Mood
-import com.amsterdam.domain.useCase.GetContinueWatchingMoviesUseCase
-import com.amsterdam.domain.useCase.GetHomeScreenDataUseCase
-import com.amsterdam.domain.useCase.GetHomeScreenDataUseCase.HomeScreenData
-import com.amsterdam.domain.useCase.GetMoviesByMoodUseCase
-import com.amsterdam.domain.useCase.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase.HomeScreenData
+import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
+import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.home.HomeUiState.HomeError

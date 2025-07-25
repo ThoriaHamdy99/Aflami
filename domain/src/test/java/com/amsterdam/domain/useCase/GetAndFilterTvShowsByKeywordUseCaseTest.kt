@@ -2,6 +2,7 @@ package com.amsterdam.domain.useCase
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.TvShowRepository
+import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.utils.fakeTvShowList
 import com.amsterdam.domain.useCase.utils.fakeTvShowListWithCategories
 import com.amsterdam.domain.useCase.utils.fakeTvShowListWithRatings

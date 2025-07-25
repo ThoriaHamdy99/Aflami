@@ -2,6 +2,7 @@ package com.amsterdam.domain.useCase
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.MovieRepository
+import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.utils.fakeMovieList
 import com.amsterdam.domain.useCase.utils.fakeMovieListWithCategories
 import com.amsterdam.domain.useCase.utils.fakeMovieListWithRatings

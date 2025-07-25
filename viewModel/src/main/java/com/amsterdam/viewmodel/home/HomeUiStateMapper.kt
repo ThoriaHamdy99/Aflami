@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.home
 
 import android.annotation.SuppressLint
-import com.amsterdam.domain.useCase.GetHomeScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.home.HomeUiState.PopularMovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState

@@ -2,7 +2,7 @@ package com.amsterdam.viewmodel.continueWatching
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
-import com.amsterdam.domain.useCase.GetContinueWatchingMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider

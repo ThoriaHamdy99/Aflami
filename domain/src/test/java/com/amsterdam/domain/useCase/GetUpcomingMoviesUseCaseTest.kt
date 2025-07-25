@@ -2,6 +2,7 @@ package com.amsterdam.domain.useCase
 
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.repository.MovieRepository
+import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
 import com.google.common.truth.Truth.assertThat

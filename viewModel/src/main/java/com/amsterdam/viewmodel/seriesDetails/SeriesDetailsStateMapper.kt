@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.seriesDetails
 
-import com.amsterdam.domain.useCase.GetTvShowDetailsUseCase.TvShowDetails
+import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
 import com.amsterdam.entity.Episode
 import com.amsterdam.entity.Season
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiStateMapper

@@ -8,8 +8,8 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.domain.useCase.GetMoviesByActorUseCase
-import com.amsterdam.domain.useCase.RecentSearchesUseCase
+import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
+import com.amsterdam.domain.useCase.search.RecentSearchesUseCase
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchUiState.SearchByActorError
 import com.amsterdam.viewmodel.search.mapper.toMediaItemUiState
