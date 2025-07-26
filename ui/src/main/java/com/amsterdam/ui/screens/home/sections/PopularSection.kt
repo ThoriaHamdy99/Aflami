@@ -38,7 +38,11 @@ import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 @SuppressLint("RestrictedApi", "ConfigurationScreenWidthHeight", "UnusedBoxWithConstraintsScope")
-fun LazyListScope.popularSection(popularMovies: List<PopularMovieItemUiState>, pagerState: PagerState) {
+fun LazyListScope.popularSection(
+    popularMovies: List<PopularMovieItemUiState>,
+    pagerState: PagerState,
+    onMovieClicked: (Long) -> Unit
+) {
     item {
             SectionTitle(
                 title = stringResource(R.string.popular),
@@ -84,6 +88,7 @@ fun LazyListScope.popularSection(popularMovies: List<PopularMovieItemUiState>, p
                         ratingAlpha = rateAlpha,
                         imageWidth = width,
                         imageHeight = height,
+                        onMovieClicked = onMovieClicked
                     )
                 }
             }
@@ -140,7 +145,8 @@ private fun PopularSectionPreview() {
         LazyColumn {
             popularSection(
                 popularMovies = dummyMovies,
-                pagerState = PagerState(currentPage = Int.MAX_VALUE / 2) { Int.MAX_VALUE }
+                pagerState = PagerState(currentPage = Int.MAX_VALUE / 2) { Int.MAX_VALUE },
+                onMovieClicked = {}
             )
         }
     }
