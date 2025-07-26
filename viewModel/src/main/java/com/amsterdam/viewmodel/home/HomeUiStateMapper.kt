@@ -14,6 +14,7 @@ class HomeUiStateMapper {
     @SuppressLint("DefaultLocale")
     private fun movieToPopularMovieUiState(movie: Movie): PopularMovieItemUiState {
         return PopularMovieItemUiState(
+            id = movie.id,
             name = movie.name,
             rating = String.format("%.1f", movie.rating),
             posterUrl = movie.posterUrl

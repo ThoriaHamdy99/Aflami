@@ -42,6 +42,7 @@ data class HomeUiState(
     }
 
     data class PopularMovieItemUiState(
+        val id: Long = 0L,
         val name : String = "",
         val rating: String = "" ,
         val posterUrl : String = ""
