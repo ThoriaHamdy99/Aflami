@@ -1,0 +1,162 @@
+package com.amsterdam.viewmodel.search.countrySearch
+
+import android.util.Log
+import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
+import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.useCase.GetMoviesByCountryUseCase
+import com.amsterdam.domain.useCase.GetSuggestedCountriesUseCase
+import com.amsterdam.domain.useCase.RecentSearchesUseCase
+import com.amsterdam.entity.Country
+import com.amsterdam.paging.PagingSource
+import com.amsterdam.viewmodel.search.mapper.toCountry
+import com.amsterdam.viewmodel.search.mapper.toMediaItemUiState
+import com.amsterdam.viewmodel.search.mapper.toUiState
+import com.amsterdam.viewmodel.shared.BaseViewModel
+import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
+import com.amsterdam.viewmodel.utils.debounceSearch
+import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+class CountrySearchViewModel(
+    private val getSuggestedCountriesUseCase: GetSuggestedCountriesUseCase,
+    private val getMoviesByCountryUseCase: GetMoviesByCountryUseCase,
+    private val recentSearchesUseCase: RecentSearchesUseCase,
+    dispatcherProvider: DispatcherProvider,
+) : BaseViewModel<CountrySearchUiState, CountrySearchEffect>(
+        CountrySearchUiState(),
+        dispatcherProvider,
+    ),
+    CountrySearchInteractionListener {
+    private val _keyword = MutableStateFlow("")
+
+    init { observeKeywordFlow() }
+
+    private fun observeKeywordFlow() {
+        viewModelScope.launch { _keyword.debounceSearch(::fetchCountriesByKeyword) }
+    }
+
+    private fun fetchCountriesByKeyword(keyword: String): Job {
+        return tryToExecute(
+            action = { getSuggestedCountriesUseCase(keyword) },
+            onSuccess = ::onFetchCountriesSuccess,
+            onError = ::onFetchError
+        )
+    }
+    private fun onFetchCountriesSuccess(countries: List<Country>) {
+        Log.e("bk", countries.toString())
+        updateState { it.copy(suggestedCountries = countries.toUiState(), errorUiState = null) }
+    }
+
+    private fun onFetchError(exception: AflamiException) {
+        Log.e("bk", "exception: $exception")
+
+        updateState {
+            it.copy(
+                isLoading = false,
+                suggestedCountries = emptyList(),
+                movies = emptyFlow(),
+                errorUiState = CountrySearchErrorState.toCountrySearchErrorState(exception),
+            )
+        }
+    }
+
+    override fun onChangeSearchKeyword(keyword: String) {
+        _keyword.update { keyword }
+
+        updateState {
+            it.copy(
+                keyword = keyword,
+                isLoading = false,
+                suggestedCountries = if (keyword.isBlank()) emptyList() else it.suggestedCountries,
+                errorUiState = null,
+                movies = emptyFlow(),
+            )
+        }
+    }
+
+    override fun onSelectCountry(country: CountryItemUiState) {
+        updateState {
+            it.copy(
+                keyword = country.countryName,
+                selectedCountryIsoCode = country.countryIsoCode,
+            )
+        }
+        fetchMoviesByCountry(getSelectedCountry())
+        saveSearchHistory()
+    }
+
+    override fun onClickRetry() {
+        val hasKeyword = state.value.keyword.isNotBlank()
+        val hasSelectedCountry = state.value.selectedCountryIsoCode.isNotBlank()
+
+        when {
+            !hasSelectedCountry && hasKeyword -> fetchCountriesByKeyword(state.value.keyword)
+            hasSelectedCountry -> fetchMoviesByCountry(getSelectedCountry())
+        }
+    }
+
+    private fun saveSearchHistory() {
+        tryToExecute(
+            action = { recentSearchesUseCase.addRecentSearchForCountry(getSelectedCountry()) },
+            onSuccess = {},
+            onError = {}
+        )
+    }
+
+    private fun fetchMoviesByCountry(selectedCountry: Country) {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            action = {
+                Pager(
+                    config = PagingConfig(pageSize = 20),
+                    pagingSourceFactory = {
+                        PagingSource { page ->
+                            getMoviesByCountryUseCase(
+                                selectedCountry,
+                                page,
+                            )
+                        }
+                    },
+                ).flow.map { pagingData -> pagingData.map { it.toMediaItemUiState() } }.cachedIn(viewModelScope)
+            },
+            onSuccess = ::onFetchMoviesSuccess,
+            onError = ::onFetchError
+        )
+    }
+
+    override fun onClickMovieCard(movieId: Long) {
+        updateState { it.copy(selectedMovieId = movieId) }
+        sendNewEffect(CountrySearchEffect.NavigateToMovieDetails)
+    }
+
+    private fun getSelectedCountry(): Country {
+        return state.value.suggestedCountries.find {
+            state.value.selectedCountryIsoCode == it.countryIsoCode
+        }.toCountry()
+    }
+
+    private fun onFetchMoviesSuccess(movies: Flow<PagingData<MovieItemUiState>>) {
+        updateState {
+            it.copy(
+                movies = movies,
+                isLoading = false,
+                suggestedCountries = emptyList()
+            )
+        }
+    }
+
+    override fun onClickNavigateBack() {
+        sendNewEffect(CountrySearchEffect.NavigateBack)
+    }
+}
