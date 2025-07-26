@@ -8,9 +8,9 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.useCase.GetMoviesByCountryUseCase
-import com.amsterdam.domain.useCase.GetSuggestedCountriesUseCase
-import com.amsterdam.domain.useCase.RecentSearchesUseCase
+import com.amsterdam.domain.useCase.search.GetMoviesByCountryUseCase
+import com.amsterdam.domain.useCase.search.GetSuggestedCountriesUseCase
+import com.amsterdam.domain.useCase.search.RecentSearchesUseCase
 import com.amsterdam.entity.Country
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.search.mapper.toCountry

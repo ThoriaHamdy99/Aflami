@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase
+package com.amsterdam.domain.useCase.search
 
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.entity.Country

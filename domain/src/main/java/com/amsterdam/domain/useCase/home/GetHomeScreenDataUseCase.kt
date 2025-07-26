@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase
+package com.amsterdam.domain.useCase.home
 
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre

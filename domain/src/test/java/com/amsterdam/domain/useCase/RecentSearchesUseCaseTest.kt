@@ -2,6 +2,7 @@ package com.amsterdam.domain.useCase
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.RecentSearchRepository
+import com.amsterdam.domain.useCase.search.RecentSearchesUseCase
 import com.amsterdam.entity.Country
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery

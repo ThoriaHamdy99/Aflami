@@ -1,8 +1,8 @@
 package com.amsterdam.viewmodel.home
 
 import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.domain.useCase.GetHomeScreenDataUseCase
-import com.amsterdam.domain.useCase.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToMovieDetailsEffect

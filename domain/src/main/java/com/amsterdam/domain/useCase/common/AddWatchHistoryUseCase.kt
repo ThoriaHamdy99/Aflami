@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase
+package com.amsterdam.domain.useCase.common
 
 import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.entity.WatchHistory

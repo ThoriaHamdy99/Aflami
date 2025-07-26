@@ -2,6 +2,7 @@ package com.amsterdam.domain.useCase
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.MovieRepository
+import com.amsterdam.domain.useCase.search.GetMoviesByCountryUseCase
 import com.amsterdam.domain.useCase.utils.fakeMovieList
 import com.amsterdam.entity.Country
 import com.google.common.truth.Truth.assertThat

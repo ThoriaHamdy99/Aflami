@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.movieDetails
 
-import com.amsterdam.domain.useCase.GetMovieDetailsUseCase
+import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
 import com.amsterdam.viewmodel.shared.Selectable
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ActorUiState

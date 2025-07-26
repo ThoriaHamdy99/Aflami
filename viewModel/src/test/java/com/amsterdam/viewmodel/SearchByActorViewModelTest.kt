@@ -3,7 +3,7 @@ package com.amsterdam.viewmodel
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.domain.useCase.GetMoviesByActorUseCase
+import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
 import com.amsterdam.viewmodel.search.actorSearch.SearchActorEffect
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchUiState
 import com.amsterdam.viewmodel.search.actorSearch.SearchActorViewModel

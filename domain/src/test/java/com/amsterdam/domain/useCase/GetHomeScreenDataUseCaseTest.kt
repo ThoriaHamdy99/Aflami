@@ -1,5 +1,9 @@
 package com.amsterdam.domain.useCase
 
+import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.utils.specificMovieList
 import com.amsterdam.entity.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
@@ -15,7 +19,7 @@ class GetHomeScreenDataUseCaseTest {
     private lateinit var getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase
     private lateinit var getPopularMoviesUseCase: GetPopularMoviesUseCase
     private lateinit var getHomeScreenDataUseCase: GetHomeScreenDataUseCase
-    private lateinit var  getUpcomingMoviesUseCase :  GetUpcomingMoviesUseCase
+    private lateinit var  getUpcomingMoviesUseCase : GetUpcomingMoviesUseCase
     @BeforeEach
     fun setUp() {
         getTopRatedMoviesUseCase = mockk(relaxed = true)

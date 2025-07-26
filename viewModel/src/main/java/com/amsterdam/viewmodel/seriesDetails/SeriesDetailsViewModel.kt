@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
-import com.amsterdam.domain.useCase.GetEpisodesBySeasonNumberUseCase
-import com.amsterdam.domain.useCase.GetTvShowDetailsUseCase
-import com.amsterdam.domain.useCase.GetTvShowDetailsUseCase.TvShowDetails
+import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
+import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
+import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.entity.Episode

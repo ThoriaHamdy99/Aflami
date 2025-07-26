@@ -3,6 +3,7 @@ package com.amsterdam.domain.useCase
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.CountryRepository
+import com.amsterdam.domain.useCase.search.GetSuggestedCountriesUseCase
 import com.amsterdam.domain.useCase.utils.countriesWithDifferentCases
 import com.amsterdam.domain.useCase.utils.fakeCountryList
 import com.amsterdam.entity.Country

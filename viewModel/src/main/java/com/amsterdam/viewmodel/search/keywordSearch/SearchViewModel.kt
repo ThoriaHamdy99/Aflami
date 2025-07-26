@@ -8,9 +8,9 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.useCase.GetAndFilterMoviesByKeywordUseCase
-import com.amsterdam.domain.useCase.GetAndFilterTvShowsByKeywordUseCase
-import com.amsterdam.domain.useCase.RecentSearchesUseCase
+import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
+import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
+import com.amsterdam.domain.useCase.search.RecentSearchesUseCase
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.paging.PagingSource

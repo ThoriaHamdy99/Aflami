@@ -2,7 +2,7 @@ package com.amsterdam.viewmodel.topRated
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
-import com.amsterdam.domain.useCase.GetTopRatedMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.topRated.TopRatedUiState.TopRatedError
