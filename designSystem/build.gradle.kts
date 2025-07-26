@@ -6,15 +6,16 @@ plugins {
 }
 
 android {
-    namespace = "com.example.designsystem"
+    namespace = "com.amsterdam.designsystem"
 }
 
 dependencies {
     implementation(libs.androidx.material3)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
+
     implementation(libs.androidx.ui.tooling.preview.android)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

@@ -1,0 +1,7 @@
+package com.amsterdam.viewmodel.movieDetails
+
+sealed interface MovieDetailsEffect {
+    object NavigateBackEffect : MovieDetailsEffect
+    object NavigateToCastsScreenEffect : MovieDetailsEffect
+    object NavigateToLoginScreenEffect : MovieDetailsEffect
+}

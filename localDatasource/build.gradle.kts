@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.localdatasource"
+    namespace = "com.amsterdam.localdatasource"
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["runnerBuilder"] =
