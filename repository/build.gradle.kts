@@ -1,10 +1,3 @@
-import java.util.Properties
-
-val properties = Properties()
-properties.load(project.rootProject.file("local.properties").inputStream())
-val baseImageUrlWidth500: String = properties.getProperty("baseImageUrlWidth500") ?: ""
-val baseImageUrlWidth300: String = properties.getProperty("baseImageUrlWidth300") ?: ""
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -23,18 +16,6 @@ android {
     defaultConfig {
         testInstrumentationRunnerArguments["runnerBuilder"] =
             "de.mannodermaus.junit5.AndroidJUnit5Builder"
-
-        buildConfigField(
-            "String",
-            "BASE_IMAGE_URL_W500",
-            baseImageUrlWidth500
-        )
-
-        buildConfigField(
-            "String",
-            "BASE_IMAGE_URL_W300",
-            baseImageUrlWidth300
-        )
     }
 }
 
