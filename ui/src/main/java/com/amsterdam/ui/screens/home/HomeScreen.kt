@@ -160,7 +160,7 @@ private fun HomeScreenContent(
                         popularSection(
                             popularMovies = state.popularMovies,
                             pagerState = pagerState,
-                            onMovieClicked = { interactionListener.onClickMovie(it.id) }
+                            onMovieClicked = interactionListener::onClickMovie
                         )
                         topRatingSection(
                             topRatedMovies = state.topRatedMovies,

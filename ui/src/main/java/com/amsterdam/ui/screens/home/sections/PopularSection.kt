@@ -41,7 +41,7 @@ import kotlin.math.absoluteValue
 fun LazyListScope.popularSection(
     popularMovies: List<PopularMovieItemUiState>,
     pagerState: PagerState,
-    onMovieClicked: (PopularMovieItemUiState) -> Unit
+    onMovieClicked: (Long) -> Unit
 ) {
     item {
             SectionTitle(

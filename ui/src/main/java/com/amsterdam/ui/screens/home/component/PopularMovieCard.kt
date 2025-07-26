@@ -39,7 +39,7 @@ fun PopularMovieCard(
     ratingAlpha: Float,
     imageWidth : Dp,
     imageHeight : Dp ,
-    onMovieClicked: (PopularMovieItemUiState) -> Unit,
+    onMovieClicked: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -51,7 +51,7 @@ fun PopularMovieCard(
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                        onClick = { onMovieClicked(popularMovie) },
+                        onClick = { onMovieClicked(popularMovie.id) },
                     ),
                 contentAlignment = Alignment
                     .BottomCenter
