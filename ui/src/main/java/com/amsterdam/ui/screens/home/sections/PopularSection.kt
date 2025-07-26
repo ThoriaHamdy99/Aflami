@@ -43,9 +43,10 @@ import kotlin.math.absoluteValue
 fun LazyListScope.popularSection(
     state: HomeUiState.PopularMoviesSectionUiState,
     pagerState: PagerState,
+    onClickMovie: (Long) -> Unit,
     isVisible: Boolean
 ) {
-    if(isVisible){
+    if (isVisible) {
         if (state.isLoading) {
             popularSectionPlaceholder()
         } else {
@@ -77,12 +78,20 @@ fun LazyListScope.popularSection(
                                 ).absoluteValue
 
                         val width by animateDpAsState(
-                            targetValue = lerp(207.dp, 244.dp, 1f - currentPageOffset.coerceIn(0f, 1f)),
+                            targetValue = lerp(
+                                207.dp,
+                                244.dp,
+                                1f - currentPageOffset.coerceIn(0f, 1f)
+                            ),
                             label = "width"
                         )
 
                         val height by animateDpAsState(
-                            targetValue = lerp(276.dp, 300.dp, 1f - currentPageOffset.coerceIn(0f, 1f)),
+                            targetValue = lerp(
+                                276.dp,
+                                300.dp,
+                                1f - currentPageOffset.coerceIn(0f, 1f)
+                            ),
                             label = "height"
                         )
                         val rateAlpha by animateFloatAsState(
@@ -98,6 +107,7 @@ fun LazyListScope.popularSection(
                             ratingAlpha = rateAlpha,
                             imageWidth = width,
                             imageHeight = height,
+                            onMovieClicked = { onClickMovie(it) },
                         )
                     }
                 }
@@ -161,7 +171,8 @@ private fun PopularSectionPreview() {
             popularSection(
                 state = HomeUiState.PopularMoviesSectionUiState(movies = dummyMovies, false),
                 pagerState = PagerState(currentPage = Int.MAX_VALUE / 2) { Int.MAX_VALUE },
-                isVisible = true
+                isVisible = true,
+                onClickMovie = {}
             )
         }
     }

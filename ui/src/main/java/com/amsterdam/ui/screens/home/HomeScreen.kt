@@ -43,7 +43,6 @@ import com.amsterdam.ui.screens.home.component.MovieMoodPickerDialogDialog
 import com.amsterdam.ui.screens.home.sections.AnimatedSectionVisibility
 import com.amsterdam.ui.screens.home.sections.BlurredMoviePoster
 import com.amsterdam.ui.screens.home.sections.MoodPickerSection
-import com.amsterdam.ui.screens.home.sections.continueWatchingSection
 import com.amsterdam.ui.screens.home.sections.popularSection
 import com.amsterdam.ui.screens.home.sections.upcomingMoviesSection
 import com.amsterdam.ui.utils.safeNavigate
@@ -150,7 +149,8 @@ private fun HomeScreenContent(
             popularSection(
                 state = state.popularMoviesSectionUiState,
                 pagerState = pagerState,
-                isVisible = state.error == null
+                isVisible = state.error == null,
+                onClickMovie = interactionListener::onClickMovie
             )
 
             continueWatchingSection(
