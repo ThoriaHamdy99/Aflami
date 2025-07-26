@@ -1,4 +1,4 @@
-package com.amsterdam.designsystem.components.customSnackBar
+package com.amsterdam.designsystem.components.snackBar
 
 import androidx.annotation.DrawableRes
 import com.amsterdam.designsystem.R

@@ -32,7 +32,6 @@ import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.IconButton
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
-import com.amsterdam.designsystem.components.RatingChip
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme

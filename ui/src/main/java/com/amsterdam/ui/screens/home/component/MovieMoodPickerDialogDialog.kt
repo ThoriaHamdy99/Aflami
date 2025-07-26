@@ -24,7 +24,7 @@ import com.amsterdam.designsystem.components.Dialog
 import com.amsterdam.designsystem.components.IconButton
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
-import com.amsterdam.designsystem.components.RatingChip
+import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.components.buttons.OutlinedButton

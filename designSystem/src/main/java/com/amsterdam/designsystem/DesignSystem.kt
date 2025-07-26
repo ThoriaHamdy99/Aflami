@@ -34,8 +34,8 @@ import com.amsterdam.designsystem.components.buttons.OutlinedButton
 import com.amsterdam.designsystem.components.buttons.PlainTextButton
 import com.amsterdam.designsystem.components.chip.Chip
 import com.amsterdam.designsystem.components.chip.GenreChip
-import com.amsterdam.designsystem.components.customSnackBar.SnackBar
-import com.amsterdam.designsystem.components.customSnackBar.SnackBarStatus
+import com.amsterdam.designsystem.components.snackBar.SnackBar
+import com.amsterdam.designsystem.components.snackBar.SnackBarStatus
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
