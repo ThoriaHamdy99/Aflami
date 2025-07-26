@@ -1,0 +1,96 @@
+package com.amsterdam.designsystem.components.buttons
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
+import com.amsterdam.designsystem.components.LoadingIndicator
+import com.amsterdam.designsystem.theme.AflamiTheme
+import com.amsterdam.designsystem.theme.AppTheme
+import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+
+@Composable
+fun PlainTextButton(
+    title: String,
+    onClick: () -> Unit,
+    isLoading: Boolean,
+    isEnabled: Boolean,
+    isNegative: Boolean,
+    modifier: Modifier = Modifier,
+    style: TextStyle = AppTheme.textStyle.label.large,
+    colors: ButtonColors = ButtonDefaults.textButtonColors(),
+) {
+    val contentColor by animateColorAsState(
+        when {
+            !isEnabled -> colors.disableContainerColor
+            isNegative -> colors.negativeContainerColor
+            else -> colors.containerColor
+        },
+    )
+
+    Row(
+        modifier =
+            modifier
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onClick,
+                    enabled = isEnabled && !isLoading,
+                ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = title,
+            color = contentColor,
+            style = style,
+        )
+
+        val animatedPadding by animateDpAsState(
+            if (isLoading) 8.dp else 0.dp,
+            tween(durationMillis = 500),
+        )
+        val animatedLoadingSize by animateDpAsState(
+            if (isLoading) 20.dp else 0.dp,
+            tween(durationMillis = 500),
+        )
+
+        AnimatedVisibility(
+            visible = isLoading && isEnabled,
+            modifier =
+                Modifier
+                    .padding(start = animatedPadding)
+                    .size(animatedLoadingSize),
+        ) {
+            LoadingIndicator(tint = contentColor)
+        }
+    }
+}
+
+@ThemeAndLocalePreviews
+@Composable
+private fun PlainTextButtonPreview() {
+    AflamiTheme {
+        PlainTextButton(
+            title = "Button",
+            onClick = {},
+            isLoading = false,
+            isEnabled = true,
+            isNegative = false,
+        )
+    }
+}

@@ -1,4 +1,10 @@
 [versions]
+minSdk = "26"
+targetSdk = "36"
+compileSdk = "36"
+versionCode = "1"
+versionName = "1.0"
+jvmTarget = "11"
 agp = "8.10.1"
 androidTestCore = "1.7.0"
 coilCompose = "2.6.0"
@@ -43,7 +49,7 @@ startupRuntime = "1.2.0"
 koverVersion = "0.9.1"
 junitJupiter = "5.8.1"
 datastorePreferences = "1.1.3"
-
+tensorflowLiteTaskVision = "0.4.3"
 
 [libraries]
 android-test-core = { module = "de.mannodermaus.junit5:android-test-core", version.ref = "androidTestCore" }
@@ -86,6 +92,7 @@ android-tools-build-gradle-plugin = { group = "com.android.tools.build", name = 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 androidx-navigation-common-android = { group = "androidx.navigation", name = "navigation-common-android", version.ref = "navigationCommonAndroid" }
 androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "startupRuntime" }
+tensorflow-lite-task-vision = { module = "org.tensorflow:tensorflow-lite-task-vision", version.ref = "tensorflowLiteTaskVision" }
 
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiterApi" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterApi" }

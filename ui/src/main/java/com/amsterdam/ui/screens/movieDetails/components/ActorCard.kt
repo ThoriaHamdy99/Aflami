@@ -1,0 +1,40 @@
+package com.amsterdam.ui.screens.movieDetails.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import com.amsterdam.designsystem.components.ImageErrorIndicator
+import com.amsterdam.designsystem.components.ImageLoadingIndicator
+import com.amsterdam.designsystem.components.Text
+import com.amsterdam.designsystem.theme.AppTheme
+import com.amsterdam.imageviewer.ui.SafeImageView
+import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ActorUiState
+
+
+@Composable
+fun ActorCard(modifier: Modifier = Modifier, actor: ActorUiState) {
+    Column(modifier = modifier.width(78.dp)) {
+        SafeImageView(
+            modifier = Modifier
+                .size(78.dp)
+                .clip(RoundedCornerShape(16.dp)),
+            model = actor.photo,
+            contentDescription = actor.name,
+            onLoading = { ImageLoadingIndicator() },
+            onError = { ImageErrorIndicator() },
+        )
+        Text(
+            text = actor.name,
+            style = AppTheme.textStyle.label.small,
+            color = AppTheme.color.body,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+    }
+}

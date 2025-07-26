@@ -1,7 +1,7 @@
 package com.amsterdam.aflami
 
 import android.util.Log
-import com.example.domain.logger.Logger
+import com.amsterdam.domain.logger.Logger
 import com.google.firebase.BuildConfig
 
 class AppLogger : Logger {
