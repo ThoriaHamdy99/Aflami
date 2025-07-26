@@ -99,7 +99,7 @@ class SeriesDetailsStateMapper(
                 imageUrl = episode.episodeImageUrl,
                 imageNumber = episode.episodeNumber,
                 description = episode.description,
-                duration = formatDuration(episode.runtime),
+                duration = formatDuration(episode.runTimeInMinutes),
                 airDate = movieDetailsStateMapper.dateToString(episode.airDate)
             )
         }
