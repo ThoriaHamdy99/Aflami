@@ -9,8 +9,11 @@ import com.amsterdam.viewmodel.cast.mapper.toUiState
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsArgs
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class CastViewModel(
+@HiltViewModel
+class CastViewModel @Inject constructor(
     private val getMovieCastUseCase: GetMovieCastUseCase,
     private val args: MovieDetailsArgs,
     dispatcherProvider: DispatcherProvider

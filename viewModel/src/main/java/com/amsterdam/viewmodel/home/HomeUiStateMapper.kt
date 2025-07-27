@@ -5,8 +5,9 @@ import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.home.HomeUiState.PopularMovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
+import javax.inject.Inject
 
-class HomeUiStateMapper {
+class HomeUiStateMapper @Inject constructor() {
 
     @SuppressLint("DefaultLocale")
     fun toUiState(homeScreenData: GetHomeScreenDataUseCase.HomeScreenData): HomeUiState {

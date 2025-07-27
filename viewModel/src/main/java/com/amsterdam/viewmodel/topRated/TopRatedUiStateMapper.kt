@@ -3,8 +3,9 @@ package com.amsterdam.viewmodel.topRated
 import android.annotation.SuppressLint
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
+import javax.inject.Inject
 
-class TopRatedUiStateMapper {
+class TopRatedUiStateMapper @Inject constructor() {
     @SuppressLint("DefaultLocale")
     fun toUiState(topRatedMovies: List<Movie>): TopRatedUiState {
         return TopRatedUiState(
