@@ -20,8 +20,6 @@ dependencies {
 
     implementation(libs.kotlinx.datetime)
 
-    implementation(libs.javax.inject)
-
     testImplementation(libs.truth)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.api)
