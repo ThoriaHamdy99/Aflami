@@ -1,23 +1,13 @@
 package com.amsterdam.viewmodel.home
 
 import android.annotation.SuppressLint
-import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.home.HomeUiState.PopularMovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
+import kotlin.collections.map
 import javax.inject.Inject
 
-class HomeUiStateMapper @Inject constructor() {
-
-    @SuppressLint("DefaultLocale")
-    fun toUiState(homeScreenData: GetHomeScreenDataUseCase.HomeScreenData): HomeUiState {
-        return HomeUiState(
-            popularMovies = moviesToPopularMoviesUiState(homeScreenData.popularMovies),
-            topRatedMovies = moviesToMoviesItemsUiState(homeScreenData.topRatedMovies),
-            upcomingMovies = moviesToMoviesItemsUiState(homeScreenData.upComingMovies),
-            continueWatchingMovies = moviesToMoviesItemsUiState(homeScreenData.continueWatchingMovies)
-        )
-    }
+class HomeUiStateMapper @Inject constructor(){
 
     fun moviesToPopularMoviesUiState(movies: List<Movie>) = movies.map(::movieToPopularMovieUiState)
     fun moviesToMoviesItemsUiState(movies: List<Movie>) = movies.map(::movieToMovieItemUiState)
@@ -28,7 +18,8 @@ class HomeUiStateMapper @Inject constructor() {
             id = movie.id,
             name = movie.name,
             rating = String.format("%.1f", movie.rating),
-            posterUrl = movie.posterUrl
+            posterUrl = movie.posterUrl,
+            category = movie.categories.map { it.name }
         )
     }
 

@@ -21,6 +21,10 @@ object ViewModelViewModelScope {
 
     @Provides
     fun provideSeriesDetailsArgs(savedStateHandle: SavedStateHandle): SeriesDetailsArgs = SeriesDetailsArgs(savedStateHandle)
+
+    @Provides
+    fun provideCastScreenArgs(savedStateHandle: SavedStateHandle): CastScreenArgs = CastScreenArgs(savedStateHandle)
+
 }
 
 @Module
