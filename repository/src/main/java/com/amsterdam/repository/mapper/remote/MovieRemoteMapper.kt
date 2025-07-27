@@ -21,7 +21,7 @@ class MovieRemoteMapper @Inject constructor(): EntityMapper<RemoteMovieItemDto, 
             rating = dto.voteAverage.toFloat(),
             popularity = dto.popularity,
             originCountry = dto.originCountry.firstOrNull() ?: "",
-            runTime = dto.runtime,
+            runTimeInMinutes = dto.runtime,
             hasVideo = dto.video
         )
     }

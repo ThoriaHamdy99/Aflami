@@ -17,7 +17,7 @@ class EpisodeRemoteMapper @Inject constructor(): EntityMapper<EpisodeDto, Episod
             rating = dto.voteAverage.toFloat(),
             airDate = dto.airDate?.toSafeLocalDate(),
             seasonNumber = dto.seasonNumber,
-            runtime = dto.runtime?.toInt() ?: 0,
+            runTimeInMinutes = dto.runtime?.toInt() ?: 0,
         )
     }
 }

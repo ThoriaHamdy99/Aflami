@@ -159,19 +159,21 @@ private fun HomeScreenContent(
 
                         popularSection(
                             popularMovies = state.popularMovies,
-                            pagerState = pagerState
+                            pagerState = pagerState,
+                            onMovieClicked = interactionListener::onClickMovie
                         )
                         topRatingSection(
                             topRatedMovies = state.topRatedMovies,
                             onClickMovie = interactionListener::onClickMovie,
                             onClickShowAll = interactionListener::onClickShowAllToRatedMovies
                         )
-                    if (state.continueWatchingMovies.isNotEmpty())
-                        continueWatchingSection(
-                            continueWatchingMovies = state.continueWatchingMovies,
-                            onClickMovie = interactionListener::onClickMovie,
-                            onClickShowAll = interactionListener::onClickShowAllContinueWatchingMovies
-                        )
+                        if (state.continueWatchingMovies.isNotEmpty()) {
+                            continueWatchingSection(
+                                continueWatchingMovies = state.continueWatchingMovies,
+                                onClickMovie = interactionListener::onClickMovie,
+                                onClickShowAll = interactionListener::onClickShowAllContinueWatchingMovies
+                            )
+                        }
 
                         item { MoodPickerSection(state, interactionListener) }
 

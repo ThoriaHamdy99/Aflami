@@ -22,7 +22,7 @@ class MovieDetailsUiStateMapper @Inject constructor() {
             categories = categories,
             moviePostersUrl = moviePosters,
             releaseDate = movie.releaseDate.toString(),
-            movieLength = movieLengthToHourMinuteString(movie.runTime),
+            movieLength = movieLengthToHourMinuteString(movie.runTimeInMinutes),
             originCountry = movie.originCountry,
             description = movie.description,
             hasVideo = movie.hasVideo,

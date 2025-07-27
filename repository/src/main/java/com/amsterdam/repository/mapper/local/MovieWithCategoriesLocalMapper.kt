@@ -19,7 +19,7 @@ class MovieWithCategoriesLocalMapper @Inject constructor(
             categories = movieGenreLocalMapper.toEntityList(dto.categories),
             popularity = dto.movie.popularity,
             originCountry = dto.movie.originCountry,
-            runTime = dto.movie.movieLength,
+            runTimeInMinutes = dto.movie.movieLength,
             hasVideo = dto.movie.hasVideo
         )
     }
