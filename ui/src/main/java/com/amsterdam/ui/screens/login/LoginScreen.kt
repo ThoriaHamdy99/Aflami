@@ -60,7 +60,7 @@ fun LoginScreen(
             effect?.let {
                 when (it) {
                     LoginEffect.NavigateToHome -> {
-                        navController.safeNavigateToTab(Route.Tab.Home)
+                        navController.navigate(Route.Tab.Home)
                     }
 
                     LoginEffect.NavigateToRegister -> navController.safeNavigate(Route.Register)
