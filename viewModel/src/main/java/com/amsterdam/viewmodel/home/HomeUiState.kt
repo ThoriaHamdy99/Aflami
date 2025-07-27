@@ -7,21 +7,23 @@ import com.amsterdam.viewmodel.shared.uiStates.MovieGenreItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 
 data class HomeUiState(
-    val popularMovies : List<PopularMovieItemUiState> = emptyList(),
-    val upcomingMovies : List<MovieItemUiState> = emptyList(),
+    val popularMovies: List<PopularMovieItemUiState> = emptyList(),
+    val upcomingMovies: List<MovieItemUiState> = emptyList(),
     val upcomingMovieGenres: List<MovieGenreItemUiState> = defaultMovieGenres,
-    val topRatedMovies : List<MovieItemUiState> = emptyList(),
-    val continueWatchingMovies : List<MovieItemUiState> = emptyList(),
+    val topRatedMovies: List<MovieItemUiState> = emptyList(),
+    val continueWatchingMovies: List<MovieItemUiState> = emptyList(),
     val moodPickerUiState: MoodPickerUiState = MoodPickerUiState(),
-    val isLoading : Boolean = false,
-    val error : HomeError? = null
-){
+    val isLoading: Boolean = false,
+    val error: HomeError? = null
+) {
     data class PopularMovieItemUiState(
         val id: Long = 0L,
-        val name : String = "",
-        val rating: String = "" ,
-        val posterUrl : String = ""
-    )
+        val name: String = "",
+        val rating: String = "",
+        val posterUrl: String = "",
+        val category: List<String> = emptyList(),
+
+        )
 
     data class MoodPickerUiState(
         val moods: List<Mood> = listOf(
@@ -39,7 +41,7 @@ data class HomeUiState(
         val openMovieDialog: Boolean = false,
     )
 
-    sealed class HomeError{
+    sealed class HomeError {
         data object NetworkError : HomeError()
     }
 
