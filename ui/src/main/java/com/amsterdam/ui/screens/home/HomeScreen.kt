@@ -171,8 +171,8 @@ private fun HomeScreenContent(
                 isVisible = state.error == null
             )
 
-            item { MoodPickerSection(state, interactionListener) }
-                        item { MoodPickerSection(state, interactionListener, modifier=Modifier.padding(bottom=24.dp)) }
+            item { MoodPickerSection(state, interactionListener,modifier=Modifier.padding(bottom=24.dp)) }
+
 
             upcomingMoviesSection(
                 state = state.upcomingMoviesSectionUiState,
