@@ -119,13 +119,13 @@ fun LazyListScope.popularSection(
 
                 }
             }
-        }
-        item {
-            DisplayGenresForMovie(
-                modifier = Modifier
-                    .zIndex(2f),
-                categories = state.movies[pagerState.currentPage % state.movies.size].category,
-            )
+            item {
+                DisplayGenresForMovie(
+                    modifier = Modifier
+                        .zIndex(2f),
+                    categories = state.movies[pagerState.currentPage % state.movies.size].category,
+                )
+            }
         }
 
     }
@@ -145,7 +145,7 @@ private fun DisplayGenresForMovie(
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         items(categories) { category ->
-            MovieGenre.values().find { it.name.equals(category, ignoreCase = true) }
+            MovieGenre.entries.find { it.name.equals(category, ignoreCase = true) }
                 ?.let { genre ->
                     CategoryChip(categoryName = getMovieGenreLabel(genre))
                 }
