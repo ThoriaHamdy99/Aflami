@@ -5,6 +5,7 @@ import com.amsterdam.entity.Actor
 
 class GetTvShowCastUseCase(private val tvShowRepository: TvShowRepository) {
     suspend operator fun invoke(tvShowId: Long): List<Actor> {
-        return emptyList()
+        return tvShowRepository.getTvShowCast(tvShowId)
+            .sortedByDescending { it.popularity }
     }
 }
