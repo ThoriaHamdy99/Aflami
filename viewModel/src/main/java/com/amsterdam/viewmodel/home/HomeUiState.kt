@@ -43,10 +43,12 @@ data class HomeUiState(
 
     data class PopularMovieItemUiState(
         val id: Long = 0L,
-        val name : String = "",
-        val rating: String = "" ,
-        val posterUrl : String = ""
-    )
+        val name: String = "",
+        val rating: String = "",
+        val posterUrl: String = "",
+        val category: List<String> = emptyList(),
+
+        )
 
     data class MoodPickerUiState(
         val moods: List<Mood> = listOf(
@@ -64,7 +66,7 @@ data class HomeUiState(
         val openMovieDialog: Boolean = false,
     )
 
-    sealed class HomeError{
+    sealed class HomeError {
         data object NetworkError : HomeError()
     }
 }

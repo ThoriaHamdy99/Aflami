@@ -5,11 +5,15 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
@@ -28,9 +32,12 @@ import com.amsterdam.designsystem.components.SectionTitle
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.ui.R
 import com.amsterdam.ui.screens.home.component.PopularMovieCard
 import com.amsterdam.ui.screens.home.sections.placeholder.popularSectionPlaceholder
+import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
+import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.viewmodel.home.HomeUiState
 import com.amsterdam.viewmodel.home.HomeUiState.PopularMovieItemUiState
 import kotlinx.coroutines.Job
@@ -88,11 +95,8 @@ fun LazyListScope.popularSection(
 
                         val height by animateDpAsState(
                             targetValue = lerp(
-                                276.dp,
-                                300.dp,
-                                1f - currentPageOffset.coerceIn(0f, 1f)
-                            ),
-                            label = "height"
+                                276.dp, 300.dp, 1f - currentPageOffset.coerceIn(0f, 1f)
+                            ), label = "height"
                         )
                         val rateAlpha by animateFloatAsState(
                             targetValue = androidx.compose.ui.util.lerp(
@@ -102,6 +106,7 @@ fun LazyListScope.popularSection(
                             ),
                             label = "height"
                         )
+
                         PopularMovieCard(
                             popularMovie = state.movies[page % state.movies.size],
                             ratingAlpha = rateAlpha,
@@ -110,8 +115,40 @@ fun LazyListScope.popularSection(
                             onMovieClicked = { onClickMovie(it) },
                         )
                     }
+
+
                 }
             }
+            item {
+                DisplayGenresForMovie(
+                    modifier = Modifier
+                        .zIndex(2f),
+                    categories = state.movies[pagerState.currentPage % state.movies.size].category,
+                )
+            }
+        }
+
+    }
+}
+
+@Composable
+private fun DisplayGenresForMovie(
+    categories: List<String>,
+    modifier: Modifier = Modifier
+) {
+    LazyRow(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        items(categories) { category ->
+            MovieGenre.entries.find { it.name.equals(category, ignoreCase = true) }
+                ?.let { genre ->
+                    CategoryChip(categoryName = getMovieGenreLabel(genre))
+                }
         }
     }
 
@@ -160,7 +197,12 @@ private fun PopularSectionPreview() {
         PopularMovieItemUiState(
             name = "Movie $it",
             posterUrl = "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
-            rating = (8.5f + it).toString()
+            rating = (8.5f + it).toString(),
+            category = listOf(
+                MovieGenre.values().random().name,
+                MovieGenre.values().random().name,
+                MovieGenre.values().random().name
+            )
         )
     }
 
