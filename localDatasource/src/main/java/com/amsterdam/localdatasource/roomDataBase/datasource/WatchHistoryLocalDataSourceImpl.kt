@@ -5,8 +5,9 @@ import com.amsterdam.repository.datasource.local.WatchHistoryLocalDataSource
 import com.amsterdam.repository.dto.local.LocalMovieDto
 import com.amsterdam.repository.dto.local.WatchHistoryDto
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class WatchHistoryLocalDataSourceImpl(
+class WatchHistoryLocalDataSourceImpl @Inject constructor(
     private val dao: WatchHistoryDao
 ) : WatchHistoryLocalDataSource {
 

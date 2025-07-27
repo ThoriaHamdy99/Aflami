@@ -6,9 +6,12 @@ import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.firstOrNull
+import javax.inject.Inject
 
-class ContinueWatchingViewModel(
+@HiltViewModel
+class ContinueWatchingViewModel @Inject constructor(
     private val getContinueWatchingMoviesUseCase: GetContinueWatchingMoviesUseCase,
     private val continueWatchingUiStateMapper: ContinueWatchingUiStateMapper,
     dispatcherProvider: DispatcherProvider

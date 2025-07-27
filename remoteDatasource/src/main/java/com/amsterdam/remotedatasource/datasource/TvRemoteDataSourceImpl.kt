@@ -9,8 +9,9 @@ import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsResponse
+import javax.inject.Inject
 
-class TvRemoteDataSourceImpl(
+class TvRemoteDataSourceImpl @Inject constructor(
     private val tvShowsServiceProvider: TvShowsServiceProvider
 ) : TvShowsRemoteSource {
 

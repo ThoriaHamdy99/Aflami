@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -56,7 +57,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SearchByActorScreen(
     modifier: Modifier = Modifier,
-    viewModel: SearchActorViewModel = koinViewModel(),
+    viewModel: SearchActorViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.state.collectAsStateWithLifecycle()
     val moviesFlow = uiState.value.movies.collectAsLazyPagingItems()

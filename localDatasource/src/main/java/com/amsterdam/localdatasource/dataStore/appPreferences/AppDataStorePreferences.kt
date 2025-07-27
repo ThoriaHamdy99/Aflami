@@ -10,8 +10,9 @@ import com.amsterdam.localdatasource.dataStore.appPreferences.AppDataStorePrefer
 import com.amsterdam.localdatasource.dataStore.datasource.AppPreferences
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class AppDataStorePreferences(
+class AppDataStorePreferences @Inject constructor(
     private val datastore: DataStore<Preferences>,
 ) : AppPreferences {
     private object PreferenceKeys {

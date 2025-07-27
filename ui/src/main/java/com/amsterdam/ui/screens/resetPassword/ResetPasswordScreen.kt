@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.application.LocalNavController
@@ -25,7 +26,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ResetPasswordScreen(
-    viewModel: ResetPasswordViewModel = koinViewModel()
+    viewModel: ResetPasswordViewModel = hiltViewModel()
 ) {
     val navController = LocalNavController.current
     val state by viewModel.state.collectAsState()

@@ -27,8 +27,9 @@ import com.amsterdam.repository.mapper.remoteToLocal.TvShowGenreIdsRemoteLocalMa
 import com.amsterdam.repository.mapper.remoteToLocal.TvShowRemoteLocalMapper
 import com.amsterdam.repository.utils.RecentSearchHandler
 import com.amsterdam.repository.utils.getDeviceLanguage
+import javax.inject.Inject
 
-class TvShowRepositoryImpl(
+class TvShowRepositoryImpl @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val localTvDataSource: TvShowLocalSource,
     private val remoteTvDataSource: TvShowsRemoteSource,

@@ -9,8 +9,9 @@ import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsResponse
+import javax.inject.Inject
 
-class MovieRemoteDataSourceImpl(
+class MovieRemoteDataSourceImpl @Inject constructor(
     private val movieServiceProvider: MovieServiceProvider
 ) : MovieRemoteSource {
 

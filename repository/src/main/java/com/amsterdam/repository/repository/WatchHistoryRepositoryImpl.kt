@@ -8,8 +8,9 @@ import com.amsterdam.repository.mapper.local.MovieLocalMapper
 import com.amsterdam.repository.mapper.local.WatchHistoryMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class WatchHistoryRepositoryImpl(
+class WatchHistoryRepositoryImpl @Inject constructor(
     private val watchHistoryLocalDataSource: WatchHistoryLocalDataSource,
     private val movieLocalMapper: MovieLocalMapper,
     private val watchHistoryMapper: WatchHistoryMapper

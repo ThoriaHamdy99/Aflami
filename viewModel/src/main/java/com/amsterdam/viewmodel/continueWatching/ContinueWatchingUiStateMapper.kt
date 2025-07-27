@@ -3,9 +3,10 @@ package com.amsterdam.viewmodel.continueWatching
 import android.annotation.SuppressLint
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
+import javax.inject.Inject
 
 
-class ContinueWatchingUiStateMapper {
+class ContinueWatchingUiStateMapper @Inject constructor() {
     @SuppressLint("DefaultLocale")
     fun toUiState(continueWatchingMovies: List<Movie>): ContinueWatchingUiState {
         return ContinueWatchingUiState(

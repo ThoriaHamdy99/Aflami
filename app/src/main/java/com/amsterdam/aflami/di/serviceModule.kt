@@ -16,24 +16,87 @@ import com.amsterdam.remotedatasource.serviceProvider.implementation.CategorySer
 import com.amsterdam.remotedatasource.serviceProvider.implementation.CountryServiceProviderImpl
 import com.amsterdam.remotedatasource.serviceProvider.implementation.MovieServiceProviderImpl
 import com.amsterdam.remotedatasource.serviceProvider.implementation.TvShowsServiceProviderImpl
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.bind
-import org.koin.dsl.module
+import javax.inject.Singleton
 
-val serviceModule = module {
-    single { Json { prettyPrint = true; isLenient = true; ignoreUnknownKeys = true } }
-    singleOf(::RetrofitClient)
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class ServiceProviderBindsModule {
 
-    single { get<RetrofitClient>().authenticationApiService() } bind AuthenticationApiService::class
-    single { get<RetrofitClient>().movieApiService() } bind MovieApiService::class
-    single { get<RetrofitClient>().categoryApiService() } bind CategoryApiService::class
-    single { get<RetrofitClient>().countryApiService() } bind CountryApiService::class
-    single { get<RetrofitClient>().tvApiService() } bind TvShowsApiService::class
+    @Binds
+    @Singleton
+    abstract fun bindAuthServiceProvider(
+        impl: AuthenticationServiceProviderImpl
+    ): AuthenticationServiceProvider
 
-    singleOf(::AuthenticationServiceProviderImpl) bind AuthenticationServiceProvider::class
-    singleOf(::CategoryServiceProviderImpl) bind CategoryServiceProvider::class
-    singleOf(::CountryServiceProviderImpl) bind CountryServiceProvider::class
-    singleOf(::MovieServiceProviderImpl) bind MovieServiceProvider::class
-    singleOf(::TvShowsServiceProviderImpl) bind TvShowsServiceProvider::class
+    @Binds
+    @Singleton
+    abstract fun bindCategoryServiceProvider(
+        impl: CategoryServiceProviderImpl
+    ): CategoryServiceProvider
+
+    @Binds
+    @Singleton
+    abstract fun bindCountryServiceProvider(
+        impl: CountryServiceProviderImpl
+    ): CountryServiceProvider
+
+    @Binds
+    @Singleton
+    abstract fun bindMovieServiceProvider(
+        impl: MovieServiceProviderImpl
+    ): MovieServiceProvider
+
+    @Binds
+    @Singleton
+    abstract fun bindTvShowsServiceProvider(
+        impl: TvShowsServiceProviderImpl
+    ): TvShowsServiceProvider
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object ServiceProvidesModule {
+
+    @Provides
+    @Singleton
+    fun provideJson(): Json = Json {
+        prettyPrint = true
+        isLenient = true
+        ignoreUnknownKeys = true
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofitClient(json: Json): RetrofitClient = RetrofitClient(json)
+
+    @Provides
+    @Singleton
+    fun provideAuthenticationApiService(client: RetrofitClient): AuthenticationApiService =
+        client.authenticationApiService()
+
+    @Provides
+    @Singleton
+    fun provideMovieApiService(client: RetrofitClient): MovieApiService =
+        client.movieApiService()
+
+    @Provides
+    @Singleton
+    fun provideCategoryApiService(client: RetrofitClient): CategoryApiService =
+        client.categoryApiService()
+
+    @Provides
+    @Singleton
+    fun provideCountryApiService(client: RetrofitClient): CountryApiService =
+        client.countryApiService()
+
+    @Provides
+    @Singleton
+    fun provideTvShowsApiService(client: RetrofitClient): TvShowsApiService =
+        client.tvApiService()
 }

@@ -10,8 +10,9 @@ import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsResponse
+import javax.inject.Inject
 
-class TvShowsServiceProviderImpl(
+class TvShowsServiceProviderImpl @Inject constructor(
     private val tvShowsApiService: TvShowsApiService
 ) : TvShowsServiceProvider {
 
