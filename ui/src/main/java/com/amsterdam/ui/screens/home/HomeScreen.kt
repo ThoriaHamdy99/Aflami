@@ -56,7 +56,6 @@ import com.amsterdam.viewmodel.home.HomeInteractionListener
 import com.amsterdam.viewmodel.home.HomeUiState
 import com.amsterdam.viewmodel.home.HomeViewModel
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
 @Composable

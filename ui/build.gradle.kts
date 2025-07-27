@@ -18,7 +18,6 @@ dependencies {
     implementation(project(":imageViewer"))
 
     implementation(libs.sifr.shaded)
-    implementation(libs.koin.androidx.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

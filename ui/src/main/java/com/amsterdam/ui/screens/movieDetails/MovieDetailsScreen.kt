@@ -75,7 +75,6 @@ import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {

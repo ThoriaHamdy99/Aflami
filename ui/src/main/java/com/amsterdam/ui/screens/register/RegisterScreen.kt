@@ -21,8 +21,6 @@ import com.amsterdam.ui.screens.register.components.RegisterWebView
 import com.amsterdam.viewmodel.register.RegisterEffect
 import com.amsterdam.viewmodel.register.RegisterUiState
 import com.amsterdam.viewmodel.register.RegisterViewModel
-import org.koin.androidx.compose.koinViewModel
-
 
 @Composable
 fun RegisterScreen(

@@ -15,7 +15,6 @@ import com.amsterdam.ui.navigation.BottomNavigation
 import com.amsterdam.ui.navigation.NavGraph
 import com.amsterdam.ui.utils.safeNavigateToTab
 import com.amsterdam.viewmodel.application.ApplicationViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AflamiApp(

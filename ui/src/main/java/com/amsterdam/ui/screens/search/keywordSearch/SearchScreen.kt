@@ -68,7 +68,6 @@ import com.amsterdam.viewmodel.search.keywordSearch.TabOption
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {

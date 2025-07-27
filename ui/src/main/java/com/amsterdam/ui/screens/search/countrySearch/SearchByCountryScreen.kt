@@ -50,7 +50,6 @@ import com.amsterdam.viewmodel.search.countrySearch.CountrySearchUiState
 import com.amsterdam.viewmodel.search.countrySearch.CountrySearchViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import kotlinx.coroutines.flow.emptyFlow
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SearchByCountryScreen(

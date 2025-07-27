@@ -47,7 +47,6 @@ import com.amsterdam.viewmodel.login.LoginInteractionListener
 import com.amsterdam.viewmodel.login.LoginUiState
 import com.amsterdam.viewmodel.login.LoginViewModel
 import com.amsterdam.viewmodel.login.PasswordErrorState
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(

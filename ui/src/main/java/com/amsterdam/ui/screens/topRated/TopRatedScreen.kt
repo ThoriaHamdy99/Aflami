@@ -39,7 +39,6 @@ import com.amsterdam.viewmodel.topRated.TopRatedInteractionListener
 import com.amsterdam.viewmodel.topRated.TopRatedUiState
 import com.amsterdam.viewmodel.topRated.TopRatedViewModel
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TopRatedScreen(viewModel: TopRatedViewModel = hiltViewModel()) {

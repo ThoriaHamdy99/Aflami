@@ -83,7 +83,6 @@ import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsViewModel
 import com.amsterdam.viewmodel.shared.Selectable
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SeriesDetailsScreen(

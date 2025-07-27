@@ -48,7 +48,6 @@ import com.amsterdam.viewmodel.cast.CastUiState
 import com.amsterdam.viewmodel.cast.CastUiState.CastErrorUiState
 import com.amsterdam.viewmodel.cast.CastViewModel
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CastScreen(viewModel: CastViewModel = hiltViewModel()) {

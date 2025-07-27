@@ -33,7 +33,6 @@ import com.amsterdam.viewmodel.continueWatching.ContinueWatchingInteractionListe
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiState
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingViewModel
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ContinueWatchingScreen(viewModel: ContinueWatchingViewModel = hiltViewModel()) {

@@ -52,7 +52,6 @@ import com.amsterdam.viewmodel.search.actorSearch.SearchActorInteractionListener
 import com.amsterdam.viewmodel.search.actorSearch.SearchActorViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import kotlinx.coroutines.flow.emptyFlow
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchByActorScreen(

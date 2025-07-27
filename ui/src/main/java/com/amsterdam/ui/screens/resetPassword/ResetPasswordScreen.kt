@@ -21,8 +21,6 @@ import com.amsterdam.ui.screens.resetPassword.components.ResetPasswordWebView
 import com.amsterdam.viewmodel.resetPassword.ResetPasswordEffect
 import com.amsterdam.viewmodel.resetPassword.ResetPasswordUiState
 import com.amsterdam.viewmodel.resetPassword.ResetPasswordViewModel
-import org.koin.androidx.compose.koinViewModel
-
 
 @Composable
 fun ResetPasswordScreen(
