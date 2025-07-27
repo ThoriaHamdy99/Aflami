@@ -7,8 +7,9 @@ import com.amsterdam.entity.Movie
 import com.amsterdam.entity.ProductionCompany
 import com.amsterdam.entity.Review
 import com.amsterdam.entity.category.MovieGenre
+import javax.inject.Inject
 
-class GetMovieDetailsUseCase(
+class GetMovieDetailsUseCase @Inject constructor(
     private val movieRepository: MovieRepository,
     private val addWatchHistoryUseCase: AddWatchHistoryUseCase,
 ) {

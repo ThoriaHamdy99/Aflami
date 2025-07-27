@@ -2,8 +2,9 @@ package com.amsterdam.domain.useCase.search
 
 import com.amsterdam.domain.repository.CountryRepository
 import com.amsterdam.entity.Country
+import javax.inject.Inject
 
-class GetSuggestedCountriesUseCase(
+class GetSuggestedCountriesUseCase @Inject constructor(
     private val countryRepository: CountryRepository
 ) {
 

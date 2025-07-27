@@ -7,8 +7,9 @@ import com.amsterdam.entity.Review
 import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.TvShowGenre
+import javax.inject.Inject
 
-class GetTvShowDetailsUseCase(
+class GetTvShowDetailsUseCase @Inject constructor(
     private val tvShowRepository: TvShowRepository,
 ) {
 
