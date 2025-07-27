@@ -46,32 +46,43 @@ android {
 }
 
 dependencies {
+    firebaseDependencies()
+    appModulesDependencies()
+    koinDependencies()
+    otherDependencies()
+}
 
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.perf)
-
-    // Modules Dependencies
-    implementation(project(":designSystem"))
+private fun DependencyHandlerScope.appModulesDependencies() {
     implementation(project(":ui"))
     implementation(project(":viewModel"))
     implementation(project(":localDatasource"))
     implementation(project(":remoteDatasource"))
     implementation(project(":domain"))
-    implementation(project(":entity"))
     implementation(project(":repository"))
+}
 
-    // Koin
+fun DependencyHandlerScope.firebaseDependencies() {
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.perf)
+}
+
+fun DependencyHandlerScope.koinDependencies() {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.core)
+}
+
+fun DependencyHandlerScope.otherDependencies() {
+    // json
     implementation(libs.kotlinx.serialization.json)
+
+    // room
     implementation(libs.androidx.room.runtime)
 
-    debugImplementation(libs.androidx.ui.tooling)
+    //manifest
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //Datastore
