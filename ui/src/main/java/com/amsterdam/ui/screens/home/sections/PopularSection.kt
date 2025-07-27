@@ -124,32 +124,32 @@ fun LazyListScope.popularSection(
             DisplayGenresForMovie(
                 modifier = Modifier
                     .zIndex(2f),
-                categories = popularMovies[pagerState.currentPage % popularMovies.size].category,
+                categories = state.movies[pagerState.currentPage % state.movies.size].category,
             )
         }
 
     }
+}
 
-    @Composable
-    private fun DisplayGenresForMovie(
-        categories: List<String>,
-        modifier: Modifier = Modifier
+@Composable
+private fun DisplayGenresForMovie(
+    categories: List<String>,
+    modifier: Modifier = Modifier
+) {
+    LazyRow(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+        contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        LazyRow(
-            modifier =
-                modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
-        ) {
-            items(categories) { category ->
-                MovieGenre.values().find { it.name.equals(category, ignoreCase = true) }
-                    ?.let { genre ->
-                        CategoryChip(categoryName = getMovieGenreLabel(genre))
-                    }
-            }
+        items(categories) { category ->
+            MovieGenre.values().find { it.name.equals(category, ignoreCase = true) }
+                ?.let { genre ->
+                    CategoryChip(categoryName = getMovieGenreLabel(genre))
+                }
         }
-
     }
 
 }
