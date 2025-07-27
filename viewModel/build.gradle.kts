@@ -31,29 +31,39 @@ android {
 }
 
 dependencies {
-    api(project(":domain"))
+    modulesDependencies()
+    coroutinesDependencies()
+    otherDependencies()
+    testDependencies()
+}
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
+private fun DependencyHandlerScope.modulesDependencies() {
+    api(project(":domain"))
+}
+
+private fun DependencyHandlerScope.coroutinesDependencies() {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+}
+
+private fun DependencyHandlerScope.otherDependencies() {
+    //kotlin extensions
+    implementation(libs.androidx.core.ktx)
+
+    //lifecycle
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
+    //datetime
     implementation(libs.kotlinx.datetime)
 
     // page 3
     implementation(libs.androidx.paging.runtime)
+}
 
-    // mockk
+private fun DependencyHandlerScope.testDependencies() {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
-
-    // junit 5
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.jupiter.api)
-    testRuntimeOnly(libs.junit.jupiter.engine)
-    testImplementation(libs.junit.jupiter.params)
-    //truth
     testImplementation(libs.truth)
     testImplementation(kotlin("test"))
 }

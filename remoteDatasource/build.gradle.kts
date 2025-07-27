@@ -6,10 +6,8 @@ var bearerToken: String = properties.getProperty("bearerToken") ?: ""
 val baseUrl: String = properties.getProperty("baseUrl") ?: ""
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.aflami.custom.plugin)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
     alias(libs.plugins.android.junit5)
 }
@@ -39,23 +37,39 @@ android {
 }
 
 dependencies {
+    modulesDependencies()
+    retrofitDependencies()
+    unitTestDependencies()
+    otherDependencies()
+}
+
+private fun DependencyHandlerScope.modulesDependencies() {
     implementation(project(":repository"))
+}
 
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.kotlinx.coroutines.core)
-
+private fun DependencyHandlerScope.retrofitDependencies() {
     implementation(libs.retrofit)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
-
     implementation(libs.retrofit2.kotlinx.serialization.converter)
-    implementation(libs.kotlinx.serialization.json)
-    // Unit Testing
+}
+
+private fun DependencyHandlerScope.unitTestDependencies() {
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.truth)
     testImplementation(kotlin("test"))
+}
+
+private fun DependencyHandlerScope.otherDependencies() {
+    //json serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    //coroutines
+    implementation(libs.kotlinx.coroutines.core)
+
+    //kotlin extensions
+    implementation(libs.androidx.core.ktx)
 }

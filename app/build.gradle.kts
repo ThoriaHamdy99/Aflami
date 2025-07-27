@@ -46,8 +46,8 @@ android {
 }
 
 dependencies {
-    firebaseDependencies()
     appModulesDependencies()
+    firebaseDependencies()
     koinDependencies()
     otherDependencies()
 }
@@ -61,29 +61,22 @@ private fun DependencyHandlerScope.appModulesDependencies() {
     implementation(project(":repository"))
 }
 
-fun DependencyHandlerScope.firebaseDependencies() {
+private fun DependencyHandlerScope.firebaseDependencies() {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.perf)
 }
 
-fun DependencyHandlerScope.koinDependencies() {
+private fun DependencyHandlerScope.koinDependencies() {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
     implementation(libs.koin.core)
 }
 
-fun DependencyHandlerScope.otherDependencies() {
+private fun DependencyHandlerScope.otherDependencies() {
     // json
     implementation(libs.kotlinx.serialization.json)
-
-    // room
-    implementation(libs.androidx.room.runtime)
-
-    //manifest
-    debugImplementation(libs.androidx.ui.test.manifest)
 
     //Datastore
     implementation(libs.androidx.datastore.preferences)
