@@ -3,10 +3,9 @@ package com.amsterdam.domain.useCase.search
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.TvShowGenre
-import javax.inject.Inject
 import kotlin.math.floor
 
-class GetAndFilterTvShowsByKeywordUseCase @Inject constructor(
+class GetAndFilterTvShowsByKeywordUseCase (
     private val tvShowRepository: TvShowRepository
 ) {
 

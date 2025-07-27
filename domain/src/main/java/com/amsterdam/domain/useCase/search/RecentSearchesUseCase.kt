@@ -2,9 +2,8 @@ package com.amsterdam.domain.useCase.search
 
 import com.amsterdam.domain.repository.RecentSearchRepository
 import com.amsterdam.entity.Country
-import javax.inject.Inject
 
-class RecentSearchesUseCase @Inject constructor(
+class RecentSearchesUseCase(
     private val recentSearchRepository: RecentSearchRepository
 ) {
     suspend fun addRecentSearch(keyword: String) {

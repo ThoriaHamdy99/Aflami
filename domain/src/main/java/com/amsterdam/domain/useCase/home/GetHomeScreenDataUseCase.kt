@@ -3,9 +3,8 @@ package com.amsterdam.domain.useCase.home
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
 import kotlinx.coroutines.flow.firstOrNull
-import javax.inject.Inject
 
-class GetHomeScreenDataUseCase @Inject constructor(
+class GetHomeScreenDataUseCase (
     private val getTopRatedMoviesUseCase : GetTopRatedMoviesUseCase,
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,

@@ -3,10 +3,9 @@ package com.amsterdam.domain.useCase.search
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
-import javax.inject.Inject
 import kotlin.math.floor
 
-class GetAndFilterMoviesByKeywordUseCase @Inject constructor(
+class GetAndFilterMoviesByKeywordUseCase(
     private val movieRepository: MovieRepository
 ) {
 

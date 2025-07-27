@@ -3,9 +3,8 @@ package com.amsterdam.domain.useCase.search
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie
-import javax.inject.Inject
 
-class GetMoviesByCountryUseCase @Inject constructor(private val movieRepository: MovieRepository) {
+class GetMoviesByCountryUseCase (private val movieRepository: MovieRepository) {
     suspend operator fun invoke(
         country: Country,
         page: Int = 1,

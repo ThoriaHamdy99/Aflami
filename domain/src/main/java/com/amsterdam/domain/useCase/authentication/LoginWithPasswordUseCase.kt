@@ -1,9 +1,8 @@
 package com.amsterdam.domain.useCase.authentication
 
 import com.amsterdam.domain.repository.AuthenticationRepository
-import javax.inject.Inject
 
-class LoginWithPasswordUseCase @Inject constructor(
+class LoginWithPasswordUseCase (
     private val authenticationRepository: AuthenticationRepository,
 ) {
     suspend operator fun invoke(
