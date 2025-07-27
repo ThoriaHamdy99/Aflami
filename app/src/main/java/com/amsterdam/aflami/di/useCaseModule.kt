@@ -13,9 +13,9 @@ import com.amsterdam.domain.useCase.common.AddWatchHistoryUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetMovieCastUseCase
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
+import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
-import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
@@ -104,22 +104,12 @@ object UseCaseModule {
         GetContinueWatchingMoviesUseCase(repo)
 
     @Provides
-    fun provideGetHomeScreenDataUseCase(
-        getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
-        getPopularMoviesUseCase: GetPopularMoviesUseCase,
-        getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
-        getContinueWatchingMoviesUseCase: GetContinueWatchingMoviesUseCase
-    ): GetHomeScreenDataUseCase =
-        GetHomeScreenDataUseCase(
-            getTopRatedMoviesUseCase,
-            getPopularMoviesUseCase,
-            getUpcomingMoviesUseCase,
-            getContinueWatchingMoviesUseCase
-        )
-
-    @Provides
     fun provideAddWatchHistoryUseCase(repo: WatchHistoryRepository): AddWatchHistoryUseCase =
         AddWatchHistoryUseCase(repo)
+
+    @Provides
+    fun provideGetTvShowCastUseCase(tvShowRepository: TvShowRepository): GetTvShowCastUseCase =
+        GetTvShowCastUseCase(tvShowRepository)
 
     @Provides
     fun provideGetMoviesByMoodUseCase(repo: MovieRepository): GetMoviesByMoodUseCase =
