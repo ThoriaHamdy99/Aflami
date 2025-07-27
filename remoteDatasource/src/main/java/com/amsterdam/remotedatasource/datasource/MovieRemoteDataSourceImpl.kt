@@ -5,6 +5,7 @@ import com.amsterdam.repository.datasource.remote.MovieRemoteSource
 import com.amsterdam.repository.dto.remote.ProductionCompanyResponse
 import com.amsterdam.repository.dto.remote.RemoteActorSearchResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
+import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
@@ -40,30 +41,30 @@ class MovieRemoteDataSourceImpl(
     override suspend fun getCastByMovieId(movieId: Long): RemoteCastAndCrewResponse {
         return movieServiceProvider.getCastByMovieId(movieId)
     }
+//
+//    override suspend fun getMovieReviews(movieId: Long): ReviewsResponse {
+//        return movieServiceProvider.getMovieReviews(movieId)
+//    }
+//
+//    override suspend fun getSimilarMovies(movieId: Long): RemoteMovieResponse {
+//        return movieServiceProvider.getSimilarMovies(movieId)
+//    }
+//
+//    override suspend fun getMovieGallery(movieId: Long): RemoteGalleryResponse {
+//        return movieServiceProvider.getMovieGallery(movieId)
+//    }
+//
+//    override suspend fun getProductionCompany(movieId: Long): ProductionCompanyResponse {
+//        return movieServiceProvider.getProductionCompany(movieId)
+//    }
 
-    override suspend fun getMovieReviews(movieId: Long): ReviewsResponse {
-        return movieServiceProvider.getMovieReviews(movieId)
-    }
-
-    override suspend fun getSimilarMovies(movieId: Long): RemoteMovieResponse {
-        return movieServiceProvider.getSimilarMovies(movieId)
-    }
-
-    override suspend fun getMovieGallery(movieId: Long): RemoteGalleryResponse {
-        return movieServiceProvider.getMovieGallery(movieId)
-    }
-
-    override suspend fun getProductionCompany(movieId: Long): ProductionCompanyResponse {
-        return movieServiceProvider.getProductionCompany(movieId)
-    }
-
-    override suspend fun getMovieDetailsById(movieId: Long): RemoteMovieItemDto {
+    override suspend fun getMovieDetailsById(movieId: Long): RemoteMovieDetailsResponse {
         return movieServiceProvider.getMovieDetailsById(movieId)
     }
 
-    override suspend fun getMoviePosters(movieId: Long): RemoteGalleryResponse {
-        return movieServiceProvider.getMoviePosters(movieId)
-    }
+//    override suspend fun getMoviePosters(movieId: Long): RemoteGalleryResponse {
+//        return movieServiceProvider.getMoviePosters(movieId)
+//    }
 
     override suspend fun getPopularMovies(): RemoteMovieResponse {
         return movieServiceProvider.getPopularMovies()

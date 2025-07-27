@@ -2,6 +2,7 @@ package com.amsterdam.repository.datasource.remote
 
 import com.amsterdam.repository.dto.remote.ProductionCompanyResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
+import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
@@ -17,17 +18,17 @@ interface MovieRemoteSource {
 
     suspend fun getCastByMovieId(movieId: Long): RemoteCastAndCrewResponse
 
-    suspend fun getMovieReviews(movieId: Long): ReviewsResponse
+//    suspend fun getMovieReviews(movieId: Long): ReviewsResponse
+//
+//    suspend fun getSimilarMovies(movieId: Long): RemoteMovieResponse
+//
+//    suspend fun getMovieGallery(movieId: Long): RemoteGalleryResponse
+//
+//    suspend fun getProductionCompany(movieId: Long): ProductionCompanyResponse
 
-    suspend fun getSimilarMovies(movieId: Long): RemoteMovieResponse
+    suspend fun getMovieDetailsById(movieId: Long): RemoteMovieDetailsResponse
 
-    suspend fun getMovieGallery(movieId: Long): RemoteGalleryResponse
-
-    suspend fun getProductionCompany(movieId: Long): ProductionCompanyResponse
-
-    suspend fun getMovieDetailsById(movieId: Long): RemoteMovieItemDto
-
-    suspend fun getMoviePosters(movieId : Long) : RemoteGalleryResponse
+//    suspend fun getMoviePosters(movieId : Long) : RemoteGalleryResponse
 
     suspend fun getPopularMovies(): RemoteMovieResponse
 

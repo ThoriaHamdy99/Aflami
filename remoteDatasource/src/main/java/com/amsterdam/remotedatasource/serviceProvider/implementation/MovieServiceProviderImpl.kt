@@ -1,10 +1,12 @@
 package com.amsterdam.remotedatasource.serviceProvider.implementation
+import android.util.Log
 import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.serviceProvider.MovieServiceProvider
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.dto.remote.ProductionCompanyResponse
 import com.amsterdam.repository.dto.remote.RemoteActorSearchResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
+import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
@@ -45,27 +47,29 @@ class MovieServiceProviderImpl(
         return responseCall { movieApiService.getCastByMovieId(movieId) }
     }
 
-    override suspend fun getMovieReviews(movieId: Long): ReviewsResponse {
-        return responseCall { movieApiService.getMovieReviews(movieId) }
-    }
+//    override suspend fun getMovieReviews(movieId: Long): ReviewsResponse {
+//        return responseCall { movieApiService.getMovieReviews(movieId) }
+//    }
+//
+//    override suspend fun getSimilarMovies(movieId: Long): RemoteMovieResponse {
+//        return responseCall { movieApiService.getSimilarMovies(movieId) }
+//    }
+//
+//    override suspend fun getMovieGallery(movieId: Long): RemoteGalleryResponse {
+//        return responseCall { movieApiService.getMovieGallery(movieId) }
+//    }
+//
+//    override suspend fun getMoviePosters(movieId: Long): RemoteGalleryResponse {
+//        return responseCall { movieApiService.getMoviePosters(movieId) }
+//    }
+//
+//    override suspend fun getProductionCompany(movieId: Long): ProductionCompanyResponse {
+//        return responseCall { movieApiService.getProductionCompany(movieId) }
+//    }
 
-    override suspend fun getSimilarMovies(movieId: Long): RemoteMovieResponse {
-        return responseCall { movieApiService.getSimilarMovies(movieId) }
-    }
+    override suspend fun getMovieDetailsById(movieId: Long): RemoteMovieDetailsResponse {
+        Log.e("bk", "getMovieDetailsById-provider impl: ${movieApiService.getMovieDetailsById(movieId)}")
 
-    override suspend fun getMovieGallery(movieId: Long): RemoteGalleryResponse {
-        return responseCall { movieApiService.getMovieGallery(movieId) }
-    }
-
-    override suspend fun getMoviePosters(movieId: Long): RemoteGalleryResponse {
-        return responseCall { movieApiService.getMoviePosters(movieId) }
-    }
-
-    override suspend fun getProductionCompany(movieId: Long): ProductionCompanyResponse {
-        return responseCall { movieApiService.getProductionCompany(movieId) }
-    }
-
-    override suspend fun getMovieDetailsById(movieId: Long): RemoteMovieItemDto {
         return responseCall { movieApiService.getMovieDetailsById(movieId) }
     }
 

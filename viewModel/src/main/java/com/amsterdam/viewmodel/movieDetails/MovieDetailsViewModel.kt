@@ -1,8 +1,10 @@
 package com.amsterdam.viewmodel.movieDetails
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
+import com.amsterdam.domain.models.MovieDetails
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.utils.SessionType
@@ -42,7 +44,7 @@ class MovieDetailsViewModel(
     private suspend fun getMovieDetails() =
         getMovieDetailsUseCase(state.value.movieId)
 
-    private fun onGetMovieDetailsSuccess(movieDetails: GetMovieDetailsUseCase.MovieDetails) =
+    private fun onGetMovieDetailsSuccess(movieDetails: MovieDetails) =
         updateState { movieDetailsUiStateMapper.toUiState(movieDetails) }
 
 

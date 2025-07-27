@@ -17,6 +17,7 @@ import com.amsterdam.repository.mapper.remote.CategoryRemoteMapper
 import com.amsterdam.repository.mapper.remote.CountryRemoteMapper
 import com.amsterdam.repository.mapper.remote.EpisodeRemoteMapper
 import com.amsterdam.repository.mapper.remote.GalleryRemoteMapper
+import com.amsterdam.repository.mapper.remote.MovieDetailRemoteMapper
 import com.amsterdam.repository.mapper.remote.MovieRemoteMapper
 import com.amsterdam.repository.mapper.remote.PostersRemoteMapper
 import com.amsterdam.repository.mapper.remote.ProductionCompanyRemoteMapper
@@ -67,4 +68,6 @@ val mapperModule = module {
     singleOf(::EpisodeRemoteMapper)
     singleOf(::SeasonRemoteMapper)
     singleOf(::WatchHistoryMapper)
+    singleOf(::MovieDetailRemoteMapper)
+
 }

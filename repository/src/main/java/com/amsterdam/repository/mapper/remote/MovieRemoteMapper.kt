@@ -7,7 +7,9 @@ import com.amsterdam.repository.mapper.shared.EntityMapper
 import com.amsterdam.repository.mapper.shared.mapCategoryIdToMovieGenre
 import com.amsterdam.repository.utils.toSafeLocalDate
 
-class MovieRemoteMapper() : EntityMapper<RemoteMovieItemDto, Movie> {
+class MovieRemoteMapper(
+    private val movieProductionCompanyRemoteMapper: ProductionCompanyRemoteMapper
+) : EntityMapper<RemoteMovieItemDto, Movie> {
     override fun toEntity(dto: RemoteMovieItemDto): Movie {
         val genresIds = dto.genreIds.ifEmpty { dto.genres.map { it.id } }
         return Movie(
@@ -21,7 +23,8 @@ class MovieRemoteMapper() : EntityMapper<RemoteMovieItemDto, Movie> {
             popularity = dto.popularity,
             originCountry = dto.originCountry.firstOrNull() ?: "",
             runTimeInMinutes = dto.runtime,
-            hasVideo = dto.video
+            hasVideo = dto.video,
+            productionCompanies = movieProductionCompanyRemoteMapper.toEntityList(dto.productionCompanies ?: emptyList())
         )
     }
 

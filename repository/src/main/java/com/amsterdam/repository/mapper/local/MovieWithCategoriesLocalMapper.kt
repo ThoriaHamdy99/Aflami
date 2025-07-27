@@ -19,7 +19,8 @@ class MovieWithCategoriesLocalMapper(
             popularity = dto.movie.popularity,
             originCountry = dto.movie.originCountry,
             runTimeInMinutes = dto.movie.movieLength,
-            hasVideo = dto.movie.hasVideo
+            hasVideo = dto.movie.hasVideo,
+            productionCompanies = emptyList()
         )
     }
 
