@@ -38,32 +38,41 @@ fun LazyListScope.upcomingMoviesSection(
 ) {
     stickyHeader {
         AnimatedSectionVisibility(isVisible) {
-            Column {
+            Column(
+                modifier = Modifier
+                    .fillParentMaxWidth()
+                    .background(AppTheme.color.surface)
+            ) {
                 Text(
                     modifier = Modifier
                         .fillParentMaxWidth()
-                        .background(AppTheme.color.surface)
-                        .padding(start = 16.dp, end = 16.dp, top = 24.dp),
+                        .padding(start = 16.dp, end = 16.dp,bottom = 16.dp),
                     text = stringResource(R.string.upcoming),
                     style = AppTheme.textStyle.title.medium,
                     color = AppTheme.color.title,
                     textAlign = TextAlign.Start,
                 )
+            }
+        }
+    }
 
-                LazyRow(
-                    modifier = Modifier.background(AppTheme.color.surface),
-                    contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(moviesGenres) { genreItem ->
-                        val genre = genreItem.selectableMovieGenre.item
-                        Chip(
-                            icon = getMovieGenreIcon(genre),
-                            label = getMovieGenreLabel(genre),
-                            isSelected = genreItem.selectableMovieGenre.isSelected,
-                            onClick = { onChangeMovieGenre(genre) },
-                        )
-                    }
+    item {
+        AnimatedSectionVisibility(isVisible) {
+            LazyRow(
+                modifier = Modifier
+                    .fillParentMaxWidth()
+                    .background(AppTheme.color.surface),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(moviesGenres) { genreItem ->
+                    val genre = genreItem.selectableMovieGenre.item
+                    Chip(
+                        icon = getMovieGenreIcon(genre),
+                        label = getMovieGenreLabel(genre),
+                        isSelected = genreItem.selectableMovieGenre.isSelected,
+                        onClick = { onChangeMovieGenre(genre) },
+                    )
                 }
             }
         }

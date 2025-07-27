@@ -175,7 +175,7 @@ private fun HomeScreenContent(
                             )
                         }
 
-                        item { MoodPickerSection(state, interactionListener) }
+                        item { MoodPickerSection(state, interactionListener, modifier=Modifier.padding(bottom=24.dp)) }
 
                         upcomingMoviesSection(
                             moviesGenres = state.upcomingMovieGenres,
