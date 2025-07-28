@@ -1,6 +1,7 @@
 package com.amsterdam.repository.dto.remote
 
-import com.amsterdam.repository.BuildConfig
+import com.amsterdam.repository.utils.ImageBaseUrlsConstant.BASE_IMAGE_URL_W300
+import com.amsterdam.repository.utils.ImageBaseUrlsConstant.BASE_IMAGE_URL_W500
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,7 +26,7 @@ data class RemoteTvShowItemDto(
     @SerialName("production_companies") val productionCompanies: List<ProductionCompanyDto> = emptyList()
 ){
     val fullPosterPath: String?
-        get() = posterPath?.let { BuildConfig.BASE_IMAGE_URL + it }
+        get() = posterPath?.let { BASE_IMAGE_URL_W500 + it }
     val fullBackdropPath: String?
-        get() = backdropPath?.let { BuildConfig.BASE_IMAGE_URL + it }
+        get() = backdropPath?.let { BASE_IMAGE_URL_W300 + it }
 }

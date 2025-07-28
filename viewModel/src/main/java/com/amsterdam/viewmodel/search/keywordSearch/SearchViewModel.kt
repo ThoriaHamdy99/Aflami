@@ -2,6 +2,8 @@ package com.amsterdam.viewmodel.search.keywordSearch
 
 import android.R.attr.rating
 import androidx.lifecycle.viewModelScope
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -23,15 +25,16 @@ import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState
 import com.amsterdam.viewmodel.utils.debounceSearch
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-@OptIn(FlowPreview::class)
-class SearchViewModel(
+@HiltViewModel
+class SearchViewModel @Inject constructor(
     private val getAndFilterMoviesByKeywordUseCase: GetAndFilterMoviesByKeywordUseCase,
     private val getAndFilterTvShowsByKeywordUseCase: GetAndFilterTvShowsByKeywordUseCase,
     private val recentSearchesUseCase: RecentSearchesUseCase,
@@ -52,7 +55,6 @@ class SearchViewModel(
             action = { recentSearchesUseCase.getRecentSearches() },
             onSuccess = ::onLoadRecentSearchesSuccess,
             onError = ::onFetchError,
-            onCompletion = ::onCompletion,
         )
     }
 
@@ -88,14 +90,13 @@ class SearchViewModel(
                 ).flow.map { pagingData -> pagingData.map { it.toMediaItemUiState() } }.cachedIn(viewModelScope)
             },
             onSuccess = ::onFetchMoviesSuccess,
-            onError = ::onFetchError,
-            onCompletion = ::onCompletion,
+            onError = {},
         )
     }
 
     private fun onFetchMoviesSuccess(movies: Flow<PagingData<MovieItemUiState>>) {
         applyMoviesFilter()
-        updateState { it.copy(movies = movies, errorUiState = null) }
+        updateState { it.copy(movies = movies) }
     }
 
     private fun fetchTvShowsByKeyword(keyword: String) {
@@ -116,14 +117,13 @@ class SearchViewModel(
                 ).flow.map { pagingData -> pagingData.map { it.toMediaItemUiState() } }.cachedIn(viewModelScope)
             },
             onSuccess = ::onFetchTvShowsSuccess,
-            onError = ::onFetchError,
-            onCompletion = ::onCompletion,
+            onError = {},
         )
     }
 
     private fun onFetchTvShowsSuccess(tvShows: Flow<PagingData<TvShowItemUiState>>) {
         applyTvShowsFilter()
-        updateState { it.copy(tvShows = tvShows, errorUiState = null) }
+        updateState { it.copy(tvShows = tvShows) }
     }
 
     private fun applyMoviesFilter() {
@@ -155,7 +155,6 @@ class SearchViewModel(
             it.copy(
                 movies = movies,
                 filterItemUiState = it.filterItemUiState.copy(isLoading = false),
-                errorUiState = null,
             )
         }
     }
@@ -192,7 +191,6 @@ class SearchViewModel(
             it.copy(
                 tvShows = tvShows,
                 filterItemUiState = it.filterItemUiState.copy(isLoading = false),
-                errorUiState = null,
             )
         }
     }
@@ -202,8 +200,6 @@ class SearchViewModel(
     }
 
     private fun resetFilterState() = updateState { it.copy(filterItemUiState = FilterItemUiState()) }
-
-    private fun onCompletion() = updateState { it.copy(isLoading = false) }
 
     private fun startLoading() = updateState { it.copy(isLoading = true) }
 
@@ -218,7 +214,6 @@ class SearchViewModel(
             action = { recentSearchesUseCase.addRecentSearch(state.value.keyword) },
             onSuccess = { fetchRecentSearches() },
             onError = ::onFetchError,
-            onCompletion = ::onCompletion,
         )
     }
 
@@ -267,7 +262,6 @@ class SearchViewModel(
             action = { recentSearchesUseCase.deleteRecentSearches() },
             onSuccess = ::onClearAllRecentSearchesSuccess,
             onError = ::onFetchError,
-            onCompletion = ::onCompletion,
         )
     }
 
@@ -282,6 +276,31 @@ class SearchViewModel(
                 isDialogVisible = false,
                 filterItemUiState = FilterItemUiState(),
             )
+        }
+    }
+
+    override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
+        when (val refreshState = loadStates.refresh) {
+            is LoadState.Loading -> {
+                if (state.value.keyword.isNotBlank()) {
+                    updateState { it.copy(isLoading = true, errorUiState = null) }
+                }
+            }
+
+            is LoadState.NotLoading -> {
+                updateState { it.copy(isLoading = false) }
+            }
+
+            is LoadState.Error -> {
+                updateState {
+                    it.copy(
+                        isLoading = false,
+                        errorUiState = SearchErrorState.toSearchErrorState(
+                            refreshState.error
+                        ),
+                    )
+                }
+            }
         }
     }
 

@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.Icon
 import com.amsterdam.designsystem.components.ImageErrorIndicator
@@ -73,6 +74,7 @@ import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
 import com.amsterdam.ui.utils.safeNavigate
+import com.amsterdam.viewmodel.cast.MediaType
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsEffect
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsInteractionListener
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState
@@ -82,11 +84,10 @@ import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsViewModel
 import com.amsterdam.viewmodel.shared.Selectable
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SeriesDetailsScreen(
-    viewModel: SeriesDetailsViewModel = koinViewModel(),
+    viewModel: SeriesDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
@@ -99,7 +100,14 @@ fun SeriesDetailsScreen(
             effect?.let {
                 when (it) {
                     SeriesDetailsEffect.NavigateBack -> navController.popBackStack()
-                    SeriesDetailsEffect.NavigateToCastScreen -> navController.safeNavigate(Route.Cast(state.tvShowId))
+                    SeriesDetailsEffect.NavigateToCastScreen -> {
+                        navController.safeNavigate(
+                            Route.Cast(
+                                mediaType = MediaType.TV_SHOW.name,
+                                mediaId = state.tvShowId
+                            )
+                        )
+                    }
                     SeriesDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(Route.Login)
                 }
             }

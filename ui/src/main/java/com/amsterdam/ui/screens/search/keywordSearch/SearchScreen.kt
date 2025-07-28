@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -53,6 +54,7 @@ import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.navigation.Route.MovieDetails
 import com.amsterdam.ui.navigation.Route.SeriesDetails
+import com.amsterdam.ui.screens.search.keywordSearch.sections.ExploreMoviesAndShows
 import com.amsterdam.ui.screens.search.keywordSearch.sections.RecentSearchesSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.SuggestionsHubSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.FilterDialog
@@ -67,15 +69,23 @@ import com.amsterdam.viewmodel.search.keywordSearch.TabOption
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState
 import kotlinx.coroutines.flow.collectLatest
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-internal fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
+internal fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val movieFlow = state.movies.collectAsLazyPagingItems()
     val tvShowFlow = state.tvShows.collectAsLazyPagingItems()
     val navController = LocalNavController.current
-
+    LaunchedEffect(movieFlow.loadState) {
+        if (state.selectedTabOption == TabOption.MOVIES) {
+            viewModel.onPagingLoadStateChanged(movieFlow.loadState)
+        }
+    }
+    LaunchedEffect(tvShowFlow.loadState) {
+        if (state.selectedTabOption == TabOption.TV_SHOWS) {
+            viewModel.onPagingLoadStateChanged(tvShowFlow.loadState)
+        }
+    }
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             effect?.let {
@@ -175,6 +185,14 @@ private fun SearchContent(
             onWorldSearchCardClicked = interaction::onClickWorldSearchCard,
             onActorSearchCardClicked = interaction::onClickActorSearchCard
         )
+
+        AnimatedVisibility(
+            state.keyword.isEmpty() && state.recentSearches.isEmpty()
+        ) {
+            CenterOfScreenContainer(unneededSpace = headerHeight + 100.dp) {
+                ExploreMoviesAndShows()
+            }
+        }
 
         RecentSearchesSection(
             keyword = state.keyword,

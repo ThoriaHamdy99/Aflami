@@ -28,6 +28,7 @@
     <string name="history">History</string>
     <string name="tv_movie">TV movie</string>
     <string name="movie">Movie</string>
+    <string name="tv">TV show</string>
     <string name="war">War</string>
     <string name="mystery">Mystery</string>
     <string name="thriller">Thriller</string>
@@ -213,5 +214,7 @@
 
     <!-- - Home  -->
     <string name="upcoming">Upcoming</string>
+    <string name="no_upcoming_movies_found_for_your_selection">No upcoming movies found for your selection.</string>
+    <string name="test">فسف</string>
 
 </resources>

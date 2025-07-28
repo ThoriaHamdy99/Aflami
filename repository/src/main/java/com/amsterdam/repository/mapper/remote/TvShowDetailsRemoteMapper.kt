@@ -6,8 +6,9 @@ import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.mapper.shared.EntityMapper
 import com.amsterdam.repository.mapper.shared.mapCategoryIdToTvShowGenre
 import com.amsterdam.repository.utils.toSafeLocalDate
+import javax.inject.Inject
 
-class TvShowDetailsRemoteMapper(
+class TvShowDetailsRemoteMapper @Inject(
     private val productionCompanyMapper: ProductionCompanyRemoteMapper,
     private val castRemoteMapper: CastRemoteMapper,
     private val reviewRemoteMapper: ReviewRemoteMapper,

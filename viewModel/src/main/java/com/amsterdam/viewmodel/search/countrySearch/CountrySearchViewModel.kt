@@ -1,7 +1,8 @@
 package com.amsterdam.viewmodel.search.countrySearch
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -20,6 +21,7 @@ import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.utils.debounceSearch
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,17 +29,18 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CountrySearchViewModel(
+@HiltViewModel
+class CountrySearchViewModel @Inject constructor(
     private val getSuggestedCountriesUseCase: GetSuggestedCountriesUseCase,
     private val getMoviesByCountryUseCase: GetMoviesByCountryUseCase,
     private val recentSearchesUseCase: RecentSearchesUseCase,
     dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<CountrySearchUiState, CountrySearchEffect>(
-        CountrySearchUiState(),
-        dispatcherProvider,
-    ),
-    CountrySearchInteractionListener {
+    CountrySearchUiState(),
+    dispatcherProvider,
+), CountrySearchInteractionListener {
     private val _keyword = MutableStateFlow("")
 
     init { observeKeywordFlow() }
@@ -53,18 +56,22 @@ class CountrySearchViewModel(
             onError = ::onFetchError
         )
     }
+
     private fun onFetchCountriesSuccess(countries: List<Country>) {
-        Log.e("bk", countries.toString())
-        updateState { it.copy(suggestedCountries = countries.toUiState(), errorUiState = null) }
+        updateState {
+            it.copy(
+                suggestedCountries = countries.toUiState(),
+                showSuggestedCountries = true,
+                errorUiState = null
+            )
+        }
     }
 
     private fun onFetchError(exception: AflamiException) {
-        Log.e("bk", "exception: $exception")
-
         updateState {
             it.copy(
                 isLoading = false,
-                suggestedCountries = emptyList(),
+                showSuggestedCountries = false,
                 movies = emptyFlow(),
                 errorUiState = CountrySearchErrorState.toCountrySearchErrorState(exception),
             )
@@ -78,7 +85,8 @@ class CountrySearchViewModel(
             it.copy(
                 keyword = keyword,
                 isLoading = false,
-                suggestedCountries = if (keyword.isBlank()) emptyList() else it.suggestedCountries,
+                selectedCountryIsoCode = "",
+                showSuggestedCountries = false,
                 errorUiState = null,
                 movies = emptyFlow(),
             )
@@ -115,7 +123,7 @@ class CountrySearchViewModel(
     }
 
     private fun fetchMoviesByCountry(selectedCountry: Country) {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isLoading = true, showSuggestedCountries = false) }
         tryToExecute(
             action = {
                 Pager(
@@ -128,16 +136,43 @@ class CountrySearchViewModel(
                             )
                         }
                     },
-                ).flow.map { pagingData -> pagingData.map { it.toMediaItemUiState() } }.cachedIn(viewModelScope)
+                )
+                    .flow.map { pagingData -> pagingData.map { it.toMediaItemUiState() } }
+                    .cachedIn(viewModelScope)
             },
             onSuccess = ::onFetchMoviesSuccess,
-            onError = ::onFetchError
+            onError = {}
         )
     }
 
     override fun onClickMovieCard(movieId: Long) {
         updateState { it.copy(selectedMovieId = movieId) }
         sendNewEffect(CountrySearchEffect.NavigateToMovieDetails)
+    }
+
+    override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
+        when (val refreshState = loadStates.refresh) {
+            is LoadState.Loading -> {
+                if (state.value.selectedCountryIsoCode.isNotBlank()) {
+                    updateState { it.copy(isLoading = true, errorUiState = null) }
+                }
+            }
+
+            is LoadState.NotLoading -> {
+                updateState { it.copy(isLoading = false) }
+            }
+
+            is LoadState.Error -> {
+                updateState {
+                    it.copy(
+                        isLoading = false,
+                        errorUiState = CountrySearchErrorState.toCountrySearchErrorState(
+                            refreshState.error
+                        ),
+                    )
+                }
+            }
+        }
     }
 
     private fun getSelectedCountry(): Country {
@@ -150,8 +185,7 @@ class CountrySearchViewModel(
         updateState {
             it.copy(
                 movies = movies,
-                isLoading = false,
-                suggestedCountries = emptyList()
+                showSuggestedCountries = false,
             )
         }
     }
