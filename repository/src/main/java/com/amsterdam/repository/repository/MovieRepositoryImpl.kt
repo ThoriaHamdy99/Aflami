@@ -7,8 +7,6 @@ import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.ProductionCompany
-import com.amsterdam.entity.Review
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.datasource.local.MovieLocalSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
@@ -38,10 +36,6 @@ class MovieRepositoryImpl(
     private val movieRemoteMapper: MovieRemoteMapper,
     private val recentSearchHandler: RecentSearchHandler,
     private val castRemoteMapper: CastRemoteMapper,
-    private val reviewRemoteMapper: ReviewRemoteMapper,
-    private val galleryRemoteMapper: GalleryRemoteMapper,
-    private val posterRemoteMapper: PostersRemoteMapper,
-    private val remoteProductionCompanyMapper: ProductionCompanyRemoteMapper,
     private val movieDetailRemoteMapper: MovieDetailRemoteMapper,
     private val movieWithCategoriesLocalMapper: MovieWithCategoriesLocalMapper,
     private val movieRemoteLocalMapper: MovieRemoteLocalMapper,
@@ -110,11 +104,10 @@ class MovieRepositoryImpl(
     }
 
     override suspend fun getMovieDetailsById(movieId: Long): MovieDetails {
-        Log.e("bk", "getMovieDetailsById: ${movieRemoteDataSource.getMovieDetailsById(movieId)}")
         return movieDetailRemoteMapper.toEntity(
             movieRemoteDataSource.getMovieDetailsById(movieId)
-                .also { incrementUserInterestByMovie(it.movie.genres)
-                    cacheWatchedMovie(it.movie)
+                .also { incrementUserInterestByMovie(it.genres)
+                    cacheWatchedMovie(movieDetailRemoteMapper.mapMovieDetailsToMovieItemDto(it))
                 }
         )
     }
@@ -126,26 +119,6 @@ class MovieRepositoryImpl(
             )
         )
     }
-//    override suspend fun getMovieReviews(movieId: Long): List<Review> {
-//        return reviewRemoteMapper.toEntityList(movieRemoteDataSource.getMovieReviews(movieId).results)
-//    }
-//
-//    override suspend fun getSimilarMovies(movieId: Long): List<Movie> {
-//        return movieRemoteMapper.toEntityList(movieRemoteDataSource.getSimilarMovies(movieId).results)
-//    }
-//
-//    override suspend fun getMovieGallery(movieId: Long): List<String> {
-//        return galleryRemoteMapper.toEntity(movieRemoteDataSource.getMovieGallery(movieId))
-//    }
-//
-//    override suspend fun getMoviePosters(movieId: Long): List<String> =
-//        posterRemoteMapper.toEntity(movieRemoteDataSource.getMoviePosters(movieId))
-//
-//    override suspend fun getProductionCompany(movieId: Long): List<ProductionCompany> {
-//        return remoteProductionCompanyMapper.toEntityList(
-//            movieRemoteDataSource.getProductionCompany(movieId).productionCompanies
-//        )
-//    }
 
     override suspend fun getUpcomingMovies(): List<Movie> {
         return movieRemoteMapper.toEntityList(movieRemoteDataSource.getUpcomingMovies().results)
@@ -253,7 +226,6 @@ class MovieRepositoryImpl(
         )
     }
 
-
     private suspend fun saveMovieWithCategories(remoteMovies: RemoteMovieResponse) {
         remoteMovies.results.forEach { onSaveMovieWithCategories(it) }
     }
@@ -268,6 +240,7 @@ class MovieRepositoryImpl(
             storedLanguage = getDeviceLanguage()
         )
     }
+
     override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>): List<Movie> {
         return movieGenreLocalMapper.toDtoList(movieGenres).let { genresIds ->
             movieRemoteMapper.toEntityList(movieRemoteDataSource.getMoviesByGenreIds(genresIds).results)

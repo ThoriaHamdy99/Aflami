@@ -2,6 +2,7 @@ package com.amsterdam.repository.mapper.remote
 
 import com.amsterdam.domain.models.MovieDetails
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
+import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.mapper.shared.EntityMapper
 
 class MovieDetailRemoteMapper(
@@ -12,14 +13,61 @@ class MovieDetailRemoteMapper(
     private val posterRemoteMapper: PostersRemoteMapper,
 ): EntityMapper<RemoteMovieDetailsResponse, MovieDetails> {
     override fun toEntity(response: RemoteMovieDetailsResponse): MovieDetails {
+        val remoteMovieItemDto = with(response){
+            RemoteMovieItemDto(
+                adult = adult,
+                backdropPath = backdropPath,
+                genreIds = genreIds,
+                id = id,
+                originalLanguage = originalLanguage,
+                originalTitle = originalTitle,
+                overview = overview,
+                popularity = popularity,
+                posterPath = posterPath,
+                productionCompanies = productionCompanies,
+                releaseDate = releaseDate,
+                title = title,
+                video = video,
+                voteAverage = voteAverage,
+                voteCount = voteCount,
+                originCountry = originCountry,
+                runtime = runtime,
+                genres = genres
+            )
+        }
         return MovieDetails(
-            movie = movieRemoteMapper.toEntity(response.movie),
+            movie = movieRemoteMapper.toEntity(remoteMovieItemDto),
             reviews = reviewRemoteMapper.toEntityList(response.reviews.results),
             actors = castRemoteMapper.toEntityList(response.credits.cast),
             similarMovies = movieRemoteMapper.toEntityList(response.similar.results),
             movieGallery = galleryRemoteMapper.toEntity(response.images),
             moviePosters = posterRemoteMapper.toEntity(response.images),
         )
+    }
+
+    fun mapMovieDetailsToMovieItemDto(remoteMovieDetailsResponse: RemoteMovieDetailsResponse): RemoteMovieItemDto {
+        return with(remoteMovieDetailsResponse) {
+            RemoteMovieItemDto(
+                adult = adult,
+                backdropPath = backdropPath,
+                genreIds = genreIds,
+                id = id,
+                originalLanguage = originalLanguage,
+                originalTitle = originalTitle,
+                overview = overview,
+                popularity = popularity,
+                posterPath = posterPath,
+                productionCompanies = productionCompanies,
+                releaseDate = releaseDate,
+                title = title,
+                video = video,
+                voteAverage = voteAverage,
+                voteCount = voteCount,
+                originCountry = originCountry,
+                runtime = runtime,
+                genres = genres
+            )
+        }
     }
 
 }

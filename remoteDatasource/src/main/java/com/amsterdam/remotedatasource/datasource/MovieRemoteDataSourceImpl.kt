@@ -41,30 +41,10 @@ class MovieRemoteDataSourceImpl(
     override suspend fun getCastByMovieId(movieId: Long): RemoteCastAndCrewResponse {
         return movieServiceProvider.getCastByMovieId(movieId)
     }
-//
-//    override suspend fun getMovieReviews(movieId: Long): ReviewsResponse {
-//        return movieServiceProvider.getMovieReviews(movieId)
-//    }
-//
-//    override suspend fun getSimilarMovies(movieId: Long): RemoteMovieResponse {
-//        return movieServiceProvider.getSimilarMovies(movieId)
-//    }
-//
-//    override suspend fun getMovieGallery(movieId: Long): RemoteGalleryResponse {
-//        return movieServiceProvider.getMovieGallery(movieId)
-//    }
-//
-//    override suspend fun getProductionCompany(movieId: Long): ProductionCompanyResponse {
-//        return movieServiceProvider.getProductionCompany(movieId)
-//    }
 
     override suspend fun getMovieDetailsById(movieId: Long): RemoteMovieDetailsResponse {
         return movieServiceProvider.getMovieDetailsById(movieId)
     }
-
-//    override suspend fun getMoviePosters(movieId: Long): RemoteGalleryResponse {
-//        return movieServiceProvider.getMoviePosters(movieId)
-//    }
 
     override suspend fun getPopularMovies(): RemoteMovieResponse {
         return movieServiceProvider.getPopularMovies()

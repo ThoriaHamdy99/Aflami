@@ -14,13 +14,8 @@ interface MovieRepository {
     suspend fun getMoviesByCountry(country: Country, page: Int, moviesPerPage: Int): List<Movie>
 
     suspend fun getActorsByMovieId(movieId: Long): List<Actor>
-    //suspend fun getMovieReviews(movieId : Long) : List<Review>
     suspend fun getMovieDetailsById(movieId : Long): MovieDetails
 
-//    suspend fun getSimilarMovies(movieId : Long) : List<Movie>
-//    suspend fun getMovieGallery(movieId : Long) : List<String>
-//    suspend fun getMoviePosters(movieId : Long) : List<String>
-//    suspend fun getProductionCompany(movieId : Long) : List<ProductionCompany>
     suspend fun getPopularMovies(): List<Movie>
     suspend fun getTopRatedMovies(): List<Movie>
     suspend fun getUpcomingMovies(): List<Movie>

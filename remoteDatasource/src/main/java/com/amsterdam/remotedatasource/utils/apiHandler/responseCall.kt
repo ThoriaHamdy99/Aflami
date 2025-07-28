@@ -1,5 +1,6 @@
 package com.amsterdam.remotedatasource.utils.apiHandler
 
+import android.util.Log
 import com.amsterdam.domain.exceptions.AccessDeniedException
 import com.amsterdam.domain.exceptions.AccessRestrictedException
 import com.amsterdam.domain.exceptions.AccountDisabledException
@@ -18,10 +19,13 @@ suspend inline fun <reified T> responseCall(crossinline execute: suspend () -> T
     try {
         execute()
     } catch (e: HttpException) {
+        Log.e("bk", "responseCall: ${e}")
         throw ServerErrorException()
     } catch (e: ConnectException) {
         throw NoInternetException()
     } catch (e: SerializationException) {
+        Log.e("bk", "responseCall: ${e}")
+
         throw ServerErrorException()
     } catch (e: Exception) {
         throw NetworkException()
