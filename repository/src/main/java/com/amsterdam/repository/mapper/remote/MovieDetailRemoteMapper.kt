@@ -1,6 +1,6 @@
 package com.amsterdam.repository.mapper.remote
 
-import com.amsterdam.domain.models.MovieDetails
+import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.mapper.shared.EntityMapper

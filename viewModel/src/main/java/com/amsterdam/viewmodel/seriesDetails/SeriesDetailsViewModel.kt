@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
-import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
+import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.entity.Episode
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
@@ -44,9 +44,9 @@ class SeriesDetailsViewModel(
     }
 
     private suspend fun getTvShowDetails(): TvShowDetails {
-        Log.d("viewModel", "getTvShowDetails: ${state.value.tvShowId}")
         return getTvShowDetailsUseCase(state.value.tvShowId)
     }
+
     private fun onGetTvShowDetailsSuccess(tvShowDetails: TvShowDetails) {
         updateState {
             seriesDetailsStateMapper.toUiState(tvShowDetails)
@@ -123,7 +123,6 @@ class SeriesDetailsViewModel(
         }
         return getEpisodesBySeasonNumberUseCase(state.value.tvShowId, seasonNumber)
     }
-
 
     private fun onGetEpisodesSuccess(seasonNumber: Int, episodes: List<Episode>) {
         if (episodes.isEmpty()) {

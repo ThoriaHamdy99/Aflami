@@ -12,19 +12,7 @@ class GetTvShowDetailsUseCase(
 ) {
 
     suspend operator fun invoke(tvShowId: Long): TvShowDetails {
-        val tvShow = tvShowRepository.getTvShowDetails(tvShowId)
-        val seasons = tvShowRepository.getTvShowSeasons(tvShowId)
-        return with(tvShow) {
-            TvShowDetails(
-                tvShow = tvShow.tvShow,
-                actors = actors,
-                seasons = seasons,
-                reviews = reviews,
-                similarTvShows = similarTvShows,
-                gallery = gallery,
-                productionsCompanies = productionsCompanies
-            )
-        }
+        return tvShowRepository.getTvShowDetails(tvShowId)
     }
 
     data class TvShowDetails(

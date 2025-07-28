@@ -13,7 +13,7 @@ class TvShowDetailsRemoteMapper(
     private val reviewRemoteMapper: ReviewRemoteMapper,
     private val galleryRemoteMapper: GalleryRemoteMapper,
     private val tvRemoteMapper: TvShowRemoteMapper,
-    private val episodeRemoteMapper: EpisodeRemoteMapper,
+    private val seasonRemoteMapper: SeasonRemoteMapper
 ) : EntityMapper<TvShowDetailsRemoteResponse, TvShowDetails> {
     override fun toEntity(dto: TvShowDetailsRemoteResponse): TvShowDetails {
         val tvShow = TvShow(
@@ -34,7 +34,7 @@ class TvShowDetailsRemoteMapper(
             TvShowDetails(
                 tvShow = tvShow,
                 actors = castRemoteMapper.toEntityList(credits.cast),
-                seasons = emptyList(),
+                seasons = seasonRemoteMapper.toEntityList(seasons),
                 reviews = reviewRemoteMapper.toEntityList(reviews.results),
                 similarTvShows = tvRemoteMapper.toEntityList(similar.results),
                 gallery = galleryRemoteMapper.toEntity(images),

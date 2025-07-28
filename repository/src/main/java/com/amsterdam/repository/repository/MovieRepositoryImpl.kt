@@ -1,8 +1,8 @@
 package com.amsterdam.repository.repository
 
-import com.amsterdam.domain.models.MovieDetails
 import com.amsterdam.domain.repository.CategoryRepository
 import com.amsterdam.domain.repository.MovieRepository
+import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie

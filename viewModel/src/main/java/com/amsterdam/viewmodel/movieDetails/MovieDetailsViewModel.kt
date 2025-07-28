@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
-import com.amsterdam.domain.models.MovieDetails
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
+import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
 import com.amsterdam.viewmodel.shared.BaseViewModel
