@@ -15,11 +15,11 @@ class TvRemoteDataSourceImpl(
     private val tvShowsApiService: TvShowsApiService
 ) : TvShowsRemoteSource {
     override suspend fun getPopularTvShows(): RemoteTvShowResponse {
-        return tvShowsServiceProvider.getPopularTvShows()
+        return responseCall { tvShowsApiService.getPopularTvShows() }
     }
 
     override suspend fun getTopRatedTvShows(): RemoteTvShowResponse {
-        return tvShowsServiceProvider.getTopRatedTvShows()
+        return responseCall { tvShowsApiService.getTopRatedTvShows() }
     }
 
     override suspend fun getTvShowsByKeyword(keyword: String, page: Int): RemoteTvShowResponse {
