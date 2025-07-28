@@ -47,7 +47,6 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     private suspend fun getTvShowDetails(): TvShowDetails {
-        Log.d("viewModel", "getTvShowDetails: ${state.value.tvShowId}")
         return getTvShowDetailsUseCase(state.value.tvShowId)
     }
     private fun onGetTvShowDetailsSuccess(tvShowDetails: TvShowDetails) {
@@ -163,7 +162,6 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     private fun onError(exception: AflamiException) {
-        Log.d("TAG", "onError: $exception")
         when (exception) {
             is NoInternetException -> updateState {
                 it.copy(

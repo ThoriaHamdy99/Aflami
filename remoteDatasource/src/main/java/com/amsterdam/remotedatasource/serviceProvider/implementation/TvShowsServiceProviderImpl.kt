@@ -15,6 +15,13 @@ import javax.inject.Inject
 class TvShowsServiceProviderImpl @Inject constructor(
     private val tvShowsApiService: TvShowsApiService
 ) : TvShowsServiceProvider {
+    override suspend fun getPopularTvShows(): RemoteTvShowResponse {
+        return responseCall { tvShowsApiService.getPopularTvShows() }
+    }
+
+    override suspend fun getTopRatedTvShows(): RemoteTvShowResponse {
+        return responseCall { tvShowsApiService.getTopRatedTvShows() }
+    }
 
     override suspend fun getTvShowsByKeyword(keyword: String, page: Int): RemoteTvShowResponse {
         return responseCall {

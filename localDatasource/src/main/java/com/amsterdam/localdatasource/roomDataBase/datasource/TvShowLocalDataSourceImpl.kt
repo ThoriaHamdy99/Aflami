@@ -64,4 +64,8 @@ class TvShowLocalDataSourceImpl @Inject constructor(
     override suspend fun incrementGenreInterest(categoryId: Long) {
         tvShowCategoryInterestDao.incrementInterest(categoryId)
     }
+
+    override suspend fun insertTvShow(tvShow: LocalTvShowDto) {
+        tvShowDao.insertTvShow(tvShow)
+    }
 }

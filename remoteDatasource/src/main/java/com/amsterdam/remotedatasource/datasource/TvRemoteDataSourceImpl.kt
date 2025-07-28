@@ -14,6 +14,13 @@ import javax.inject.Inject
 class TvRemoteDataSourceImpl @Inject constructor(
     private val tvShowsServiceProvider: TvShowsServiceProvider
 ) : TvShowsRemoteSource {
+    override suspend fun getPopularTvShows(): RemoteTvShowResponse {
+        return tvShowsServiceProvider.getPopularTvShows()
+    }
+
+    override suspend fun getTopRatedTvShows(): RemoteTvShowResponse {
+        return tvShowsServiceProvider.getTopRatedTvShows()
+    }
 
     override suspend fun getTvShowsByKeyword(keyword: String, page: Int): RemoteTvShowResponse {
         return tvShowsServiceProvider.getTvShowsByKeyword(keyword, page)
