@@ -6,8 +6,9 @@ import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
 import com.amsterdam.repository.dto.remote.authentication.AuthenticationResponseDto
 import com.amsterdam.repository.dto.remote.authentication.CreateSessionDto
 import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
-class AuthenticationRemoteDataSourceImpl(
+class AuthenticationRemoteDataSourceImpl @Inject constructor(
     private val json: Json,
     private val authenticationApiService: AuthenticationApiService
 ) : AuthenticationRemoteSource {
