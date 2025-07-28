@@ -11,7 +11,15 @@ android {
 dependencies {
     modulesDependencies()
     navigationDependencies()
-    otherDependencies()
+    lifeCycleDependencies()
+    koinAndroidXDependencies()
+    sifrDependencies()
+    pagingDependencies()
+    kotlinExtensionsDependencies()
+    appCompactDependencies()
+    previewDependencies()
+    composeDependencies()
+    uiGraphicsDependencies()
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
@@ -25,35 +33,41 @@ private fun DependencyHandlerScope.navigationDependencies() {
     implementation(libs.androidx.navigation.common.android)
 }
 
-private fun DependencyHandlerScope.otherDependencies() {
-    //android lifecycle
+private fun DependencyHandlerScope.lifeCycleDependencies() {
     implementation(libs.androidx.lifecycle.runtime.ktx)
+}
 
-    //activity compose
+private fun DependencyHandlerScope.koinAndroidXDependencies() {
+    implementation(libs.koin.androidx.compose)
+}
+
+private fun DependencyHandlerScope.sifrDependencies() {
+    implementation(libs.sifr.shaded)
+}
+
+private fun DependencyHandlerScope.pagingDependencies() {
+    implementation(libs.androidx.paging.compose)
+}
+
+private fun DependencyHandlerScope.kotlinExtensionsDependencies() {
+    implementation(libs.androidx.core.ktx)
+}
+
+private fun DependencyHandlerScope.appCompactDependencies() {
+    implementation(libs.androidx.appcompat)
+}
+
+private fun DependencyHandlerScope.previewDependencies() {
+    debugImplementation(libs.androidx.ui.tooling.preview)
+}
+
+private fun DependencyHandlerScope.composeDependencies() {
     implementation(libs.androidx.activity.compose)
-
-    //compose bom
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.foundation)
+}
 
-    //ui
+private fun DependencyHandlerScope.uiGraphicsDependencies() {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-
-    //previe
-    debugImplementation(libs.androidx.ui.tooling.preview)
-
-    //app compact
-    implementation(libs.androidx.appcompat)
-
-    //foundation
-    implementation(libs.androidx.foundation)
-
-    //kotlin extensions
-    implementation(libs.androidx.core.ktx)
-
-    // page 3
-    implementation(libs.androidx.paging.compose)
-
-    //koin androidx compose
-    implementation(libs.koin.androidx.compose)
 }

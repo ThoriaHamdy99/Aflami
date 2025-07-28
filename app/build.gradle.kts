@@ -52,7 +52,10 @@ dependencies {
     appModulesDependencies()
     firebaseDependencies()
     koinDependencies()
-    otherDependencies()
+    datastoreDependencies()
+    jsonSerializationDependencies()
+    roomDependencies()
+    androidxRuntimeDependencies()
 }
 
 private fun DependencyHandlerScope.appModulesDependencies() {
@@ -77,10 +80,18 @@ private fun DependencyHandlerScope.koinDependencies() {
     implementation(libs.koin.core)
 }
 
-private fun DependencyHandlerScope.otherDependencies() {
-    // json
-    implementation(libs.kotlinx.serialization.json)
-
-    //Datastore
+private fun DependencyHandlerScope.datastoreDependencies() {
     implementation(libs.androidx.datastore.preferences)
+}
+
+private fun DependencyHandlerScope.jsonSerializationDependencies() {
+    implementation(libs.kotlinx.serialization.json)
+}
+
+private fun DependencyHandlerScope.roomDependencies() {
+    implementation(libs.androidx.room.runtime)
+}
+
+fun DependencyHandlerScope.androidxRuntimeDependencies() {
+    implementation(libs.androidx.runtime)
 }

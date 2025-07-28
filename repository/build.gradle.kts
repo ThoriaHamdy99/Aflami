@@ -22,7 +22,11 @@ dependencies {
     modulesDependencies()
     roomDependencies()
     testDependencies()
-    otherDependencies()
+    jsonSerializationDependencies()
+    coroutinesDependencies()
+    kotlinExtensionsDependencies()
+    kotlinDateTimeDependencies()
+    appCompactDependencies()
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
@@ -45,19 +49,22 @@ private fun DependencyHandlerScope.testDependencies() {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
-private fun DependencyHandlerScope.otherDependencies() {
-    //kotlin extensions
-    implementation(libs.androidx.core.ktx)
-
-    //app compact
-    implementation(libs.androidx.appcompat)
-
-    //coroutines
-    implementation(libs.kotlinx.coroutines.core)
-
-    // date time
-    implementation(libs.kotlinx.datetime)
-
-    // json serialization
+private fun DependencyHandlerScope.jsonSerializationDependencies() {
     implementation(libs.kotlinx.serialization.json)
+}
+
+private fun DependencyHandlerScope.coroutinesDependencies() {
+    implementation(libs.kotlinx.coroutines.core)
+}
+
+private fun DependencyHandlerScope.kotlinExtensionsDependencies() {
+    implementation(libs.androidx.core.ktx)
+}
+
+private fun DependencyHandlerScope.kotlinDateTimeDependencies() {
+    implementation(libs.kotlinx.datetime)
+}
+
+private fun DependencyHandlerScope.appCompactDependencies() {
+    implementation(libs.androidx.appcompat)
 }

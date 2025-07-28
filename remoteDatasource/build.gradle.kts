@@ -40,7 +40,10 @@ dependencies {
     modulesDependencies()
     retrofitDependencies()
     unitTestDependencies()
-    otherDependencies()
+    kotlinExtensionsDependencies()
+    jsonSerializationDependencies()
+    coroutinesDependencies()
+    kotlinExtensionsDependencies()
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
@@ -63,13 +66,14 @@ private fun DependencyHandlerScope.unitTestDependencies() {
     testImplementation(kotlin("test"))
 }
 
-private fun DependencyHandlerScope.otherDependencies() {
-    //json serialization
+private fun DependencyHandlerScope.jsonSerializationDependencies() {
     implementation(libs.kotlinx.serialization.json)
+}
 
-    //coroutines
+private fun DependencyHandlerScope.coroutinesDependencies() {
     implementation(libs.kotlinx.coroutines.core)
+}
 
-    //kotlin extensions
+private fun DependencyHandlerScope.kotlinExtensionsDependencies() {
     implementation(libs.androidx.core.ktx)
 }

@@ -33,7 +33,11 @@ android {
 dependencies {
     modulesDependencies()
     coroutinesDependencies()
-    otherDependencies()
+    kotlinExtensionsDependencies()
+    appCompactDependencies()
+    lifeCycleDependencies()
+    dateTimeDependencies()
+    pagingDependencies()
     testDependencies()
 }
 
@@ -46,17 +50,22 @@ private fun DependencyHandlerScope.coroutinesDependencies() {
     implementation(libs.kotlinx.coroutines.android)
 }
 
-private fun DependencyHandlerScope.otherDependencies() {
-    //kotlin extensions
+private fun DependencyHandlerScope.kotlinExtensionsDependencies() {
     implementation(libs.androidx.core.ktx)
+}
 
-    //lifecycle
+private fun DependencyHandlerScope.appCompactDependencies() {
+    implementation(libs.androidx.appcompat)
+}
+
+private fun DependencyHandlerScope.lifeCycleDependencies() {
     implementation(libs.androidx.lifecycle.runtime.ktx)
+}
 
-    //datetime
+private fun DependencyHandlerScope.dateTimeDependencies() {
     implementation(libs.kotlinx.datetime)
-
-    // page 3
+}
+private fun DependencyHandlerScope.pagingDependencies() {
     implementation(libs.androidx.paging.runtime)
 }
 
