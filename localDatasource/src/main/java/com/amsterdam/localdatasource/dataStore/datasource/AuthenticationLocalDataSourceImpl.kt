@@ -2,8 +2,9 @@ package com.amsterdam.localdatasource.dataStore.datasource
 
 import com.amsterdam.domain.exceptions.UnauthorizedException
 import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
+import javax.inject.Inject
 
-class AuthenticationLocalDataSourceImpl(
+class AuthenticationLocalDataSourceImpl @Inject constructor(
     private val appPreferences: AppPreferences
 ): AuthenticationLocalSource {
     override suspend fun setSessionType(sessionType: String) {
