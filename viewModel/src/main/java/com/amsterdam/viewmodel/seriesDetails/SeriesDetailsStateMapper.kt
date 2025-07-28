@@ -23,7 +23,6 @@ class SeriesDetailsStateMapper(
             rating = movieDetailsStateMapper.ratingToRatingString(tvShow.rating),
             posterUrl = tvShow.posterUrl,
             title = tvShow.name,
-            categories = categories,
             airDate = tvShow.airDate.toString(),
             seasonCount = formatSeasonCount(seasons.size),
             originCountry = tvShow.originCountry,

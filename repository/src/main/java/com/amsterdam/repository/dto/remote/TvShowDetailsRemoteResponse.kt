@@ -1,6 +1,8 @@
 package com.amsterdam.repository.dto.remote
 
 import com.amsterdam.repository.BuildConfig
+import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
+import com.amsterdam.repository.dto.remote.review.ReviewsResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -21,6 +23,11 @@ data class TvShowDetailsRemoteResponse(
     @SerialName("vote_average") val voteAverage: Double,
     @SerialName("seasons") val seasons: List<SeasonDto> = emptyList(),
     @SerialName("number_of_seasons") val seasonCount: Int = 0,
+    @SerialName("production_companies") val productionCompanies: List<ProductionCompanyDto>,
+    @SerialName("reviews") val reviews: ReviewsResponse,
+    @SerialName("credits") val credits: RemoteCastAndCrewResponse,
+    @SerialName("similar") val similar: RemoteTvShowResponse,
+    @SerialName("images") val images: RemoteGalleryResponse,
 ) {
     val fullPosterPath: String?
         get() = posterPath?.let { BuildConfig.BASE_IMAGE_URL + it }

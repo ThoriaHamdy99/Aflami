@@ -19,6 +19,7 @@ class TvShowWithCategoryLocalMapper(
             popularity = dto.tvShow.popularity,
             seasonCount = dto.tvShow.seasonCount,
             originCountry = dto.tvShow.originCountry,
+            productionCompanies = emptyList()
         )
     }
 }

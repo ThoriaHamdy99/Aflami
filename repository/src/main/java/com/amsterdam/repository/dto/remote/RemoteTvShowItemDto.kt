@@ -22,6 +22,7 @@ data class RemoteTvShowItemDto(
     @SerialName("vote_count") val voteCount: Int,
     @SerialName("seasons") val seasons: List<SeasonDto> = emptyList(),
     @SerialName("number_of_seasons") val seasonCount: Int = 0,
+    @SerialName("production_companies") val productionCompanies: List<ProductionCompanyDto> = emptyList()
 ){
     val fullPosterPath: String?
         get() = posterPath?.let { BuildConfig.BASE_IMAGE_URL + it }

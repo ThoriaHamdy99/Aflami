@@ -7,7 +7,9 @@ import com.amsterdam.repository.mapper.shared.EntityMapper
 import com.amsterdam.repository.mapper.shared.mapCategoryIdToTvShowGenre
 import com.amsterdam.repository.utils.toSafeLocalDate
 
-class TvShowRemoteMapper() : EntityMapper<RemoteTvShowItemDto, TvShow> {
+class TvShowRemoteMapper(
+    private val productionCompanyMapper: ProductionCompanyRemoteMapper
+) : EntityMapper<RemoteTvShowItemDto, TvShow> {
     override fun toEntity(dto: RemoteTvShowItemDto): TvShow {
         return TvShow(
             id = dto.id,
@@ -20,6 +22,7 @@ class TvShowRemoteMapper() : EntityMapper<RemoteTvShowItemDto, TvShow> {
             popularity = dto.popularity,
             seasonCount = dto.seasonCount,
             originCountry = dto.originCountry.firstOrNull() ?: "",
+            productionCompanies = productionCompanyMapper.toEntityList(dto.productionCompanies)
         )
     }
 
