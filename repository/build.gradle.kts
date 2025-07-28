@@ -1,9 +1,3 @@
-import java.util.Properties
-
-val properties = Properties()
-properties.load(project.rootProject.file("local.properties").inputStream())
-val baseImageUrl: String = properties.getProperty("baseImageUrl") ?: ""
-
 plugins {
     alias(libs.plugins.aflami.custom.plugin)
     alias(libs.plugins.ksp)
@@ -20,12 +14,6 @@ android {
     defaultConfig {
         testInstrumentationRunnerArguments["runnerBuilder"] =
             "de.mannodermaus.junit5.AndroidJUnit5Builder"
-
-        buildConfigField(
-            "String",
-            "BASE_IMAGE_URL",
-            baseImageUrl
-        )
     }
 }
 

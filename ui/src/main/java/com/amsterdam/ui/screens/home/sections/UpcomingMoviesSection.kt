@@ -17,17 +17,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
-import com.amsterdam.designsystem.theme.AppTheme
-import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.ui.screens.home.sections.placeholder.upcomingMoviesSectionPlaceholder
-import com.amsterdam.viewmodel.home.HomeUiState.UpcomingMoviesSectionUiState
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.chip.Chip
-import com.amsterdam.ui.R
+import com.amsterdam.designsystem.theme.AppTheme
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.imageviewer.ui.SafeImageView
+import com.amsterdam.ui.R
 import com.amsterdam.ui.components.MovieCard
+import com.amsterdam.ui.screens.home.sections.placeholder.upcomingMoviesSectionPlaceholder
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreIcon
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
+import com.amsterdam.viewmodel.home.HomeUiState.UpcomingMoviesSectionUiState
 
 fun LazyListScope.upcomingMoviesSection(
     state: UpcomingMoviesSectionUiState,
@@ -36,37 +36,45 @@ fun LazyListScope.upcomingMoviesSection(
     modifier: Modifier = Modifier,
     isVisible: Boolean
 ) {
-    if (isVisible){
+    if (isVisible) {
         if (state.isLoading) {
             upcomingMoviesSectionPlaceholder()
         } else {
             stickyHeader {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .fillParentMaxWidth()
+                        .background(AppTheme.color.surface)
+                        .padding(top = 26.dp, bottom = 16.dp)
+                ) {
                     Text(
                         modifier = Modifier
                             .fillParentMaxWidth()
-                            .background(AppTheme.color.surface)
-                            .padding(start = 16.dp, end = 16.dp, top = 24.dp),
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                         text = stringResource(R.string.upcoming),
                         style = AppTheme.textStyle.title.medium,
                         color = AppTheme.color.title,
                         textAlign = TextAlign.Start,
                     )
+                }
+            }
 
-                    LazyRow(
-                        modifier = Modifier.background(AppTheme.color.surface),
-                        contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(state.movieGenres) { genreItem ->
-                            val genre = genreItem.selectableMovieGenre.item
-                            Chip(
-                                icon = getMovieGenreIcon(genre),
-                                label = getMovieGenreLabel(genre),
-                                isSelected = genreItem.selectableMovieGenre.isSelected,
-                                onClick = { onChangeMovieGenre(genre) },
-                            )
-                        }
+            item {
+                LazyRow(
+                    modifier = Modifier
+                        .fillParentMaxWidth()
+                        .background(AppTheme.color.surface),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(state.movieGenres) { genreItem ->
+                        val genre = genreItem.selectableMovieGenre.item
+                        Chip(
+                            icon = getMovieGenreIcon(genre),
+                            label = getMovieGenreLabel(genre),
+                            isSelected = genreItem.selectableMovieGenre.isSelected,
+                            onClick = { onChangeMovieGenre(genre) },
+                        )
                     }
                 }
             }
@@ -100,16 +108,16 @@ fun LazyListScope.upcomingMoviesSection(
             } else {
                 item {
                     Text(
-                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                         text = stringResource(R.string.no_upcoming_movies_found_for_your_selection),
                         style = AppTheme.textStyle.label.medium,
                         color = AppTheme.color.body,
                         textAlign = TextAlign.Center
                     )
-
                 }
             }
         }
     }
-
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -123,8 +124,11 @@ private fun HomeScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(nestedScrollConnection)
+            .navigationBarsPadding()
     ) {
-        AnimatedSectionVisibility(visible = state.popularMoviesSectionUiState.movies.isNotEmpty()) {
+        AnimatedSectionVisibility(
+            visible = state.popularMoviesSectionUiState.movies.isNotEmpty() && remember { derivedStateOf { lazyListState.firstVisibleItemIndex } }.value == 0
+        ) {
             BlurredMoviePoster(
                 posterUrl = state.popularMoviesSectionUiState.movies[pagerState.currentPage % state.popularMoviesSectionUiState.movies.size].posterUrl,
                 modifier = Modifier.offset { IntOffset(x = 0, y = blurOffsetY.roundToInt()) }
@@ -136,7 +140,7 @@ private fun HomeScreenContent(
             contentPadding = PaddingValues(bottom = 100.dp),
             state = lazyListState,
         ) {
-            item {
+            stickyHeader {
                 HomeAppBar(
                     modifier = Modifier
                         .background(appBarColor)
@@ -167,7 +171,8 @@ private fun HomeScreenContent(
                 isVisible = state.error == null
             )
 
-            item { MoodPickerSection(state, interactionListener) }
+            item { MoodPickerSection(state, interactionListener,modifier=Modifier.padding(bottom=24.dp)) }
+
 
             upcomingMoviesSection(
                 state = state.upcomingMoviesSectionUiState,

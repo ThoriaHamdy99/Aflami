@@ -17,7 +17,8 @@ class HomeUiStateMapper {
             id = movie.id,
             name = movie.name,
             rating = String.format("%.1f", movie.rating),
-            posterUrl = movie.posterUrl
+            posterUrl = movie.posterUrl,
+            category = movie.categories.map { it.name }
         )
     }
 
