@@ -4,9 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import com.amsterdam.localdatasource.dataStore.appPreferences.AppDataStorePreferences
-import com.amsterdam.localdatasource.dataStore.datasource.AppPreferences
-import com.amsterdam.localdatasource.dataStore.datasource.AuthenticationLocalDataSourceImpl
+import com.amsterdam.localdatasource.dataStore.AuthenticationLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
 import com.amsterdam.localdatasource.roomDataBase.datasource.CategoryLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.CountryLocalDataSourceImpl
@@ -33,8 +31,6 @@ val localDataSourceModule = module {
             produceFile = { androidApplication().dataStoreFile("app.preferences_pb") }
         )
     }
-
-    singleOf(::AppDataStorePreferences) bind AppPreferences::class
 
     // Database instance
     single { AflamiDatabase.getInstance(androidApplication()) }
