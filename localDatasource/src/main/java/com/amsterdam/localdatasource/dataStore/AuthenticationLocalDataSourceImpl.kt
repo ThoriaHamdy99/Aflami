@@ -11,8 +11,9 @@ import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class AuthenticationLocalDataSourceImpl(
+class AuthenticationLocalDataSourceImpl @Inject constructor(
     private val datastore: DataStore<Preferences>,
 ) : AuthenticationLocalSource {
     private object PreferenceKeys {

@@ -10,8 +10,9 @@ import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsResponse
+import javax.inject.Inject
 
-class MovieRemoteDataSourceImpl(
+class MovieRemoteDataSourceImpl @Inject constructor(
     private val movieApiService: MovieApiService
 ) : MovieRemoteSource {
 
@@ -72,9 +73,9 @@ class MovieRemoteDataSourceImpl(
     override suspend fun getUpcomingMovies(): RemoteMovieResponse {
         return responseCall { movieApiService.getUpcomingMovies() }
     }
-  override suspend fun getTopRatedMovies(): RemoteMovieResponse {
-      return responseCall { movieApiService.getTopRatedMovies() }
-  }
+    override suspend fun getTopRatedMovies(): RemoteMovieResponse {
+        return responseCall { movieApiService.getTopRatedMovies() }
+    }
     override suspend fun getMoviesByGenreIds(genresIds: List<Long>): RemoteMovieResponse {
         return responseCall { movieApiService.getMoviesByGenreIds(genresIds) }
     }
