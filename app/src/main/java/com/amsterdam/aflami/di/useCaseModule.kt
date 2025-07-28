@@ -9,16 +9,23 @@ import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.authentication.LoginAsGuestUseCase
 import com.amsterdam.domain.useCase.authentication.LoginWithPasswordUseCase
-import com.amsterdam.domain.useCase.common.AddWatchHistoryUseCase
+import com.amsterdam.domain.useCase.common.AddMovieWatchHistoryUseCase
+import com.amsterdam.domain.useCase.common.AddTvShowWatchHistoryUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetMovieCastUseCase
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
+import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetPopularTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
@@ -48,6 +55,14 @@ object UseCaseModule {
         LoginWithPasswordUseCase(repo)
 
     @Provides
+    fun provideAddMovieWatchHistoryUseCase(watchHistoryRepository: WatchHistoryRepository): AddMovieWatchHistoryUseCase =
+        AddMovieWatchHistoryUseCase(watchHistoryRepository)
+
+    @Provides
+    fun provideAddTvShowWatchHistoryUseCase(watchHistoryRepository: WatchHistoryRepository): AddTvShowWatchHistoryUseCase =
+        AddTvShowWatchHistoryUseCase(watchHistoryRepository)
+
+    @Provides
     fun provideGetAndFilterMoviesByKeywordUseCase(repo: MovieRepository): GetAndFilterMoviesByKeywordUseCase =
         GetAndFilterMoviesByKeywordUseCase(repo)
 
@@ -58,10 +73,6 @@ object UseCaseModule {
     @Provides
     fun provideGetMovieCastUseCase(repo: MovieRepository): GetMovieCastUseCase =
         GetMovieCastUseCase(repo)
-
-    @Provides
-    fun provideGetMovieDetailsUseCase(repo: MovieRepository, addWatchHistoryUseCase: AddWatchHistoryUseCase): GetMovieDetailsUseCase =
-        GetMovieDetailsUseCase(repo, addWatchHistoryUseCase)
 
     @Provides
     fun provideGetMoviesByActorUseCase(repo: MovieRepository): GetMoviesByActorUseCase =
@@ -88,8 +99,11 @@ object UseCaseModule {
         GetEpisodesBySeasonNumberUseCase(repo)
 
     @Provides
-    fun provideGetTvShowDetailsUseCase(repo: TvShowRepository): GetTvShowDetailsUseCase =
-        GetTvShowDetailsUseCase(repo)
+    fun provideGetTvShowDetailsUseCase(
+        repo: TvShowRepository,
+        addTvShowWatchHistoryUseCase: AddTvShowWatchHistoryUseCase
+    ): GetTvShowDetailsUseCase =
+        GetTvShowDetailsUseCase(repo, addTvShowWatchHistoryUseCase)
 
     @Provides
     fun provideGetUpcomingMoviesUseCase(repo: MovieRepository): GetUpcomingMoviesUseCase =
@@ -104,14 +118,68 @@ object UseCaseModule {
         GetContinueWatchingMoviesUseCase(repo)
 
     @Provides
-    fun provideAddWatchHistoryUseCase(repo: WatchHistoryRepository): AddWatchHistoryUseCase =
-        AddWatchHistoryUseCase(repo)
-
-    @Provides
     fun provideGetTvShowCastUseCase(tvShowRepository: TvShowRepository): GetTvShowCastUseCase =
         GetTvShowCastUseCase(tvShowRepository)
 
     @Provides
     fun provideGetMoviesByMoodUseCase(repo: MovieRepository): GetMoviesByMoodUseCase =
         GetMoviesByMoodUseCase(repo)
+
+    @Provides
+    fun provideGetContinueWatchingTvShowsUseCase(watchHistoryRepository: WatchHistoryRepository): GetContinueWatchingTvShowsUseCase =
+        GetContinueWatchingTvShowsUseCase(watchHistoryRepository)
+
+    @Provides
+    fun provideGetTopRatedTvShowsUseCase(
+        tvShowRepository: TvShowRepository
+    ): GetTopRatedTvShowsUseCase = GetTopRatedTvShowsUseCase(tvShowRepository)
+
+    @Provides
+    fun provideGetPopularTvShowsUseCase(
+        tvShowRepository: TvShowRepository
+    ): GetPopularTvShowsUseCase = GetPopularTvShowsUseCase(tvShowRepository)
+
+    @Provides
+    fun provideGetHomeScreenDataUseCase(
+        getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
+        getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase,
+        getPopularMoviesUseCase: GetPopularMoviesUseCase,
+        getPopularTvShowsUseCase: GetPopularTvShowsUseCase,
+        getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
+    ): GetHomeScreenDataUseCase =
+        GetHomeScreenDataUseCase(
+            getTopRatedMoviesUseCase,
+            getTopRatedTvShowsUseCase,
+            getPopularMoviesUseCase,
+            getPopularTvShowsUseCase,
+            getUpcomingMoviesUseCase
+        )
+
+    @Provides
+    fun provideGetContinueWatchingScreenDataUseCase(
+        getContinueWatchingMoviesUseCase: GetContinueWatchingMoviesUseCase,
+        getContinueWatchingTvShowsUseCase: GetContinueWatchingTvShowsUseCase,
+    ) = GetContinueWatchingScreenDataUseCase(
+        getContinueWatchingMoviesUseCase,
+        getContinueWatchingTvShowsUseCase
+    )
+
+    @Provides
+    fun provideGetMovieDetailsUseCase(
+        movieRepository: MovieRepository,
+        addWatchHistoryUseCase: AddMovieWatchHistoryUseCase
+    ) = GetMovieDetailsUseCase(
+        movieRepository,
+        addWatchHistoryUseCase
+    )
+
+    @Provides
+    fun provideGetTopRatedScreenDataUseCase(
+        getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
+        getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase
+    ) = GetTopRatedScreenDataUseCase(
+        getTopRatedMoviesUseCase,
+        getTopRatedTvShowsUseCase
+    )
+
 }

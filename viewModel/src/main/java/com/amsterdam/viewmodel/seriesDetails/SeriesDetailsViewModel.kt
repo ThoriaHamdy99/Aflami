@@ -1,6 +1,5 @@
 package com.amsterdam.viewmodel.seriesDetails
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
