@@ -1,6 +1,5 @@
 package com.amsterdam.repository.repository
 
-import android.util.Log
 import com.amsterdam.domain.models.MovieDetails
 import com.amsterdam.domain.repository.CategoryRepository
 import com.amsterdam.domain.repository.MovieRepository
@@ -17,12 +16,8 @@ import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import com.amsterdam.repository.mapper.local.MovieGenreLocalMapper
 import com.amsterdam.repository.mapper.local.MovieWithCategoriesLocalMapper
 import com.amsterdam.repository.mapper.remote.CastRemoteMapper
-import com.amsterdam.repository.mapper.remote.GalleryRemoteMapper
 import com.amsterdam.repository.mapper.remote.MovieDetailRemoteMapper
 import com.amsterdam.repository.mapper.remote.MovieRemoteMapper
-import com.amsterdam.repository.mapper.remote.PostersRemoteMapper
-import com.amsterdam.repository.mapper.remote.ProductionCompanyRemoteMapper
-import com.amsterdam.repository.mapper.remote.ReviewRemoteMapper
 import com.amsterdam.repository.mapper.remoteToLocal.MovieGenreIdsRemoteLocalMapper
 import com.amsterdam.repository.mapper.remoteToLocal.MovieRemoteLocalMapper
 import com.amsterdam.repository.utils.RecentSearchHandler

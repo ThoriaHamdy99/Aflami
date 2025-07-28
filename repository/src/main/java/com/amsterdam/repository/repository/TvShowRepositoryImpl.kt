@@ -3,10 +3,7 @@ package com.amsterdam.repository.repository
 import com.amsterdam.domain.repository.CategoryRepository
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
-import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Episode
-import com.amsterdam.entity.ProductionCompany
-import com.amsterdam.entity.Review
 import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
 import com.amsterdam.repository.datasource.local.TvShowLocalSource
@@ -16,11 +13,7 @@ import com.amsterdam.repository.dto.remote.RemoteCategoryDto
 import com.amsterdam.repository.dto.remote.RemoteTvShowItemDto
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.mapper.local.TvShowWithCategoryLocalMapper
-import com.amsterdam.repository.mapper.remote.CastRemoteMapper
 import com.amsterdam.repository.mapper.remote.EpisodeRemoteMapper
-import com.amsterdam.repository.mapper.remote.GalleryRemoteMapper
-import com.amsterdam.repository.mapper.remote.ProductionCompanyRemoteMapper
-import com.amsterdam.repository.mapper.remote.ReviewRemoteMapper
 import com.amsterdam.repository.mapper.remote.SeasonRemoteMapper
 import com.amsterdam.repository.mapper.remote.TvShowDetailsRemoteMapper
 import com.amsterdam.repository.mapper.remote.TvShowRemoteMapper

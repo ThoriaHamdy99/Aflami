@@ -19,13 +19,10 @@ suspend inline fun <reified T> responseCall(crossinline execute: suspend () -> T
     try {
         execute()
     } catch (e: HttpException) {
-        Log.e("bk", "responseCall: ${e}")
         throw ServerErrorException()
     } catch (e: ConnectException) {
         throw NoInternetException()
     } catch (e: SerializationException) {
-        Log.e("bk", "responseCall: ${e}")
-
         throw ServerErrorException()
     } catch (e: Exception) {
         throw NetworkException()

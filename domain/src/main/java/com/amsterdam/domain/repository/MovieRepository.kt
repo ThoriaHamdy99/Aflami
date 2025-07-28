@@ -4,8 +4,6 @@ import com.amsterdam.domain.models.MovieDetails
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.ProductionCompany
-import com.amsterdam.entity.Review
 import com.amsterdam.entity.category.MovieGenre
 
 interface MovieRepository {
