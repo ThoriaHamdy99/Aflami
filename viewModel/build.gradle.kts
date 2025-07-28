@@ -61,4 +61,6 @@ dependencies {
     //truth
     testImplementation(libs.truth)
     testImplementation(kotlin("test"))
+    testImplementation("app.cash.turbine:turbine:1.1.0")
+
 }
