@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.aflami.custom.plugin)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -12,7 +14,6 @@ dependencies {
     modulesDependencies()
     navigationDependencies()
     lifeCycleDependencies()
-    koinAndroidXDependencies()
     sifrDependencies()
     pagingDependencies()
     kotlinExtensionsDependencies()
@@ -20,6 +21,7 @@ dependencies {
     previewDependencies()
     composeDependencies()
     uiGraphicsDependencies()
+    hiltDependencies()
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
@@ -35,10 +37,6 @@ private fun DependencyHandlerScope.navigationDependencies() {
 
 private fun DependencyHandlerScope.lifeCycleDependencies() {
     implementation(libs.androidx.lifecycle.runtime.ktx)
-}
-
-private fun DependencyHandlerScope.koinAndroidXDependencies() {
-    implementation(libs.koin.androidx.compose)
 }
 
 private fun DependencyHandlerScope.sifrDependencies() {
@@ -70,4 +68,10 @@ private fun DependencyHandlerScope.composeDependencies() {
 private fun DependencyHandlerScope.uiGraphicsDependencies() {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
+}
+
+private fun DependencyHandlerScope.hiltDependencies() {
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation (libs.androidx.hilt.navigation.compose)
 }

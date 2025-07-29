@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.google.service)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.pref)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -51,11 +53,11 @@ android {
 dependencies {
     appModulesDependencies()
     firebaseDependencies()
-    koinDependencies()
     datastoreDependencies()
     jsonSerializationDependencies()
     roomDependencies()
     androidxRuntimeDependencies()
+    hiltDependencies()
 }
 
 private fun DependencyHandlerScope.appModulesDependencies() {
@@ -74,12 +76,6 @@ private fun DependencyHandlerScope.firebaseDependencies() {
     implementation(libs.firebase.perf)
 }
 
-private fun DependencyHandlerScope.koinDependencies() {
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.android)
-    implementation(libs.koin.core)
-}
-
 private fun DependencyHandlerScope.datastoreDependencies() {
     implementation(libs.androidx.datastore.preferences)
 }
@@ -94,4 +90,9 @@ private fun DependencyHandlerScope.roomDependencies() {
 
 fun DependencyHandlerScope.androidxRuntimeDependencies() {
     implementation(libs.androidx.runtime)
+}
+
+fun DependencyHandlerScope.hiltDependencies() {
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 }

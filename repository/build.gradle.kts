@@ -27,6 +27,7 @@ dependencies {
     kotlinExtensionsDependencies()
     kotlinDateTimeDependencies()
     appCompactDependencies()
+    injectDependencies()
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
@@ -67,4 +68,8 @@ private fun DependencyHandlerScope.kotlinDateTimeDependencies() {
 
 private fun DependencyHandlerScope.appCompactDependencies() {
     implementation(libs.androidx.appcompat)
+}
+
+private fun DependencyHandlerScope.injectDependencies() {
+    implementation(libs.javax.inject)
 }

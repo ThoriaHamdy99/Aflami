@@ -67,4 +67,6 @@ private fun DependencyHandlerScope.unitTestDependencies() {
 
 private fun DependencyHandlerScope.datastoreDependencies() {
     implementation(libs.androidx.datastore.preferences)
+
+    implementation(libs.javax.inject)
 }

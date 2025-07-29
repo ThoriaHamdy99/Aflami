@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.aflami.custom.plugin)
     alias(libs.plugins.android.junit5)
     alias(libs.plugins.kover)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -39,6 +40,7 @@ dependencies {
     dateTimeDependencies()
     pagingDependencies()
     testDependencies()
+    hiltDependencies()
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
@@ -75,4 +77,10 @@ private fun DependencyHandlerScope.testDependencies() {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.truth)
     testImplementation(kotlin("test"))
+    testImplementation("app.cash.turbine:turbine:1.1.0")
+}
+
+private fun DependencyHandlerScope.hiltDependencies() {
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 }

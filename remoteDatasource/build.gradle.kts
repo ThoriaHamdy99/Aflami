@@ -44,6 +44,7 @@ dependencies {
     jsonSerializationDependencies()
     coroutinesDependencies()
     kotlinExtensionsDependencies()
+    injectDependencies()
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
@@ -76,4 +77,7 @@ private fun DependencyHandlerScope.coroutinesDependencies() {
 
 private fun DependencyHandlerScope.kotlinExtensionsDependencies() {
     implementation(libs.androidx.core.ktx)
+}
+private fun DependencyHandlerScope.injectDependencies() {
+    implementation(libs.javax.inject)
 }
