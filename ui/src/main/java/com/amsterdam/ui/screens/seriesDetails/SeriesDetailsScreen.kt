@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -244,35 +245,38 @@ fun SeriesDetailsContent(
                                 .fillMaxWidth()
                                 .offset(y = (-20).dp)
                         ) {
-                            Column(
+
+                            Text(
+                                text = state.title,
+                                style = AppTheme.textStyle.title.large,
+                                color = AppTheme.color.title,
                                 modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 12.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(horizontal = 16.dp)
                             ) {
-                                Text(
-                                    text = state.title,
-                                    style = AppTheme.textStyle.title.large,
-                                    color = AppTheme.color.title
-                                )
-                                LazyRow(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 12.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    items(state.categories) {
-                                        CategoryChip(categoryName = getTvShowGenreLabel(it))
-                                    }
+                                items(state.categories) {
+                                    CategoryChip(categoryName = getTvShowGenreLabel(it))
                                 }
-                                SeriesInfoSection(
-                                    modifier = Modifier.padding(top = 8.dp),
-                                    airDate = state.airDate,
-                                    seasonCount = state.seasonCount,
-                                    originCountry = state.originCountry
-                                )
-                                DescriptionSection(
-                                    modifier = Modifier.padding(top = 24.dp),
-                                    description = state.description
-                                )
                             }
+                            SeriesInfoSection(
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .padding(horizontal = 16.dp),
+                                airDate = state.airDate,
+                                seasonCount = state.seasonCount,
+                                originCountry = state.originCountry,
+                            )
+                            DescriptionSection(
+                                modifier = Modifier
+                                    .padding(top = 24.dp)
+                                    .padding(horizontal = 24.dp),
+                                description = state.description
+                            )
                             CastSection(
                                 modifier = Modifier.padding(top = 24.dp),
                                 actors = state.cast,

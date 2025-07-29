@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -246,36 +247,38 @@ fun MovieContent(
                                 .fillMaxWidth()
                                 .offset(y = (-20).dp),
                     ) {
-                        Column(
+                        Text(
+                            text = state.movieTitle,
+                            style = AppTheme.textStyle.title.large,
+                            color = AppTheme.color.title,
                             modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        LazyRow(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp)
                         ) {
-                            Text(
-                                text = state.movieTitle,
-                                style = AppTheme.textStyle.title.large,
-                                color = AppTheme.color.title,
-                            )
-                            LazyRow(
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 12.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                items(state.categories) {
-                                    CategoryChip(categoryName = getMovieGenreLabel(it))
-                                }
+                            items(state.categories) {
+                                CategoryChip(categoryName = getMovieGenreLabel(it))
                             }
-                            MovieInfoSection(
-                                modifier = Modifier.padding(top = 8.dp),
-                                releaseDate = state.releaseDate,
-                                movieLength = state.movieLength,
-                                originCountry = state.originCountry,
-                            )
-                            DescriptionSection(
-                                modifier = Modifier.padding(top = 24.dp),
-                                description = state.description,
-                            )
                         }
+                        MovieInfoSection(
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .padding(horizontal = 16.dp),
+                            releaseDate = state.releaseDate,
+                            movieLength = state.movieLength,
+                            originCountry = state.originCountry,
+                        )
+                        DescriptionSection(
+                            modifier = Modifier
+                                .padding(top = 24.dp)
+                                .padding(horizontal = 16.dp),
+                            description = state.description,
+                        )
                         CastSection(
                             modifier = Modifier.padding(top = 24.dp),
                             actors = state.actors.take(10),
