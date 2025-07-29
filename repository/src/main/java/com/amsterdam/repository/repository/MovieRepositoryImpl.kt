@@ -2,6 +2,7 @@ package com.amsterdam.repository.repository
 
 import com.amsterdam.domain.repository.CategoryRepository
 import com.amsterdam.domain.repository.MovieRepository
+import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie
@@ -18,6 +19,7 @@ import com.amsterdam.repository.mapper.local.MovieGenreLocalMapper
 import com.amsterdam.repository.mapper.local.MovieWithCategoriesLocalMapper
 import com.amsterdam.repository.mapper.remote.CastRemoteMapper
 import com.amsterdam.repository.mapper.remote.GalleryRemoteMapper
+import com.amsterdam.repository.mapper.remote.MovieDetailRemoteMapper
 import com.amsterdam.repository.mapper.remote.MovieRemoteMapper
 import com.amsterdam.repository.mapper.remote.PostersRemoteMapper
 import com.amsterdam.repository.mapper.remote.ProductionCompanyRemoteMapper
@@ -103,12 +105,13 @@ class MovieRepositoryImpl @Inject constructor(
         return castRemoteMapper.toEntityList(movieRemoteDataSource.getCastByMovieId(movieId).cast)
     }
 
-    override suspend fun getMovieDetailsById(movieId: Long): MovieDetails {
+    override suspend fun getMovieDetailsById(movieId: Long): GetMovieDetailsUseCase.MovieDetails {
         return movieDetailRemoteMapper.toEntity(
             movieRemoteDataSource.getMovieDetailsById(movieId)
-                .also { incrementUserInterestByMovie(it.genres)
+                .also {
+                    incrementUserInterestByMovie(it.genres)
                     cacheWatchedMovie(movieDetailRemoteMapper.mapMovieDetailsToMovieItemDto(it))
-
+                }
         )
     }
 
@@ -136,7 +139,11 @@ class MovieRepositoryImpl @Inject constructor(
         page: Int,
         moviesPerPage: Int
     ): List<Movie>? {
-        return recentSearchHandler.isRecentSearchExpired(keyword, searchType, getDeviceLanguage())
+        return recentSearchHandler.isRecentSearchExpired(
+            keyword,
+            searchType,
+            getDeviceLanguage()
+        )
             .takeIf { isRecentSearchExpired -> !isRecentSearchExpired }
             ?.let { getMoviesFromLocal(keyword, searchType, page, moviesPerPage) }
             ?.takeIf { movies -> movies.isNotEmpty() }
@@ -232,7 +239,10 @@ class MovieRepositoryImpl @Inject constructor(
 
     private suspend fun onSaveMovieWithCategories(remoteMovie: RemoteMovieItemDto) {
         movieLocalSource.addMovieWithCategories(
-            movie = movieRemoteLocalMapper.toLocal(remoteMovie, listOf(getDeviceLanguage())),
+            movie = movieRemoteLocalMapper.toLocal(
+                remoteMovie,
+                listOf(getDeviceLanguage())
+            ),
             categories = movieGenreIdsRemoteLocalMapper.toLocalList(
                 remoteMovie.genreIds,
                 listOf(getDeviceLanguage())
@@ -243,7 +253,11 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>): List<Movie> {
         return movieGenreLocalMapper.toDtoList(movieGenres).let { genresIds ->
-            movieRemoteMapper.toEntityList(movieRemoteDataSource.getMoviesByGenreIds(genresIds).results)
+            movieRemoteMapper.toEntityList(
+                movieRemoteDataSource.getMoviesByGenreIds(
+                    genresIds
+                ).results
+            )
         }
     }
 
@@ -251,5 +265,6 @@ class MovieRepositoryImpl @Inject constructor(
         remoteCategories.map(RemoteCategoryDto::id)
             .map { movieLocalSource.incrementGenreInterest(it.toLong()) }
     }
+
 
 }

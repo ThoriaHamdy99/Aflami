@@ -4,6 +4,7 @@ import com.amsterdam.remotedatasource.api.TvShowsApiService
 import com.amsterdam.remotedatasource.serviceProvider.TvShowsServiceProvider
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.dto.remote.EpisodeResponse
+import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
@@ -19,6 +20,10 @@ class TvShowsServiceProviderImpl @Inject constructor(
 
     override suspend fun getTopRatedTvShows(): RemoteTvShowResponse {
         return responseCall { tvShowsApiService.getTopRatedTvShows() }
+    }
+
+    override suspend fun getTvShowCast(tvShowId: Long): RemoteCastAndCrewResponse {
+        return responseCall { tvShowsApiService.getTvShowCast(tvShowId) }
     }
 
     override suspend fun getTvShowsByKeyword(keyword: String, page: Int): RemoteTvShowResponse {

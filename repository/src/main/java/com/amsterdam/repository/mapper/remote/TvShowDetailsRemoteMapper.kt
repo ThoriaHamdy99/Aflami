@@ -8,7 +8,7 @@ import com.amsterdam.repository.mapper.shared.mapCategoryIdToTvShowGenre
 import com.amsterdam.repository.utils.toSafeLocalDate
 import javax.inject.Inject
 
-class TvShowDetailsRemoteMapper @Inject(
+class TvShowDetailsRemoteMapper @Inject constructor(
     private val productionCompanyMapper: ProductionCompanyRemoteMapper,
     private val castRemoteMapper: CastRemoteMapper,
     private val reviewRemoteMapper: ReviewRemoteMapper,

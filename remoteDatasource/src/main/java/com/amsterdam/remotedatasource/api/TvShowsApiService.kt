@@ -1,6 +1,7 @@
 package com.amsterdam.remotedatasource.api
 
 import com.amsterdam.repository.dto.remote.EpisodeResponse
+import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import retrofit2.http.GET
@@ -20,6 +21,11 @@ interface TvShowsApiService {
         @Query(QUERY_KEY) keyword: String,
         @Query(PAGE_KEY) page: Int
     ): RemoteTvShowResponse
+
+    @GET(TV_SHOW_CREDITS_ENDPOINT)
+    suspend fun getTvShowCast(
+        @Path("tvShowId") tvShowId: Long
+    ): RemoteCastAndCrewResponse
 
     @GET(TV_SHOW_DETAILS_ENDPOINT)
     suspend fun getTvShowDetailsById(
@@ -42,6 +48,7 @@ interface TvShowsApiService {
         private const val SEARCH_TV_URL = "search/tv"
         private const val QUERY_KEY = "query"
         private const val PAGE_KEY = "page"
+        private const val TV_SHOW_CREDITS_ENDPOINT = "tv/{tvShowId}/credits"
         private const val TV_SHOW_DETAILS_ENDPOINT = "tv/{tvShowId}"
         private const val TV_SHOW_DETAILS_APPEND_PARAMETERS = "credits,similar,reviews,images"
         private const val TV_SHOW_EPISODES_ENDPOINT = "tv/{tvShowId}/season/{seasonNumber}"

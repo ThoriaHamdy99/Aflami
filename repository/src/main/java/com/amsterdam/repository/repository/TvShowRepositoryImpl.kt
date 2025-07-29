@@ -3,6 +3,7 @@ package com.amsterdam.repository.repository
 import com.amsterdam.domain.repository.CategoryRepository
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
+import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Episode
 import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
@@ -14,6 +15,7 @@ import com.amsterdam.repository.dto.remote.RemoteTvShowItemDto
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.mapper.local.TvShowWithCategoryLocalMapper
+import com.amsterdam.repository.mapper.remote.CastRemoteMapper
 import com.amsterdam.repository.mapper.remote.EpisodeRemoteMapper
 import com.amsterdam.repository.mapper.remote.SeasonRemoteMapper
 import com.amsterdam.repository.mapper.remote.TvShowDetailsRemoteMapper
@@ -37,8 +39,21 @@ class TvShowRepositoryImpl @Inject constructor(
     private val tvShowWithCategoryLocalMapper: TvShowWithCategoryLocalMapper,
     private val tvShowRemoteLocalMapper: TvShowRemoteLocalMapper,
     private val tvShowRemoteDetailsLocalMapper: TvShowRemoteDetailsLocalMapper,
-    private val tvShowDetailsRemoteMapper: TvShowDetailsRemoteMapper
+    private val tvShowDetailsRemoteMapper: TvShowDetailsRemoteMapper,
+    private val castRemoteMapper: CastRemoteMapper,
 ) : TvShowRepository {
+    override suspend fun getPopularTvShows(): List<TvShow> {
+        return tvRemoteMapper.toEntityList(remoteTvDataSource.getPopularTvShows().results)
+    }
+
+    override suspend fun getTopRatedTvShows(): List<TvShow> {
+        return tvRemoteMapper.toEntityList(remoteTvDataSource.getTopRatedTvShows().results)
+    }
+
+    override suspend fun getTvShowCast(tvShowId: Long): List<Actor> {
+        return remoteTvDataSource.getTvShowCast(tvShowId).cast.map { castRemoteMapper.toEntity(it) }
+    }
+
     override suspend fun getTvShowByKeyword(
         keyword: String,
         page: Int,

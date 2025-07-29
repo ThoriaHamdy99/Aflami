@@ -4,8 +4,9 @@ import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.mapper.shared.EntityMapper
+import javax.inject.Inject
 
-class MovieDetailRemoteMapper(
+class MovieDetailRemoteMapper @Inject constructor(
     private val movieRemoteMapper: MovieRemoteMapper,
     private val reviewRemoteMapper: ReviewRemoteMapper,
     private val castRemoteMapper: CastRemoteMapper,
