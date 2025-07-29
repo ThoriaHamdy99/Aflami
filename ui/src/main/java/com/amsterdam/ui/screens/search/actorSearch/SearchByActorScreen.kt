@@ -168,8 +168,8 @@ private fun SearchByActorContent(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(vertical = 8.dp)
                     .verticalScroll(rememberScrollState())
+                    .padding(vertical = 8.dp)
             ) {
                 CenterOfScreenContainer(headerHeight) {
                     when {
