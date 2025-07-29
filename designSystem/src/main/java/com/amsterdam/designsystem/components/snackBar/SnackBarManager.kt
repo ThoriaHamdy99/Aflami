@@ -16,6 +16,7 @@ object SnackBarManager {
         status: SnackBarStatus,
         duration: Long = 3000L
     ) {
+        if (message.isEmpty()) return
         val snackBarData = SnackBarData(message, status, duration)
         _snackBarFlow.tryEmit(snackBarData)
     }
