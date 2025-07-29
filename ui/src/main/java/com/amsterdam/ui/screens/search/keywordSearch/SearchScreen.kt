@@ -90,13 +90,17 @@ internal fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
         viewModel.effect.collectLatest { effect ->
             effect?.let {
                 when (effect) {
-                    SearchUiEffect.NavigateBack -> navController.popBackStack()
+                    SearchUiEffect.NavigateBack -> navController.popBackStack(
+                        route = Route.Tab.Home,
+                        inclusive = false,
+                    )
                     SearchUiEffect.NavigateToActorSearch -> navController.safeNavigate(Route.SearchByActor)
                     SearchUiEffect.NavigateToWorldSearch -> navController.safeNavigate(Route.SearchByCountry)
                     is SearchUiEffect.NavigateToMovieDetails -> {
                         viewModel.onSaveSearchHistory()
                         navController.safeNavigate(MovieDetails(effect.movieId))
                     }
+
                     is SearchUiEffect.NavigateToTvShowDetails -> {
                         viewModel.onSaveSearchHistory()
                         navController.navigate(SeriesDetails(effect.tvShowId))
@@ -301,7 +305,7 @@ private fun SuccessMediaItems(
                         movieYear = mediaItem.yearOfRelease,
                         movieTitle = mediaItem.name,
                         movieRating = mediaItem.rate,
-                        onClick = {onTvShowClicked(mediaItem.id)}
+                        onClick = { onTvShowClicked(mediaItem.id) }
                     )
                 }
             }
@@ -330,7 +334,7 @@ private fun getItemKey(
 ): String {
     val item = selectedItems[index]
     val id = if (selectedTabOption == TabOption.MOVIES) (item as MovieItemUiState).id
-             else (item as TvShowItemUiState).id
+    else (item as TvShowItemUiState).id
     return "${id}-${index}"
 }
 
