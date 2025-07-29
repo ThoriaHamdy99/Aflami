@@ -60,6 +60,7 @@ fun MoodPickerCard(
                                 AppTheme.color.yellowAccent,
                             ),
                     ),
+                    alpha = 0.7f,
                 )
                 .border(1.dp, AppTheme.color.stroke, RoundedCornerShape(24.dp)),
     ) {
