@@ -1,6 +1,7 @@
 package com.amsterdam.remotedatasource.datasource
 
-import com.amsterdam.remotedatasource.serviceProvider.MovieServiceProvider
+import com.amsterdam.remotedatasource.api.MovieApiService
+import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
 import com.amsterdam.repository.dto.remote.RemoteActorSearchResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
@@ -9,51 +10,51 @@ import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import javax.inject.Inject
 
 class MovieRemoteDataSourceImpl @Inject constructor(
-    private val movieServiceProvider: MovieServiceProvider
+    private val movieApiService: MovieApiService
 ) : MovieRemoteSource {
 
     override suspend fun getMoviesByKeyword(keyword: String, page: Int): RemoteMovieResponse {
-        return movieServiceProvider.getMoviesByKeyword(keyword, page)
+        return responseCall { movieApiService.getMoviesByKeyword(keyword, page) }
     }
 
     override suspend fun getMoviesByActorName(name: String, page: Int): RemoteMovieResponse {
-        val actorsByName = getActorIdByName(name, page)
+        val actorId = getActorIdByName(name, page)
             .actors
             .joinToString(separator = "|") { it.id.toString() }
-
-        return movieServiceProvider.getMoviesByActorId(actorsByName)
+        return responseCall { movieApiService.getMoviesByActorId(actorId) }
     }
 
     private suspend fun getActorIdByName(name: String, page: Int): RemoteActorSearchResponse {
-        return movieServiceProvider.getActorIdByName(name, page)
+        return responseCall { movieApiService.getActorIdByName(name, page) }
     }
 
     override suspend fun getMoviesByCountryIsoCode(
         countryIsoCode: String,
         page: Int
     ): RemoteMovieResponse {
-        return movieServiceProvider.getMoviesByCountryIsoCode(countryIsoCode, page)
+        return responseCall { movieApiService.getMoviesByCountryIsoCode(countryIsoCode, page) }
     }
 
     override suspend fun getCastByMovieId(movieId: Long): RemoteCastAndCrewResponse {
-        return movieServiceProvider.getCastByMovieId(movieId)
+        return responseCall { movieApiService.getCastByMovieId(movieId) }
     }
 
     override suspend fun getMovieDetailsById(movieId: Long): RemoteMovieDetailsResponse {
-        return movieServiceProvider.getMovieDetailsById(movieId)
+        return responseCall { movieApiService.getMovieDetailsById(movieId) }
+
     }
 
     override suspend fun getPopularMovies(): RemoteMovieResponse {
-        return movieServiceProvider.getPopularMovies()
+        return responseCall { movieApiService.getPopularMovies() }
     }
 
     override suspend fun getUpcomingMovies(): RemoteMovieResponse {
-        return movieServiceProvider.getUpcomingMovies()
+        return responseCall { movieApiService.getUpcomingMovies() }
     }
-  override suspend fun getTopRatedMovies(): RemoteMovieResponse {
-     return movieServiceProvider.getTopRatedMovies()
-  }
+    override suspend fun getTopRatedMovies(): RemoteMovieResponse {
+        return responseCall { movieApiService.getTopRatedMovies() }
+    }
     override suspend fun getMoviesByGenreIds(genresIds: List<Long>): RemoteMovieResponse {
-        return movieServiceProvider.getMoviesByGenreIds(genresIds)
+        return responseCall { movieApiService.getMoviesByGenreIds(genresIds) }
     }
 }
