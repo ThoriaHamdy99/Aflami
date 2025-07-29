@@ -49,7 +49,6 @@ fun MovieMoodPickerDialogDialog(
         onDismiss = onDismiss,
         isDismissible = true,
         modifier = modifier,
-        behindDialogColor = AppTheme.color.dialogBackground
     ) {
         DialogContent(
             movie,
@@ -69,12 +68,6 @@ fun DialogContent(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth(0.9f)
-            .clip(RoundedCornerShape(16.dp))
-            .background(
-                AppTheme.color.surface,
-                shape = RoundedCornerShape(16.dp)
-            )
             .padding(12.dp)
     ) {
         Row(
