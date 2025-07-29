@@ -73,6 +73,8 @@
     <string name="dont_have_account">Don’t have account?</string>
     <string name="create_account">Create account</string>
     <string name="incorrect_username_or_password">incorrect username or password</string>
+    <string name="account_disabled">Your Account has been Disabled</string>
+    <string name="account_not_verified">Your email address has not been verified</string>
     <!-- -   -->
     <!-- - Mood Picker  -->
     <string name="mood_picker_title">Mood Picker (Get a Movie)</string>
