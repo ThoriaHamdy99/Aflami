@@ -21,24 +21,34 @@ fun SafeImageView(
     contentScale: ContentScale = ContentScale.Crop,
     onLoading: (@Composable () -> Unit),
     onError: (@Composable () -> Unit),
-    isClassified: Boolean = true
+    isClassified: Boolean = true,
+    isSafeEnabled: Boolean = true,
 ) {
-    val imageLoader = rememberSafeImageLoader(isClassified = isClassified)
+    if (isSafeEnabled) {
+        val imageLoader = rememberSafeImageLoader(isClassified = isClassified)
 
-    imageLoader?.let { imageLoaders ->
+        imageLoader?.let { imageLoaders ->
+            SubcomposeAsyncImage(
+                model = model,
+                contentDescription = contentDescription,
+                imageLoader = imageLoaders,
+                modifier = modifier,
+                contentScale = contentScale,
+                loading = { onLoading() },
+                error = { onError() },
+            )
+        } ?: onLoading()
+    } else {
         SubcomposeAsyncImage(
             model = model,
             contentDescription = contentDescription,
-            imageLoader = imageLoaders,
             modifier = modifier,
             contentScale = contentScale,
             loading = { onLoading() },
             error = { onError() },
-
-            )
-    } ?: onLoading()
+        )
+    }
 }
-
 
 @Composable
 private fun rememberSafeImageLoader(isClassified: Boolean): ImageLoader? {
