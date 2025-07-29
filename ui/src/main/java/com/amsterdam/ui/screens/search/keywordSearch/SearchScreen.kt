@@ -187,8 +187,15 @@ private fun SearchContent(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             visible = state.isDialogVisible,
         ) {
+            val currentFilterState =
+                if (state.selectedTabOption == TabOption.MOVIES) {
+                    state.movieFilterItemUiState
+                } else {
+                    state.tvShowFilterItemUiState
+                }
+
             FilterDialog(
-                filterState = state.filterItemUiState,
+                filterState = currentFilterState,
                 selectedTabOption = state.selectedTabOption,
                 interaction = filterInteraction
             )

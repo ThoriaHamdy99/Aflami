@@ -1,6 +1,5 @@
 package com.amsterdam.viewmodel.search.keywordSearch
 
-import android.R.attr.rating
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -25,12 +24,12 @@ import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState
 import com.amsterdam.viewmodel.utils.debounceSearch
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,9 +42,6 @@ class SearchViewModel @Inject constructor(
     SearchInteractionListener,
     FilterInteractionListener {
     private val _keyword = MutableStateFlow("")
-
-    var isNavigating: Boolean = false
-        private set
 
     init {
         fetchRecentSearches()
@@ -87,6 +83,8 @@ class SearchViewModel @Inject constructor(
                             getAndFilterMoviesByKeywordUseCase(
                                 keyword = keyword,
                                 page = page,
+                                rating = state.value.movieFilterItemUiState.selectedStarIndex,
+                                movieGenre = state.value.movieFilterItemUiState.selectableMovieGenres.getSelectedGenreType()
                             )
                         }
                     },
@@ -99,7 +97,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun onFetchMoviesSuccess(movies: Flow<PagingData<MovieItemUiState>>) {
-        applyMoviesFilter()
         updateState { it.copy(movies = movies) }
     }
 
@@ -114,7 +111,8 @@ class SearchViewModel @Inject constructor(
                             getAndFilterTvShowsByKeywordUseCase(
                                 keyword = keyword,
                                 page = page,
-                                rating = rating,
+                                rating = state.value.tvShowFilterItemUiState.selectedStarIndex,
+                                tvGenre = state.value.tvShowFilterItemUiState.selectableTvShowGenres.getSelectedGenreType()
                             )
                         }
                     },
@@ -127,12 +125,11 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun onFetchTvShowsSuccess(tvShows: Flow<PagingData<TvShowItemUiState>>) {
-        applyTvShowsFilter()
         updateState { it.copy(tvShows = tvShows) }
     }
 
     private fun applyMoviesFilter() {
-        val currentCategoryItemUiStates = state.value.filterItemUiState.selectableMovieGenres
+        val currentMovieFilterState = state.value.movieFilterItemUiState
         tryToExecute(
             action = {
                 Pager(
@@ -142,16 +139,15 @@ class SearchViewModel @Inject constructor(
                             getAndFilterMoviesByKeywordUseCase(
                                 keyword = state.value.keyword,
                                 page = page,
-                                rating = state.value.filterItemUiState.selectedStarIndex,
-                                movieGenre = currentCategoryItemUiStates.getSelectedGenreType(),
+                                rating = currentMovieFilterState.selectedStarIndex,
+                                movieGenre = currentMovieFilterState.selectableMovieGenres.getSelectedGenreType(),
                             )
                         }
                     },
                 ).flow.map { pagingData -> pagingData.map { it.toMediaItemUiState() } }
-                    .cachedIn(viewModelScope)
             },
             onSuccess = ::onMoviesFilteredSuccess,
-            onError = ::onFetchError,
+            onError = {},
             onCompletion = ::onClickCancel,
         )
     }
@@ -160,13 +156,13 @@ class SearchViewModel @Inject constructor(
         updateState {
             it.copy(
                 movies = movies,
-                filterItemUiState = it.filterItemUiState.copy(isLoading = false),
+                movieFilterItemUiState = it.movieFilterItemUiState.copy(isLoading = false),
             )
         }
     }
 
     private fun applyTvShowsFilter() {
-        val currentGenreItemUiStates = state.value.filterItemUiState.selectableTvShowGenres
+        val currentTvShowFilterState = state.value.tvShowFilterItemUiState
         tryToExecute(
             action = {
                 Pager(
@@ -176,8 +172,8 @@ class SearchViewModel @Inject constructor(
                             getAndFilterTvShowsByKeywordUseCase(
                                 keyword = state.value.keyword,
                                 page = page,
-                                rating = state.value.filterItemUiState.selectedStarIndex,
-                                tvGenre = currentGenreItemUiStates.getSelectedGenreType(),
+                                rating = currentTvShowFilterState.selectedStarIndex,
+                                tvGenre = currentTvShowFilterState.selectableTvShowGenres.getSelectedGenreType(),
                             )
                         }
                     },
@@ -196,7 +192,7 @@ class SearchViewModel @Inject constructor(
         updateState {
             it.copy(
                 tvShows = tvShows,
-                filterItemUiState = it.filterItemUiState.copy(isLoading = false),
+                tvShowFilterItemUiState = it.tvShowFilterItemUiState.copy(isLoading = false),
             )
         }
     }
@@ -205,8 +201,14 @@ class SearchViewModel @Inject constructor(
         updateState { it.copy(errorUiState = SearchErrorState.toSearchErrorState(exception)) }
     }
 
-    private fun resetFilterState() =
-        updateState { it.copy(filterItemUiState = FilterItemUiState()) }
+    private fun resetFilterState() {
+        updateState { currentState ->
+            when (currentState.selectedTabOption) {
+                TabOption.MOVIES -> currentState.copy(movieFilterItemUiState = FilterItemUiState())
+                TabOption.TV_SHOWS -> currentState.copy(tvShowFilterItemUiState = FilterItemUiState())
+            }
+        }
+    }
 
     private fun startLoading() = updateState { it.copy(isLoading = true) }
 
@@ -229,26 +231,13 @@ class SearchViewModel @Inject constructor(
             onSaveSearchHistory()
             onClickClearSearch()
         } else {
-            if (!isNavigating) {
-                isNavigating = true
-                sendNewEffect(SearchUiEffect.NavigateBack)
-            }
+            sendNewEffect(SearchUiEffect.NavigateBack)
         }
     }
 
-    override fun onClickWorldSearchCard() {
-        if (!isNavigating) {
-            isNavigating = true
-            sendNewEffect(SearchUiEffect.NavigateToWorldSearch)
-        }
-    }
+    override fun onClickWorldSearchCard() = sendNewEffect(SearchUiEffect.NavigateToWorldSearch)
 
-    override fun onClickActorSearchCard() {
-        if (!isNavigating) {
-            isNavigating = true
-            sendNewEffect(SearchUiEffect.NavigateToActorSearch)
-        }
-    }
+    override fun onClickActorSearchCard() = sendNewEffect(SearchUiEffect.NavigateToActorSearch)
 
     override fun onClickRetryRequest() = onSearchKeywordChanged(_keyword.value)
 
@@ -256,10 +245,7 @@ class SearchViewModel @Inject constructor(
         updateState {
             it.copy(
                 selectedTabOption = tabOption,
-                movies = state.value.movies,
-                tvShows = state.value.tvShows,
                 isLoading = true,
-                filterItemUiState = FilterItemUiState(),
             )
         }
         onSearchKeywordChanged(_keyword.value)
@@ -294,7 +280,8 @@ class SearchViewModel @Inject constructor(
             currentState.copy(
                 keyword = "",
                 isDialogVisible = false,
-                filterItemUiState = FilterItemUiState(),
+                movieFilterItemUiState = FilterItemUiState(),
+                tvShowFilterItemUiState = FilterItemUiState(),
             )
         }
     }
@@ -325,17 +312,11 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun onClickMovieCard(movieId: Long) {
-        if (!isNavigating) {
-            isNavigating = true
-            sendNewEffect(SearchUiEffect.NavigateToMovieDetails(movieId))
-        }
+        sendNewEffect(SearchUiEffect.NavigateToMovieDetails(movieId))
     }
 
     override fun onClickTvShowCard(tvShowId: Long) {
-        if (!isNavigating) {
-            isNavigating = true
-            sendNewEffect(SearchUiEffect.NavigateToTvShowDetails(tvShowId))
-        }
+        sendNewEffect(SearchUiEffect.NavigateToTvShowDetails(tvShowId))
     }
 
     override fun onClickFilterButton() {
@@ -343,16 +324,30 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun onChangeRatingStar(ratingIndex: Int) {
-        updateState { it.copy(filterItemUiState = it.filterItemUiState.copy(selectedStarIndex = ratingIndex)) }
+        updateState { currentState ->
+            when (currentState.selectedTabOption) {
+                TabOption.MOVIES -> currentState.copy(
+                    movieFilterItemUiState = currentState.movieFilterItemUiState.copy(
+                        selectedStarIndex = ratingIndex
+                    )
+                )
+
+                TabOption.TV_SHOWS -> currentState.copy(
+                    tvShowFilterItemUiState = currentState.tvShowFilterItemUiState.copy(
+                        selectedStarIndex = ratingIndex
+                    )
+                )
+            }
+        }
     }
 
     override fun onChangeMovieGenre(genreType: MovieGenre) {
         updateState {
             it.copy(
-                filterItemUiState =
-                    state.value.filterItemUiState.copy(
+                movieFilterItemUiState =
+                    state.value.movieFilterItemUiState.copy(
                         selectableMovieGenres =
-                            it.filterItemUiState.selectableMovieGenres.selectByMovieGenre(
+                            it.movieFilterItemUiState.selectableMovieGenres.selectByMovieGenre(
                                 genreType,
                             ),
                     ),
@@ -363,10 +358,10 @@ class SearchViewModel @Inject constructor(
     override fun onChangeTvShowGenre(genreType: TvShowGenre) {
         updateState {
             it.copy(
-                filterItemUiState =
-                    state.value.filterItemUiState.copy(
+                tvShowFilterItemUiState =
+                    state.value.tvShowFilterItemUiState.copy(
                         selectableTvShowGenres =
-                            it.filterItemUiState.selectableTvShowGenres.selectByTvGenre(
+                            it.tvShowFilterItemUiState.selectableTvShowGenres.selectByTvGenre(
                                 genreType,
                             ),
                     ),
@@ -378,16 +373,22 @@ class SearchViewModel @Inject constructor(
         updateState {
             it.copy(
                 isDialogVisible = false,
-                filterItemUiState = it.filterItemUiState.copy(isLoading = false),
+                movieFilterItemUiState = it.movieFilterItemUiState.copy(isLoading = false),
+                tvShowFilterItemUiState = it.tvShowFilterItemUiState.copy(isLoading = false),
             )
         }
     }
 
     override fun onClickApply() {
-        updateState {
-            it.copy(
-                filterItemUiState = it.filterItemUiState.copy(isLoading = true),
+        updateState { currentState ->
+            currentState.copy(
                 isDialogVisible = false,
+                movieFilterItemUiState = if (currentState.selectedTabOption == TabOption.MOVIES) currentState.movieFilterItemUiState.copy(
+                    isLoading = true
+                ) else currentState.movieFilterItemUiState,
+                tvShowFilterItemUiState = if (currentState.selectedTabOption == TabOption.TV_SHOWS) currentState.tvShowFilterItemUiState.copy(
+                    isLoading = true
+                ) else currentState.tvShowFilterItemUiState,
             )
         }
 
@@ -398,8 +399,4 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun onClickClear() = resetFilterState()
-
-    fun navigationCompleted() {
-        isNavigating = false
-    }
 }
