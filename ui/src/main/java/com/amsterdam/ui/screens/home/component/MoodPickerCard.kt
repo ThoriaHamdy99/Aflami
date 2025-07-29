@@ -172,15 +172,13 @@ private fun MoodIcon(
         painter = painterResource(iconRes),
         contentDescription = null,
         tint = tint,
-        modifier =
-            Modifier
-                .padding(4.dp)
-                .size(24.dp)
-                .clickable(
-                    interactionSource = MutableInteractionSource(),
-                    indication = null,
-                    onClick = onClick,
-                ),
+        modifier = Modifier
+            .size(32.dp)
+            .clickable(
+                interactionSource = MutableInteractionSource(),
+                indication = null,
+                onClick = onClick,
+            ),
     )
 }
 
