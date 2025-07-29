@@ -15,6 +15,7 @@ import com.amsterdam.ui.navigation.BottomNavigation
 import com.amsterdam.ui.navigation.NavGraph
 import com.amsterdam.ui.utils.safeNavigateToTab
 import com.amsterdam.viewmodel.application.ApplicationViewModel
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun AflamiApp(
@@ -23,8 +24,9 @@ fun AflamiApp(
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
-    val state = viewModel.state.collectAsState()
-    val startDestination = getStartDestination(state.value.startDestination)
+    val startDestination = runBlocking {
+        getStartDestination(viewModel.setStartDestination())
+    }
     AflamiTheme {
         CompositionLocalProvider(LocalNavController provides navController) {
             Scaffold(

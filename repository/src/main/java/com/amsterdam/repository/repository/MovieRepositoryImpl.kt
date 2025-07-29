@@ -49,18 +49,19 @@ class MovieRepositoryImpl @Inject constructor(
         page: Int,
         moviesPerPage: Int
     ): List<Movie> {
-        categoryRepository.getMovieCategories()
-        return getCachedMovies(keyword, SearchType.BY_KEYWORD, page, moviesPerPage)
-            ?: recentSearchHandler.deleteRecentSearch(
-                keyword, SearchType.BY_KEYWORD, getDeviceLanguage()
-            ).let {
-                getMoviesByKeywordFromRemote(
-                    keyword,
-                    SearchType.BY_KEYWORD,
-                    page,
-                    moviesPerPage
-                )
-            }
+        return categoryRepository.getMovieCategories().let {
+            getCachedMovies(keyword, SearchType.BY_KEYWORD, page, moviesPerPage)
+                ?: recentSearchHandler.deleteRecentSearch(
+                    keyword, SearchType.BY_KEYWORD, getDeviceLanguage()
+                ).let {
+                    getMoviesByKeywordFromRemote(
+                        keyword,
+                        SearchType.BY_KEYWORD,
+                        page,
+                        moviesPerPage
+                    )
+                }
+        }
     }
 
     override suspend fun getMoviesByActor(
@@ -68,17 +69,19 @@ class MovieRepositoryImpl @Inject constructor(
         page: Int,
         moviesPerPage: Int
     ): List<Movie> {
-        return getCachedMovies(actorName, SearchType.BY_ACTOR, page, moviesPerPage)
-            ?: recentSearchHandler.deleteRecentSearch(
-                actorName, SearchType.BY_ACTOR, getDeviceLanguage()
-            ).let {
-                getMoviesByActorNameFromRemote(
-                    actorName,
-                    SearchType.BY_ACTOR,
-                    page,
-                    moviesPerPage
-                )
-            }
+        return categoryRepository.getMovieCategories().let {
+            getCachedMovies(actorName, SearchType.BY_ACTOR, page, moviesPerPage)
+                ?: recentSearchHandler.deleteRecentSearch(
+                    actorName, SearchType.BY_ACTOR, getDeviceLanguage()
+                ).let {
+                    getMoviesByActorNameFromRemote(
+                        actorName,
+                        SearchType.BY_ACTOR,
+                        page,
+                        moviesPerPage
+                    )
+                }
+        }
     }
 
     override suspend fun getMoviesByCountry(
@@ -86,20 +89,22 @@ class MovieRepositoryImpl @Inject constructor(
         page: Int,
         moviesPerPage: Int
     ): List<Movie> {
-        return getCachedMovies(country.countryIsoCode, SearchType.BY_COUNTRY, page, moviesPerPage)
-            ?: recentSearchHandler.deleteRecentSearch(
-                country.countryIsoCode,
-                SearchType.BY_COUNTRY,
-                getDeviceLanguage()
-            )
-                .let {
-                    getMoviesByCountryIsoCodeFromRemote(
-                        country.countryIsoCode,
-                        SearchType.BY_COUNTRY,
-                        page,
-                        moviesPerPage
-                    )
-                }
+        return categoryRepository.getMovieCategories().let {
+            getCachedMovies(country.countryIsoCode, SearchType.BY_COUNTRY, page, moviesPerPage)
+                ?: recentSearchHandler.deleteRecentSearch(
+                    country.countryIsoCode,
+                    SearchType.BY_COUNTRY,
+                    getDeviceLanguage()
+                )
+                    .let {
+                        getMoviesByCountryIsoCodeFromRemote(
+                            country.countryIsoCode,
+                            SearchType.BY_COUNTRY,
+                            page,
+                            moviesPerPage
+                        )
+                    }
+        }
     }
 
     override suspend fun getActorsByMovieId(movieId: Long): List<Actor> {
@@ -210,11 +215,12 @@ class MovieRepositoryImpl @Inject constructor(
         page: Int,
         moviesPerPage: Int
     ): List<Movie> {
-        saveMovieWithCategories(remoteMovies)
-        return saveMoviesWithSearch(remoteMovies, keyword, searchType)
-            .let { getMoviesFromLocal(keyword, searchType, page, moviesPerPage) }
-            .takeIf { movies -> movies.isNotEmpty() }
-            ?: movieRemoteMapper.toEntityList(remoteMovies.results)
+        return saveMovieWithCategories(remoteMovies).let {
+            saveMoviesWithSearch(remoteMovies, keyword, searchType)
+                .let { getMoviesFromLocal(keyword, searchType, page, moviesPerPage) }
+                .takeIf { movies -> movies.isNotEmpty() }
+                ?: movieRemoteMapper.toEntityList(remoteMovies.results)
+        }
     }
 
     private suspend fun getMoviesFromLocal(

@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,7 +49,6 @@ import com.amsterdam.designsystem.components.Icon
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.designsystem.components.LoadingContainer
-import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.chip.Chip
 import com.amsterdam.designsystem.components.divider.HorizontalDivider
@@ -60,6 +60,7 @@ import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.EpisodeCard
 import com.amsterdam.ui.components.MustLoginDialog
 import com.amsterdam.ui.components.NoNetworkContainer
+import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
@@ -108,7 +109,10 @@ fun SeriesDetailsScreen(
                             )
                         )
                     }
-                    SeriesDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(Route.Login)
+
+                    SeriesDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
+                        Route.Login
+                    )
                 }
             }
         }
@@ -188,7 +192,7 @@ fun SeriesDetailsContent(
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
-        ){
+        ) {
             LazyColumn(
                 state = listState,
                 modifier = Modifier
@@ -239,32 +243,38 @@ fun SeriesDetailsContent(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
                                 .offset(y = (-20).dp)
                         ) {
+
                             Text(
                                 text = state.title,
                                 style = AppTheme.textStyle.title.large,
-                                color = AppTheme.color.title
+                                color = AppTheme.color.title,
+                                modifier = Modifier.padding(horizontal = 16.dp)
                             )
                             LazyRow(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = 12.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(horizontal = 16.dp)
                             ) {
                                 items(state.categories) {
                                     CategoryChip(categoryName = getTvShowGenreLabel(it))
                                 }
                             }
                             SeriesInfoSection(
-                                modifier = Modifier.padding(top = 8.dp),
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .padding(horizontal = 16.dp),
                                 airDate = state.airDate,
                                 seasonCount = state.seasonCount,
-                                originCountry = state.originCountry
+                                originCountry = state.originCountry,
                             )
                             DescriptionSection(
-                                modifier = Modifier.padding(top = 24.dp),
+                                modifier = Modifier
+                                    .padding(top = 24.dp)
+                                    .padding(horizontal = 24.dp),
                                 description = state.description
                             )
                             CastSection(
@@ -280,7 +290,9 @@ fun SeriesDetailsContent(
                                     .background(AppTheme.color.stroke)
                             )
                             SeriesExtrasSection(
-                                modifier = Modifier.padding(top = 12.dp),
+                                modifier = Modifier
+                                    .padding(top = 12.dp)
+                                    .padding(horizontal = 16.dp),
                                 extras = state.extraItem,
                                 onClickExtras = interaction::onClickSeriesExtraItem
                             )
@@ -295,7 +307,6 @@ fun SeriesDetailsContent(
                         when (selectedExtra) {
                             SeriesExtras.SEASONS -> seasonsSection(
                                 seasons = state.seasons,
-                                state = state,
                                 interaction = interaction
                             )
 
@@ -385,7 +396,6 @@ private fun SeriesExtrasSection(
 
 private fun LazyListScope.seasonsSection(
     seasons: List<SeasonUiState>,
-    state: SeriesDetailsUiState,
     interaction: SeriesDetailsInteractionListener
 ) {
     seasons.forEachIndexed { index, season ->
@@ -408,7 +418,7 @@ private fun LazyListScope.seasonsSection(
 private fun SeasonHeader(
     season: SeasonUiState,
     onClickSeasonMenu: (Int) -> Unit,
-    ) {
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
