@@ -3,6 +3,7 @@ package com.amsterdam.viewmodel.login
 import com.amsterdam.domain.exceptions.AccountDisabledException
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.InvalidCredentialsException
+import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.exceptions.VerificationRequiredException
 
 data class LoginUiState(
@@ -18,14 +19,17 @@ sealed interface LoginErrorState {
     data object InvalidCredentials: LoginErrorState
     data object VerificationRequired: LoginErrorState
     data object AccountDisabled: LoginErrorState
+    data object NoInternet: LoginErrorState
+    data object UnknownError: LoginErrorState
 
     companion object{
-        fun toLoginErrorState(exception: AflamiException): LoginErrorState?{
+        fun toLoginErrorState(exception: AflamiException): LoginErrorState{
             return when (exception) {
                 is InvalidCredentialsException -> InvalidCredentials
                 is VerificationRequiredException -> VerificationRequired
                 is AccountDisabledException -> AccountDisabled
-                else -> null
+                is NetworkException -> NoInternet
+                else -> UnknownError
             }
         }
     }

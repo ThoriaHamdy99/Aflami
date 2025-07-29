@@ -11,6 +11,8 @@ fun getLoginErrorMessage(loginErrorState: LoginErrorState?, context: Context): S
         LoginErrorState.InvalidCredentials -> context.getString(R.string.incorrect_username_or_password)
         LoginErrorState.AccountDisabled -> context.getString(R.string.account_disabled)
         LoginErrorState.VerificationRequired -> context.getString(R.string.account_not_verified)
-        null -> ""
+        LoginErrorState.NoInternet -> context.getString(R.string.offline_message)
+        LoginErrorState.UnknownError -> context.getString(R.string.search_error_unknown)
+        else -> ""
     }
 }
