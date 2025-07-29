@@ -141,7 +141,7 @@ fun TextField(
                         .onFocusChanged { focusState -> isFocused = focusState.isFocused },
                 textStyle = style.copy(color = AppTheme.color.title),
                 singleLine = true,
-                visualTransformation = if (isObscured) PasswordVisualTransformation() else VisualTransformation.None,
+                visualTransformation = if (isObscured) PasswordVisualTransformation('*') else VisualTransformation.None,
                 decorationBox = { innerTextField ->
                     InnerTextFieldWithHint(innerTextField, text, hintText, style)
                 },
