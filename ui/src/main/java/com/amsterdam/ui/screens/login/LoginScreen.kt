@@ -1,5 +1,6 @@
 package com.amsterdam.ui.screens.login
 
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
@@ -84,6 +86,7 @@ private fun LoginScreenContent(
     interactionListener: LoginInteractionListener
 ) {
     val scrollState = rememberScrollState()
+    val isLandscape = LocalConfiguration.current.orientation == ORIENTATION_LANDSCAPE
     Box {
         LoginBackground()
         Column(
@@ -103,7 +106,7 @@ private fun LoginScreenContent(
                     containerColor = AppTheme.color.primaryVariant,
                     paddingValues = PaddingValues(horizontal = 6.dp, vertical = 9.dp),
                     withBorder = true,
-                    modifier = Modifier.padding(bottom = 24.dp)
+                    modifier = Modifier.padding(vertical = 24.dp)
                 )
 
                 Text(
@@ -171,7 +174,12 @@ private fun LoginScreenContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 16.dp)
+                    .then(
+                        if (isLandscape){
+                            Modifier.padding(top = 32.dp)
+                        } else Modifier
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
