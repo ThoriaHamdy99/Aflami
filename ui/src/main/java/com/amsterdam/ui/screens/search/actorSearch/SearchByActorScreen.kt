@@ -175,10 +175,8 @@ private fun SearchByActorContent(
                     when {
                         state.isLoading -> LoadingContainer(modifier = Modifier)
 
-                        state.error != null -> {
-                            if (state.error == ActorSearchErrorState.NoNetworkConnection) {
-                                NoNetworkContainer(interactionListener::onClickRetrySearch)
-                            }
+                        state.error == ActorSearchErrorState.NoNetworkConnection -> {
+                            NoNetworkContainer(interactionListener::onClickRetrySearch)
                         }
 
                         state.keyword.isBlank() -> {
@@ -190,7 +188,7 @@ private fun SearchByActorContent(
                             )
                         }
 
-                        movies.itemSnapshotList.isEmpty() -> {
+                        movies.itemCount == 0 -> {
                             NoDataContainer(
                                 imageRes = painterResource(R.drawable.placeholder_no_result_found),
                                 title = stringResource(R.string.no_search_result),
