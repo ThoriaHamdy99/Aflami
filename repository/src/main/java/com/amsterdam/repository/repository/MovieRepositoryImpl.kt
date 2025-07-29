@@ -6,8 +6,6 @@ import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.ProductionCompany
-import com.amsterdam.entity.Review
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.datasource.local.MovieLocalSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
@@ -18,12 +16,8 @@ import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import com.amsterdam.repository.mapper.local.MovieGenreLocalMapper
 import com.amsterdam.repository.mapper.local.MovieWithCategoriesLocalMapper
 import com.amsterdam.repository.mapper.remote.CastRemoteMapper
-import com.amsterdam.repository.mapper.remote.GalleryRemoteMapper
 import com.amsterdam.repository.mapper.remote.MovieDetailRemoteMapper
 import com.amsterdam.repository.mapper.remote.MovieRemoteMapper
-import com.amsterdam.repository.mapper.remote.PostersRemoteMapper
-import com.amsterdam.repository.mapper.remote.ProductionCompanyRemoteMapper
-import com.amsterdam.repository.mapper.remote.ReviewRemoteMapper
 import com.amsterdam.repository.mapper.remoteToLocal.MovieGenreIdsRemoteLocalMapper
 import com.amsterdam.repository.mapper.remoteToLocal.MovieRemoteLocalMapper
 import com.amsterdam.repository.utils.RecentSearchHandler
