@@ -2,7 +2,6 @@ package com.amsterdam.ui.screens.movieDetails
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -24,10 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,22 +36,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.ImageErrorIndicator
-import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.MustLoginDialog
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.components.appBar.DefaultAppBar
+import com.amsterdam.ui.components.details.DetailsPostersPager
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
@@ -65,7 +59,6 @@ import com.amsterdam.ui.screens.movieDetails.components.GallerySection
 import com.amsterdam.ui.screens.movieDetails.components.MoreLikeSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieExtrasSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieInfoSection
-import com.amsterdam.ui.screens.movieDetails.components.PageIndicator
 import com.amsterdam.ui.screens.movieDetails.components.PlayButton
 import com.amsterdam.ui.screens.movieDetails.components.ReviewSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
@@ -189,7 +182,7 @@ fun MovieContent(
                     if(state.moviePostersUrl.isEmpty()) {
                         ImageErrorIndicator()
                     } else {
-                        PostersPager(
+                        DetailsPostersPager(
                             pagerState = pagerState,
                             postersUrl = state.moviePostersUrl
                         )
@@ -307,47 +300,6 @@ fun MovieContent(
                         MovieExtras.COMPANY_PRODUCTION -> CompanyProductionSection(state.productionCompany)
                     }
                 }
-        }
-    }
-}
-
-@Composable
-private fun PostersPager(
-    pagerState: PagerState,
-    postersUrl: List<String>,
-) {
-    Box {
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxSize()
-        ) { page ->
-            SafeImageView(
-                model = postersUrl[page],
-                contentDescription = "",
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .animateContentSize(),
-                onLoading = { ImageLoadingIndicator() },
-                onError = { ImageErrorIndicator() },
-            )
-        }
-
-        if (postersUrl.size > 1) {
-            PageIndicator(
-                modifier = Modifier
-                    .zIndex(1f)
-                    .padding(4.dp)
-                    .background(
-                        AppTheme.color.primaryVariant,
-                        RoundedCornerShape(100.dp)
-                    )
-                    .padding(vertical = 4.dp, horizontal = 2.dp)
-                    .align(Alignment.BottomEnd),
-                numberOfPages = if (postersUrl.size >= 10) 10
-                else postersUrl.size,
-                selectedPage = pagerState.currentPage % 10
-            )
         }
     }
 }
