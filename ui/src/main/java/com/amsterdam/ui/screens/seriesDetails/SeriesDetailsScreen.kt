@@ -74,6 +74,7 @@ import com.amsterdam.ui.screens.movieDetails.components.ReviewSection
 import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
+import com.amsterdam.ui.utils.formateAsRate
 import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.cast.MediaType
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsEffect
@@ -219,7 +220,7 @@ fun SeriesDetailsContent(
                         )
 
                         RatingChip(
-                            state.rating,
+                            state.rating.formateAsRate(),
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
                                 .padding(vertical = 4.dp)
@@ -303,11 +304,15 @@ fun SeriesDetailsContent(
                     ?.item
                     ?.let { selectedExtra ->
                         when (selectedExtra) {
-                            SeriesExtras.SEASONS -> seasonsSection(
-                                seasons = state.seasons,
-                                interaction = interaction
-                            )
-
+                            SeriesExtras.SEASONS -> {
+                                val visibleSeasons = state.seasons.filter { it.episodeCount > 0 }
+                                if (visibleSeasons.isNotEmpty()) {
+                                    seasonsSection(
+                                        seasons = visibleSeasons,
+                                        interaction = interaction
+                                    )
+                                }
+                            }
                             SeriesExtras.MORE_LIKE_THIS -> MoreLikeSection(state.similarSeries)
                             SeriesExtras.REVIEWS -> ReviewSection(state.reviews)
                             SeriesExtras.GALLERY -> item {
