@@ -19,8 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -168,10 +166,17 @@ private fun SearchContent(
             headerHeight = headerHeight
         )
 
+        val currentFilterState =
+            if (state.selectedTabOption == TabOption.MOVIES) {
+                state.movieFilterItemUiState
+            } else {
+                state.tvShowFilterItemUiState
+            }
+
         item(span = { GridItemSpan(maxLineSpan) }) {
             AnimatedVisibility(modifier = Modifier.fillMaxSize(), visible = state.isDialogVisible) {
                 FilterDialog(
-                    filterState = state.filterItemUiState,
+                    filterState = currentFilterState,
                     selectedTabOption = state.selectedTabOption,
                     interaction = filterInteraction
                 )

@@ -291,7 +291,6 @@ class SearchViewModel @Inject constructor(
                 isLoading = false,
                 movies = emptyFlow(),
                 tvShows = emptyFlow(),
-                filterItemUiState = FilterItemUiState(),
             )
         }
     }
