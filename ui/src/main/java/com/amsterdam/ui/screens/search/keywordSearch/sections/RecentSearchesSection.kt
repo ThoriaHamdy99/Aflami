@@ -80,8 +80,8 @@ internal fun LazyGridScope.recentSearchesSection(
 
     item(span = { GridItemSpan(maxLineSpan) }) {
         AnimatedVisibility(keyword.isEmpty() && recentSearches.isEmpty()) {
-            CenterOfScreenContainer(unneededSpace = headerHeight + 100.dp) {
-                ExploreMoviesAndShows(modifier = Modifier.padding(top = 70.dp))
+            CenterOfScreenContainer(unneededSpace = headerHeight) {
+                ExploreMoviesAndShows(modifier = Modifier)
             }
         }
     }

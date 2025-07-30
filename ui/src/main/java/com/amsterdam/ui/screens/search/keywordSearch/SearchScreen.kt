@@ -28,7 +28,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.amsterdam.designsystem.R
-import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.application.LocalNavController
@@ -113,7 +112,6 @@ private fun SearchContent(
         interaction.onClickClearSearch()
     }
     var headerHeight by remember { mutableStateOf(0.dp) }
-
     var isPageStillLoading by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -187,9 +185,7 @@ private fun SearchContent(
             AnimatedVisibility(
                 visible = (state.isLoading || isPageStillLoading) && state.keyword.isNotBlank() && state.errorUiState == null,
             ) {
-                CenterOfScreenContainer(unneededSpace = headerHeight) {
-                    LoadingContainer()
-                }
+                LoadingContainer(modifier = Modifier.fillMaxSize())
             }
         }
 
