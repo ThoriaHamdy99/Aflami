@@ -308,7 +308,9 @@ fun MovieContent(
                     when (selectedExtra) {
                         MovieExtras.MORE_LIKE_THIS -> MoreLikeSection(state.similarMovies)
                         MovieExtras.REVIEWS -> ReviewSection(state.reviews)
-                        MovieExtras.GALLERY -> GallerySection(state.gallery)
+                        MovieExtras.GALLERY -> item {
+                            GallerySection(gallery = state.gallery)
+                        }
                         MovieExtras.COMPANY_PRODUCTION -> CompanyProductionSection(state.productionCompany)
                     }
                 }
