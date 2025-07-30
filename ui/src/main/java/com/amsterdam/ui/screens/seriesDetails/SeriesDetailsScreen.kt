@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -120,6 +121,7 @@ fun SeriesDetailsScreen(
                     SeriesDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
                         Route.Login
                     )
+
                     is SeriesDetailsEffect.NavigateToMovieDetails -> {
                         navController.safeNavigate(Route.MovieDetails(it.movieId))
                     }
@@ -244,33 +246,14 @@ fun SeriesDetailsContent(
                             .fillMaxWidth()
                             .height(263.dp)
                     ) {
-                        HorizontalPager(
-                            state = pagerState,
-                            modifier = Modifier.fillMaxSize()
-                        ) { page ->
-                            SafeImageView(
-                                model = state.postersUrls[page],
-                                contentDescription = "",
-                                modifier =
-                                    Modifier
-                                        .fillMaxSize()
-                                        .animateContentSize(),
-                                onLoading = { ImageLoadingIndicator() },
-                                onError = { ImageErrorIndicator() },
+                        if (state.postersUrls.isEmpty()) {
+                            ImageErrorIndicator()
+                        } else {
+                            PostersPager(
+                                pagerState = pagerState,
+                                postersUrl = state.postersUrls
                             )
-
                         }
-
-                        PageIndicator(
-                            modifier = Modifier
-                                .zIndex(1f)
-                                .padding(4.dp)
-                                .background(AppTheme.color.primaryVariant, RoundedCornerShape(100.dp))
-                                .padding(vertical = 4.dp, horizontal = 2.dp)
-                                .align(Alignment.BottomEnd),
-                            numberOfPages = state.postersUrls.size,
-                            selectedPage = pagerState.currentPage
-                        )
 
                         RatingChip(
                             state.rating.formateAsRate(),
@@ -387,6 +370,48 @@ fun SeriesDetailsContent(
                         }
                     }
             }
+        }
+    }
+}
+
+
+@Composable
+private fun PostersPager(
+    pagerState: PagerState,
+    postersUrl: List<String>,
+) {
+    Box {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) { page ->
+            SafeImageView(
+                model = postersUrl[page],
+                contentDescription = "",
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .animateContentSize(),
+                onLoading = { ImageLoadingIndicator() },
+                onError = { ImageErrorIndicator() },
+            )
+        }
+
+        if (postersUrl.size > 1) {
+            PageIndicator(
+                modifier = Modifier
+                    .zIndex(1f)
+                    .padding(4.dp)
+                    .background(
+                        AppTheme.color.primaryVariant,
+                        RoundedCornerShape(100.dp)
+                    )
+                    .padding(vertical = 4.dp, horizontal = 2.dp)
+                    .align(Alignment.BottomEnd),
+                numberOfPages = if (postersUrl.size >= 10) 10
+                else postersUrl.size,
+                selectedPage = pagerState.currentPage % 10
+            )
         }
     }
 }
