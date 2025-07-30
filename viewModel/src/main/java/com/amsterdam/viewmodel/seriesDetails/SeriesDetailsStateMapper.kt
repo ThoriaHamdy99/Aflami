@@ -3,7 +3,6 @@ package com.amsterdam.viewmodel.seriesDetails
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
 import com.amsterdam.entity.Episode
 import com.amsterdam.entity.Season
-import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiStateMapper
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState.EpisodeUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
@@ -12,19 +11,20 @@ import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ActorUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ProductionCompanyUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ReviewUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.SimilarMovieUiState
+import kotlinx.datetime.LocalDate
+import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
-class SeriesDetailsStateMapper @Inject constructor(
-    private val movieDetailsStateMapper: MovieDetailsUiStateMapper
-) {
+class SeriesDetailsStateMapper @Inject constructor() {
 
     fun toUiState(seriesDetails: TvShowDetails): SeriesDetailsUiState = with(seriesDetails) {
         SeriesDetailsUiState(
             tvShowId = tvShow.id,
-            rating = movieDetailsStateMapper.ratingToRatingString(tvShow.rating),
+            rating = ratingToRatingString(tvShow.rating),
             posterUrl = tvShow.posterUrl,
             title = tvShow.name,
-            airDate = movieDetailsStateMapper.dateToString(tvShow.airDate),
+            airDate = dateToString(tvShow.airDate),
             seasonCount = formatSeasonCount(seasons.size),
             originCountry = tvShow.originCountry,
             description = tvShow.description,
@@ -47,7 +47,7 @@ class SeriesDetailsStateMapper @Inject constructor(
             similarSeries = similarTvShows.map {
                 SimilarMovieUiState(
                     movieId = it.id,
-                    rate = movieDetailsStateMapper.ratingToRatingString(it.rating),
+                    rate = ratingToRatingString(it.rating),
                     name = it.name,
                     productionYear = it.airDate.year.toString(),
                     posterUrl = it.posterUrl
@@ -57,9 +57,9 @@ class SeriesDetailsStateMapper @Inject constructor(
                 ReviewUiState(
                     author = it.reviewerName,
                     username = it.reviewerUsername,
-                    rating = movieDetailsStateMapper.ratingToRatingString(it.rating),
+                    rating = ratingToRatingString(it.rating),
                     content = it.content,
-                    date = movieDetailsStateMapper.dateToString(it.date),
+                    date = dateToString(it.date),
                     imageUrl = it.imageUrl.takeIf { it.isNotBlank() }
                 )
             },
@@ -97,12 +97,12 @@ class SeriesDetailsStateMapper @Inject constructor(
                 id = episode.id,
                 number = episode.episodeNumber,
                 title = episode.title,
-                rating = movieDetailsStateMapper.ratingToRatingString(episode.rating),
+                rating = ratingToRatingString(episode.rating),
                 imageUrl = episode.episodeImageUrl,
                 imageNumber = episode.episodeNumber,
                 description = episode.description,
                 duration = formatDuration(episode.runTimeInMinutes),
-                airDate = movieDetailsStateMapper.dateToString(episode.airDate)
+                airDate = dateToString(episode.airDate)
             )
         }
     }
@@ -118,5 +118,21 @@ class SeriesDetailsStateMapper @Inject constructor(
             hours > 0 -> "${hours}h"
             else -> "${minutes}m"
         }
+    }
+
+    fun dateToString(date: LocalDate?): String {
+        if (date == null) {
+            return ""
+        }
+        val day = date.dayOfMonth.toString().padStart(2, '0')
+        val month = date.monthNumber.toString().padStart(2, '0')
+        val year = date.year.toString()
+        return "$day-$month-$year"
+    }
+
+    fun ratingToRatingString(rating: Float): String {
+        val clamped = rating.coerceIn(0f, 10f)
+        val rounded = (clamped * 10).roundToInt() / 10f
+        return String.format(Locale.US, "%.1f", rounded)
     }
 }
