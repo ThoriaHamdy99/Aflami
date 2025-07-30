@@ -10,6 +10,5 @@ import kotlinx.datetime.Instant
 )
 data class MovieWatchHistoryDto(
     @PrimaryKey val movieId: Long,
-    val storedLanguage: String,
-    val lastWatchedTime: Instant
+    val storedLanguage: String
 )

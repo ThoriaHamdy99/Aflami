@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
@@ -12,6 +13,7 @@ import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiStateMapper
 import com.amsterdam.viewmodel.home.HomeUiState.HomeError
 import com.amsterdam.viewmodel.search.mapper.selectByMovieGenre
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -22,6 +24,8 @@ import com.amsterdam.viewmodel.utils.getLinearItemsList
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +34,7 @@ class HomeViewModel @Inject constructor(
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
     private val getContinueWatchingScreenDataUseCase: GetContinueWatchingScreenDataUseCase,
     private val homeUiStateMapper: HomeUiStateMapper,
+    private val continueWatchingUiStateMapper : ContinueWatchingUiStateMapper,
     private val getMoviesByMoodUseCase: GetMoviesByMoodUseCase,
     private val dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<HomeUiState, HomeEffect>(HomeUiState(), dispatcherProvider),
@@ -67,7 +72,7 @@ class HomeViewModel @Inject constructor(
     private fun getContinueWatchingData() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            action = { getContinueWatchingScreenDataUseCase() },
+            action = { getContinueWatchingScreenDataUseCase(pageSize = 8) },
             onSuccess = ::onGetContinueWatchingScreenDataSuccess,
             onError = ::onError,
             onCompletion = ::onCompletion
@@ -75,23 +80,25 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onGetContinueWatchingScreenDataSuccess(continueWatchingData: ContinueWatchingScreenData) {
-        combine(
-            continueWatchingData.continueWatchingMovies,
-            continueWatchingData.continueWatchingTvShows
-        ) { movies, tvShows ->
-            updateState { currentState ->
-                currentState.copy(
-                    continueWatchingMediaSectionUiState = currentState.continueWatchingMediaSectionUiState.copy(
-                        mediaItems = getLinearItemsList(
-                            movies,
-                            tvShows,
-                            homeUiStateMapper::movieToMediaItemUiState,
-                            homeUiStateMapper::tvShowToMediaItemUiState
-                        )
-                    )
-                )
-            }
-        }.launchIn(viewModelScope)
+        val movies = continueWatchingData.continueWatchingMovies
+        val tvShows = continueWatchingData.continueWatchingTvShows
+        viewModelScope.launch {
+             combine(movies, tvShows) { moviesWitchHistory, tvShowsWitchHistory ->
+                 getLinearItemsList(moviesWitchHistory,
+                     tvShowsWitchHistory,
+                     continueWatchingUiStateMapper::continueWatchingMediaItemUiState,
+                     continueWatchingUiStateMapper::continueWatchingMediaItemUiState
+                     )
+            }.collect {
+                 updateState { currentState ->
+                     currentState.copy(
+                         continueWatchingMediaSectionUiState = currentState.continueWatchingMediaSectionUiState.copy(
+                             mediaItems = it.sortedByDescending { it.dateAdded }
+                         )
+                     )
+                 }
+             }
+        }
     }
 
 

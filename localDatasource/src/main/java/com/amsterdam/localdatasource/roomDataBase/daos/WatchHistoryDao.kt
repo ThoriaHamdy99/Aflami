@@ -23,11 +23,12 @@ interface WatchHistoryDao {
     SELECT *
     FROM ${DatabaseConstants.MOVIE_TABLE} AS m
     JOIN ${DatabaseConstants.MOVIE_WATCH_HISTORY_TABLE} AS w
-    ON m.movieId = w.movieId
-    ORDER BY w.lastWatchedTime DESC
+    ON m.movieId = w.movieId and m.storedLanguage = :storedLanguage
+    ORDER BY m.insertedDate DESC 
+    LIMIT :limit OFFSET :offset
     """
     )
-    fun getMovieContinueWatching(): Flow<List<LocalMovieDto>>
+    fun getMovieContinueWatching(offset: Int, limit: Int,storedLanguage :String): Flow<List<LocalMovieDto>>
 
 
     @Query(
@@ -35,9 +36,10 @@ interface WatchHistoryDao {
     SELECT *
     FROM ${DatabaseConstants.TV_SHOW_TABLE} AS t
     JOIN ${DatabaseConstants.TV_WATCH_HISTORY_TABLE} AS w
-    ON t.tvShowId = w.tvShowId
-    ORDER BY w.lastWatchedTime DESC
+    ON t.tvShowId = w.tvShowId and t.storedLanguage = :storedLanguage
+    ORDER BY t.insertedDate DESC
+    LIMIT :limit OFFSET :offset
     """
     )
-    fun getTvShowContinueWatching(): Flow<List<LocalTvShowDto>>
+    fun getTvShowContinueWatching(offset: Int, limit: Int,storedLanguage :String): Flow<List<LocalTvShowDto>>
 }

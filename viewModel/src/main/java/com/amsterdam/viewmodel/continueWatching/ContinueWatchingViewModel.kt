@@ -1,18 +1,25 @@
 package com.amsterdam.viewmodel.continueWatching
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase.ContinueWatchingScreenData
+import com.amsterdam.paging.PagingSource
+import com.amsterdam.viewmodel.home.HomeUiState.ContinueWatchingMediaItemUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.media.MediaType
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import com.amsterdam.viewmodel.utils.getLinearItemsList
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
 import javax.inject.Inject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 @HiltViewModel
 class ContinueWatchingViewModel @Inject constructor(
@@ -33,29 +40,33 @@ class ContinueWatchingViewModel @Inject constructor(
     private fun getContinueWatchingData() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            action = { getContinueWatchingScreenDataUseCase() },
+            action = {
+                Pager(
+                    config = PagingConfig(pageSize = 8,prefetchDistance = 1, initialLoadSize = 8),
+                    pagingSourceFactory = {
+                        PagingSource { page ->
+                            val continueWatchingScreenData = getContinueWatchingScreenDataUseCase(page = page, pageSize = 8)
+                            getLinearItemsList(continueWatchingScreenData.continueWatchingMovies.first(),
+                                continueWatchingScreenData.continueWatchingTvShows.first(),
+                                continueWatchingUiStateMapper::continueWatchingMediaItemUiState,
+                                continueWatchingUiStateMapper::continueWatchingMediaItemUiState
+                            ).sortedByDescending { it.dateAdded }
+                        }
+                    }
+                ).flow.map { pagingData -> pagingData.map { it } }.cachedIn(viewModelScope)
+            },
             onSuccess = ::onGetContinueWatchingScreenDataSuccess,
             onError = ::onError,
             onCompletion = ::onCompletion
         )
     }
 
-    fun onGetContinueWatchingScreenDataSuccess(continueWatchingData: ContinueWatchingScreenData) {
-        combine(
-            continueWatchingData.continueWatchingMovies,
-            continueWatchingData.continueWatchingTvShows
-        ) { movies, tvShows ->
-            updateState { currentState ->
-                currentState.copy(
-                    continueMediaItemUiStates = getLinearItemsList(
-                        movies,
-                        tvShows,
-                        continueWatchingUiStateMapper::movieToMediaItemUiState,
-                        continueWatchingUiStateMapper::tvShowToMediaItemUiState
-                    )
-                )
-            }
-        }.launchIn(viewModelScope)
+    fun onGetContinueWatchingScreenDataSuccess(mediaItems: Flow<PagingData<ContinueWatchingMediaItemUiState>>) {
+        updateState { currentState ->
+            currentState.copy(
+                continueMediaItemUiStates = mediaItems
+            )
+        }
     }
 
     private fun onError(exception: AflamiException) {
@@ -65,7 +76,8 @@ class ContinueWatchingViewModel @Inject constructor(
                     error = ContinueWatchingUiState.ContinueWatchingError.NetworkError
                 )
             }
-            else ->{}
+
+            else -> {}
         }
     }
 

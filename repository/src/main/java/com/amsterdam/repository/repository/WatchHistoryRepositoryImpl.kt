@@ -1,54 +1,37 @@
 package com.amsterdam.repository.repository
 
 import com.amsterdam.domain.repository.WatchHistoryRepository
-import com.amsterdam.entity.Movie
 import com.amsterdam.entity.MovieWatchHistory
-import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.TvShowWatchHistory
 import com.amsterdam.repository.datasource.local.WatchHistoryLocalDataSource
-import com.amsterdam.repository.mapper.local.MovieLocalMapper
-import com.amsterdam.repository.mapper.local.MovieWatchHistoryMapper
-import com.amsterdam.repository.mapper.local.TvShowLocalMapper
-import com.amsterdam.repository.mapper.local.TvShowWatchHistoryMapper
+import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
+import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
+import com.amsterdam.repository.mapper.local.MovieWatchHistoryLocalMapper
+import com.amsterdam.repository.mapper.local.TvWatchHistoryLocalMapper
+import com.amsterdam.repository.utils.getDeviceLanguage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class WatchHistoryRepositoryImpl @Inject constructor(
     private val watchHistoryLocalDataSource: WatchHistoryLocalDataSource,
-    private val movieLocalMapper: MovieLocalMapper,
-    private val tvLocalMapper: TvShowLocalMapper,
-    private val movieWatchHistoryMapper: MovieWatchHistoryMapper,
-    private val tvShowWatchHistoryMapper: TvShowWatchHistoryMapper
+    private val movieWatchHistoryLocalMapper: MovieWatchHistoryLocalMapper,
+    private val tvWatchHistoryLocalMapper: TvWatchHistoryLocalMapper
 ) : WatchHistoryRepository {
 
-    override suspend fun addMovieToWatchHistory(item: MovieWatchHistory) {
-        watchHistoryLocalDataSource.addMovieToWatchHistory(
-            movieWatchHistoryMapper.toDto(
-                item,
-                emptyList()
-            )
-        )
+    override suspend fun addMovieToWatchHistory(movieId : Long) {
+        watchHistoryLocalDataSource.addMovieToWatchHistory(MovieWatchHistoryDto(movieId,getDeviceLanguage()))
     }
 
-    override fun getContinueWatchingMovies(): Flow<List<Movie>> {
-        return watchHistoryLocalDataSource.getMovieContinueWatching().map {
-            movieLocalMapper.toEntityList(it)
-        }
+    override fun getContinueWatchingMovies(page: Int, pageSize: Int): Flow<List<MovieWatchHistory>> {
+        return  watchHistoryLocalDataSource.getMovieContinueWatching(page,pageSize,getDeviceLanguage()).map(movieWatchHistoryLocalMapper::toEntityList)
     }
 
-    override suspend fun addTvShowToWatchHistory(item: TvShowWatchHistory) {
-        watchHistoryLocalDataSource.addTvShowToWatchHistory(
-            tvShowWatchHistoryMapper.toDto(
-                item,
-                emptyList()
-            )
-        )
+    override suspend fun addTvShowToWatchHistory(tvShowId: Long) {
+        watchHistoryLocalDataSource.addTvShowToWatchHistory(TvShowWatchHistoryDto(tvShowId,getDeviceLanguage()))
     }
 
-    override fun getContinueWatchingTvShows(): Flow<List<TvShow>> {
-        return watchHistoryLocalDataSource.getTvShowContinueWatching().map {
-            tvLocalMapper.toEntityList(it)
-        }
+    override fun getContinueWatchingTvShows(page: Int, pageSize: Int): Flow<List<TvShowWatchHistory>> {
+       return watchHistoryLocalDataSource.getTvShowContinueWatching(page,pageSize,getDeviceLanguage()).map(tvWatchHistoryLocalMapper::toEntityList)
     }
 }

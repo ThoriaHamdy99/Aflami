@@ -7,8 +7,8 @@ import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
 import kotlinx.coroutines.flow.Flow
 
 interface WatchHistoryLocalDataSource {
-    suspend fun addMovieToWatchHistory(item: MovieWatchHistoryDto)
-    fun getMovieContinueWatching(): Flow<List<LocalMovieDto>>
-    suspend fun addTvShowToWatchHistory(item: TvShowWatchHistoryDto)
-    fun getTvShowContinueWatching(): Flow<List<LocalTvShowDto>>
+    suspend fun addMovieToWatchHistory(movieId : MovieWatchHistoryDto)
+    fun getMovieContinueWatching(page: Int, pageSize: Int,storedLanguage: String): Flow<List<LocalMovieDto>>
+    suspend fun addTvShowToWatchHistory(tvShowId : TvShowWatchHistoryDto)
+    fun getTvShowContinueWatching(page: Int, pageSize: Int,storedLanguage: String): Flow<List<LocalTvShowDto>>
 }
