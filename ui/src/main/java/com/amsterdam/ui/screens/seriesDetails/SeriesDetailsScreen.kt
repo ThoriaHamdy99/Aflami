@@ -37,11 +37,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.R
@@ -127,6 +131,8 @@ fun SeriesDetailsContent(
 ) {
     val configuration = LocalConfiguration.current
     val screenWidthDp by remember { mutableStateOf(configuration.screenWidthDp.dp) }
+    val screenHeightDp = configuration.screenHeightDp.dp
+    var seriesExtrasSectionYOffsetDp by remember { mutableStateOf(0.dp) }
     val listState = rememberLazyListState()
     val animationDuration by remember { mutableIntStateOf(1000) }
     val surface = AppTheme.color.surface
@@ -290,7 +296,11 @@ fun SeriesDetailsContent(
                                     .background(AppTheme.color.stroke)
                             )
                             SeriesExtrasSection(
-                                modifier = Modifier.padding(top = 12.dp),
+                                modifier = Modifier.padding(top = 12.dp)
+                                    .onGloballyPositioned { coordinates ->
+                                        seriesExtrasSectionYOffsetDp =
+                                            coordinates.positionOnScreen().y.dp
+                                    },
                                 extras = state.extraItem,
                                 onClickExtras = interaction::onClickSeriesExtraItem
                             )
@@ -316,6 +326,24 @@ fun SeriesDetailsContent(
                             )
                         }
                     }
+
+                item {
+                    val lastVisibleItemInfo by remember { derivedStateOf { listState.layoutInfo.visibleItemsInfo.lastOrNull() } }
+                    val totalItemsCount by remember { derivedStateOf { listState.layoutInfo.totalItemsCount } }
+
+
+                    val spacerHeight: Dp by remember {
+                        derivedStateOf {
+                            if (seriesExtrasSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)){
+                                screenHeightDp
+                            } else {
+                                0.dp
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(spacerHeight))
+                }
             }
 
             Column(
