@@ -21,7 +21,7 @@ class MovieDetailsUiStateMapper @Inject constructor() {
             movieTitle = movie.name,
             categories = movie.categories,
             moviePostersUrl = moviePosters,
-            releaseDate = movie.releaseDate.toString(),
+            releaseDate = safeDateToString(movie.releaseDate),
             movieLength = movieLengthToHourMinuteString(movie.runTimeInMinutes),
             originCountry = movie.originCountry,
             description = movie.description,
@@ -68,12 +68,6 @@ class MovieDetailsUiStateMapper @Inject constructor() {
         )
     }
 
-    fun movieLengthToHourMinuteString(movieLength: Int): String {
-        val hours = movieLength / 60
-        val minutes = movieLength % 60
-        return "${hours}h ${minutes}m"
-    }
-
     fun dateToString(date: LocalDate?): String {
         if (date == null) {
             return ""
@@ -82,6 +76,16 @@ class MovieDetailsUiStateMapper @Inject constructor() {
         val month = date.monthNumber.toString().padStart(2, '0')
         val year = date.year.toString()
         return "$day-$month-$year"
+    }
+
+    private fun safeDateToString(date: LocalDate?): String {
+        return date?.let { dateToString(it) } ?: ""
+    }
+
+    fun movieLengthToHourMinuteString(movieLength: Int): String {
+        val hours = movieLength / 60
+        val minutes = movieLength % 60
+        return "${hours}h ${minutes}m"
     }
 
     fun ratingToRatingString(rating: Float): String {
