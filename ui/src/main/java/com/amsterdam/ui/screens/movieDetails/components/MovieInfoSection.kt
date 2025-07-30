@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AppTheme
+import com.amsterdam.ui.utils.formateDateForDisplay
 
 @Composable
 fun MovieInfoSection(
@@ -21,7 +22,8 @@ fun MovieInfoSection(
     originCountry: String,
     modifier: Modifier = Modifier
 ) {
-    val items = listOf(releaseDate, movieLength, originCountry)
+    val formattedReleaseDate= formateDateForDisplay(releaseDate)
+    val items = listOf(formattedReleaseDate, movieLength, originCountry)
 
     Row(
         modifier = modifier
