@@ -33,7 +33,6 @@ import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.home.sections.AnimatedSectionVisibility
 import com.amsterdam.ui.screens.topRated.component.TopRatedBackgroundComponent
 import com.amsterdam.ui.screens.topRated.component.TopRatedMediaItemsGrid
-import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.topRated.TopRatedEffect
 import com.amsterdam.viewmodel.topRated.TopRatedInteractionListener
 import com.amsterdam.viewmodel.topRated.TopRatedUiState
@@ -49,15 +48,15 @@ fun TopRatedScreen(viewModel: TopRatedViewModel = hiltViewModel()) {
         viewModel.effect.collectLatest {
             when (it) {
                 is TopRatedEffect.NavigateToMovieDetailsScreen -> {
-                    navController.safeNavigate(Route.MovieDetails(it.movieId))
+                    navController.navigate(Route.MovieDetails(it.movieId))
                 }
 
                 is TopRatedEffect.NavigateToTvShowDetailsEffect -> {
-                    navController.safeNavigate(Route.SeriesDetails(it.tvShowId))
+                    navController.navigate(Route.SeriesDetails(it.tvShowId))
                 }
 
                 TopRatedEffect.NavigateBack -> {
-                    navController.popBackStack()
+                    navController.navigateUp()
                 }
             }
         }

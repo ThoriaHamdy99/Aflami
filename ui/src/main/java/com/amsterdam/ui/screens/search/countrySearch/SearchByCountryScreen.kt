@@ -42,7 +42,6 @@ import com.amsterdam.ui.screens.search.countrySearch.components.CountrySearchFie
 import com.amsterdam.ui.screens.search.countrySearch.components.ExploreCountries
 import com.amsterdam.ui.screens.search.countrySearch.components.MoviesVerticalGrid
 import com.amsterdam.ui.screens.search.countrySearch.components.NoMoviesFound
-import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.search.countrySearch.CountryItemUiState
 import com.amsterdam.viewmodel.search.countrySearch.CountrySearchEffect
 import com.amsterdam.viewmodel.search.countrySearch.CountrySearchErrorState
@@ -66,10 +65,10 @@ internal fun SearchByCountryScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 CountrySearchEffect.NavigateBack -> {
-                    navController.popBackStack()
+                    navController.navigateUp()
                 }
 
-                CountrySearchEffect.NavigateToMovieDetails -> navController.safeNavigate(
+                CountrySearchEffect.NavigateToMovieDetails -> navController.navigate(
                     MovieDetails(state.selectedMovieId)
                 )
             }

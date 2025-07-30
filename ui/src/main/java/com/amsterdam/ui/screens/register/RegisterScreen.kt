@@ -33,7 +33,7 @@ fun RegisterScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                RegisterEffect.NavigateToSignIn -> navController.popBackStack()
+                RegisterEffect.NavigateToSignIn -> navController.navigateUp()
             }
         }
     }

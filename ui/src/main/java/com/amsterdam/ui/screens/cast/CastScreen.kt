@@ -57,7 +57,7 @@ fun CastScreen(viewModel: CastViewModel = hiltViewModel()) {
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                CastUiEffect.NavigateBack -> navController.popBackStack()
+                CastUiEffect.NavigateBack -> navController.navigateUp()
             }
         }
     }

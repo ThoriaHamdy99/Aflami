@@ -47,7 +47,6 @@ import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.ui.screens.login.components.getLoginErrorMessage
 import com.amsterdam.ui.screens.login.components.getPasswordTextFieldIcon
-import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.login.LoginEffect
 import com.amsterdam.viewmodel.login.LoginErrorState
 import com.amsterdam.viewmodel.login.LoginInteractionListener
@@ -72,8 +71,8 @@ fun LoginScreen(
                     }
                 }
 
-                LoginEffect.NavigateToRegister -> navController.safeNavigate(Route.Register)
-                LoginEffect.NavigateToResetPassword -> navController.safeNavigate(Route.ResetPassword)
+                LoginEffect.NavigateToRegister -> navController.navigate(Route.Register)
+                LoginEffect.NavigateToResetPassword -> navController.navigate(Route.ResetPassword)
                 LoginEffect.ShowCredentialsError -> {
                     SnackBarManager.showError(
                         getLoginErrorMessage(state.loginError, context)

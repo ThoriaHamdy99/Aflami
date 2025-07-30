@@ -58,7 +58,6 @@ import com.amsterdam.ui.screens.search.keywordSearch.sections.ExploreMoviesAndSh
 import com.amsterdam.ui.screens.search.keywordSearch.sections.RecentSearchesSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.SuggestionsHubSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.FilterDialog
-import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.search.keywordSearch.FilterInteractionListener
 import com.amsterdam.viewmodel.search.keywordSearch.SearchErrorState
 import com.amsterdam.viewmodel.search.keywordSearch.SearchInteractionListener
@@ -91,29 +90,26 @@ internal fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 SearchUiEffect.NavigateBack -> {
-                    navController.popBackStack(
-                        route = Route.Tab.Home,
-                        inclusive = false,
-                    )
+                    navController.navigateUp()
                     delay(200)
                     viewModel.navigationCompleted()
                 }
 
                 SearchUiEffect.NavigateToActorSearch -> {
-                    navController.safeNavigate(Route.SearchByActor)
+                    navController.navigate(Route.SearchByActor)
                     delay(200)
                     viewModel.navigationCompleted()
                 }
 
                 SearchUiEffect.NavigateToWorldSearch -> {
-                    navController.safeNavigate(Route.SearchByCountry)
+                    navController.navigate(Route.SearchByCountry)
                     delay(200)
                     viewModel.navigationCompleted()
                 }
 
                 is SearchUiEffect.NavigateToMovieDetails -> {
                     viewModel.onSaveSearchHistory()
-                    navController.safeNavigate(MovieDetails(effect.movieId))
+                    navController.navigate(MovieDetails(effect.movieId))
                     delay(200)
                     viewModel.navigationCompleted()
                 }

@@ -72,7 +72,6 @@ import com.amsterdam.ui.screens.movieDetails.components.PlayButton
 import com.amsterdam.ui.screens.movieDetails.components.ReviewSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.ui.utils.formateAsRate
-import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.cast.MediaType
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsEffect
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsInteractionListener
@@ -94,9 +93,9 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                MovieDetailsEffect.NavigateBackEffect -> navController.popBackStack()
+                MovieDetailsEffect.NavigateBackEffect -> navController.navigateUp()
                 MovieDetailsEffect.NavigateToCastsScreenEffect -> {
-                    navController.safeNavigate(
+                    navController.navigate(
                         Route.Cast(
                             mediaType = MediaType.MOVIE.name,
                             mediaId = state.value.movieId
@@ -104,7 +103,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                     )
                 }
 
-                MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
+                MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.navigate(
                     Route.Login
                 )
                 is MovieDetailsEffect.NavigateToMovieDetails -> {

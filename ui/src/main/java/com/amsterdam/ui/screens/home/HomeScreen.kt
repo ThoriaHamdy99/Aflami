@@ -49,7 +49,6 @@ import com.amsterdam.ui.screens.home.sections.continueWatchingSection
 import com.amsterdam.ui.screens.home.sections.popularSection
 import com.amsterdam.ui.screens.home.sections.topRatingSection
 import com.amsterdam.ui.screens.home.sections.upcomingMoviesSection
-import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.home.HomeEffect
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToMovieDetailsEffect
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToSearchScreenEffect
@@ -66,22 +65,22 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hil
     LaunchedEffect(Unit) {
         homeViewModel.effect.collectLatest { effect ->
             when (effect) {
-                is NavigateToSearchScreenEffect -> navController.safeNavigate(Route.Search)
+                is NavigateToSearchScreenEffect -> navController.navigate(Route.Search)
 
                 is NavigateToMovieDetailsEffect -> {
-                    navController.safeNavigate(MovieDetails(movieId = effect.movieId))
+                    navController.navigate(MovieDetails(movieId = effect.movieId))
                 }
 
                 is HomeEffect.NavigateToTvShowDetailsEffect -> {
-                    navController.safeNavigate(Route.SeriesDetails(tvShowId = effect.tvShowId))
+                    navController.navigate(Route.SeriesDetails(tvShowId = effect.tvShowId))
                 }
 
                 is HomeEffect.NavigateToTopRatedMoviesEffect -> {
-                    navController.safeNavigate(Route.TopRated)
+                    navController.navigate(Route.TopRated)
                 }
 
                 is HomeEffect.NavigateToContinueWatchingMoviesScreen -> {
-                    navController.safeNavigate(Route.ContinueWatching)
+                    navController.navigate(Route.ContinueWatching)
                 }
             }
         }

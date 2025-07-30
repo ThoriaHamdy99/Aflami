@@ -27,7 +27,6 @@ import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.continueWatching.component.ContinueWatchingMediaItemsGrid
 import com.amsterdam.ui.screens.home.sections.AnimatedSectionVisibility
-import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingEffect
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingInteractionListener
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiState
@@ -43,15 +42,15 @@ fun ContinueWatchingScreen(viewModel: ContinueWatchingViewModel = hiltViewModel(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is ContinueWatchingEffect.NavigateToMovieDetailsScreen -> {
-                    navController.safeNavigate(Route.MovieDetails(effect.movieId))
+                    navController.navigate(Route.MovieDetails(effect.movieId))
                 }
 
                 is ContinueWatchingEffect.NavigateToTvShowDetailsEffect -> {
-                    navController.safeNavigate(Route.SeriesDetails(effect.tvShowId))
+                    navController.navigate(Route.SeriesDetails(effect.tvShowId))
                 }
 
                 ContinueWatchingEffect.NavigateBack -> {
-                    navController.popBackStack()
+                    navController.navigateUp()
                 }
             }
         }
