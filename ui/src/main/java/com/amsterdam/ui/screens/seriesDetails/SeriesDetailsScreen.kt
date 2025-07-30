@@ -75,7 +75,6 @@ import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
 import com.amsterdam.ui.utils.formateAsRate
-import com.amsterdam.ui.utils.formateDateForDisplay
 import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.cast.MediaType
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsEffect
@@ -115,6 +114,7 @@ fun SeriesDetailsScreen(
                     SeriesDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
                         Route.Login
                     )
+
                     is SeriesDetailsEffect.NavigateToMovieDetails -> {
                         navController.safeNavigate(Route.MovieDetails(it.movieId))
                     }
@@ -342,10 +342,12 @@ fun SeriesDetailsContent(
                                     interaction.onClickSimilarMovie(movieId)
                                 }
                             )
+
                             SeriesExtras.REVIEWS -> ReviewSection(state.reviews)
                             SeriesExtras.GALLERY -> item {
                                 GallerySection(gallery = state.gallery)
                             }
+
                             SeriesExtras.COMPANY_PRODUCTION -> CompanyProductionSection(
                                 state.productionCompanies
                             )
@@ -363,8 +365,7 @@ private fun SeriesInfoSection(
     seasonCount: String,
     originCountry: String
 ) {
-    val formattedAirDate = formateDateForDisplay(airDate)
-    val items = listOf(formattedAirDate, seasonCount, originCountry)
+    val items = listOf(airDate, seasonCount, originCountry)
 
     Row(
         modifier = modifier
