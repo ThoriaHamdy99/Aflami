@@ -13,8 +13,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.R
+import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.divider.HorizontalDivider
 import com.amsterdam.designsystem.theme.AppTheme
@@ -26,6 +28,7 @@ internal fun LazyGridScope.recentSearchesSection(
     onAllRecentSearchesCleared: () -> Unit,
     onRecentSearchClicked: (String) -> Unit,
     onRecentSearchCleared: (String) -> Unit,
+    headerHeight: Dp,
     modifier: Modifier = Modifier,
 ) {
     item(span = { GridItemSpan(maxLineSpan) }) {
@@ -35,7 +38,7 @@ internal fun LazyGridScope.recentSearchesSection(
                     modifier
                         .fillMaxWidth()
                         .background(color = AppTheme.color.surface)
-                        .padding(top = 24.dp)
+                        .padding(top = 16.dp)
                         .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
@@ -74,61 +77,10 @@ internal fun LazyGridScope.recentSearchesSection(
 
 
     item(span = { GridItemSpan(maxLineSpan) }) {
-        AnimatedVisibility(recentSearches.isEmpty()) {
-            // todo: show empty state imageUrl
+        AnimatedVisibility(keyword.isEmpty() &&recentSearches.isEmpty()) {
+            CenterOfScreenContainer(unneededSpace = headerHeight + 100.dp) {
+                ExploreMoviesAndShows()
+            }
         }
     }
 }
-//
-//internal fun LazyGridScope.RecentSearchesSection(
-//    keyword: String,
-//    recentSearches: List<String>,
-//    onAllRecentSearchesCleared: () -> Unit,
-//    onRecentSearchClicked: (String) -> Unit,
-//    onRecentSearchCleared: (String) -> Unit,
-//    modifier: Modifier = Modifier,
-//) {
-//    AnimatedVisibility(recentSearches.isNotEmpty() && keyword.isBlank()) {
-//        Column {
-//            Row(
-//                modifier =
-//                    modifier
-//                        .fillMaxWidth()
-//                        .background(color = AppTheme.color.surface)
-//                        .padding(top = 24.dp)
-//                        .padding(horizontal = 16.dp),
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//            ) {
-//                Text(
-//                    text = stringResource(R.string.recent_searches),
-//                    style = AppTheme.textStyle.title.medium,
-//                    color = AppTheme.color.title,
-//                    textAlign = TextAlign.Start,
-//                )
-//
-//                Text(
-//                    modifier = modifier.clickable(onClick = onAllRecentSearchesCleared),
-//                    text = stringResource(R.string.clear_all),
-//                    style = AppTheme.textStyle.label.medium,
-//                    color = AppTheme.color.primary,
-//                )
-//            }
-//
-//            LazyColumn {
-//                items(items = recentSearches, key = { it }) { recentSearchItem ->
-//                    RecentSearchItem(
-//                        modifier = Modifier.animateItem(),
-//                        title = recentSearchItem,
-//                        onItemClick = onRecentSearchClicked,
-//                        onCancelClick = onRecentSearchCleared,
-//                    )
-//                    if (recentSearchItem != recentSearches.last()) HorizontalDivider()
-//                }
-//            }
-//        }
-//    }
-//
-//    AnimatedVisibility(recentSearches.isEmpty()) {
-//        // todo: show empty state imageUrl
-//    }
-//}

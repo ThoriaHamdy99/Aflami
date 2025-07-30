@@ -1,7 +1,6 @@
 package com.amsterdam.viewmodel.search.keywordSearch
 
 import android.R.attr.rating
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -69,6 +68,11 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun onSearchKeywordChanged(keyword: String) {
+        if (keyword.isBlank()) {
+            updateState { it.copy(movies = emptyFlow(), tvShows = emptyFlow(), errorUiState = null, isLoading = false) }
+            return
+        }
+
         when (state.value.selectedTabOption) {
             TabOption.MOVIES -> fetchMoviesByKeyword(keyword)
             TabOption.TV_SHOWS -> fetchTvShowsByKeyword(keyword)
@@ -276,6 +280,9 @@ class SearchViewModel @Inject constructor(
             currentState.copy(
                 keyword = "",
                 isDialogVisible = false,
+                isLoading = false,
+                movies = emptyFlow(),
+                tvShows = emptyFlow(),
                 filterItemUiState = FilterItemUiState(),
             )
         }

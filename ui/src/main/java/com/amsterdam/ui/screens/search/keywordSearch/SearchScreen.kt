@@ -120,6 +120,7 @@ private fun SearchContent(
         interaction.onClickClearSearch()
     }
     var headerHeight by remember { mutableStateOf(0.dp) }
+
     var isPageStillLoading by remember { mutableStateOf(false) }
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -146,7 +147,7 @@ private fun SearchContent(
             onTabOptionClicked = interaction::onClickTabOption,
             onSaveSearchHistory = interaction::onSaveSearchHistory,
             onHeaderSizeChanged = { headerHeight = it.height.dp },
-            keyboardController =  keyboardController
+            keyboardController = keyboardController
         )
 
         successMediaItemsSection(
@@ -170,14 +171,12 @@ private fun SearchContent(
             recentSearches = state.recentSearches,
             onAllRecentSearchesCleared = interaction::onClickClearAllRecentSearches,
             onRecentSearchClicked = interaction::onClickRecentSearch,
-            onRecentSearchCleared = interaction::onClickClearRecentSearch
+            onRecentSearchCleared = interaction::onClickClearRecentSearch,
+            headerHeight = headerHeight
         )
 
         item(span = { GridItemSpan(maxLineSpan) }) {
-            AnimatedVisibility(
-                modifier = Modifier.fillMaxSize(),
-                visible = state.isDialogVisible,
-            ) {
+            AnimatedVisibility(modifier = Modifier.fillMaxSize(), visible = state.isDialogVisible) {
                 FilterDialog(
                     filterState = state.filterItemUiState,
                     selectedTabOption = state.selectedTabOption,
@@ -192,15 +191,6 @@ private fun SearchContent(
             ) {
                 CenterOfScreenContainer(unneededSpace = headerHeight) {
                     LoadingContainer(modifier = Modifier.background(Color.Red))//.height(remainingContentHeight)
-                }
-           }
-        }
-
-
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            AnimatedVisibility(state.keyword.isEmpty() && state.recentSearches.isEmpty()) {
-                CenterOfScreenContainer(unneededSpace = headerHeight + 100.dp) {
-                    ExploreMoviesAndShows()
                 }
             }
         }
@@ -227,218 +217,6 @@ private fun SearchContent(
                     )
                 }
             }
-
         }
     }
-
 }
-//@Composable
-//private fun SearchContent(
-//    state: SearchUiState,
-//    movies: LazyPagingItems<MovieItemUiState>,
-//    tvShows: LazyPagingItems<TvShowItemUiState>,
-//    interaction: SearchInteractionListener,
-//    filterInteraction: FilterInteractionListener,
-//) {
-//    BackHandler(enabled = state.keyword.isNotEmpty()) {
-//        interaction.onClickClearSearch()
-//    }
-//    var headerHeight by remember { mutableStateOf(0.dp) }
-//    var isPageStillLoading by remember { mutableStateOf(false) }
-//
-//    Column(
-//        modifier =
-//            Modifier
-//                .fillMaxSize()
-//                .background(color = AppTheme.color.surface)
-//                .statusBarsPadding()
-//                .navigationBarsPadding(),
-//    ) {
-//        SearchScreenHeader(
-//            keyword = state.keyword,
-//            selectedTabOption = state.selectedTabOption,
-//            onNavigateBackClicked = interaction::onClickNavigateBack,
-//            onKeywordValuedChanged = interaction::onChangeSearchKeyword,
-//            onFilterButtonClicked = interaction::onClickFilterButton,
-//            onTabOptionClicked = interaction::onClickTabOption,
-//            onSaveSearchHistory = interaction::onSaveSearchHistory,
-//            onHeaderSizeChanged = {
-//                headerHeight = it.height.dp
-//            },
-//        )
-//
-//        AnimatedVisibility(
-//            (state.isLoading || isPageStillLoading) && state.keyword.isNotBlank() && state.errorUiState == null,
-//        ) {
-//            CenterOfScreenContainer(unneededSpace = headerHeight) {
-//                LoadingContainer()
-//            }
-//        }
-//
-//        AnimatedVisibility(
-//            modifier = Modifier.align(Alignment.CenterHorizontally),
-//            visible = state.isDialogVisible,
-//        ) {
-//            FilterDialog(
-//                filterState = state.filterItemUiState,
-//                selectedTabOption = state.selectedTabOption,
-//                interaction = filterInteraction
-//            )
-//        }
-//
-//        AnimatedVisibility(state.keyword.isNotBlank() && state.errorUiState == null) {
-//            SuccessMediaItems(
-//                selectedTabOption = state.selectedTabOption,
-//                moviesFlow = movies,
-//                tvShowsFlow = tvShows,
-//                onPageLoading = { isPageStillLoading = it },
-//                onMovieClicked = interaction::onClickMovieCard,
-//                onTvShowClicked = interaction::onClickTvShowCard,
-//            )
-//        }
-//
-//        SuggestionsHubSection(
-//            keyword = state.keyword,
-//            onWorldSearchCardClicked = interaction::onClickWorldSearchCard,
-//            onActorSearchCardClicked = interaction::onClickActorSearchCard
-//        )
-//
-//        AnimatedVisibility(
-//            state.keyword.isEmpty() && state.recentSearches.isEmpty()
-//        ) {
-//            CenterOfScreenContainer(unneededSpace = headerHeight + 100.dp) {
-//                ExploreMoviesAndShows()
-//            }
-//        }
-//
-//        RecentSearchesSection(
-//            keyword = state.keyword,
-//            recentSearches = state.recentSearches,
-//            onAllRecentSearchesCleared = interaction::onClickClearAllRecentSearches,
-//            onRecentSearchClicked = interaction::onClickRecentSearch,
-//            onRecentSearchCleared = interaction::onClickClearRecentSearch
-//        )
-//
-//        CenterOfScreenContainer(
-//            unneededSpace = headerHeight,
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(start = 8.dp, end = 8.dp)
-//        ) {
-//            AnimatedVisibility(state.keyword.isNotBlank()) {
-//                if (state.errorUiState != null && state.errorUiState is SearchErrorState.NoNetworkConnection) {
-//                    NoNetworkContainer(
-//                        onClickRetry = interaction::onClickRetryRequest,
-//                        modifier = Modifier.verticalScroll(rememberScrollState())
-//                    )
-//                }
-//
-//                val isSelectedTabSearchResultEmpty =
-//                    if (state.selectedTabOption == TabOption.MOVIES) {
-//                        movies.itemSnapshotList.isEmpty()
-//                    } else {
-//                        tvShows.itemSnapshotList.isEmpty()
-//                    }
-//
-//                AnimatedVisibility(state.errorUiState == null && isSelectedTabSearchResultEmpty) {
-//                    NoDataContainer(
-//                        imageRes = painterResource(com.amsterdam.ui.R.drawable.placeholder_no_result_found),
-//                        title = stringResource(R.string.no_search_result),
-//                        description = stringResource(R.string.no_search_result_description),
-//                        modifier = Modifier.verticalScroll(rememberScrollState()),
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-
-
-//@Composable
-//private fun SuccessMediaItems(
-//    selectedTabOption: TabOption,
-//    moviesFlow: LazyPagingItems<MovieItemUiState>,
-//    tvShowsFlow: LazyPagingItems<TvShowItemUiState>,
-//    onPageLoading: (Boolean) -> Unit,
-//    onMovieClicked: (movieId: Long) -> Unit,
-//    onTvShowClicked: (tvShowId: Long) -> Unit,
-//    modifier: Modifier = Modifier
-//) {
-//    val selectedItems = if (selectedTabOption == TabOption.MOVIES) {
-//        moviesFlow
-//    } else {
-//        tvShowsFlow
-//    }
-//
-//    LazyVerticalGrid(
-//        columns = GridCells.Adaptive(160.dp),
-//        verticalArrangement = Arrangement.spacedBy(8.dp),
-//        horizontalArrangement = Arrangement.spacedBy(8.dp),
-//        contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
-//        modifier = modifier,
-//    ) {
-//        items(
-//            selectedItems.itemCount,
-//            key = { index -> getItemKey(selectedTabOption, index, selectedItems) },
-//        ) { index ->
-//            val mediaItem = selectedItems[index] ?: return@items
-//            when (mediaItem) {
-//                is MovieItemUiState -> {
-//                    MovieCard(
-//                        movieImage = {
-//                            SafeImageView(
-//                                modifier = Modifier.fillMaxSize(),
-//                                contentDescription = mediaItem.name,
-//                                model = mediaItem.posterImageUrl,
-//                                contentScale = ContentScale.Crop,
-//                                onLoading = { ImageLoadingIndicator() },
-//                                onError = { ImageErrorIndicator() },
-//                            )
-//                        },
-//                        movieType = stringResource(R.string.movies),
-//                        movieYear = mediaItem.yearOfRelease,
-//                        movieTitle = mediaItem.name,
-//                        movieRating = mediaItem.rate,
-//                        onClick = { onMovieClicked(mediaItem.id) }
-//                    )
-//                }
-//
-//                is TvShowItemUiState -> {
-//                    MovieCard(
-//                        movieImage = {
-//                            SafeImageView(
-//                                modifier = Modifier.fillMaxSize(),
-//                                contentDescription = mediaItem.name,
-//                                model = mediaItem.posterImageUrl,
-//                                contentScale = ContentScale.Crop,
-//                                onLoading = { ImageLoadingIndicator() },
-//                                onError = { ImageErrorIndicator() },
-//                            )
-//                        },
-//                        movieType = stringResource(R.string.tv_shows),
-//                        movieYear = mediaItem.yearOfRelease,
-//                        movieTitle = mediaItem.name,
-//                        movieRating = mediaItem.rate,
-//                        onClick = { onTvShowClicked(mediaItem.id) }
-//                    )
-//                }
-//            }
-//        }
-//
-//        selectedItems.apply {
-//            when (loadState.refresh) {
-//                is LoadState.Loading -> {
-//                    onPageLoading(true)
-//                }
-//
-//                is LoadState.NotLoading -> {
-//                    onPageLoading(false)
-//                }
-//
-//                else -> onPageLoading(false)
-//            }
-//        }
-//    }
-//}
-
-

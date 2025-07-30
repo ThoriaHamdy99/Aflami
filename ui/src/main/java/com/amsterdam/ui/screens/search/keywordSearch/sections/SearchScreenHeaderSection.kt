@@ -36,14 +36,13 @@ fun LazyGridScope.searchScreenHeaderSection(
 ) {
     //val keyboardController = LocalSoftwareKeyboardController.current
     item(span = { GridItemSpan(maxLineSpan) }) {
-        Column(
-            modifier = modifier.onSizeChanged(onSizeChanged = onHeaderSizeChanged),
-        ) {
+        Column(modifier = modifier.onSizeChanged(onSizeChanged = onHeaderSizeChanged),) {
             DefaultAppBar(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 title = stringResource(R.string.search),
                 onNavigateBackClicked = onNavigateBackClicked,
             )
+
             TextField(
                 modifier =
                     Modifier
@@ -69,6 +68,7 @@ fun LazyGridScope.searchScreenHeaderSection(
                     ),
                 imeAction = ImeAction.Search,
             )
+
             AnimatedVisibility(keyword.isNotBlank()) {
                 TabsLayout(
                     modifier = Modifier.fillMaxWidth(),

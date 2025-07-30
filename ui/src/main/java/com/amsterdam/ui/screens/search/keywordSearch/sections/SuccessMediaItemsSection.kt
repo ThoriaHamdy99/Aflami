@@ -1,6 +1,5 @@
 package com.amsterdam.ui.screens.search.keywordSearch.sections
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.ui.Modifier
@@ -33,11 +32,11 @@ fun LazyGridScope.successMediaItemsSection(
         tvShowsFlow
     }
 
+    if(state.keyword.isNotBlank() && state.errorUiState == null && selectedItems.itemCount > 0){
     items(
-        selectedItems.itemCount,
+        count = selectedItems.itemCount,
         key = { index -> getItemKey(selectedTabOption, index, selectedItems) },
     ) { index ->
-        AnimatedVisibility(state.keyword.isNotBlank() && state.errorUiState == null) {
             val mediaItem = selectedItems[index]
             when (mediaItem) {
                 is MovieItemUiState -> {
