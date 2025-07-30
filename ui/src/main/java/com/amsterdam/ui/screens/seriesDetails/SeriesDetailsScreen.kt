@@ -78,6 +78,7 @@ import com.amsterdam.ui.screens.movieDetails.components.ReviewSection
 import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
+import com.amsterdam.ui.utils.formateAsRate
 import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.cast.MediaType
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsEffect
@@ -117,6 +118,9 @@ fun SeriesDetailsScreen(
                     SeriesDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
                         Route.Login
                     )
+                    is SeriesDetailsEffect.NavigateToMovieDetails -> {
+                        navController.safeNavigate(Route.MovieDetails(it.movieId))
+                    }
                 }
             }
         }
@@ -196,9 +200,27 @@ fun SeriesDetailsContent(
         enter = fadeIn(tween(animationDuration)),
         exit = fadeOut(tween(animationDuration))
     ) {
-        Box(
+        Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(appBarColor)
+            ) {
+                DefaultAppBar(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .statusBarsPadding(),
+                    firstOption = painterResource(R.drawable.ic_outlined_star),
+                    lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
+                    onNavigateBackClicked = interaction::onNavigateBack,
+                    onFirstOptionClicked = interaction::onRateClicked,
+                    onLastOptionClicked = interaction::onAddToListClicked
+                )
+                HorizontalDivider(color = dividerColor)
+            }
+
             LazyColumn(
                 state = listState,
                 modifier = Modifier
@@ -225,7 +247,7 @@ fun SeriesDetailsContent(
                         )
 
                         RatingChip(
-                            state.rating,
+                            state.rating.formateAsRate(),
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
                                 .padding(vertical = 4.dp)
@@ -313,14 +335,30 @@ fun SeriesDetailsContent(
                     ?.item
                     ?.let { selectedExtra ->
                         when (selectedExtra) {
+                            SeriesExtras.SEASONS -> {
+                                val visibleSeasons = state.seasons.filter { it.episodeCount > 0 }
+                                if (visibleSeasons.isNotEmpty()) {
+                                    seasonsSection(
+                                        seasons = visibleSeasons,
+                                        interaction = interaction
+                                    )
+                                }
+                            }
                             SeriesExtras.SEASONS -> seasonsSection(
                                 seasons = state.seasons,
                                 interaction = interaction
                             )
 
-                            SeriesExtras.MORE_LIKE_THIS -> MoreLikeSection(state.similarSeries)
+                            SeriesExtras.MORE_LIKE_THIS -> MoreLikeSection(
+                                similarMovies = state.similarSeries,
+                                onClick = { movieId ->
+                                    interaction.onClickSimilarMovie(movieId)
+                                }
+                            )
                             SeriesExtras.REVIEWS -> ReviewSection(state.reviews)
-                            SeriesExtras.GALLERY -> GallerySection(state.gallery)
+                            SeriesExtras.GALLERY -> item {
+                                GallerySection(gallery = state.gallery)
+                            }
                             SeriesExtras.COMPANY_PRODUCTION -> CompanyProductionSection(
                                 state.productionCompanies
                             )
@@ -344,24 +382,6 @@ fun SeriesDetailsContent(
 
                     Spacer(modifier = Modifier.height(spacerHeight))
                 }
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(appBarColor)
-            ) {
-                DefaultAppBar(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .statusBarsPadding(),
-                    firstOption = painterResource(R.drawable.ic_outlined_star),
-                    lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
-                    onNavigateBackClicked = interaction::onNavigateBack,
-                    onFirstOptionClicked = interaction::onRateClicked,
-                    onLastOptionClicked = interaction::onAddToListClicked
-                )
-                HorizontalDivider(color = dividerColor)
             }
         }
     }
@@ -516,13 +536,11 @@ private fun SeriesDetailsContentPreview() {
                 override fun onClickRetryButton() {}
                 override fun onClickShowAllCast() {}
                 override fun onAddToListClicked() {}
-
                 override fun onRateClicked() {}
-
                 override fun onClickSeasonMenu(seasonNumber: Int) {}
                 override fun onNavigateToLoginClicked() {}
-
                 override fun onCancelClicked() {}
+                override fun onClickSimilarMovie(movieId: Long) {}
             }
         )
     }

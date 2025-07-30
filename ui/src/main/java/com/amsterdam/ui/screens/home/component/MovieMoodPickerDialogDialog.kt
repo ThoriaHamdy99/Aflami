@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,6 +34,7 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
+import com.amsterdam.ui.utils.formateAsRate
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 
 @SuppressLint("ContextCastToActivity")
@@ -49,7 +51,6 @@ fun MovieMoodPickerDialogDialog(
         onDismiss = onDismiss,
         isDismissible = true,
         modifier = modifier,
-        behindDialogColor = AppTheme.color.dialogBackground
     ) {
         DialogContent(
             movie,
@@ -69,12 +70,6 @@ fun DialogContent(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth(0.9f)
-            .clip(RoundedCornerShape(16.dp))
-            .background(
-                AppTheme.color.surface,
-                shape = RoundedCornerShape(16.dp)
-            )
             .padding(12.dp)
     ) {
         Row(
@@ -125,7 +120,7 @@ fun DialogContent(
             )
 
             RatingChip(
-                movie.rate,
+                movie.rate.formateAsRate(),
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(4.dp)
@@ -158,9 +153,13 @@ fun DialogContent(
 
                     Box(
                         modifier = Modifier
-                            .size(3.dp, 3.dp)
-                            .background(AppTheme.color.onPrimaryBody)
                             .padding(horizontal = 4.dp)
+                            .size(3.dp, 3.dp)
+
+                            .background(
+                                AppTheme.color.onPrimaryBody,
+                                shape = CircleShape
+                            )
                             .align(Alignment.CenterVertically)
                     )
 
