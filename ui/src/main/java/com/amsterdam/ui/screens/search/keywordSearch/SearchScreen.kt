@@ -1,18 +1,14 @@
 package com.amsterdam.ui.screens.search.keywordSearch
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -43,7 +39,6 @@ import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.navigation.Route.MovieDetails
 import com.amsterdam.ui.navigation.Route.SeriesDetails
-import com.amsterdam.ui.screens.search.keywordSearch.sections.ExploreMoviesAndShows
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.FilterDialog
 import com.amsterdam.ui.screens.search.keywordSearch.sections.recentSearchesSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.searchScreenHeaderSection
@@ -122,9 +117,7 @@ private fun SearchContent(
     var headerHeight by remember { mutableStateOf(0.dp) }
 
     var isPageStillLoading by remember { mutableStateOf(false) }
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val keyboardController = LocalSoftwareKeyboardController.current
-    val remainingContentHeight = screenHeight - headerHeight - 12.dp * 2
 
     LazyVerticalGrid(
         modifier = Modifier
@@ -190,7 +183,7 @@ private fun SearchContent(
                 visible = (state.isLoading || isPageStillLoading) && state.keyword.isNotBlank() && state.errorUiState == null,
             ) {
                 CenterOfScreenContainer(unneededSpace = headerHeight) {
-                    LoadingContainer(modifier = Modifier.background(Color.Red))//.height(remainingContentHeight)
+                    LoadingContainer()
                 }
             }
         }
