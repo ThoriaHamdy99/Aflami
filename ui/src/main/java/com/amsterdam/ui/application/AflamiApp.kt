@@ -1,15 +1,19 @@
 package com.amsterdam.ui.application
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.amsterdam.designsystem.components.Scaffold
+import com.amsterdam.designsystem.components.snackBar.SnackBarHost
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.ui.navigation.BottomNavigation
 import com.amsterdam.ui.navigation.NavGraph
@@ -37,10 +41,13 @@ fun AflamiApp(
                     )
                 }
             ) {
-                NavGraph(
-                    navController = navController,
-                    startDestination = startDestination
-                )
+                Box(modifier = Modifier.fillMaxSize()) {
+                    NavGraph(
+                        navController = navController,
+                        startDestination = startDestination
+                    )
+                    SnackBarHost()
+                }
             }
         }
     }
