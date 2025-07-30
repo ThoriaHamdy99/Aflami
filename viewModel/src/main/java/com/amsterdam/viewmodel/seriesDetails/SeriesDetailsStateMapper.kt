@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class SeriesDetailsStateMapper @Inject constructor(
     private val movieDetailsStateMapper: MovieDetailsUiStateMapper
-){
+) {
 
     fun toUiState(seriesDetails: TvShowDetails): SeriesDetailsUiState = with(seriesDetails) {
         SeriesDetailsUiState(
@@ -24,7 +24,7 @@ class SeriesDetailsStateMapper @Inject constructor(
             rating = movieDetailsStateMapper.ratingToRatingString(tvShow.rating),
             posterUrl = tvShow.posterUrl,
             title = tvShow.name,
-            airDate = tvShow.airDate.toString(),
+            airDate = movieDetailsStateMapper.dateToString(tvShow.airDate),
             seasonCount = formatSeasonCount(seasons.size),
             originCountry = tvShow.originCountry,
             description = tvShow.description,
