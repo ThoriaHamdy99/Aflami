@@ -343,16 +343,19 @@ fun SeriesDetailsContent(
                                     )
                                 }
                             }
+
                             SeriesExtras.MORE_LIKE_THIS -> MoreLikeSection(
                                 similarMovies = state.similarSeries,
                                 onClick = { movieId ->
                                     interaction.onClickSimilarMovie(movieId)
                                 }
                             )
+
                             SeriesExtras.REVIEWS -> ReviewSection(state.reviews)
                             SeriesExtras.GALLERY -> item {
                                 GallerySection(gallery = state.gallery)
                             }
+
                             SeriesExtras.COMPANY_PRODUCTION -> CompanyProductionSection(
                                 state.productionCompanies
                             )
