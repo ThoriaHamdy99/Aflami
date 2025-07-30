@@ -315,7 +315,9 @@ fun SeriesDetailsContent(
                             }
                             SeriesExtras.MORE_LIKE_THIS -> MoreLikeSection(state.similarSeries)
                             SeriesExtras.REVIEWS -> ReviewSection(state.reviews)
-                            SeriesExtras.GALLERY -> GallerySection(state.gallery)
+                            SeriesExtras.GALLERY -> item {
+                                GallerySection(gallery = state.gallery)
+                            }
                             SeriesExtras.COMPANY_PRODUCTION -> CompanyProductionSection(
                                 state.productionCompanies
                             )
