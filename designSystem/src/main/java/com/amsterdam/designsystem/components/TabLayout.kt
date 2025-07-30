@@ -18,12 +18,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
-import androidx.compose.ui.zIndex
 import com.amsterdam.designsystem.components.divider.HorizontalDivider
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
@@ -89,7 +89,7 @@ fun TabsLayout(
             }
         }
         HorizontalDivider(
-            modifier = Modifier.fillMaxWidth().offset(x = (-16).dp),
+            modifier = Modifier.fillMaxWidth().graphicsLayer{ scaleX = 2f },
             thickness = 1.dp,
             color = dividerColor,
         )
