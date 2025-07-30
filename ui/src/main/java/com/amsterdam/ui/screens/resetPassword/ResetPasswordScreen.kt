@@ -34,7 +34,6 @@ fun ResetPasswordScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 ResetPasswordEffect.NavigateToSignIn -> navController.popBackStack()
-                else -> {}
             }
         }
     }

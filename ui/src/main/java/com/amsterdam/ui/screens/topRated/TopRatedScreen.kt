@@ -47,19 +47,17 @@ fun TopRatedScreen(viewModel: TopRatedViewModel = hiltViewModel()) {
     TopRatedContent(state, viewModel)
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest {
-            it?.let {
-                when (it) {
-                    is TopRatedEffect.NavigateToMovieDetailsScreen -> {
-                        navController.safeNavigate(Route.MovieDetails(it.movieId))
-                    }
+            when (it) {
+                is TopRatedEffect.NavigateToMovieDetailsScreen -> {
+                    navController.safeNavigate(Route.MovieDetails(it.movieId))
+                }
 
-                    is TopRatedEffect.NavigateToTvShowDetailsEffect -> {
-                        navController.safeNavigate(Route.SeriesDetails(it.tvShowId))
-                    }
+                is TopRatedEffect.NavigateToTvShowDetailsEffect -> {
+                    navController.safeNavigate(Route.SeriesDetails(it.tvShowId))
+                }
 
-                    TopRatedEffect.NavigateBack -> {
-                        navController.popBackStack()
-                    }
+                TopRatedEffect.NavigateBack -> {
+                    navController.popBackStack()
                 }
             }
         }

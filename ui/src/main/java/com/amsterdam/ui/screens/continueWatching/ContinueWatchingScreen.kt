@@ -40,20 +40,18 @@ fun ContinueWatchingScreen(viewModel: ContinueWatchingViewModel = hiltViewModel(
     val navController = LocalNavController.current
     ContinueWatchingContent(state, viewModel)
     LaunchedEffect(Unit) {
-        viewModel.effect.collectLatest {
-            it?.let {
-                when (it) {
-                    is ContinueWatchingEffect.NavigateToMovieDetailsScreen -> {
-                        navController.safeNavigate(Route.MovieDetails(it.movieId))
-                    }
+        viewModel.effect.collectLatest { effect ->
+            when (effect) {
+                is ContinueWatchingEffect.NavigateToMovieDetailsScreen -> {
+                    navController.safeNavigate(Route.MovieDetails(effect.movieId))
+                }
 
-                    is ContinueWatchingEffect.NavigateToTvShowDetailsEffect -> {
-                        navController.safeNavigate(Route.SeriesDetails(it.tvShowId))
-                    }
+                is ContinueWatchingEffect.NavigateToTvShowDetailsEffect -> {
+                    navController.safeNavigate(Route.SeriesDetails(effect.tvShowId))
+                }
 
-                    ContinueWatchingEffect.NavigateBack -> {
-                        navController.popBackStack()
-                    }
+                ContinueWatchingEffect.NavigateBack -> {
+                    navController.popBackStack()
                 }
             }
         }

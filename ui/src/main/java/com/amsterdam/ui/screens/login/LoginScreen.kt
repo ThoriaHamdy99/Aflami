@@ -65,21 +65,19 @@ fun LoginScreen(
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
-            effect?.let {
-                when (it) {
-                    LoginEffect.NavigateToHome -> {
-                        navController.navigate(Route.Tab.Home){
-                            popUpTo(0)
-                        }
+            when (effect) {
+                LoginEffect.NavigateToHome -> {
+                    navController.navigate(Route.Tab.Home){
+                        popUpTo(0)
                     }
+                }
 
-                    LoginEffect.NavigateToRegister -> navController.safeNavigate(Route.Register)
-                    LoginEffect.NavigateToResetPassword -> navController.safeNavigate(Route.ResetPassword)
-                    LoginEffect.ShowCredentialsError -> {
-                        SnackBarManager.showError(
-                            getLoginErrorMessage(state.loginError, context)
-                        )
-                    }
+                LoginEffect.NavigateToRegister -> navController.safeNavigate(Route.Register)
+                LoginEffect.NavigateToResetPassword -> navController.safeNavigate(Route.ResetPassword)
+                LoginEffect.ShowCredentialsError -> {
+                    SnackBarManager.showError(
+                        getLoginErrorMessage(state.loginError, context)
+                    )
                 }
             }
         }

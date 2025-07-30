@@ -13,6 +13,10 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -61,25 +65,23 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hil
     val state by homeViewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         homeViewModel.effect.collectLatest { effect ->
-            effect?.let {
-                when (effect) {
-                    is NavigateToSearchScreenEffect -> navController.safeNavigate(Route.Search)
+            when (effect) {
+                is NavigateToSearchScreenEffect -> navController.safeNavigate(Route.Search)
 
-                    is NavigateToMovieDetailsEffect -> {
-                        navController.safeNavigate(MovieDetails(movieId = effect.movieId))
-                    }
+                is NavigateToMovieDetailsEffect -> {
+                    navController.safeNavigate(MovieDetails(movieId = effect.movieId))
+                }
 
-                    is HomeEffect.NavigateToTvShowDetailsEffect -> {
-                        navController.safeNavigate(Route.SeriesDetails(tvShowId = effect.tvShowId))
-                    }
+                is HomeEffect.NavigateToTvShowDetailsEffect -> {
+                    navController.safeNavigate(Route.SeriesDetails(tvShowId = effect.tvShowId))
+                }
 
-                    is HomeEffect.NavigateToTopRatedMoviesEffect -> {
-                        navController.safeNavigate(Route.TopRated)
-                    }
+                is HomeEffect.NavigateToTopRatedMoviesEffect -> {
+                    navController.safeNavigate(Route.TopRated)
+                }
 
-                    is HomeEffect.NavigateToContinueWatchingMoviesScreen -> {
-                        navController.safeNavigate(Route.ContinueWatching)
-                    }
+                is HomeEffect.NavigateToContinueWatchingMoviesScreen -> {
+                    navController.safeNavigate(Route.ContinueWatching)
                 }
             }
         }

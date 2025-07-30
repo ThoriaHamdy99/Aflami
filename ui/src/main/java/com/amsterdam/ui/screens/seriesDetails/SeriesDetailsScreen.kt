@@ -104,25 +104,22 @@ fun SeriesDetailsScreen(
     )
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
-            effect?.let {
-                when (it) {
-                    SeriesDetailsEffect.NavigateBack -> navController.popBackStack()
-                    SeriesDetailsEffect.NavigateToCastScreen -> {
-                        navController.safeNavigate(
-                            Route.Cast(
-                                mediaType = MediaType.TV_SHOW.name,
-                                mediaId = state.tvShowId
-                            )
+            when (effect) {
+                SeriesDetailsEffect.NavigateBack -> navController.popBackStack()
+                SeriesDetailsEffect.NavigateToCastScreen -> {
+                    navController.safeNavigate(
+                        Route.Cast(
+                            mediaType = MediaType.TV_SHOW.name,
+                            mediaId = state.tvShowId
                         )
-                    }
-
-                    SeriesDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
-                        Route.Login
                     )
+                }
 
-                    is SeriesDetailsEffect.NavigateToMovieDetails -> {
-                        navController.safeNavigate(Route.MovieDetails(it.movieId))
-                    }
+                SeriesDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
+                    Route.Login
+                )
+                is SeriesDetailsEffect.NavigateToMovieDetails -> {
+                    navController.safeNavigate(Route.MovieDetails(effect.movieId))
                 }
             }
         }

@@ -93,26 +93,24 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
     )
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
-            effect?.let {
-                when (effect) {
-                    MovieDetailsEffect.NavigateBackEffect -> navController.popBackStack()
-                    MovieDetailsEffect.NavigateToCastsScreenEffect -> {
-                        navController.safeNavigate(
-                            Route.Cast(
-                                mediaType = MediaType.MOVIE.name,
-                                mediaId = state.value.movieId
-                            )
+            when (effect) {
+                MovieDetailsEffect.NavigateBackEffect -> navController.popBackStack()
+                MovieDetailsEffect.NavigateToCastsScreenEffect -> {
+                    navController.safeNavigate(
+                        Route.Cast(
+                            mediaType = MediaType.MOVIE.name,
+                            mediaId = state.value.movieId
                         )
-                    }
-
-                    MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
-                        Route.Login
                     )
-                    is MovieDetailsEffect.NavigateToMovieDetails -> {
-                        navController.navigate(
-                            Route.MovieDetails(effect.movieId)
-                        )
-                    }
+                }
+
+                MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
+                    Route.Login
+                )
+                is MovieDetailsEffect.NavigateToMovieDetails -> {
+                    navController.navigate(
+                        Route.MovieDetails(effect.movieId)
+                    )
                 }
             }
         }

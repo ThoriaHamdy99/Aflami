@@ -64,16 +64,14 @@ internal fun SearchByCountryScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
-            effect?.let {
-                when (effect) {
-                    CountrySearchEffect.NavigateBack -> {
-                        navController.popBackStack()
-                    }
-
-                    CountrySearchEffect.NavigateToMovieDetails -> navController.safeNavigate(
-                        MovieDetails(state.selectedMovieId)
-                    )
+            when (effect) {
+                CountrySearchEffect.NavigateBack -> {
+                    navController.popBackStack()
                 }
+
+                CountrySearchEffect.NavigateToMovieDetails -> navController.safeNavigate(
+                    MovieDetails(state.selectedMovieId)
+                )
             }
         }
     }

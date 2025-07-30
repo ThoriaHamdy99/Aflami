@@ -89,42 +89,40 @@ internal fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
     }
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
-            effect?.let {
-                when (effect) {
-                    SearchUiEffect.NavigateBack -> {
-                        navController.popBackStack(
-                            route = Route.Tab.Home,
-                            inclusive = false,
-                        )
-                        delay(200)
-                        viewModel.navigationCompleted()
-                    }
+            when (effect) {
+                SearchUiEffect.NavigateBack -> {
+                    navController.popBackStack(
+                        route = Route.Tab.Home,
+                        inclusive = false,
+                    )
+                    delay(200)
+                    viewModel.navigationCompleted()
+                }
 
-                    SearchUiEffect.NavigateToActorSearch -> {
-                        navController.safeNavigate(Route.SearchByActor)
-                        delay(200)
-                        viewModel.navigationCompleted()
-                    }
+                SearchUiEffect.NavigateToActorSearch -> {
+                    navController.safeNavigate(Route.SearchByActor)
+                    delay(200)
+                    viewModel.navigationCompleted()
+                }
 
-                    SearchUiEffect.NavigateToWorldSearch -> {
-                        navController.safeNavigate(Route.SearchByCountry)
-                        delay(200)
-                        viewModel.navigationCompleted()
-                    }
+                SearchUiEffect.NavigateToWorldSearch -> {
+                    navController.safeNavigate(Route.SearchByCountry)
+                    delay(200)
+                    viewModel.navigationCompleted()
+                }
 
-                    is SearchUiEffect.NavigateToMovieDetails -> {
-                        viewModel.onSaveSearchHistory()
-                        navController.safeNavigate(MovieDetails(effect.movieId))
-                        delay(200)
-                        viewModel.navigationCompleted()
-                    }
+                is SearchUiEffect.NavigateToMovieDetails -> {
+                    viewModel.onSaveSearchHistory()
+                    navController.safeNavigate(MovieDetails(effect.movieId))
+                    delay(200)
+                    viewModel.navigationCompleted()
+                }
 
-                    is SearchUiEffect.NavigateToTvShowDetails -> {
-                        viewModel.onSaveSearchHistory()
-                        navController.navigate(SeriesDetails(effect.tvShowId))
-                        delay(200)
-                        viewModel.navigationCompleted()
-                    }
+                is SearchUiEffect.NavigateToTvShowDetails -> {
+                    viewModel.onSaveSearchHistory()
+                    navController.navigate(SeriesDetails(effect.tvShowId))
+                    delay(200)
+                    viewModel.navigationCompleted()
                 }
             }
         }
