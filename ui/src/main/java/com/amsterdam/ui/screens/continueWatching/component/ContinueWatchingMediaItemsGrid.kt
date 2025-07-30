@@ -51,7 +51,7 @@ fun ContinueWatchingMediaItemsGrid(
                 movieImage = { MovieImage(item.posterImageUrl) },
                 movieType = movieType,
                 movieYear = item.yearOfRelease,
-                movieTitle = item.name + item?.id,
+                movieTitle = item.name,
                 movieRating = item.rate
             ) {
                 onClickMediaItem(item.id, item.mediaType)
