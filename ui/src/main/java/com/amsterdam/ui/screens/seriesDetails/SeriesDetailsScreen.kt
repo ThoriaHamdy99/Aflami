@@ -114,6 +114,9 @@ fun SeriesDetailsScreen(
                     SeriesDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
                         Route.Login
                     )
+                    is SeriesDetailsEffect.NavigateToMovieDetails -> {
+                        navController.safeNavigate(Route.MovieDetails(it.movieId))
+                    }
                 }
             }
         }
@@ -331,7 +334,17 @@ fun SeriesDetailsContent(
                                     )
                                 }
                             }
-                            SeriesExtras.MORE_LIKE_THIS -> MoreLikeSection(state.similarSeries)
+                            SeriesExtras.SEASONS -> seasonsSection(
+                                seasons = state.seasons,
+                                interaction = interaction
+                            )
+
+                            SeriesExtras.MORE_LIKE_THIS -> MoreLikeSection(
+                                similarMovies = state.similarSeries,
+                                onClick = { movieId ->
+                                    interaction.onClickSimilarMovie(movieId)
+                                }
+                            )
                             SeriesExtras.REVIEWS -> ReviewSection(state.reviews)
                             SeriesExtras.GALLERY -> item {
                                 GallerySection(gallery = state.gallery)
@@ -495,13 +508,11 @@ private fun SeriesDetailsContentPreview() {
                 override fun onClickRetryButton() {}
                 override fun onClickShowAllCast() {}
                 override fun onAddToListClicked() {}
-
                 override fun onRateClicked() {}
-
                 override fun onClickSeasonMenu(seasonNumber: Int) {}
                 override fun onNavigateToLoginClicked() {}
-
                 override fun onCancelClicked() {}
+                override fun onClickSimilarMovie(movieId: Long) {}
             }
         )
     }

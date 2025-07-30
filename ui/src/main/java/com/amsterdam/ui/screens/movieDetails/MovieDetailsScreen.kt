@@ -105,6 +105,11 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                     MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
                         Route.Login
                     )
+                    is MovieDetailsEffect.NavigateToMovieDetails -> {
+                        navController.navigate(
+                            Route.MovieDetails(effect.movieId)
+                        )
+                    }
                 }
             }
         }
@@ -307,7 +312,12 @@ fun MovieContent(
                 ?.item
                 ?.let { selectedExtra ->
                     when (selectedExtra) {
-                        MovieExtras.MORE_LIKE_THIS -> MoreLikeSection(state.similarMovies)
+                        MovieExtras.MORE_LIKE_THIS -> MoreLikeSection(
+                            similarMovies = state.similarMovies,
+                            onClick = { selectedMovieId ->
+                                interactionListener.onClickSimilarMovie(selectedMovieId)
+                            }
+                        )
                         MovieExtras.REVIEWS -> ReviewSection(state.reviews)
                         MovieExtras.GALLERY -> item {
                             GallerySection(gallery = state.gallery)
@@ -336,6 +346,7 @@ private fun SearchByActorContentPreview() {
                     override fun onRateClicked() {}
                     override fun onNavigateToLoginClicked() {}
                     override fun onCancelClicked() {}
+                    override fun onClickSimilarMovie(movieId: Long) {}
                 },
         )
     }
