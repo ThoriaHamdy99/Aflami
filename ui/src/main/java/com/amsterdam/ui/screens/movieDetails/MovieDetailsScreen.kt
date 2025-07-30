@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -105,6 +106,11 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                     MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
                         Route.Login
                     )
+                    is MovieDetailsEffect.NavigateToMovieDetails -> {
+                        navController.navigate(
+                            Route.MovieDetails(effect.movieId)
+                        )
+                    }
                 }
             }
         }
@@ -180,33 +186,14 @@ fun MovieContent(
                             .fillMaxWidth()
                             .height(263.dp),
                 ) {
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier.fillMaxSize()
-                    ) { page ->
-                        SafeImageView(
-                            model = state.moviePostersUrl[page],
-                            contentDescription = "",
-                            modifier =
-                                Modifier
-                                    .fillMaxSize()
-                                    .animateContentSize(),
-                            onLoading = { ImageLoadingIndicator() },
-                            onError = { ImageErrorIndicator() },
+                    if(state.moviePostersUrl.isEmpty()) {
+                        ImageErrorIndicator()
+                    } else {
+                        PostersPager(
+                            pagerState = pagerState,
+                            postersUrl = state.moviePostersUrl
                         )
-
                     }
-
-                    PageIndicator(
-                        modifier = Modifier
-                            .zIndex(1f)
-                            .padding(4.dp)
-                            .background(AppTheme.color.primaryVariant, RoundedCornerShape(100.dp))
-                            .padding(vertical = 4.dp, horizontal = 2.dp)
-                            .align(Alignment.BottomEnd),
-                        numberOfPages = state.moviePostersUrl.size,
-                        selectedPage = pagerState.currentPage
-                    )
 
                     DefaultAppBar(
                         modifier =
@@ -307,9 +294,16 @@ fun MovieContent(
                 ?.item
                 ?.let { selectedExtra ->
                     when (selectedExtra) {
-                        MovieExtras.MORE_LIKE_THIS -> MoreLikeSection(state.similarMovies)
+                        MovieExtras.MORE_LIKE_THIS -> MoreLikeSection(
+                            similarMovies = state.similarMovies,
+                            onClick = { selectedMovieId ->
+                                interactionListener.onClickSimilarMovie(selectedMovieId)
+                            }
+                        )
                         MovieExtras.REVIEWS -> ReviewSection(state.reviews)
-                        MovieExtras.GALLERY -> GallerySection(state.gallery)
+                        MovieExtras.GALLERY -> item {
+                            GallerySection(gallery = state.gallery)
+                        }
                         MovieExtras.COMPANY_PRODUCTION -> CompanyProductionSection(state.productionCompany)
                     }
                 }
@@ -317,6 +311,46 @@ fun MovieContent(
     }
 }
 
+@Composable
+private fun PostersPager(
+    pagerState: PagerState,
+    postersUrl: List<String>,
+) {
+    Box {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) { page ->
+            SafeImageView(
+                model = postersUrl[page],
+                contentDescription = "",
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .animateContentSize(),
+                onLoading = { ImageLoadingIndicator() },
+                onError = { ImageErrorIndicator() },
+            )
+        }
+
+        if (postersUrl.size > 1) {
+            PageIndicator(
+                modifier = Modifier
+                    .zIndex(1f)
+                    .padding(4.dp)
+                    .background(
+                        AppTheme.color.primaryVariant,
+                        RoundedCornerShape(100.dp)
+                    )
+                    .padding(vertical = 4.dp, horizontal = 2.dp)
+                    .align(Alignment.BottomEnd),
+                numberOfPages = if (postersUrl.size >= 10) 10
+                else postersUrl.size,
+                selectedPage = pagerState.currentPage % 10
+            )
+        }
+    }
+}
 
 @Composable
 @ThemeAndLocalePreviews
@@ -334,6 +368,7 @@ private fun SearchByActorContentPreview() {
                     override fun onRateClicked() {}
                     override fun onNavigateToLoginClicked() {}
                     override fun onCancelClicked() {}
+                    override fun onClickSimilarMovie(movieId: Long) {}
                 },
         )
     }
