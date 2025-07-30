@@ -91,34 +91,24 @@ internal fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
             when (effect) {
                 SearchUiEffect.NavigateBack -> {
                     navController.navigateUp()
-                    delay(200)
-                    viewModel.navigationCompleted()
                 }
 
                 SearchUiEffect.NavigateToActorSearch -> {
                     navController.navigate(Route.SearchByActor)
-                    delay(200)
-                    viewModel.navigationCompleted()
                 }
 
                 SearchUiEffect.NavigateToWorldSearch -> {
                     navController.navigate(Route.SearchByCountry)
-                    delay(200)
-                    viewModel.navigationCompleted()
                 }
 
                 is SearchUiEffect.NavigateToMovieDetails -> {
                     viewModel.onSaveSearchHistory()
                     navController.navigate(MovieDetails(effect.movieId))
-                    delay(200)
-                    viewModel.navigationCompleted()
                 }
 
                 is SearchUiEffect.NavigateToTvShowDetails -> {
                     viewModel.onSaveSearchHistory()
                     navController.navigate(SeriesDetails(effect.tvShowId))
-                    delay(200)
-                    viewModel.navigationCompleted()
                 }
             }
         }
