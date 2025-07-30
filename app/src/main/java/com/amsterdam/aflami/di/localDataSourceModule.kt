@@ -5,9 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import com.amsterdam.localdatasource.dataStore.appPreferences.AppDataStorePreferences
-import com.amsterdam.localdatasource.dataStore.datasource.AppPreferences
-import com.amsterdam.localdatasource.dataStore.datasource.AuthenticationLocalDataSourceImpl
+import com.amsterdam.localdatasource.dataStore.AuthenticationLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
 import com.amsterdam.localdatasource.roomDataBase.datasource.CategoryLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.CountryLocalDataSourceImpl
@@ -125,11 +123,5 @@ abstract class LocalDataSourceBindsModule {
     abstract fun bindWatchHistoryLocalDataSource(
         impl: WatchHistoryLocalDataSourceImpl
     ): WatchHistoryLocalDataSource
-
-    @Binds
-    @Singleton
-    abstract fun bindAppPreferences(
-        impl: AppDataStorePreferences
-    ): AppPreferences
 
 }
