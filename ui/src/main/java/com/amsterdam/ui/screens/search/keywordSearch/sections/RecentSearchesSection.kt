@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,8 +39,7 @@ internal fun LazyGridScope.recentSearchesSection(
                     modifier
                         .fillMaxWidth()
                         .background(color = AppTheme.color.surface)
-                        .padding(top = 16.dp)
-                        .padding(horizontal = 16.dp),
+                        .padding(top = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
@@ -65,19 +65,21 @@ internal fun LazyGridScope.recentSearchesSection(
         span = { GridItemSpan(maxLineSpan) },
     ) { recentSearchItem ->
         AnimatedVisibility(recentSearches.isNotEmpty() && keyword.isBlank()) {
-            RecentSearchItem(
-                modifier = Modifier.animateItem(),
-                title = recentSearchItem,
-                onItemClick = onRecentSearchClicked,
-                onCancelClick = onRecentSearchCleared,
-            )
-            if (recentSearchItem != recentSearches.last()) HorizontalDivider()
+            Column {
+                RecentSearchItem(
+                    modifier = Modifier.animateItem(),
+                    title = recentSearchItem,
+                    onItemClick = onRecentSearchClicked,
+                    onCancelClick = onRecentSearchCleared,
+                )
+                if (recentSearchItem != recentSearches.last()) HorizontalDivider()
+            }
         }
     }
 
 
     item(span = { GridItemSpan(maxLineSpan) }) {
-        AnimatedVisibility(keyword.isEmpty() &&recentSearches.isEmpty()) {
+        AnimatedVisibility(keyword.isEmpty() && recentSearches.isEmpty()) {
             CenterOfScreenContainer(unneededSpace = headerHeight + 100.dp) {
                 ExploreMoviesAndShows()
             }

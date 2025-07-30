@@ -34,11 +34,9 @@ fun LazyGridScope.searchScreenHeaderSection(
     modifier: Modifier = Modifier,
     onHeaderSizeChanged: (IntSize) -> Unit = {},
 ) {
-    //val keyboardController = LocalSoftwareKeyboardController.current
     item(span = { GridItemSpan(maxLineSpan) }) {
         Column(modifier = modifier.onSizeChanged(onSizeChanged = onHeaderSizeChanged),) {
             DefaultAppBar(
-                modifier = Modifier.padding(horizontal = 16.dp),
                 title = stringResource(R.string.search),
                 onNavigateBackClicked = onNavigateBackClicked,
             )
@@ -47,8 +45,7 @@ fun LazyGridScope.searchScreenHeaderSection(
                 modifier =
                     Modifier
                         .background(color = AppTheme.color.surface)
-                        .padding(top = 8.dp)
-                        .padding(horizontal = 16.dp),
+                        .padding(top = 8.dp),
                 text = keyword,
                 onValueChange = onKeywordValuedChanged,
                 hintText = stringResource(R.string.search_hint),

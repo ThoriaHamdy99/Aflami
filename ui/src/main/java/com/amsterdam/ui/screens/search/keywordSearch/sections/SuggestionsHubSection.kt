@@ -28,9 +28,7 @@ internal fun LazyGridScope.suggestionsHubSection(
     item(span = { GridItemSpan(maxLineSpan) }) {
         AnimatedVisibility(keyword.isBlank()) {
             Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.serach_suggestions_hub),
                 style = AppTheme.textStyle.title.medium,
                 color = AppTheme.color.title,
@@ -42,10 +40,7 @@ internal fun LazyGridScope.suggestionsHubSection(
     item(span = { GridItemSpan(maxLineSpan) }) {
         AnimatedVisibility(visible = keyword.isBlank()) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 0.dp, start = 16.dp, end = 16.dp)
-                    .height(intrinsicSize = IntrinsicSize.Max),
+                modifier = Modifier.fillMaxWidth().height(intrinsicSize = IntrinsicSize.Max),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 GlobalSearchHub(
