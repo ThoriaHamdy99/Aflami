@@ -238,7 +238,7 @@ class SearchViewModel @Inject constructor(
         } else {
             if (!isNavigating) {
                 isNavigating = true
-                sendNewEffect(SearchUiEffect.NavigateBack)
+                sendNewNavigationEffect(SearchUiEffect.NavigateBack)
             }
         }
     }
@@ -246,14 +246,14 @@ class SearchViewModel @Inject constructor(
     override fun onClickWorldSearchCard() {
         if (!isNavigating) {
             isNavigating = true
-            sendNewEffect(SearchUiEffect.NavigateToWorldSearch)
+            sendNewNavigationEffect(SearchUiEffect.NavigateToWorldSearch)
         }
     }
 
     override fun onClickActorSearchCard() {
         if (!isNavigating) {
             isNavigating = true
-            sendNewEffect(SearchUiEffect.NavigateToActorSearch)
+            sendNewNavigationEffect(SearchUiEffect.NavigateToActorSearch)
         }
     }
 
@@ -332,14 +332,14 @@ class SearchViewModel @Inject constructor(
     override fun onClickMovieCard(movieId: Long) {
         if (!isNavigating) {
             isNavigating = true
-            sendNewEffect(SearchUiEffect.NavigateToMovieDetails(movieId))
+            sendNewNavigationEffect(SearchUiEffect.NavigateToMovieDetails(movieId))
         }
     }
 
     override fun onClickTvShowCard(tvShowId: Long) {
         if (!isNavigating) {
             isNavigating = true
-            sendNewEffect(SearchUiEffect.NavigateToTvShowDetails(tvShowId))
+            sendNewNavigationEffect(SearchUiEffect.NavigateToTvShowDetails(tvShowId))
         }
     }
 
