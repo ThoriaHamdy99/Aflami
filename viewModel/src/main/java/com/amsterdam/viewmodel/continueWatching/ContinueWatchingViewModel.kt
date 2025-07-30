@@ -42,10 +42,10 @@ class ContinueWatchingViewModel @Inject constructor(
         tryToExecute(
             action = {
                 Pager(
-                    config = PagingConfig(pageSize = 8,prefetchDistance = 1, initialLoadSize = 8),
+                    config = PagingConfig(pageSize = 20),
                     pagingSourceFactory = {
                         PagingSource { page ->
-                            val continueWatchingScreenData = getContinueWatchingScreenDataUseCase(page = page, pageSize = 8)
+                            val continueWatchingScreenData = getContinueWatchingScreenDataUseCase(page = page, pageSize = 20)
                             getLinearItemsList(continueWatchingScreenData.continueWatchingMovies.first(),
                                 continueWatchingScreenData.continueWatchingTvShows.first(),
                                 continueWatchingUiStateMapper::continueWatchingMediaItemUiState,
