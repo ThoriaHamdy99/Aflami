@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,7 +48,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.Icon
 import com.amsterdam.designsystem.components.ImageErrorIndicator
-import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.chip.Chip
@@ -55,13 +55,13 @@ import com.amsterdam.designsystem.components.divider.HorizontalDivider
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.EpisodeCard
 import com.amsterdam.ui.components.MustLoginDialog
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.components.appBar.DefaultAppBar
+import com.amsterdam.ui.components.details.DetailsPostersPager
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
@@ -85,6 +85,7 @@ import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState.
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsViewModel
 import com.amsterdam.viewmodel.shared.Selectable
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -155,6 +156,14 @@ fun SeriesDetailsContent(
             } else {
                 transparent
             }
+        }
+    }
+    val pagerState = rememberPagerState { state.postersUrls.size }
+
+    LaunchedEffect(true) {
+        while (true) {
+            delay(4000)
+            pagerState.animateScrollToPage(((pagerState.currentPage + 1) % 10))
         }
     }
 
@@ -231,15 +240,14 @@ fun SeriesDetailsContent(
                             .fillMaxWidth()
                             .height(263.dp)
                     ) {
-                        SafeImageView(
-                            model = state.posterUrl,
-                            contentDescription = "",
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .animateContentSize(),
-                            onLoading = { ImageLoadingIndicator() },
-                            onError = { ImageErrorIndicator() },
-                        )
+                        if (state.postersUrls.isEmpty()) {
+                            ImageErrorIndicator()
+                        } else {
+                            DetailsPostersPager(
+                                pagerState = pagerState,
+                                postersUrl = state.postersUrls
+                            )
+                        }
 
                         RatingChip(
                             state.rating.formateAsRate(),
@@ -335,19 +343,16 @@ fun SeriesDetailsContent(
                                     )
                                 }
                             }
-
                             SeriesExtras.MORE_LIKE_THIS -> MoreLikeSection(
                                 similarMovies = state.similarSeries,
                                 onClick = { movieId ->
                                     interaction.onClickSimilarMovie(movieId)
                                 }
                             )
-
                             SeriesExtras.REVIEWS -> ReviewSection(state.reviews)
                             SeriesExtras.GALLERY -> item {
                                 GallerySection(gallery = state.gallery)
                             }
-
                             SeriesExtras.COMPANY_PRODUCTION -> CompanyProductionSection(
                                 state.productionCompanies
                             )

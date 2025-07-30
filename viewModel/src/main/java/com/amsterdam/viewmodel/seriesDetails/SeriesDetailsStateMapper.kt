@@ -64,6 +64,7 @@ class SeriesDetailsStateMapper @Inject constructor(
                 )
             },
             gallery = gallery.map { it },
+            postersUrls = posters,
             productionCompanies = productionsCompanies.map { company ->
                 ProductionCompanyUiState(
                     image = company.imageUrl,
