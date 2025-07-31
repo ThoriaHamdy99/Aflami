@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -20,13 +21,13 @@ import androidx.compose.ui.unit.dp
 
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
-fun AdaptiveGrid(
-    items: List<Any>,
+fun <T> AdaptiveGrid(
+    items: List<T>,
     itemMinWidth: Int,
     modifier: Modifier = Modifier,
     itemsHorizontalPadding: Dp = 8.dp,
     itemsVerticalPadding: Dp = 8.dp,
-    cardContent: @Composable RowScope.(Any) -> Unit
+    cardContent: @Composable RowScope.(T) -> Unit
 ) {
     val deviceWidth = LocalConfiguration.current.screenWidthDp
     var chunks by remember { mutableIntStateOf(deviceWidth / itemMinWidth) }

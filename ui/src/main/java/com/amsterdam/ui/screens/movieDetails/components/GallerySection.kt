@@ -34,7 +34,7 @@ fun GallerySection(
                     .height(145.dp)
                     .clip(RoundedCornerShape(12.dp)),
                 contentDescription = null,
-                model = item.toString(),
+                model = item,
                 contentScale = ContentScale.Crop,
                 onLoading = { ImageLoadingIndicator() },
                 onError = { ImageErrorIndicator() },
