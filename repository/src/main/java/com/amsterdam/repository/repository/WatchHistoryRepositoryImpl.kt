@@ -45,18 +45,22 @@ class WatchHistoryRepositoryImpl @Inject constructor(
         pageSize: Int
     ): Flow<List<MovieWatchHistory>> = flow {
         watchHistoryLocalDataSource.getMoviesWatchHistory(page, pageSize).collect {
-            emit(it.map { moviesIds ->
-                movieLocalSource.getMovieById(moviesIds.movieId, getDeviceLanguage())?.let {
-                    movieWatchHistoryLocalMapper.toEntity(it)
-                }
-                    ?: movieRemoteDataSource.getMovieDetailsById(moviesIds.movieId).run {
-                        cacheWatchedMovie(this)
-                        movieLocalSource.getMovieById(moviesIds.movieId, getDeviceLanguage()).let {
-                            movieWatchHistoryLocalMapper.toEntity(it!!)
-                        }
-                    }
-            })
+            emit(it.map { getMovieWatchHistory(it) })
         }
+    }
+
+    private suspend fun getMovieWatchHistory(movieWatchHistoryDto: MovieWatchHistoryDto): MovieWatchHistory {
+        return movieLocalSource.getMovieById(movieWatchHistoryDto.movieId, getDeviceLanguage())
+            ?.let {
+                movieWatchHistoryLocalMapper.toEntity(it)
+            }
+            ?: movieRemoteDataSource.getMovieDetailsById(movieWatchHistoryDto.movieId).run {
+                cacheWatchedMovie(this)
+                movieLocalSource.getMovieById(movieWatchHistoryDto.movieId, getDeviceLanguage())
+                    .let {
+                        movieWatchHistoryLocalMapper.toEntity(it!!)
+                    }
+            }
     }
 
     private suspend fun cacheWatchedMovie(remoteMovieDetailsResponse: RemoteMovieDetailsResponse) {
@@ -78,21 +82,27 @@ class WatchHistoryRepositoryImpl @Inject constructor(
         pageSize: Int
     ): Flow<List<TvShowWatchHistory>> = flow {
         watchHistoryLocalDataSource.getTvShowsWatchHistory(page, pageSize).collect {
-            emit(it.map { tvShowsIds ->
-                tvShowLocalDataSource.getTvShowById(tvShowsIds.tvShowId, getDeviceLanguage())?.let {
-                    tvWatchHistoryLocalMapper.toEntity(it)
-                }
-                    ?: tvShowRemoteSource.getTvShowDetailsById(tvShowsIds.tvShowId).run {
-                        cacheWatchedTvShow(this)
-                        tvShowLocalDataSource.getTvShowById(
-                            tvShowsIds.tvShowId,
-                            getDeviceLanguage()
-                        ).let {
-                            tvWatchHistoryLocalMapper.toEntity(it!!)
-                        }
-                    }
-            })
+            emit(it.map { getTvShowWatchHistory(it) })
         }
+    }
+
+
+    private suspend fun getTvShowWatchHistory(tvShowWatchHistoryDto: TvShowWatchHistoryDto): TvShowWatchHistory {
+        return tvShowLocalDataSource.getTvShowById(
+            tvShowWatchHistoryDto.tvShowId,
+            getDeviceLanguage()
+        )?.let {
+            tvWatchHistoryLocalMapper.toEntity(it)
+        }
+            ?: tvShowRemoteSource.getTvShowDetailsById(tvShowWatchHistoryDto.tvShowId).run {
+                cacheWatchedTvShow(this)
+                tvShowLocalDataSource.getTvShowById(
+                    tvShowWatchHistoryDto.tvShowId,
+                    getDeviceLanguage()
+                ).let {
+                    tvWatchHistoryLocalMapper.toEntity(it!!)
+                }
+            }
     }
 
     private suspend fun cacheWatchedTvShow(remoteTvShowItemDto: TvShowDetailsRemoteResponse) {
