@@ -1,7 +1,6 @@
 package com.amsterdam.ui.screens.movieDetails
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -33,17 +32,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.R
@@ -108,6 +104,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                     MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
                         Route.Login
                     )
+
                     is MovieDetailsEffect.NavigateToMovieDetails -> {
                         navController.navigate(
                             Route.MovieDetails(effect.movieId)
@@ -193,7 +190,7 @@ fun MovieContent(
                             .fillMaxWidth()
                             .height(263.dp),
                 ) {
-                    if(state.moviePostersUrl.isEmpty()) {
+                    if (state.moviePostersUrl.isEmpty()) {
                         ImageErrorIndicator()
                     } else {
                         DetailsPostersPager(
@@ -273,6 +270,8 @@ fun MovieContent(
                                 .padding(top = 24.dp)
                                 .padding(horizontal = 16.dp),
                             description = state.description,
+                            isExpanded = state.isDescriptionExpanded,
+                            onToggleExpansion = interactionListener::onDescriptionExpansionToggled
                         )
                         CastSection(
                             modifier = Modifier.padding(top = 24.dp),
@@ -312,10 +311,12 @@ fun MovieContent(
                                 interactionListener.onClickSimilarMovie(selectedMovieId)
                             }
                         )
-                        MovieExtras.REVIEWS -> ReviewSection(state.reviews)
+
+                        MovieExtras.REVIEWS -> ReviewSection(state.reviews, interactionListener)
                         MovieExtras.GALLERY -> item {
                             GallerySection(gallery = state.gallery)
                         }
+
                         MovieExtras.COMPANY_PRODUCTION -> CompanyProductionSection(state.productionCompany)
                     }
                 }
@@ -327,7 +328,7 @@ fun MovieContent(
 
                 val spacerHeight: Dp by remember {
                     derivedStateOf {
-                        if (movieExtrasSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)){
+                        if (movieExtrasSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)) {
                             screenHeightDp
                         } else {
                             0.dp
@@ -358,6 +359,8 @@ private fun SearchByActorContentPreview() {
                     override fun onNavigateToLoginClicked() {}
                     override fun onCancelClicked() {}
                     override fun onClickSimilarMovie(movieId: Long) {}
+                    override fun onDescriptionExpansionToggled() {}
+                    override fun onReviewExpansionToggled(reviewId: String) {}
                 },
         )
     }
