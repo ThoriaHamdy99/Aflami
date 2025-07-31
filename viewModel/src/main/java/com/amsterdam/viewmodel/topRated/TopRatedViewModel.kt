@@ -1,7 +1,8 @@
 package com.amsterdam.viewmodel.topRated
 
+import android.util.Log
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NoInternetException
+import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase.TopRatedScreenData
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -38,7 +39,7 @@ class TopRatedViewModel @Inject constructor(
 
     private fun onError(exception: AflamiException) {
         when (exception) {
-            is NoInternetException -> updateState {
+            is NetworkException -> updateState {
                 it.copy(
                     isLoading = false,
                     error = TopRatedError.NetworkError
