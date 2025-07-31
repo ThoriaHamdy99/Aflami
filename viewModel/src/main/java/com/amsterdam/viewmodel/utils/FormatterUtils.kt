@@ -25,11 +25,6 @@ import kotlin.math.roundToInt
         val minutes = movieLength % 60
         return "${hours}h ${minutes}m"
     }
-
-    fun safeDateToString(date: LocalDate?): String {
-        return date?.let { dateToString(it) } ?: ""
-    }
-
     fun formatDuration(duration: Int): String {
         val hours = duration / 60
         val minutes = duration % 60

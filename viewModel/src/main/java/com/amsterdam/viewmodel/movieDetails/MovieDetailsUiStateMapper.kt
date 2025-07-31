@@ -10,7 +10,6 @@ import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.SimilarMovieUiState
 import com.amsterdam.viewmodel.utils.dateToString
 import com.amsterdam.viewmodel.utils.movieLengthToHourMinuteString
 import com.amsterdam.viewmodel.utils.ratingToRatingString
-import com.amsterdam.viewmodel.utils.safeDateToString
 import javax.inject.Inject
 
 class MovieDetailsUiStateMapper @Inject constructor() {
@@ -22,7 +21,7 @@ class MovieDetailsUiStateMapper @Inject constructor() {
             movieTitle = movie.name,
             categories = movie.categories,
             moviePostersUrl = moviePosters,
-            releaseDate = safeDateToString(movie.releaseDate),
+            releaseDate = dateToString(movie.releaseDate),
             movieLength = movieLengthToHourMinuteString(movie.runTimeInMinutes),
             originCountry = movie.originCountry,
             description = movie.description,
