@@ -58,7 +58,7 @@ fun LazyListScope.continueWatchingSection(
                             movieType = movieType,
                             movieYear = item.yearOfRelease,
                             movieTitle = item.name,
-                            movieRating = item.rate.formateAsRate()
+                            movieRating = item.rate
                         ) {
                             onClickMediaItem(item.id, item.mediaType)
                         }
