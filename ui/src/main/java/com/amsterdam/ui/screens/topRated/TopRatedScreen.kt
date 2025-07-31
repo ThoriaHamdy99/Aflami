@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun TopRatedScreen(viewModel: TopRatedViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
+
     TopRatedContent(state, viewModel)
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest {

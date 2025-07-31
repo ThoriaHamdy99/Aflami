@@ -101,6 +101,7 @@ fun SeriesDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
+
     SeriesDetailsContent(
         state = state,
         interaction = viewModel

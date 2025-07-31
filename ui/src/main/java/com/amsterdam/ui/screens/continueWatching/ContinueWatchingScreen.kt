@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun ContinueWatchingScreen(viewModel: ContinueWatchingViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
+
     ContinueWatchingContent(state, viewModel)
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
