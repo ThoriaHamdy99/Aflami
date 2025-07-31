@@ -27,14 +27,19 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.R
@@ -53,17 +58,16 @@ import com.amsterdam.ui.components.details.DetailsPostersPager
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
-import com.amsterdam.ui.screens.movieDetails.components.CompanyProductionSection
+import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
 import com.amsterdam.ui.screens.movieDetails.components.GallerySection
-import com.amsterdam.ui.screens.movieDetails.components.MoreLikeSection
+import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieExtrasSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieInfoSection
 import com.amsterdam.ui.screens.movieDetails.components.PlayButton
-import com.amsterdam.ui.screens.movieDetails.components.ReviewSection
+import com.amsterdam.ui.screens.movieDetails.components.reviewSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.ui.utils.formateAsRate
-import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.cast.MediaType
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsEffect
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsInteractionListener
@@ -84,26 +88,24 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
     )
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
-            effect?.let {
-                when (effect) {
-                    MovieDetailsEffect.NavigateBackEffect -> navController.popBackStack()
-                    MovieDetailsEffect.NavigateToCastsScreenEffect -> {
-                        navController.safeNavigate(
-                            Route.Cast(
-                                mediaType = MediaType.MOVIE.name,
-                                mediaId = state.value.movieId
-                            )
+            when (effect) {
+                MovieDetailsEffect.NavigateBackEffect -> navController.navigateUp()
+                MovieDetailsEffect.NavigateToCastsScreenEffect -> {
+                    navController.navigate(
+                        Route.Cast(
+                            mediaType = MediaType.MOVIE.name,
+                            mediaId = state.value.movieId
                         )
-                    }
-
-                    MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
-                        Route.Login
                     )
-                    is MovieDetailsEffect.NavigateToMovieDetails -> {
-                        navController.navigate(
-                            Route.MovieDetails(effect.movieId)
-                        )
-                    }
+                }
+
+                MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.navigate(
+                    Route.Login
+                )
+                is MovieDetailsEffect.NavigateToMovieDetails -> {
+                    navController.navigate(
+                        Route.MovieDetails(effect.movieId)
+                    )
                 }
             }
         }
@@ -118,9 +120,14 @@ fun MovieContent(
 ) {
     val configuration = LocalConfiguration.current
     val screenWidthDp by remember { mutableStateOf(configuration.screenWidthDp.dp) }
+    val screenHeightDp = configuration.screenHeightDp.dp
+    var movieExtrasSectionYOffsetDp by remember { mutableStateOf(0.dp) }
+
     val listState = rememberLazyListState()
     val animationDuration by remember { mutableIntStateOf(1000) }
     val pagerState = rememberPagerState { state.moviePostersUrl.size }
+
+
 
     LaunchedEffect(true) {
         while (true) {
@@ -274,7 +281,12 @@ fun MovieContent(
                                     .background(AppTheme.color.stroke),
                         )
                         MovieExtrasSection(
-                            modifier = Modifier.padding(top = 12.dp),
+                            modifier = Modifier
+                                .padding(top = 12.dp)
+                                .onGloballyPositioned { coordinates ->
+                                    movieExtrasSectionYOffsetDp =
+                                        coordinates.positionOnScreen().y.dp
+                                },
                             extras = state.extraItem,
                             onClickExtras = interactionListener::onClickMovieExtras,
                         )
@@ -287,19 +299,37 @@ fun MovieContent(
                 ?.item
                 ?.let { selectedExtra ->
                     when (selectedExtra) {
-                        MovieExtras.MORE_LIKE_THIS -> MoreLikeSection(
+                        MovieExtras.MORE_LIKE_THIS -> moreLikeSection(
                             similarMovies = state.similarMovies,
                             onClick = { selectedMovieId ->
                                 interactionListener.onClickSimilarMovie(selectedMovieId)
                             }
                         )
-                        MovieExtras.REVIEWS -> ReviewSection(state.reviews)
+                        MovieExtras.REVIEWS -> reviewSection(state.reviews)
                         MovieExtras.GALLERY -> item {
                             GallerySection(gallery = state.gallery)
                         }
-                        MovieExtras.COMPANY_PRODUCTION -> CompanyProductionSection(state.productionCompany)
+                        MovieExtras.COMPANY_PRODUCTION -> companyProductionSection(state.productionCompany)
                     }
                 }
+
+            item {
+                val lastVisibleItemInfo by remember { derivedStateOf { listState.layoutInfo.visibleItemsInfo.lastOrNull() } }
+                val totalItemsCount by remember { derivedStateOf { listState.layoutInfo.totalItemsCount } }
+
+
+                val spacerHeight: Dp by remember {
+                    derivedStateOf {
+                        if (movieExtrasSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)){
+                            screenHeightDp
+                        } else {
+                            0.dp
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(spacerHeight))
+            }
         }
     }
 }

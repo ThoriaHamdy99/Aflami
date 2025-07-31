@@ -3,6 +3,7 @@ package com.amsterdam.viewmodel.seriesDetails
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
 import com.amsterdam.entity.Episode
 import com.amsterdam.entity.Season
+import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiStateMapper
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState.EpisodeUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
@@ -11,20 +12,20 @@ import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ActorUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ProductionCompanyUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ReviewUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.SimilarMovieUiState
-import com.amsterdam.viewmodel.utils.dateToString
-import com.amsterdam.viewmodel.utils.formatDuration
-import com.amsterdam.viewmodel.utils.ratingToRatingString
 import javax.inject.Inject
 
-class SeriesDetailsStateMapper @Inject constructor() {
+class SeriesDetailsStateMapper @Inject constructor(
+    private val movieDetailsStateMapper: MovieDetailsUiStateMapper
+){
 
     fun toUiState(seriesDetails: TvShowDetails): SeriesDetailsUiState = with(seriesDetails) {
         SeriesDetailsUiState(
             tvShowId = tvShow.id,
-            rating = ratingToRatingString(tvShow.rating),
+            rating = movieDetailsStateMapper.ratingToRatingString(tvShow.rating),
             posterUrl = tvShow.posterUrl,
             title = tvShow.name,
-            airDate = dateToString(tvShow.airDate),
+            categories = tvShow.categories,
+            airDate = tvShow.airDate.toString(),
             seasonCount = formatSeasonCount(seasons.size),
             originCountry = tvShow.originCountry,
             description = tvShow.description,
@@ -47,7 +48,7 @@ class SeriesDetailsStateMapper @Inject constructor() {
             similarSeries = similarTvShows.map {
                 SimilarMovieUiState(
                     movieId = it.id,
-                    rate = ratingToRatingString(it.rating),
+                    rate = movieDetailsStateMapper.ratingToRatingString(it.rating),
                     name = it.name,
                     productionYear = it.airDate.year.toString(),
                     posterUrl = it.posterUrl
@@ -57,9 +58,9 @@ class SeriesDetailsStateMapper @Inject constructor() {
                 ReviewUiState(
                     author = it.reviewerName,
                     username = it.reviewerUsername,
-                    rating = ratingToRatingString(it.rating),
+                    rating = movieDetailsStateMapper.ratingToRatingString(it.rating),
                     content = it.content,
-                    date = dateToString(it.date),
+                    date = movieDetailsStateMapper.dateToString(it.date),
                     imageUrl = it.imageUrl.takeIf { it.isNotBlank() }
                 )
             },
@@ -97,15 +98,26 @@ class SeriesDetailsStateMapper @Inject constructor() {
                 id = episode.id,
                 number = episode.episodeNumber,
                 title = episode.title,
-                rating = ratingToRatingString(episode.rating),
+                rating = movieDetailsStateMapper.ratingToRatingString(episode.rating),
                 imageUrl = episode.episodeImageUrl,
                 imageNumber = episode.episodeNumber,
                 description = episode.description,
                 duration = formatDuration(episode.runTimeInMinutes),
-                airDate = dateToString(episode.airDate)
+                airDate = movieDetailsStateMapper.dateToString(episode.airDate)
             )
         }
     }
 
     private fun formatSeasonCount(count: Int) = "$count Season"
+
+    private fun formatDuration(duration: Int): String {
+        val hours = duration / 60
+        val minutes = duration % 60
+
+        return when {
+            hours > 0 && minutes > 0 -> "${hours}h ${minutes}m"
+            hours > 0 -> "${hours}h"
+            else -> "${minutes}m"
+        }
+    }
 }

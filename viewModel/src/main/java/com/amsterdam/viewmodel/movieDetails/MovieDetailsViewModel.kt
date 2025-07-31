@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
+import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
@@ -13,6 +14,7 @@ import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.MovieAndSeriesDetailsDialogType
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -62,11 +64,11 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     override fun onClickShowAllCast() {
-        sendNewEffect(MovieDetailsEffect.NavigateToCastsScreenEffect)
+        sendNewNavigationEffect(MovieDetailsEffect.NavigateToCastsScreenEffect)
     }
 
     override fun onClickBack() {
-        sendNewEffect(MovieDetailsEffect.NavigateBackEffect)
+        sendNewNavigationEffect(MovieDetailsEffect.NavigateBackEffect)
     }
 
     override fun onClickRetryRequest() {
@@ -83,7 +85,11 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     override fun onNavigateToLoginClicked() {
-        sendNewEffect(MovieDetailsEffect.NavigateToLoginScreenEffect)
+        viewModelScope.launch {
+            updateState { it.copy(isLoginDialogVisible = false) }
+            delay(300)
+            sendNewNavigationEffect(MovieDetailsEffect.NavigateToLoginScreenEffect)
+        }
     }
 
     override fun onCancelClicked() {
@@ -91,7 +97,7 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     override fun onClickSimilarMovie(movieId: Long) {
-        sendNewEffect(MovieDetailsEffect.NavigateToMovieDetails(movieId))
+        sendNewNavigationEffect(MovieDetailsEffect.NavigateToMovieDetails(movieId))
     }
 
     override fun onAddToListClicked() {
@@ -122,6 +128,7 @@ class MovieDetailsViewModel @Inject constructor(
         Log.e("bk", "onError: $exception")
          when (exception) {
             is NoInternetException -> updateState { it.copy(networkError = true) }
+            is NetworkException -> updateState { it.copy(networkError = true) }
             else -> {}
         }
     }
