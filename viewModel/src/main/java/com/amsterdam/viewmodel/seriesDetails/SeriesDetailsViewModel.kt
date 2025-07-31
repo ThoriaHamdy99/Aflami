@@ -67,7 +67,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     override fun onNavigateBack() {
-        sendNewEffect(SeriesDetailsEffect.NavigateBack)
+        sendNewNavigationEffect(SeriesDetailsEffect.NavigateBack)
     }
 
     override fun onClickRetryButton() {
@@ -75,7 +75,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     override fun onClickShowAllCast() {
-        sendNewEffect(SeriesDetailsEffect.NavigateToCastScreen)
+        sendNewNavigationEffect(SeriesDetailsEffect.NavigateToCastScreen)
     }
 
     override fun onAddToListClicked() {
@@ -105,7 +105,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     override fun onNavigateToLoginClicked() {
-        sendNewEffect(SeriesDetailsEffect.NavigateToLoginScreenEffect)
+        sendNewNavigationEffect(SeriesDetailsEffect.NavigateToLoginScreenEffect)
     }
 
     override fun onCancelClicked() {
@@ -113,7 +113,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     override fun onClickSimilarMovie(movieId: Long) {
-        sendNewEffect(SeriesDetailsEffect.NavigateToMovieDetails(movieId))
+        sendNewNavigationEffect(SeriesDetailsEffect.NavigateToMovieDetails(movieId))
     }
 
     private suspend fun getEpisodesForSeason(seasonNumber: Int): List<Episode> {
