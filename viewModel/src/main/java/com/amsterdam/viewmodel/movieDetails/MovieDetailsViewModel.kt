@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
-import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
+import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
@@ -38,7 +38,7 @@ class MovieDetailsViewModel @Inject constructor(
         updateState { it.copy(isLoading = true, networkError = false) }
         tryToExecute(
             action = ::getMovieDetails,
-            onSuccess =::onGetMovieDetailsSuccess,
+            onSuccess = ::onGetMovieDetailsSuccess,
             onError = ::onError,
             onCompletion = ::onCompletion
         )
@@ -94,6 +94,23 @@ class MovieDetailsViewModel @Inject constructor(
         sendNewEffect(MovieDetailsEffect.NavigateToMovieDetails(movieId))
     }
 
+    override fun onDescriptionExpansionToggled() {
+        updateState { it.copy(isDescriptionExpanded = !it.isDescriptionExpanded) }
+    }
+
+    override fun onReviewExpansionToggled(reviewId: String) {
+        updateState { state ->
+            val updatedReviews = state.reviews.map { review ->
+                if (review.username == reviewId) {
+                    review.copy(isExpanded = !review.isExpanded)
+                } else {
+                    review
+                }
+            }
+            state.copy(reviews = updatedReviews)
+        }
+    }
+
     override fun onAddToListClicked() {
         viewModelScope.launch {
             runIfLoggedIn(
@@ -114,13 +131,13 @@ class MovieDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun showMustLoginDialog(dialogType: MovieAndSeriesDetailsDialogType){
+    private fun showMustLoginDialog(dialogType: MovieAndSeriesDetailsDialogType) {
         updateState { it.copy(isLoginDialogVisible = true, dialogType = dialogType) }
     }
 
     private fun onError(exception: AflamiException) {
         Log.e("bk", "onError: $exception")
-         when (exception) {
+        when (exception) {
             is NoInternetException -> updateState { it.copy(networkError = true) }
             else -> {}
         }
