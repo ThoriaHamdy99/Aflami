@@ -7,10 +7,10 @@ import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ActorUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ProductionCompanyUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ReviewUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.SimilarMovieUiState
-import com.amsterdam.viewmodel.utils.FormatterUtils.dateToString
-import com.amsterdam.viewmodel.utils.FormatterUtils.movieLengthToHourMinuteString
-import com.amsterdam.viewmodel.utils.FormatterUtils.ratingToRatingString
-import com.amsterdam.viewmodel.utils.FormatterUtils.safeDateToString
+import com.amsterdam.viewmodel.utils.dateToString
+import com.amsterdam.viewmodel.utils.movieLengthToHourMinuteString
+import com.amsterdam.viewmodel.utils.ratingToRatingString
+import com.amsterdam.viewmodel.utils.safeDateToString
 import javax.inject.Inject
 
 class MovieDetailsUiStateMapper @Inject constructor() {

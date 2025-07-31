@@ -11,9 +11,9 @@ import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ActorUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ProductionCompanyUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ReviewUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.SimilarMovieUiState
-import com.amsterdam.viewmodel.utils.FormatterUtils.dateToString
-import com.amsterdam.viewmodel.utils.FormatterUtils.formatDuration
-import com.amsterdam.viewmodel.utils.FormatterUtils.ratingToRatingString
+import com.amsterdam.viewmodel.utils.dateToString
+import com.amsterdam.viewmodel.utils.formatDuration
+import com.amsterdam.viewmodel.utils.ratingToRatingString
 import javax.inject.Inject
 
 class SeriesDetailsStateMapper @Inject constructor() {
@@ -106,5 +106,6 @@ class SeriesDetailsStateMapper @Inject constructor() {
             )
         }
     }
+
     private fun formatSeasonCount(count: Int) = "$count Season"
 }

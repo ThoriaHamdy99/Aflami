@@ -4,8 +4,6 @@ import kotlinx.datetime.LocalDate
 import java.util.Locale
 import kotlin.math.roundToInt
 
-object FormatterUtils {
-
     fun dateToString(date: LocalDate?): String {
         if (date == null) {
             return ""
@@ -42,4 +40,3 @@ object FormatterUtils {
             else -> "${minutes}m"
         }
     }
-}
