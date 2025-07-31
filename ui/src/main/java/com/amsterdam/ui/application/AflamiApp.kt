@@ -22,7 +22,7 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun AflamiApp(
     viewModel: ApplicationViewModel = hiltViewModel()
-){
+) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
@@ -35,7 +35,13 @@ fun AflamiApp(
                 bottomBar = {
                     BottomNavigation(
                         currentDestination = currentDestination,
-                        onNavigate = { navController.navigate(it) },
+                        onNavigate = {
+                            navController.navigate(it) {
+                                popUpTo(it) {
+                                    inclusive = true
+                                }
+                            }
+                        },
                     )
                 }
             ) {
