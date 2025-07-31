@@ -3,35 +3,103 @@ package com.amsterdam.repository.repository
 import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.entity.MovieWatchHistory
 import com.amsterdam.entity.TvShowWatchHistory
+import com.amsterdam.repository.datasource.local.MovieLocalSource
+import com.amsterdam.repository.datasource.local.TvShowLocalSource
 import com.amsterdam.repository.datasource.local.WatchHistoryLocalDataSource
+import com.amsterdam.repository.datasource.remote.MovieRemoteSource
+import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
 import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
 import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
+import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
+import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.mapper.local.MovieWatchHistoryLocalMapper
 import com.amsterdam.repository.mapper.local.TvWatchHistoryLocalMapper
+import com.amsterdam.repository.mapper.remote.MovieDetailRemoteMapper
+import com.amsterdam.repository.mapper.remoteToLocal.MovieRemoteLocalMapper
+import com.amsterdam.repository.mapper.remoteToLocal.TvShowRemoteDetailsLocalMapper
 import com.amsterdam.repository.utils.getDeviceLanguage
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class WatchHistoryRepositoryImpl @Inject constructor(
     private val watchHistoryLocalDataSource: WatchHistoryLocalDataSource,
+    private val movieLocalSource: MovieLocalSource,
+    private val movieRemoteDataSource: MovieRemoteSource,
+    private val tvShowLocalDataSource: TvShowLocalSource,
+    private val tvShowRemoteSource: TvShowsRemoteSource,
+    private val tvShowRemoteDetailsLocalMapper: TvShowRemoteDetailsLocalMapper,
+    private val localTvDataSource: TvShowLocalSource,
     private val movieWatchHistoryLocalMapper: MovieWatchHistoryLocalMapper,
-    private val tvWatchHistoryLocalMapper: TvWatchHistoryLocalMapper
+    private val tvWatchHistoryLocalMapper: TvWatchHistoryLocalMapper,
+    private val movieRemoteLocalMapper: MovieRemoteLocalMapper,
+    private val movieDetailRemoteMapper: MovieDetailRemoteMapper,
 ) : WatchHistoryRepository {
 
-    override suspend fun addMovieToWatchHistory(movieId : Long) {
-        watchHistoryLocalDataSource.addMovieToWatchHistory(MovieWatchHistoryDto(movieId,getDeviceLanguage()))
+    override suspend fun addMovieToWatchHistory(movieId: Long) {
+        watchHistoryLocalDataSource.addMovieToWatchHistory(MovieWatchHistoryDto(movieId))
     }
 
-    override fun getContinueWatchingMovies(page: Int, pageSize: Int): Flow<List<MovieWatchHistory>> {
-        return  watchHistoryLocalDataSource.getMovieContinueWatching(page,pageSize,getDeviceLanguage()).map(movieWatchHistoryLocalMapper::toEntityList)
+    override fun getContinueWatchingMovies(
+        page: Int,
+        pageSize: Int
+    ): Flow<List<MovieWatchHistory>> = flow {
+        watchHistoryLocalDataSource.getMoviesWatchHistory(page, pageSize).collect {
+            emit(it.map { moviesIds ->
+                movieLocalSource.getMovieById(moviesIds.movieId, getDeviceLanguage())?.let {
+                    movieWatchHistoryLocalMapper.toEntity(it)
+                }
+                    ?: movieRemoteDataSource.getMovieDetailsById(moviesIds.movieId).run {
+                        cacheWatchedMovie(this)
+                        movieLocalSource.getMovieById(moviesIds.movieId, getDeviceLanguage()).let {
+                            movieWatchHistoryLocalMapper.toEntity(it!!)
+                        }
+                    }
+            })
+        }
+    }
+
+    private suspend fun cacheWatchedMovie(remoteMovieDetailsResponse: RemoteMovieDetailsResponse) {
+        movieLocalSource.insertMovie(
+            movieRemoteLocalMapper.toLocal(
+                remote = movieDetailRemoteMapper.mapMovieDetailsToMovieItemDto(
+                    remoteMovieDetailsResponse
+                ), args = listOf(getDeviceLanguage())
+            )
+        )
     }
 
     override suspend fun addTvShowToWatchHistory(tvShowId: Long) {
-        watchHistoryLocalDataSource.addTvShowToWatchHistory(TvShowWatchHistoryDto(tvShowId,getDeviceLanguage()))
+        watchHistoryLocalDataSource.addTvShowToWatchHistory(TvShowWatchHistoryDto(tvShowId))
     }
 
-    override fun getContinueWatchingTvShows(page: Int, pageSize: Int): Flow<List<TvShowWatchHistory>> {
-       return watchHistoryLocalDataSource.getTvShowContinueWatching(page,pageSize,getDeviceLanguage()).map(tvWatchHistoryLocalMapper::toEntityList)
+    override fun getContinueWatchingTvShows(
+        page: Int,
+        pageSize: Int
+    ): Flow<List<TvShowWatchHistory>> = flow {
+        watchHistoryLocalDataSource.getTvShowsWatchHistory(page, pageSize).collect {
+            emit(it.map { tvShowsIds ->
+                tvShowLocalDataSource.getTvShowById(tvShowsIds.tvShowId, getDeviceLanguage())?.let {
+                    tvWatchHistoryLocalMapper.toEntity(it)
+                }
+                    ?: tvShowRemoteSource.getTvShowDetailsById(tvShowsIds.tvShowId).run {
+                        cacheWatchedTvShow(this)
+                        tvShowLocalDataSource.getTvShowById(
+                            tvShowsIds.tvShowId,
+                            getDeviceLanguage()
+                        ).let {
+                            tvWatchHistoryLocalMapper.toEntity(it!!)
+                        }
+                    }
+            })
+        }
+    }
+
+    private suspend fun cacheWatchedTvShow(remoteTvShowItemDto: TvShowDetailsRemoteResponse) {
+        localTvDataSource.insertTvShow(
+            tvShowRemoteDetailsLocalMapper.toLocal(
+                remote = remoteTvShowItemDto, args = listOf(getDeviceLanguage())
+            )
+        )
     }
 }

@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,6 +53,8 @@ import kotlinx.coroutines.flow.collectLatest
 fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hiltViewModel()) {
     val navController = LocalNavController.current
     val state by homeViewModel.state.collectAsStateWithLifecycle()
+    val configuration = LocalConfiguration.current
+    val currentLocale = configuration.locales[0]
     LaunchedEffect(Unit) {
         homeViewModel.effect.collectLatest { effect ->
             effect?.let {
@@ -76,6 +79,10 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hil
                 }
             }
         }
+    }
+
+    LaunchedEffect(currentLocale) {
+        homeViewModel.onLanguageChanged(currentLocale)
     }
 
     HomeScreenContent(
@@ -193,13 +200,11 @@ private fun HomeScreenPreview() {
             interactionListener = object : HomeInteractionListener {
                 override fun onClickRetryLoading() {}
                 override fun onClickSearch() {}
-
                 override fun onClickUpcomingMovieCard(id: Long) {}
                 override fun onChangeUpcomingMovieGenre(genre: MovieGenre) {}
                 override fun onClickMediaItem(mediaId: Long, mediaType: MediaType) {}
                 override fun onClickShowAllToRatedMovies() {}
                 override fun onClickShowAllContinueWatchingMovies() {}
-
                 override fun onClickMood(mood: Mood) {}
                 override fun onClickGetNow() {}
                 override fun onDismissMoodPickerDialog() {}

@@ -8,6 +8,5 @@ import com.amsterdam.repository.dto.local.utils.DatabaseConstants
     tableName = DatabaseConstants.MOVIE_WATCH_HISTORY_TABLE,
 )
 data class MovieWatchHistoryDto(
-    @PrimaryKey val movieId: Long,
-    val storedLanguage: String
+    @PrimaryKey val movieId: Long
 )

@@ -23,6 +23,7 @@ import com.amsterdam.viewmodel.utils.getLinearItemsList
 import kotlinx.coroutines.flow.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,11 +32,12 @@ class HomeViewModel @Inject constructor(
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
     private val getContinueWatchingScreenDataUseCase: GetContinueWatchingScreenDataUseCase,
     private val homeUiStateMapper: HomeUiStateMapper,
-    private val continueWatchingUiStateMapper : ContinueWatchingUiStateMapper,
+    private val continueWatchingUiStateMapper: ContinueWatchingUiStateMapper,
     private val getMoviesByMoodUseCase: GetMoviesByMoodUseCase,
     private val dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<HomeUiState, HomeEffect>(HomeUiState(), dispatcherProvider),
     HomeInteractionListener {
+    private var currentLocale: Locale = Locale.getDefault()
 
     init {
         getContinueWatchingData()
@@ -43,13 +45,19 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getHomeScreenData() {
-        updateState { it.copy(
-            isLoading = true,
-            popularMediaSectionUiState = state.value.popularMediaSectionUiState.copy(isLoading = true),
-            topRatedMediaSectionUiState = state.value.topRatedMediaSectionUiState.copy(isLoading = true),
-            upcomingMoviesSectionUiState = state.value.upcomingMoviesSectionUiState.copy(isLoading = true),
-            continueWatchingMediaSectionUiState = state.value.continueWatchingMediaSectionUiState.copy(isLoading = true),
-        ) }
+        updateState {
+            it.copy(
+                isLoading = true,
+                popularMediaSectionUiState = state.value.popularMediaSectionUiState.copy(isLoading = true),
+                topRatedMediaSectionUiState = state.value.topRatedMediaSectionUiState.copy(isLoading = true),
+                upcomingMoviesSectionUiState = state.value.upcomingMoviesSectionUiState.copy(
+                    isLoading = true
+                ),
+                continueWatchingMediaSectionUiState = state.value.continueWatchingMediaSectionUiState.copy(
+                    isLoading = true
+                ),
+            )
+        }
         tryToExecute(
             action = { getHomeScreenDataUseCase() },
             onSuccess = ::onGetHomeScreenDataSuccess,
@@ -80,21 +88,22 @@ class HomeViewModel @Inject constructor(
         val movies = continueWatchingData.continueWatchingMovies
         val tvShows = continueWatchingData.continueWatchingTvShows
         viewModelScope.launch {
-             combine(movies, tvShows) { moviesWitchHistory, tvShowsWitchHistory ->
-                 getLinearItemsList(moviesWitchHistory,
-                     tvShowsWitchHistory,
-                     continueWatchingUiStateMapper::continueWatchingMediaItemUiState,
-                     continueWatchingUiStateMapper::continueWatchingMediaItemUiState
-                     )
+            combine(movies, tvShows) { moviesWitchHistory, tvShowsWitchHistory ->
+                getLinearItemsList(
+                    moviesWitchHistory,
+                    tvShowsWitchHistory,
+                    continueWatchingUiStateMapper::continueWatchingMediaItemUiState,
+                    continueWatchingUiStateMapper::continueWatchingMediaItemUiState
+                )
             }.collect {
-                 updateState { currentState ->
-                     currentState.copy(
-                         continueWatchingMediaSectionUiState = currentState.continueWatchingMediaSectionUiState.copy(
-                             mediaItems = it.sortedByDescending { it.dateAdded }
-                         )
-                     )
-                 }
-             }
+                updateState { currentState ->
+                    currentState.copy(
+                        continueWatchingMediaSectionUiState = currentState.continueWatchingMediaSectionUiState.copy(
+                            mediaItems = it.sortedByDescending { it.dateAdded }
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -242,6 +251,14 @@ class HomeViewModel @Inject constructor(
         when (exception) {
             is NetworkException -> updateState { it.copy(error = HomeError.NetworkError) }
             else -> {}
+        }
+    }
+
+    fun onLanguageChanged(newLanguish: Locale) {
+        if (currentLocale != newLanguish) {
+            getContinueWatchingData()
+            getHomeScreenData()
+            currentLocale = newLanguish
         }
     }
 

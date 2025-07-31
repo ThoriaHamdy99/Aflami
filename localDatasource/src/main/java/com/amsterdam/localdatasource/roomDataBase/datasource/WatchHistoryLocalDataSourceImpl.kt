@@ -2,8 +2,6 @@ package com.amsterdam.localdatasource.roomDataBase.datasource
 
 import com.amsterdam.localdatasource.roomDataBase.daos.WatchHistoryDao
 import com.amsterdam.repository.datasource.local.WatchHistoryLocalDataSource
-import com.amsterdam.repository.dto.local.LocalMovieDto
-import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
 import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
 import kotlinx.coroutines.flow.Flow
@@ -16,17 +14,17 @@ class WatchHistoryLocalDataSourceImpl @Inject constructor(
     override suspend fun addMovieToWatchHistory(item: MovieWatchHistoryDto) =
         dao.addMovieToWatchHistory(item)
 
-    override fun getMovieContinueWatching(page: Int, pageSize: Int,storedLanguage: String): Flow<List<LocalMovieDto>> {
-        val offset = (page - 1) * pageSize
-        return dao.getMovieContinueWatching(offset, pageSize,storedLanguage)
+    override fun getMoviesWatchHistory(page: Int, pageSize: Int) : Flow<List<MovieWatchHistoryDto>> {
+        val offset = (page -1) * pageSize
+       return dao.getMoviesWatchHistory(offset,pageSize)
     }
 
     override suspend fun addTvShowToWatchHistory(item: TvShowWatchHistoryDto) =
         dao.addTvShowToWatchHistory(item)
 
-    override fun getTvShowContinueWatching(page: Int, pageSize: Int,storedLanguage: String): Flow<List<LocalTvShowDto>> {
-        val offset = (page - 1) * pageSize
-        return dao.getTvShowContinueWatching(offset, pageSize,storedLanguage)
+    override fun getTvShowsWatchHistory(page: Int, pageSize: Int): Flow<List<TvShowWatchHistoryDto>> {
+        val offset = (page -1) * pageSize
+        return dao.getTvShowsWatchHistory(offset,pageSize)
     }
 }
 

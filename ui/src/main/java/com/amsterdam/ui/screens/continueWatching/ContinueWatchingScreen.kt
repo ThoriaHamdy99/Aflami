@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -39,6 +40,8 @@ import kotlinx.coroutines.flow.collectLatest
 fun ContinueWatchingScreen(viewModel: ContinueWatchingViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
+    val configuration = LocalConfiguration.current
+    val currentLocale = configuration.locales[0]
     ContinueWatchingContent(state, viewModel)
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest {
@@ -58,6 +61,10 @@ fun ContinueWatchingScreen(viewModel: ContinueWatchingViewModel = hiltViewModel(
                 }
             }
         }
+    }
+
+    LaunchedEffect(currentLocale) {
+        viewModel.onLanguageChanged(currentLocale)
     }
 }
 

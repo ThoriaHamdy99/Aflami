@@ -20,6 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.util.Locale
 
 @HiltViewModel
 class ContinueWatchingViewModel @Inject constructor(
@@ -31,6 +32,7 @@ class ContinueWatchingViewModel @Inject constructor(
     dispatcherProvider
 ),
     ContinueWatchingInteractionListener {
+    private var currentLocale: Locale = Locale.getDefault()
 
     init {
         getContinueWatchingData()
@@ -94,6 +96,13 @@ class ContinueWatchingViewModel @Inject constructor(
 
     override fun onClickBack() {
         sendNewEffect(ContinueWatchingEffect.NavigateBack)
+    }
+
+    fun onLanguageChanged(newLanguish: Locale) {
+        if (currentLocale != newLanguish) {
+            getContinueWatchingData()
+            currentLocale = newLanguish
+        }
     }
 
     private fun onCompletion() = updateState { it.copy(isLoading = false) }
