@@ -9,35 +9,37 @@ import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
-import com.amsterdam.paging.PagingSource
-import com.amsterdam.viewmodel.home.HomeUiState.ContinueWatchingMediaItemUiState
+import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase.ContinueWatchingScreenData
+import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.media.MediaType
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import com.amsterdam.viewmodel.utils.getLinearItemsList
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import java.util.Locale
 
 @HiltViewModel
 class ContinueWatchingViewModel @Inject constructor(
     private val getContinueWatchingScreenDataUseCase: GetContinueWatchingScreenDataUseCase,
     private val continueWatchingUiStateMapper: ContinueWatchingUiStateMapper,
+    manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<ContinueWatchingUiState, ContinueWatchingEffect>(
     ContinueWatchingUiState(),
     dispatcherProvider
 ),
     ContinueWatchingInteractionListener {
-    private var currentLocale: Locale = Locale.getDefault()
 
     init {
-        getContinueWatchingData()
+        manageLocaleLanguageUseCase.getDeviceLanguage()
+            .onEach {
+                getContinueWatchingData()
+            }.launchIn(viewModelScope)
     }
-
 
     private fun getContinueWatchingData() {
         updateState { it.copy(isLoading = true) }
@@ -78,8 +80,7 @@ class ContinueWatchingViewModel @Inject constructor(
                     error = ContinueWatchingUiState.ContinueWatchingError.NetworkError
                 )
             }
-
-            else -> {}
+            else ->{}
         }
     }
 
@@ -96,13 +97,6 @@ class ContinueWatchingViewModel @Inject constructor(
 
     override fun onClickBack() {
         sendNewEffect(ContinueWatchingEffect.NavigateBack)
-    }
-
-    fun onLanguageChanged(newLanguish: Locale) {
-        if (currentLocale != newLanguish) {
-            getContinueWatchingData()
-            currentLocale = newLanguish
-        }
     }
 
     private fun onCompletion() = updateState { it.copy(isLoading = false) }

@@ -12,7 +12,6 @@ import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiStateMapper
 import com.amsterdam.viewmodel.home.HomeUiState.HomeError
 import com.amsterdam.viewmodel.search.mapper.selectByMovieGenre
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -21,9 +20,8 @@ import com.amsterdam.viewmodel.shared.uiStates.media.MediaType
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import com.amsterdam.viewmodel.utils.getLinearItemsList
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,16 +30,17 @@ class HomeViewModel @Inject constructor(
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
     private val getContinueWatchingScreenDataUseCase: GetContinueWatchingScreenDataUseCase,
     private val homeUiStateMapper: HomeUiStateMapper,
-    private val continueWatchingUiStateMapper: ContinueWatchingUiStateMapper,
     private val getMoviesByMoodUseCase: GetMoviesByMoodUseCase,
     private val dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<HomeUiState, HomeEffect>(HomeUiState(), dispatcherProvider),
     HomeInteractionListener {
-    private var currentLocale: Locale = Locale.getDefault()
 
     init {
-        getContinueWatchingData()
-        getHomeScreenData()
+        manageLocaleLanguageUseCase.getDeviceLanguage()
+            .onEach {
+                getHomeScreenData()
+                getContinueWatchingData()
+            }.launchIn(viewModelScope)
     }
 
     private fun getHomeScreenData() {
@@ -65,7 +64,7 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun onGetHomeScreenDataSuccess(homeScreenData: HomeScreenData) {
+    private fun onGetHomeScreenDataSuccess(homeScreenData: HomeScreenData) {
         updateState {
             homeUiStateMapper.toUiState(
                 homeScreenData,
@@ -162,23 +161,23 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onClickSearch() {
-        sendNewEffect(HomeEffect.NavigateToSearchScreenEffect)
+        sendNewNavigationEffect(HomeEffect.NavigateToSearchScreenEffect)
     }
 
     override fun onClickMediaItem(mediaId: Long, mediaType: MediaType) {
         if (mediaType == MediaType.MOVIE)
-            sendNewEffect(HomeEffect.NavigateToMovieDetailsEffect(mediaId))
+            sendNewNavigationEffect(HomeEffect.NavigateToMovieDetailsEffect(mediaId))
         else
-            sendNewEffect(HomeEffect.NavigateToTvShowDetailsEffect(mediaId))
+            sendNewNavigationEffect(HomeEffect.NavigateToTvShowDetailsEffect(mediaId))
 
     }
 
     override fun onClickShowAllContinueWatchingMovies() {
-        sendNewEffect(HomeEffect.NavigateToContinueWatchingMoviesScreen)
+        sendNewNavigationEffect(HomeEffect.NavigateToContinueWatchingMoviesScreen)
     }
 
     override fun onClickShowAllToRatedMovies() {
-        sendNewEffect(HomeEffect.NavigateToTopRatedMoviesEffect)
+        sendNewNavigationEffect(HomeEffect.NavigateToTopRatedMoviesEffect)
     }
 
     override fun onClickMood(mood: Mood) {
@@ -208,7 +207,7 @@ class HomeViewModel @Inject constructor(
 
     override fun onClickViewDetails() {
         onDismissMoodPickerDialog()
-        sendNewEffect(HomeEffect.NavigateToMovieDetailsEffect(movieId = state.value.moodPickerUiState.selectedMovie.id))
+        sendNewNavigationEffect(HomeEffect.NavigateToMovieDetailsEffect(movieId = state.value.moodPickerUiState.selectedMovie.id))
     }
 
     override fun onClickGetAnotherMovie() {
@@ -244,21 +243,13 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onClickUpcomingMovieCard(id: Long) {
-        sendNewEffect(HomeEffect.NavigateToMovieDetailsEffect(movieId = id))
+        sendNewNavigationEffect(HomeEffect.NavigateToMovieDetailsEffect(movieId = id))
     }
 
     private fun onError(exception: AflamiException) {
         when (exception) {
             is NetworkException -> updateState { it.copy(error = HomeError.NetworkError) }
             else -> {}
-        }
-    }
-
-    fun onLanguageChanged(newLanguish: Locale) {
-        if (currentLocale != newLanguish) {
-            getContinueWatchingData()
-            getHomeScreenData()
-            currentLocale = newLanguish
         }
     }
 
