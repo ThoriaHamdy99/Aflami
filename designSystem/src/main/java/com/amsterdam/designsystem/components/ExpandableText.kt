@@ -33,9 +33,10 @@ fun ExpandableText(
     showMoreStyle: TextStyle = AppTheme.textStyle.label.medium,
     showLessStyle: TextStyle = AppTheme.textStyle.label.medium,
     showMoreColor: Color = AppTheme.color.primary,
-    showLessColor: Color = AppTheme.color.primary
+    showLessColor: Color = AppTheme.color.primary,
+    isExpanded: Boolean,
+    onToggleExpansion: () -> Unit
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
     var isClickable by remember { mutableStateOf(false) }
     var lastCharacterIndex by remember { mutableIntStateOf(0) }
 
@@ -75,7 +76,7 @@ fun ExpandableText(
             withLink(
                 link = LinkAnnotation.Clickable(
                     tag = showMoreText,
-                    linkInteractionListener = { isExpanded = true }
+                    linkInteractionListener = { onToggleExpansion() }
                 )
             ) {
                 withStyle(showMoreSpanStyle) {
@@ -91,7 +92,7 @@ fun ExpandableText(
             withLink(
                 link = LinkAnnotation.Clickable(
                     tag = showLessText,
-                    linkInteractionListener = { isExpanded = false }
+                    linkInteractionListener = { onToggleExpansion() }
                 )
             ) {
                 withStyle(showLessSpanStyle) {
