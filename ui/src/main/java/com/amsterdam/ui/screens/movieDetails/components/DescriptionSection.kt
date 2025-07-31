@@ -13,7 +13,12 @@ import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AppTheme
 
 @Composable
-fun DescriptionSection(modifier: Modifier = Modifier, description: String) {
+fun DescriptionSection(
+    modifier: Modifier = Modifier,
+    description: String,
+    isExpanded: Boolean,
+    onToggleExpansion: () -> Unit
+) {
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.description),
@@ -21,6 +26,10 @@ fun DescriptionSection(modifier: Modifier = Modifier, description: String) {
             color = AppTheme.color.title,
         )
         Spacer(modifier = Modifier.height(8.dp))
-        ExpandableText(text = description)
+        ExpandableText(
+            text = description,
+            isExpanded = isExpanded,
+            onToggleExpansion = onToggleExpansion
+        )
     }
 }
