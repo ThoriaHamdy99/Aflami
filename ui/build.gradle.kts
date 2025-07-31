@@ -17,7 +17,6 @@ dependencies {
     sifrDependencies()
     pagingDependencies()
     kotlinExtensionsDependencies()
-    kotlinDateTimeDependencies()
     appCompactDependencies()
     previewDependencies()
     composeDependencies()
@@ -75,7 +74,4 @@ private fun DependencyHandlerScope.hiltDependencies() {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation (libs.androidx.hilt.navigation.compose)
-}
-private fun DependencyHandlerScope.kotlinDateTimeDependencies() {
-    implementation(libs.kotlinx.datetime)
 }
