@@ -68,7 +68,6 @@ import com.amsterdam.ui.screens.movieDetails.components.PlayButton
 import com.amsterdam.ui.screens.movieDetails.components.reviewSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.ui.utils.formateAsRate
-import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.cast.MediaType
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsEffect
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsInteractionListener
@@ -89,27 +88,24 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
     )
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
-            effect?.let {
-                when (effect) {
-                    MovieDetailsEffect.NavigateBackEffect -> navController.popBackStack()
-                    MovieDetailsEffect.NavigateToCastsScreenEffect -> {
-                        navController.safeNavigate(
-                            Route.Cast(
-                                mediaType = MediaType.MOVIE.name,
-                                mediaId = state.value.movieId
-                            )
+            when (effect) {
+                MovieDetailsEffect.NavigateBackEffect -> navController.navigateUp()
+                MovieDetailsEffect.NavigateToCastsScreenEffect -> {
+                    navController.navigate(
+                        Route.Cast(
+                            mediaType = MediaType.MOVIE.name,
+                            mediaId = state.value.movieId
                         )
-                    }
-
-                    MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.safeNavigate(
-                        Route.Login
                     )
+                }
 
-                    is MovieDetailsEffect.NavigateToMovieDetails -> {
-                        navController.navigate(
-                            Route.MovieDetails(effect.movieId)
-                        )
-                    }
+                MovieDetailsEffect.NavigateToLoginScreenEffect -> navController.navigate(
+                    Route.Login
+                )
+                is MovieDetailsEffect.NavigateToMovieDetails -> {
+                    navController.navigate(
+                        Route.MovieDetails(effect.movieId)
+                    )
                 }
             }
         }
@@ -270,8 +266,6 @@ fun MovieContent(
                                 .padding(top = 24.dp)
                                 .padding(horizontal = 16.dp),
                             description = state.description,
-                            isExpanded = state.isDescriptionExpanded,
-                            onToggleExpansion = interactionListener::onDescriptionExpansionToggled
                         )
                         CastSection(
                             modifier = Modifier.padding(top = 24.dp),
@@ -311,7 +305,7 @@ fun MovieContent(
                                 interactionListener.onClickSimilarMovie(selectedMovieId)
                             }
                         )
-                        MovieExtras.REVIEWS -> reviewSection(state.reviews, interactionListener)
+                        MovieExtras.REVIEWS -> reviewSection(state.reviews)
                         MovieExtras.GALLERY -> item {
                             GallerySection(gallery = state.gallery)
                         }
@@ -326,7 +320,7 @@ fun MovieContent(
 
                 val spacerHeight: Dp by remember {
                     derivedStateOf {
-                        if (movieExtrasSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)) {
+                        if (movieExtrasSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)){
                             screenHeightDp
                         } else {
                             0.dp
@@ -357,8 +351,6 @@ private fun SearchByActorContentPreview() {
                     override fun onNavigateToLoginClicked() {}
                     override fun onCancelClicked() {}
                     override fun onClickSimilarMovie(movieId: Long) {}
-                    override fun onDescriptionExpansionToggled() {}
-                    override fun onReviewExpansionToggled(reviewId: String) {}
                 },
         )
     }
