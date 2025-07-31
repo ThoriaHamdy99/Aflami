@@ -65,11 +65,13 @@ fun ExpandableText(
 
     val annotatedText = buildAnnotatedString {
         if (isClickable && !isExpanded) {
-            val adjustedText = text.substring(0, lastCharacterIndex - 4)
+            val safeEnd = (lastCharacterIndex - 4).coerceAtLeast(0)
+            val trimmedText = text.take(safeEnd)
                 .dropLast(showMoreText.length)
                 .dropLastWhile { it.isWhitespace() || it == '.' }
+
             withStyle(textSpanStyle) {
-                append(adjustedText)
+                append(trimmedText)
                 append(" ")
             }
 
@@ -121,4 +123,15 @@ fun ExpandableText(
             }
         }
     )
+}
+
+@ThemeAndLocalePreviews
+@Composable
+fun ExpandableTextPreview() {
+    AflamiTheme {
+        ExpandableText(
+            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus tortor.",
+            minimizedMaxLines = 3
+        )
+    }
 }

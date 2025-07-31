@@ -58,14 +58,14 @@ import com.amsterdam.ui.components.details.DetailsPostersPager
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
-import com.amsterdam.ui.screens.movieDetails.components.CompanyProductionSection
+import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
 import com.amsterdam.ui.screens.movieDetails.components.GallerySection
-import com.amsterdam.ui.screens.movieDetails.components.MoreLikeSection
+import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieExtrasSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieInfoSection
 import com.amsterdam.ui.screens.movieDetails.components.PlayButton
-import com.amsterdam.ui.screens.movieDetails.components.ReviewSection
+import com.amsterdam.ui.screens.movieDetails.components.reviewSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.ui.utils.formateAsRate
 import com.amsterdam.ui.utils.safeNavigate
@@ -190,7 +190,7 @@ fun MovieContent(
                             .fillMaxWidth()
                             .height(263.dp),
                 ) {
-                    if (state.moviePostersUrl.isEmpty()) {
+                    if(state.moviePostersUrl.isEmpty()) {
                         ImageErrorIndicator()
                     } else {
                         DetailsPostersPager(
@@ -305,19 +305,17 @@ fun MovieContent(
                 ?.item
                 ?.let { selectedExtra ->
                     when (selectedExtra) {
-                        MovieExtras.MORE_LIKE_THIS -> MoreLikeSection(
+                        MovieExtras.MORE_LIKE_THIS -> moreLikeSection(
                             similarMovies = state.similarMovies,
                             onClick = { selectedMovieId ->
                                 interactionListener.onClickSimilarMovie(selectedMovieId)
                             }
                         )
-
-                        MovieExtras.REVIEWS -> ReviewSection(state.reviews, interactionListener)
+                        MovieExtras.REVIEWS -> reviewSection(state.reviews, interactionListener)
                         MovieExtras.GALLERY -> item {
                             GallerySection(gallery = state.gallery)
                         }
-
-                        MovieExtras.COMPANY_PRODUCTION -> CompanyProductionSection(state.productionCompany)
+                        MovieExtras.COMPANY_PRODUCTION -> companyProductionSection(state.productionCompany)
                     }
                 }
 
