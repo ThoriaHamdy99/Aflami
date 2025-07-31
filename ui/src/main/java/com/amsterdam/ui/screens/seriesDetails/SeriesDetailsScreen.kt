@@ -184,7 +184,7 @@ fun SeriesDetailsContent(
     }
     val animatedTopPadding by animateDpAsState(
         targetValue = topPadding,
-        animationSpec = tween(animationDuration),
+        animationSpec = tween(animationDuration), label = ""
     )
 
 
@@ -350,14 +350,16 @@ fun SeriesDetailsContent(
                     ?.let { selectedExtra ->
                         when (selectedExtra) {
                             SeriesExtras.SEASONS -> {
-                                    seasonsSection(seasons = state.seasons, interaction = interaction)
+                                seasonsSection(seasons = state.seasons, interaction = interaction)
                             }
+
                             SeriesExtras.MORE_LIKE_THIS -> moreLikeSection(
                                 similarMovies = state.similarSeries,
                                 onClick = { movieId ->
                                     interaction.onClickSimilarMovie(movieId)
                                 }
                             )
+
                             SeriesExtras.REVIEWS -> reviewSection(state.reviews)
                             SeriesExtras.GALLERY -> item {
                                 GallerySection(gallery = state.gallery)
