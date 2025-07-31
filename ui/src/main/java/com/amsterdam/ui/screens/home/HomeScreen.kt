@@ -1,11 +1,14 @@
 package com.amsterdam.ui.screens.home
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -15,9 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -92,6 +99,7 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hil
     )
 }
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 private fun HomeScreenContent(
     state: HomeUiState,
@@ -99,7 +107,9 @@ private fun HomeScreenContent(
     modifier: Modifier = Modifier
 ) {
     val lazyListState = rememberLazyListState()
-
+    val configuration = LocalConfiguration.current
+    val screenHeightDp = configuration.screenHeightDp.dp
+    var upcomingMoviesSectionYOffsetDp by remember { mutableStateOf(0.dp) }
 
     val scrollOffset = remember {
         derivedStateOf { lazyListState.firstVisibleItemScrollOffset }
@@ -153,8 +163,33 @@ private fun HomeScreenContent(
                 state = state.upcomingMoviesSectionUiState,
                 onChangeMovieGenre = interactionListener::onChangeUpcomingMovieGenre,
                 onMovieClicked = interactionListener::onClickUpcomingMovieCard,
-                isVisible = state.error == null
+                isVisible = state.error == null,
+                onVerticalOffsetChange = {
+                    upcomingMoviesSectionYOffsetDp = it
+                }
             )
+
+            if (state.error == null){
+                if (!state.upcomingMoviesSectionUiState.isLoading){
+                    item {
+                        val lastVisibleItemInfo by remember { derivedStateOf { lazyListState.layoutInfo.visibleItemsInfo.lastOrNull() } }
+                        val totalItemsCount by remember { derivedStateOf { lazyListState.layoutInfo.totalItemsCount } }
+
+
+                        val spacerHeight: Dp by remember {
+                            derivedStateOf {
+                                if (upcomingMoviesSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)){
+                                    screenHeightDp
+                                } else {
+                                    0.dp
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(spacerHeight))
+                    }
+                }
+            }
 
             item {
                 AnimatedSectionVisibility(
