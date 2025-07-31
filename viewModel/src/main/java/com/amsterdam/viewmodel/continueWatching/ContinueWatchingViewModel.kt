@@ -9,18 +9,20 @@ import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase.ContinueWatchingScreenData
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+import com.amsterdam.paging.PagingSource
+import com.amsterdam.viewmodel.home.HomeUiState.ContinueWatchingMediaItemUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.media.MediaType
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import com.amsterdam.viewmodel.utils.getLinearItemsList
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 @HiltViewModel
 class ContinueWatchingViewModel @Inject constructor(
@@ -57,7 +59,7 @@ class ContinueWatchingViewModel @Inject constructor(
                             ).sortedByDescending { it.dateAdded }
                         }
                     }
-                ).flow.map { pagingData -> pagingData.map { it } }.cachedIn(viewModelScope)
+                ).flow.cachedIn(viewModelScope)
             },
             onSuccess = ::onGetContinueWatchingScreenDataSuccess,
             onError = ::onError,

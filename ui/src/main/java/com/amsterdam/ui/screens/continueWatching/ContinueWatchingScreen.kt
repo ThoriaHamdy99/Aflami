@@ -39,8 +39,6 @@ import kotlinx.coroutines.flow.collectLatest
 fun ContinueWatchingScreen(viewModel: ContinueWatchingViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
-    val configuration = LocalConfiguration.current
-    val currentLocale = configuration.locales[0]
     ContinueWatchingContent(state, viewModel)
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -58,10 +56,6 @@ fun ContinueWatchingScreen(viewModel: ContinueWatchingViewModel = hiltViewModel(
                 }
             }
         }
-    }
-
-    LaunchedEffect(currentLocale) {
-        viewModel.onLanguageChanged(currentLocale)
     }
 }
 

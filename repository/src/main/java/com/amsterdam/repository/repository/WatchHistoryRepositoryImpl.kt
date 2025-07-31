@@ -3,6 +3,7 @@ package com.amsterdam.repository.repository
 import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.entity.MovieWatchHistory
 import com.amsterdam.entity.TvShowWatchHistory
+import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.MovieLocalSource
 import com.amsterdam.repository.datasource.local.TvShowLocalSource
 import com.amsterdam.repository.datasource.local.WatchHistoryLocalDataSource
@@ -17,8 +18,8 @@ import com.amsterdam.repository.mapper.local.TvWatchHistoryLocalMapper
 import com.amsterdam.repository.mapper.remote.MovieDetailRemoteMapper
 import com.amsterdam.repository.mapper.remoteToLocal.MovieRemoteLocalMapper
 import com.amsterdam.repository.mapper.remoteToLocal.TvShowRemoteDetailsLocalMapper
-import com.amsterdam.repository.utils.getDeviceLanguage
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -28,6 +29,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
     private val movieRemoteDataSource: MovieRemoteSource,
     private val tvShowLocalDataSource: TvShowLocalSource,
     private val tvShowRemoteSource: TvShowsRemoteSource,
+    private val preferences: AppPreferences,
     private val tvShowRemoteDetailsLocalMapper: TvShowRemoteDetailsLocalMapper,
     private val localTvDataSource: TvShowLocalSource,
     private val movieWatchHistoryLocalMapper: MovieWatchHistoryLocalMapper,
@@ -50,13 +52,13 @@ class WatchHistoryRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getMovieWatchHistory(movieWatchHistoryDto: MovieWatchHistoryDto): MovieWatchHistory {
-        return movieLocalSource.getMovieById(movieWatchHistoryDto.movieId, getDeviceLanguage())
+        return movieLocalSource.getMovieById(movieWatchHistoryDto.movieId, preferences.getDeviceLanguage().first())
             ?.let {
                 movieWatchHistoryLocalMapper.toEntity(it)
             }
             ?: movieRemoteDataSource.getMovieDetailsById(movieWatchHistoryDto.movieId).run {
                 cacheWatchedMovie(this)
-                movieLocalSource.getMovieById(movieWatchHistoryDto.movieId, getDeviceLanguage())
+                movieLocalSource.getMovieById(movieWatchHistoryDto.movieId, preferences.getDeviceLanguage().first())
                     .let {
                         movieWatchHistoryLocalMapper.toEntity(it!!)
                     }
@@ -68,7 +70,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
             movieRemoteLocalMapper.toLocal(
                 remote = movieDetailRemoteMapper.mapMovieDetailsToMovieItemDto(
                     remoteMovieDetailsResponse
-                ), args = listOf(getDeviceLanguage())
+                ), args = listOf(preferences.getDeviceLanguage().first())
             )
         )
     }
@@ -90,7 +92,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
     private suspend fun getTvShowWatchHistory(tvShowWatchHistoryDto: TvShowWatchHistoryDto): TvShowWatchHistory {
         return tvShowLocalDataSource.getTvShowById(
             tvShowWatchHistoryDto.tvShowId,
-            getDeviceLanguage()
+            preferences.getDeviceLanguage().first()
         )?.let {
             tvWatchHistoryLocalMapper.toEntity(it)
         }
@@ -98,7 +100,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
                 cacheWatchedTvShow(this)
                 tvShowLocalDataSource.getTvShowById(
                     tvShowWatchHistoryDto.tvShowId,
-                    getDeviceLanguage()
+                    preferences.getDeviceLanguage().first()
                 ).let {
                     tvWatchHistoryLocalMapper.toEntity(it!!)
                 }
@@ -108,7 +110,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
     private suspend fun cacheWatchedTvShow(remoteTvShowItemDto: TvShowDetailsRemoteResponse) {
         localTvDataSource.insertTvShow(
             tvShowRemoteDetailsLocalMapper.toLocal(
-                remote = remoteTvShowItemDto, args = listOf(getDeviceLanguage())
+                remote = remoteTvShowItemDto, args = listOf(preferences.getDeviceLanguage().first())
             )
         )
     }
