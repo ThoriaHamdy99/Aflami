@@ -19,7 +19,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import com.amsterdam.designsystem.R
+import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
+import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 
 @Composable
 fun ExpandableText(
@@ -127,11 +129,26 @@ fun ExpandableText(
 
 @ThemeAndLocalePreviews
 @Composable
+fun ExpandableTextExpandedPreview() {
+    AflamiTheme {
+        ExpandableText(
+            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus tortor.",
+            minimizedMaxLines = 3,
+            isExpanded = true,
+            onToggleExpansion = {}
+        )
+    }
+}
+
+@ThemeAndLocalePreviews
+@Composable
 fun ExpandableTextPreview() {
     AflamiTheme {
         ExpandableText(
             text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus tortor.",
-            minimizedMaxLines = 3
+            minimizedMaxLines = 3,
+            isExpanded = false,
+            onToggleExpansion = {}
         )
     }
 }

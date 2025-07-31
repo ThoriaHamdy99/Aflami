@@ -72,17 +72,16 @@ import com.amsterdam.ui.components.details.DetailsPostersPager
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
-import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
 import com.amsterdam.ui.screens.movieDetails.components.EmptyStateText
 import com.amsterdam.ui.screens.movieDetails.components.GallerySection
-import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
 import com.amsterdam.ui.screens.movieDetails.components.PlayButton
-import com.amsterdam.ui.screens.movieDetails.components.reviewSection
+import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
+import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
 import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
-import com.amsterdam.ui.screens.seriesDetails.component.ReviewSection
+import com.amsterdam.ui.screens.seriesDetails.component.reviewSection
 import com.amsterdam.ui.utils.formateAsRate
 import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.cast.MediaType
@@ -293,7 +292,7 @@ fun SeriesDetailsContent(
                                 modifier = Modifier.padding(horizontal = 16.dp)
                             )
 
-                            if(state.categories.isNotEmpty()){
+                            if (state.categories.isNotEmpty()) {
                                 LazyRow(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -356,18 +355,21 @@ fun SeriesDetailsContent(
                     ?.let { selectedExtra ->
                         when (selectedExtra) {
                             SeriesExtras.SEASONS -> {
-                                    seasonsSection(seasons = state.seasons, interaction = interaction)
+                                seasonsSection(seasons = state.seasons, interaction = interaction)
                             }
+
                             SeriesExtras.MORE_LIKE_THIS -> moreLikeSection(
                                 similarMovies = state.similarSeries,
                                 onClick = { movieId ->
                                     interaction.onClickSimilarMovie(movieId)
                                 }
                             )
+
                             SeriesExtras.REVIEWS -> reviewSection(state.reviews, interaction)
                             SeriesExtras.GALLERY -> item {
                                 GallerySection(gallery = state.gallery)
                             }
+
                             SeriesExtras.COMPANY_PRODUCTION -> companyProductionSection(
                                 state.productionCompanies
                             )
@@ -421,7 +423,7 @@ private fun SeriesInfoSection(
 ) {
     val items = listOf(airDate, seasonCount, originCountry)
 
-    if (!items.all{it.isEmpty()}) {
+    if (!items.all { it.isEmpty() }) {
         Row(
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
