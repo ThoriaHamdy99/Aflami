@@ -74,10 +74,10 @@ import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
 import com.amsterdam.ui.screens.movieDetails.components.GallerySection
 import com.amsterdam.ui.screens.movieDetails.components.MoreLikeSection
 import com.amsterdam.ui.screens.movieDetails.components.PlayButton
-import com.amsterdam.ui.screens.movieDetails.components.ReviewSection
 import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
+import com.amsterdam.ui.screens.seriesDetails.component.ReviewSection
 import com.amsterdam.ui.utils.formateAsRate
 import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.cast.MediaType
@@ -312,7 +312,9 @@ fun SeriesDetailsContent(
                                 modifier = Modifier
                                     .padding(top = 24.dp)
                                     .padding(horizontal = 24.dp),
-                                description = state.description
+                                description = state.description,
+                                isExpanded = state.isDescriptionExpanded,
+                                onToggleExpansion = interaction::onDescriptionExpansionToggled
                             )
                             CastSection(
                                 modifier = Modifier.padding(top = 24.dp),
@@ -327,7 +329,8 @@ fun SeriesDetailsContent(
                                     .background(AppTheme.color.stroke)
                             )
                             SeriesExtrasSection(
-                                modifier = Modifier.padding(top = 12.dp)
+                                modifier = Modifier
+                                    .padding(top = 12.dp)
                                     .onGloballyPositioned { coordinates ->
                                         seriesExtrasSectionYOffsetDp =
                                             coordinates.positionOnScreen().y.dp
@@ -353,16 +356,23 @@ fun SeriesDetailsContent(
                                     )
                                 }
                             }
+
                             SeriesExtras.MORE_LIKE_THIS -> MoreLikeSection(
                                 similarMovies = state.similarSeries,
                                 onClick = { movieId ->
                                     interaction.onClickSimilarMovie(movieId)
                                 }
                             )
-                            SeriesExtras.REVIEWS -> ReviewSection(state.reviews)
+
+                            SeriesExtras.REVIEWS -> ReviewSection(
+                                state.reviews,
+                                interaction
+                            )
+
                             SeriesExtras.GALLERY -> item {
                                 GallerySection(gallery = state.gallery)
                             }
+
                             SeriesExtras.COMPANY_PRODUCTION -> CompanyProductionSection(
                                 state.productionCompanies
                             )
@@ -376,7 +386,7 @@ fun SeriesDetailsContent(
 
                     val spacerHeight: Dp by remember {
                         derivedStateOf {
-                            if (seriesExtrasSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)){
+                            if (seriesExtrasSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)) {
                                 screenHeightDp
                             } else {
                                 0.dp
@@ -545,6 +555,8 @@ private fun SeriesDetailsContentPreview() {
                 override fun onNavigateToLoginClicked() {}
                 override fun onCancelClicked() {}
                 override fun onClickSimilarMovie(movieId: Long) {}
+                override fun onDescriptionExpansionToggled() {}
+                override fun onReviewExpansionToggled(reviewId: String) {}
             }
         )
     }
