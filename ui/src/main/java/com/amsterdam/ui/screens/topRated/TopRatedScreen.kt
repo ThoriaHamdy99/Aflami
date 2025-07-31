@@ -24,6 +24,7 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.R
+import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.application.LocalNavController
@@ -102,17 +103,23 @@ private fun TopRatedContent(
             AnimatedSectionVisibility(
                 visible = state.isLoading
             ) {
-                LoadingContainer(modifier = Modifier
-                    .fillMaxSize()
-                    .zIndex(10f))
+                LoadingContainer(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .zIndex(10f)
+                )
             }
 
             AnimatedSectionVisibility(
                 visible = state.error == TopRatedUiState.TopRatedError.NetworkError
             ) {
-                NoNetworkContainer(
-                    onClickRetry = interactionListener::onClickRetryLoading
-                )
+                CenterOfScreenContainer(
+                    unneededSpace = 0.dp
+                ) {
+                    NoNetworkContainer(
+                        onClickRetry = interactionListener::onClickRetryLoading
+                    )
+                }
             }
 
             AnimatedSectionVisibility(
