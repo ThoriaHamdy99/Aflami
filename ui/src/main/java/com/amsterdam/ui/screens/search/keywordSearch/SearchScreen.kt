@@ -41,8 +41,6 @@ import com.amsterdam.ui.screens.search.keywordSearch.sections.RecentSearchesSect
 import com.amsterdam.ui.screens.search.keywordSearch.sections.SearchScreenHeaderSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.SuccessMediaItemsSection
 import com.amsterdam.ui.screens.search.keywordSearch.sections.SuggestionsHubSection
-import com.amsterdam.ui.utils.safeNavigate
-import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.FilterDialog
 import com.amsterdam.viewmodel.search.keywordSearch.FilterInteractionListener
 import com.amsterdam.viewmodel.search.keywordSearch.SearchErrorState
 import com.amsterdam.viewmodel.search.keywordSearch.SearchInteractionListener
@@ -52,7 +50,6 @@ import com.amsterdam.viewmodel.search.keywordSearch.SearchViewModel
 import com.amsterdam.viewmodel.search.keywordSearch.TabOption
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
