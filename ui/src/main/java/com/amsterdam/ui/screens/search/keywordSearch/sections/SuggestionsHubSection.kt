@@ -1,14 +1,12 @@
 package com.amsterdam.ui.screens.search.keywordSearch.sections
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -19,42 +17,35 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.components.globalSearchHub.GlobalSearchHub
 import com.amsterdam.ui.components.globalSearchHub.GlobalSearchHubUI
 
-internal fun LazyGridScope.suggestionsHubSection(
-    keyword: String,
+@Composable
+internal fun SuggestionsHubSection(
     onWorldSearchCardClicked: () -> Unit,
     onActorSearchCardClicked: () -> Unit,
 ) {
+    Text(
+        text = stringResource(R.string.serach_suggestions_hub),
+        style = AppTheme.textStyle.title.medium,
+        color = AppTheme.color.title,
+        textAlign = TextAlign.Start,
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+    )
+    Row(
+        modifier = Modifier
+            .padding(top = 12.dp)
+            .fillMaxWidth()
+            .height(intrinsicSize = IntrinsicSize.Max),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        GlobalSearchHub(
+            modifier = Modifier.weight(1f),
+            globalSearchHubUI = GlobalSearchHubUI.WORLD,
+            onItemClick = onWorldSearchCardClicked,
+        )
 
-    item(span = { GridItemSpan(maxLineSpan) }) {
-        AnimatedVisibility(keyword.isBlank()) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.serach_suggestions_hub),
-                style = AppTheme.textStyle.title.medium,
-                color = AppTheme.color.title,
-                textAlign = TextAlign.Start,
-            )
-        }
-    }
-
-    item(span = { GridItemSpan(maxLineSpan) }) {
-        AnimatedVisibility(visible = keyword.isBlank()) {
-            Row(
-                modifier = Modifier.fillMaxWidth().height(intrinsicSize = IntrinsicSize.Max),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                GlobalSearchHub(
-                    modifier = Modifier.weight(1f),
-                    globalSearchHubUI = GlobalSearchHubUI.WORLD,
-                    onItemClick = onWorldSearchCardClicked,
-                )
-
-                GlobalSearchHub(
-                    modifier = Modifier.weight(1f),
-                    globalSearchHubUI = GlobalSearchHubUI.ACTOR,
-                    onItemClick = onActorSearchCardClicked,
-                )
-            }
-        }
+        GlobalSearchHub(
+            modifier = Modifier.weight(1f),
+            globalSearchHubUI = GlobalSearchHubUI.ACTOR,
+            onItemClick = onActorSearchCardClicked,
+        )
     }
 }

@@ -3,21 +3,21 @@ package com.amsterdam.ui.screens.search.keywordSearch
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -28,8 +28,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.amsterdam.designsystem.R
+import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.LoadingContainer
-import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
@@ -37,10 +37,10 @@ import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.navigation.Route.MovieDetails
 import com.amsterdam.ui.navigation.Route.SeriesDetails
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.FilterDialog
-import com.amsterdam.ui.screens.search.keywordSearch.sections.recentSearchesSection
-import com.amsterdam.ui.screens.search.keywordSearch.sections.searchScreenHeaderSection
-import com.amsterdam.ui.screens.search.keywordSearch.sections.successMediaItemsSection
-import com.amsterdam.ui.screens.search.keywordSearch.sections.suggestionsHubSection
+import com.amsterdam.ui.screens.search.keywordSearch.sections.RecentSearchesSection
+import com.amsterdam.ui.screens.search.keywordSearch.sections.SearchScreenHeaderSection
+import com.amsterdam.ui.screens.search.keywordSearch.sections.SuccessMediaItemsSection
+import com.amsterdam.ui.screens.search.keywordSearch.sections.SuggestionsHubSection
 import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.search.keywordSearch.FilterInteractionListener
 import com.amsterdam.viewmodel.search.keywordSearch.SearchErrorState
@@ -112,105 +112,103 @@ private fun SearchContent(
         interaction.onClickClearSearch()
     }
     var headerHeight by remember { mutableStateOf(0.dp) }
-    var isPageStillLoading by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
-
-    LazyVerticalGrid(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = AppTheme.color.surface)
             .statusBarsPadding()
-            .navigationBarsPadding(),
-        columns = GridCells.Adaptive(160.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
+            .navigationBarsPadding()
+            .padding(horizontal = 16.dp)
     ) {
+        Column(Modifier.fillMaxSize()) {
+            SearchScreenHeaderSection(
+                keyword = state.keyword,
+                selectedTabOption = state.selectedTabOption,
+                onNavigateBackClicked = interaction::onClickNavigateBack,
+                onKeywordValuedChanged = interaction::onChangeSearchKeyword,
+                onFilterButtonClicked = interaction::onClickFilterButton,
+                onTabOptionClicked = interaction::onClickTabOption,
+                onSaveSearchHistory = interaction::onSaveSearchHistory,
+                onHeaderSizeChanged = { headerHeight = it.height.dp },
+                keyboardController = keyboardController
+            )
 
-        searchScreenHeaderSection(
-            keyword = state.keyword,
-            selectedTabOption = state.selectedTabOption,
-            onNavigateBackClicked = interaction::onClickNavigateBack,
-            onKeywordValuedChanged = interaction::onChangeSearchKeyword,
-            onFilterButtonClicked = interaction::onClickFilterButton,
-            onTabOptionClicked = interaction::onClickTabOption,
-            onSaveSearchHistory = interaction::onSaveSearchHistory,
-            onHeaderSizeChanged = { headerHeight = it.height.dp },
-            keyboardController = keyboardController
-        )
+            AnimatedVisibility(state.keyword.isBlank()) {
+                Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
+                    SuggestionsHubSection(
+                        onWorldSearchCardClicked = interaction::onClickWorldSearchCard,
+                        onActorSearchCardClicked = interaction::onClickActorSearchCard
+                    )
 
-        successMediaItemsSection(
-            selectedTabOption = state.selectedTabOption,
-            moviesFlow = movies,
-            tvShowsFlow = tvShows,
-            onPageLoading = { isPageStillLoading = it },
-            onMovieClicked = interaction::onClickMovieCard,
-            onTvShowClicked = interaction::onClickTvShowCard,
-            state = state
-        )
+                    RecentSearchesSection(
+                        keyword = state.keyword,
+                        recentSearches = state.recentSearches,
+                        onAllRecentSearchesCleared = interaction::onClickClearAllRecentSearches,
+                        onRecentSearchClicked = interaction::onClickRecentSearch,
+                        onRecentSearchCleared = interaction::onClickClearRecentSearch
+                    )
+                }
+            }
 
-        suggestionsHubSection(
-            keyword = state.keyword,
-            onWorldSearchCardClicked = interaction::onClickWorldSearchCard,
-            onActorSearchCardClicked = interaction::onClickActorSearchCard
-        )
+            AnimatedVisibility(state.keyword.isNotBlank()) {
+                SuccessMediaItemsSection(
+                    selectedTabOption = state.selectedTabOption,
+                    moviesFlow = movies,
+                    tvShowsFlow = tvShows,
+                    onMovieClicked = interaction::onClickMovieCard,
+                    onTvShowClicked = interaction::onClickTvShowCard,
+                    state = state
+                )
+                val isSelectedTabHasNoData = if (state.selectedTabOption == TabOption.MOVIES) {
+                    movies.itemSnapshotList.isEmpty()
+                } else {
+                    tvShows.itemSnapshotList.isEmpty()
+                }
+                if (state.isLoading || state.errorUiState != null || isSelectedTabHasNoData) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(vertical = 8.dp)
+                    ) {
+                        CenterOfScreenContainer(headerHeight, modifier = Modifier.fillMaxSize()) {
+                            when {
+                                state.isLoading && state.errorUiState == null -> {
+                                    LoadingContainer()
+                                }
 
-        recentSearchesSection(
-            keyword = state.keyword,
-            recentSearches = state.recentSearches,
-            onAllRecentSearchesCleared = interaction::onClickClearAllRecentSearches,
-            onRecentSearchClicked = interaction::onClickRecentSearch,
-            onRecentSearchCleared = interaction::onClickClearRecentSearch,
-            headerHeight = headerHeight
-        )
+                                state.errorUiState is SearchErrorState.NoNetworkConnection -> {
+                                    NoNetworkContainer(
+                                        onClickRetry = interaction::onClickRetryRequest
+                                    )
+                                }
 
-        val currentFilterState =
-            if (state.selectedTabOption == TabOption.MOVIES) {
+                                !state.isLoading && state.errorUiState == null && isSelectedTabHasNoData -> {
+                                    NoDataContainer(
+                                        imageRes = painterResource(com.amsterdam.ui.R.drawable.placeholder_no_result_found),
+                                        title = stringResource(R.string.no_search_result),
+                                        description = stringResource(R.string.no_search_result_description),
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        AnimatedVisibility(modifier = Modifier.fillMaxSize(), visible = state.isDialogVisible) {
+            val currentFilterState = if (state.selectedTabOption == TabOption.MOVIES) {
                 state.movieFilterItemUiState
             } else {
                 state.tvShowFilterItemUiState
             }
-
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            AnimatedVisibility(modifier = Modifier.fillMaxSize(), visible = state.isDialogVisible) {
-                FilterDialog(
-                    filterState = currentFilterState,
-                    selectedTabOption = state.selectedTabOption,
-                    interaction = filterInteraction
-                )
-            }
-        }
-
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            AnimatedVisibility(
-                visible = (state.isLoading || isPageStillLoading) && state.keyword.isNotBlank() && state.errorUiState == null,
-            ) {
-                LoadingContainer(modifier = Modifier.fillMaxSize())
-            }
-        }
-
-        item(span = { GridItemSpan(maxLineSpan) }) {
-
-            AnimatedVisibility(state.keyword.isNotBlank()) {
-                if (state.errorUiState != null && state.errorUiState is SearchErrorState.NoNetworkConnection) {
-                    NoNetworkContainer(onClickRetry = interaction::onClickRetryRequest)
-                }
-
-                val isSelectedTabSearchResultEmpty =
-                    if (state.selectedTabOption == TabOption.MOVIES) {
-                        movies.itemSnapshotList.isEmpty()
-                    } else {
-                        tvShows.itemSnapshotList.isEmpty()
-                    }
-
-                AnimatedVisibility(!state.isLoading && state.errorUiState == null && isSelectedTabSearchResultEmpty) {
-                    NoDataContainer(
-                        imageRes = painterResource(com.amsterdam.ui.R.drawable.placeholder_no_result_found),
-                        title = stringResource(R.string.no_search_result),
-                        description = stringResource(R.string.no_search_result_description),
-                    )
-                }
-            }
+            FilterDialog(
+                filterState = currentFilterState,
+                selectedTabOption = state.selectedTabOption,
+                interaction = filterInteraction
+            )
         }
     }
 }
