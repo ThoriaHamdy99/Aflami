@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.emptyFlow
 import javax.inject.Inject
 
@@ -54,7 +53,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun fetchRecentSearches() {
-        startLoading()
         tryToExecute(
             action = { recentSearchesUseCase.getRecentSearches() },
             onSuccess = ::onLoadRecentSearchesSuccess,
@@ -224,6 +222,7 @@ class SearchViewModel @Inject constructor(
     private fun startLoading() = updateState { it.copy(isLoading = true) }
 
     override fun onChangeSearchKeyword(keyword: String) {
+        if (keyword.trim() == state.value.keyword.trim()) return
         _keyword.update { keyword }
         updateState { it.copy(keyword = keyword) }
     }
