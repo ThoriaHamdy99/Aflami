@@ -54,13 +54,13 @@ class WatchHistoryRepositoryImpl @Inject constructor(
     private suspend fun getMovieWatchHistory(movieWatchHistoryDto: MovieWatchHistoryDto): MovieWatchHistory {
         return movieLocalSource.getMovieById(movieWatchHistoryDto.movieId, preferences.getDeviceLanguage().first())
             ?.let {
-                movieWatchHistoryLocalMapper.toEntity(it)
+                movieWatchHistoryLocalMapper.toEntity(it.copy(insertedDate = movieWatchHistoryDto.watchedDate))
             }
             ?: movieRemoteDataSource.getMovieDetailsById(movieWatchHistoryDto.movieId).run {
                 cacheWatchedMovie(this)
                 movieLocalSource.getMovieById(movieWatchHistoryDto.movieId, preferences.getDeviceLanguage().first())
                     .let {
-                        movieWatchHistoryLocalMapper.toEntity(it!!)
+                        movieWatchHistoryLocalMapper.toEntity(it!!.copy(insertedDate = movieWatchHistoryDto.watchedDate))
                     }
             }
     }
@@ -94,7 +94,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
             tvShowWatchHistoryDto.tvShowId,
             preferences.getDeviceLanguage().first()
         )?.let {
-            tvWatchHistoryLocalMapper.toEntity(it)
+            tvWatchHistoryLocalMapper.toEntity(it.copy(insertedDate = tvShowWatchHistoryDto.watchedDate))
         }
             ?: tvShowRemoteSource.getTvShowDetailsById(tvShowWatchHistoryDto.tvShowId).run {
                 cacheWatchedTvShow(this)
@@ -102,7 +102,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
                     tvShowWatchHistoryDto.tvShowId,
                     preferences.getDeviceLanguage().first()
                 ).let {
-                    tvWatchHistoryLocalMapper.toEntity(it!!)
+                    tvWatchHistoryLocalMapper.toEntity(it!!.copy(insertedDate = tvShowWatchHistoryDto.watchedDate))
                 }
             }
     }
