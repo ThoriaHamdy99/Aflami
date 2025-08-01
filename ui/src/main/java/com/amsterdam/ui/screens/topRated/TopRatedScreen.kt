@@ -76,7 +76,9 @@ private fun TopRatedContent(
     interactionListener: TopRatedInteractionListener
 ) {
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
     ) {
         var headerHeight by remember { mutableStateOf(0.dp) }
         TopRatedBackgroundComponent()
