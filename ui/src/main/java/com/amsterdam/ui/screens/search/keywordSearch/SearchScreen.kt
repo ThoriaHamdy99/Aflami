@@ -150,8 +150,7 @@ private fun SearchContent(
                     )
 
                     RecentSearchesSection(
-                        keyword = state.keyword,
-                        recentSearches = state.recentSearches,
+                        state = state,
                         onAllRecentSearchesCleared = interaction::onClickClearAllRecentSearches,
                         onRecentSearchClicked = interaction::onClickRecentSearch,
                         onRecentSearchCleared = interaction::onClickClearRecentSearch
