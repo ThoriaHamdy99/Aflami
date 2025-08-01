@@ -1,4 +1,3 @@
-package com.amsterdam.remotedatasource.serviceProvider
 
 import com.amsterdam.repository.dto.remote.EpisodeResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse

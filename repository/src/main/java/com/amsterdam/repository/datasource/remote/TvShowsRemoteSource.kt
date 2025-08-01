@@ -8,7 +8,9 @@ import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 interface TvShowsRemoteSource {
 
     suspend fun getPopularTvShows(): RemoteTvShowResponse
-    suspend fun getTopRatedTvShows(): RemoteTvShowResponse
+    suspend fun getTopRatedTvShows(
+        page: Int
+    ): RemoteTvShowResponse
     suspend fun getTvShowCast(tvShowId: Long): RemoteCastAndCrewResponse
 
     suspend fun getTvShowsByKeyword(

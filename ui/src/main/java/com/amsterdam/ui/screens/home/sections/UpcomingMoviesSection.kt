@@ -27,11 +27,10 @@ import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.components.adaptiveGrid
-import com.amsterdam.ui.components.MovieCard
+import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.screens.home.sections.placeholder.upcomingMoviesSectionPlaceholder
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreIcon
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
-import com.amsterdam.ui.utils.formateAsRate
 import com.amsterdam.viewmodel.home.HomeUiState.UpcomingMoviesSectionUiState
 
 fun LazyListScope.upcomingMoviesSection(
@@ -100,7 +99,7 @@ fun LazyListScope.upcomingMoviesSection(
                     itemsVerticalPadding = 8.dp,
                     deviceWidth = deviceWidth,
                 ) { movie ->
-                    MovieCard(
+                    MediaCard(
                         modifier = modifier
                             .weight(1f)
                             .height(196.dp),
@@ -116,7 +115,7 @@ fun LazyListScope.upcomingMoviesSection(
                         movieType = stringResource(R.string.movies),
                         movieYear = movie.yearOfRelease,
                         movieTitle = movie.name,
-                        movieRating = movie.rate.formateAsRate(),
+                        movieRating = movie.rate,
                         onClick = { onMovieClicked(movie.id) }
                     )
                 }

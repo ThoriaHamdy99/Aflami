@@ -44,13 +44,11 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavController
-import com.amsterdam.ui.components.MovieCard
+import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.navigation.Route
-import com.amsterdam.ui.utils.formateAsRate
-import com.amsterdam.ui.utils.safeNavigate
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchErrorState
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchUiState
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchEffect
@@ -72,13 +70,11 @@ fun SearchByActorScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
-            effect?.let {
-                when (it) {
-                    ActorSearchEffect.NavigateBack -> navController.popBackStack()
-                    is ActorSearchEffect.NavigateToDetailsScreen -> {
-                        viewModel.onSaveSearchHistory()
-                        navController.safeNavigate(Route.MovieDetails(it.movieId))
-                    }
+            when (effect) {
+                ActorSearchEffect.NavigateBack -> navController.navigateUp()
+                is ActorSearchEffect.NavigateToDetailsScreen -> {
+                    viewModel.onSaveSearchHistory()
+                    navController.navigate(Route.MovieDetails(effect.movieId))
                 }
             }
         }
@@ -152,12 +148,12 @@ private fun SearchByActorContent(
                     key = { index -> "${movies[index]?.id}-$index" },
                 ) { index ->
                     val movie = movies[index] ?: return@items
-                    MovieCard(
+                    MediaCard(
                         movieImage = { MovieImage(movie.posterImageUrl) },
                         movieType = stringResource(R.string.movie),
                         movieYear = movie.yearOfRelease,
                         movieTitle = movie.name,
-                        movieRating = movie.rate.formateAsRate(),
+                        movieRating = movie.rate,
                     ) {
                         interactionListener.onClickMovie(movie.id)
                     }
