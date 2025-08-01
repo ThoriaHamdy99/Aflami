@@ -223,10 +223,10 @@ private fun CustomMoodPickerCardPreview() {
             cardMoods = listOf(
                 CardMood.SAD,
                 CardMood.ANGRY,
-                CardMood.IN_LOVE,
-                CardMood.CONFUSED,
-                CardMood.THINKING,
-                CardMood.UN_HAPPY
+                CardMood.ROMANTIC,
+                CardMood.ANGRY,
+                CardMood.DEPRESSED,
+                CardMood.SAD_DIZZY
             ),
             onSelectMood = {},
         )
