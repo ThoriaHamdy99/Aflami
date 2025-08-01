@@ -5,19 +5,20 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -25,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -38,6 +40,7 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.domain.models.Mood
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.ui.application.LocalNavController
+import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.HomeAppBar
 import com.amsterdam.ui.navigation.Route
@@ -110,118 +113,125 @@ private fun HomeScreenContent(
     val scrollOffset = remember {
         derivedStateOf { lazyListState.firstVisibleItemScrollOffset }
     }
-
     val appBarColor by animateColorAsState(
         targetValue = if (scrollOffset.value > 8) AppTheme.color.surface else Color.Transparent,
         animationSpec = tween(800),
         label = "AppBarScrollColor"
     )
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
             .navigationBarsPadding()
+            .windowInsetsPadding(WindowInsets(bottom = LocalScaffoldBottomPadding.current))
     ) {
-        LazyColumn(
-            modifier = modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 100.dp),
-            state = lazyListState,
-        ) {
-            popularSection(
-                state = state.popularMediaSectionUiState,
-                onClickMediaItem = interactionListener::onClickMediaItem,
-                isVisible = state.error == null
-            )
-
-            continueWatchingSection(
-                state = state.continueWatchingMediaSectionUiState,
-                isVisible = state.continueWatchingMediaSectionUiState.mediaItems.isNotEmpty(),
-                onClickMediaItem = interactionListener::onClickMediaItem,
-                onClickShowAll = interactionListener::onClickShowAllContinueWatchingMovies,
-            )
-
-            topRatingSection(
-                state = state.topRatedMediaSectionUiState,
-                onClickMediaItem = interactionListener::onClickMediaItem,
-                onClickShowAll = interactionListener::onClickShowAllToRatedMovies,
-                isVisible = state.error == null,
-            )
-
-            item {
-                MoodPickerSection(
-                    state,
-                    interactionListener,
-                )
-            }
-
-            upcomingMoviesSection(
-                state = state.upcomingMoviesSectionUiState,
-                onChangeMovieGenre = interactionListener::onChangeUpcomingMovieGenre,
-                onMovieClicked = interactionListener::onClickUpcomingMovieCard,
-                isVisible = state.error == null,
-                onVerticalOffsetChange = {
-                    upcomingMoviesSectionYOffsetDp = it
-                },
-                deviceWidth = deviceWidth,
-            )
-
-            if (state.error == null){
-                if (!state.upcomingMoviesSectionUiState.isLoading){
-                    item {
-                        val lastVisibleItemInfo by remember { derivedStateOf { lazyListState.layoutInfo.visibleItemsInfo.lastOrNull() } }
-                        val totalItemsCount by remember { derivedStateOf { lazyListState.layoutInfo.totalItemsCount } }
-
-
-                        val spacerHeight: Dp by remember {
-                            derivedStateOf {
-                                if (upcomingMoviesSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)){
-                                    screenHeightDp
-                                } else {
-                                    0.dp
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(spacerHeight))
-                    }
-                }
-            }
-
-            item {
-                AnimatedSectionVisibility(
-                    visible = state.error != null,
+        if (state.error == HomeUiState.HomeError.NetworkError) {
+            Column (Modifier.fillMaxSize()) {
+                HomeAppBar(
+                    onSearchClicked = interactionListener::onClickSearch,
                     modifier = Modifier
-                        .fillParentMaxWidth()
-                        .padding(top = 16.dp)
+                        .background(appBarColor)
+                        .statusBarsPadding()
+                        .padding(horizontal = 16.dp),
+                )
+                Box (
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
                 ) {
                     NoNetworkContainer(
                         onClickRetry = interactionListener::onClickRetryLoading,
-                        description = ""
+                        modifier = Modifier.fillMaxSize().padding(vertical = 8.dp)
                     )
                 }
             }
-        }
+        } else {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 100.dp),
+                state = lazyListState,
+            ) {
+                popularSection(
+                    state = state.popularMediaSectionUiState,
+                    onClickMediaItem = interactionListener::onClickMediaItem,
+                    isVisible = state.error == null
+                )
 
-        HomeAppBar(
-            modifier = Modifier
-                .background(appBarColor)
-                .statusBarsPadding()
-                .padding(horizontal = 16.dp),
-            onSearchClicked = interactionListener::onClickSearch,
-        )
+                continueWatchingSection(
+                    state = state.continueWatchingMediaSectionUiState,
+                    isVisible = state.continueWatchingMediaSectionUiState.mediaItems.isNotEmpty(),
+                    onClickMediaItem = interactionListener::onClickMediaItem,
+                    onClickShowAll = interactionListener::onClickShowAllContinueWatchingMovies,
+                )
 
-        AnimatedSectionVisibility(visible = state.moodPickerUiState.openMovieDialog) {
-            MovieMoodPickerDialogDialog(
-                movie = state.moodPickerUiState.selectedMovie,
-                onClickViewDetails = interactionListener::onClickViewDetails,
-                onClickGetAnotherMovie = interactionListener::onClickGetAnotherMovie,
-                onDismiss = interactionListener::onDismissMoodPickerDialog,
-                modifier = Modifier.fillMaxSize()
+                topRatingSection(
+                    state = state.topRatedMediaSectionUiState,
+                    onClickMediaItem = interactionListener::onClickMediaItem,
+                    onClickShowAll = interactionListener::onClickShowAllToRatedMovies,
+                    isVisible = state.error == null,
+                )
+
+                item {
+                    MoodPickerSection(
+                        state,
+                        interactionListener,
+                    )
+                }
+
+                upcomingMoviesSection(
+                    state = state.upcomingMoviesSectionUiState,
+                    onChangeMovieGenre = interactionListener::onChangeUpcomingMovieGenre,
+                    onMovieClicked = interactionListener::onClickUpcomingMovieCard,
+                    isVisible = state.error == null,
+                    onVerticalOffsetChange = {
+                        upcomingMoviesSectionYOffsetDp = it
+                    },
+                    deviceWidth = deviceWidth,
+                )
+
+                if (state.error == null) {
+                    if (!state.upcomingMoviesSectionUiState.isLoading) {
+                        item {
+                            val lastVisibleItemInfo by remember { derivedStateOf { lazyListState.layoutInfo.visibleItemsInfo.lastOrNull() } }
+                            val totalItemsCount by remember { derivedStateOf { lazyListState.layoutInfo.totalItemsCount } }
+
+
+                            val spacerHeight: Dp by remember {
+                                derivedStateOf {
+                                    if (upcomingMoviesSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)) {
+                                        screenHeightDp
+                                    } else {
+                                        0.dp
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(spacerHeight))
+                        }
+                    }
+                }
+            }
+            AnimatedSectionVisibility(visible = state.moodPickerUiState.openMovieDialog) {
+                MovieMoodPickerDialogDialog(
+                    movie = state.moodPickerUiState.selectedMovie,
+                    onClickViewDetails = interactionListener::onClickViewDetails,
+                    onClickGetAnotherMovie = interactionListener::onClickGetAnotherMovie,
+                    onDismiss = interactionListener::onDismissMoodPickerDialog,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            HomeAppBar(
+                onSearchClicked = interactionListener::onClickSearch,
+                modifier = Modifier
+                    .background(appBarColor)
+                    .statusBarsPadding()
+                    .padding(horizontal = 16.dp),
             )
         }
     }
 }
+
 
 @ThemeAndLocalePreviews
 @Composable
