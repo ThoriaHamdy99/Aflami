@@ -60,7 +60,7 @@ import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
 import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
-import com.amsterdam.ui.screens.movieDetails.components.GallerySection
+import com.amsterdam.ui.screens.movieDetails.components.gallerySection
 import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieExtrasSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieInfoSection
@@ -129,7 +129,7 @@ fun MovieContent(
     val listState = rememberLazyListState()
     val animationDuration by remember { mutableIntStateOf(1000) }
     val pagerState = rememberPagerState { state.moviePostersUrl.size }
-
+    val deviceWidth = configuration.screenWidthDp
 
 
     LaunchedEffect(true) {
@@ -309,9 +309,8 @@ fun MovieContent(
                             }
                         )
                         MovieExtras.REVIEWS -> reviewSection(state.reviews)
-                        MovieExtras.GALLERY -> item {
-                            GallerySection(gallery = state.gallery)
-                        }
+                        MovieExtras.GALLERY -> gallerySection(gallery = state.gallery, deviceWidth = deviceWidth)
+
                         MovieExtras.COMPANY_PRODUCTION -> companyProductionSection(state.productionCompany)
                     }
                 }

@@ -71,12 +71,12 @@ import com.amsterdam.ui.components.details.DetailsPostersPager
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
-import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
 import com.amsterdam.ui.screens.movieDetails.components.EmptyStateText
-import com.amsterdam.ui.screens.movieDetails.components.GallerySection
-import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
+import com.amsterdam.ui.screens.movieDetails.components.gallerySection
 import com.amsterdam.ui.screens.movieDetails.components.PlayButton
+import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
+import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
 import com.amsterdam.ui.screens.movieDetails.components.reviewSection
 import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
@@ -168,6 +168,7 @@ fun SeriesDetailsContent(
         }
     }
     val pagerState = rememberPagerState { state.postersUrls.size }
+    val deviceWidth = configuration.screenWidthDp
 
     LaunchedEffect(true) {
         while (true) {
@@ -363,9 +364,7 @@ fun SeriesDetailsContent(
                                 }
                             )
                             SeriesExtras.REVIEWS -> reviewSection(state.reviews)
-                            SeriesExtras.GALLERY -> item {
-                                GallerySection(gallery = state.gallery)
-                            }
+                            SeriesExtras.GALLERY -> gallerySection(gallery = state.gallery, deviceWidth = deviceWidth)
                             SeriesExtras.COMPANY_PRODUCTION -> companyProductionSection(
                                 state.productionCompanies
                             )

@@ -4,16 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionOnScreen
@@ -30,6 +26,7 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
+import com.amsterdam.ui.components.adaptiveGrid
 import com.amsterdam.ui.components.MovieCard
 import com.amsterdam.ui.screens.home.sections.placeholder.upcomingMoviesSectionPlaceholder
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreIcon
@@ -39,6 +36,7 @@ import com.amsterdam.viewmodel.home.HomeUiState.UpcomingMoviesSectionUiState
 
 fun LazyListScope.upcomingMoviesSection(
     state: UpcomingMoviesSectionUiState,
+    deviceWidth: Int,
     onMovieClicked: (movieId: Long) -> Unit,
     onChangeMovieGenre: (genreType: MovieGenre) -> Unit,
     modifier: Modifier = Modifier,
@@ -91,30 +89,36 @@ fun LazyListScope.upcomingMoviesSection(
             }
 
             if (state.movies.isNotEmpty()) {
-                items(items = state.movies, key = { it.id }) { movie ->
-                    with(movie) {
-                        MovieCard(
-                            modifier = modifier
-                                .fillParentMaxWidth()
-                                .animateItem()
-                                .height(196.dp)
-                                .padding(horizontal = 16.dp, vertical = 4.dp),
-                            movieImage = {
-                                SafeImageView(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentDescription = name,
-                                    model = posterImageUrl,
-                                    onLoading = { ImageLoadingIndicator() },
-                                    onError = { ImageErrorIndicator() },
-                                )
-                            },
-                            movieType = stringResource(R.string.movies),
-                            movieYear = yearOfRelease,
-                            movieTitle = name,
-                            movieRating = rate.formateAsRate(),
-                            onClick = { onMovieClicked(id) }
-                        )
-                    }
+                adaptiveGrid(
+                    items = state.movies,
+                    itemMinWidth = 320,
+                    modifier = Modifier.padding(
+                        vertical = 12.dp,
+                        horizontal = 16.dp
+                    ),
+                    itemsHorizontalPadding = 8.dp,
+                    itemsVerticalPadding = 8.dp,
+                    deviceWidth = deviceWidth,
+                ) { movie ->
+                    MovieCard(
+                        modifier = modifier
+                            .weight(1f)
+                            .height(196.dp),
+                        movieImage = {
+                            SafeImageView(
+                                modifier = Modifier.fillMaxSize(),
+                                contentDescription = movie.name,
+                                model = movie.posterImageUrl,
+                                onLoading = { ImageLoadingIndicator() },
+                                onError = { ImageErrorIndicator() },
+                            )
+                        },
+                        movieType = stringResource(R.string.movies),
+                        movieYear = movie.yearOfRelease,
+                        movieTitle = movie.name,
+                        movieRating = movie.rate.formateAsRate(),
+                        onClick = { onMovieClicked(movie.id) }
+                    )
                 }
             } else {
                 item {
