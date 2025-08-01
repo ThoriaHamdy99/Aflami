@@ -373,7 +373,7 @@ fun SeriesDetailsContent(
                                 SeriesExtras.GALLERY -> gallerySection(gallery = state.gallery, deviceWidth = deviceWidth)
 
                                 SeriesExtras.COMPANY_PRODUCTION -> companyProductionSection(
-                                    state.productionCompanies
+                                    state.productionCompanies, deviceWidth
                                 )
                             }
                         }

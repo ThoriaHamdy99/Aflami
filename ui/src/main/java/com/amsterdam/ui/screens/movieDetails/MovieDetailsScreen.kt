@@ -336,7 +336,7 @@ fun MovieContent(
 
                                 MovieExtras.GALLERY -> gallerySection(gallery = state.gallery, deviceWidth = deviceWidth)
 
-                                MovieExtras.COMPANY_PRODUCTION -> companyProductionSection(state.productionCompany)
+                                MovieExtras.COMPANY_PRODUCTION -> companyProductionSection(state.productionCompany, deviceWidth = deviceWidth)
                             }
                         }
 
