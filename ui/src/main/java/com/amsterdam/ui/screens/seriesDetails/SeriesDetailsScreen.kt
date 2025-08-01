@@ -76,7 +76,7 @@ import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
 import com.amsterdam.ui.screens.movieDetails.components.EmptyStateText
-import com.amsterdam.ui.screens.movieDetails.components.GallerySection
+import com.amsterdam.ui.screens.movieDetails.components.gallerySection
 import com.amsterdam.ui.screens.movieDetails.components.PlayButton
 import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
@@ -166,6 +166,7 @@ fun SeriesDetailsContent(
         }
     }
     val pagerState = rememberPagerState { state.postersUrls.size }
+    val deviceWidth = configuration.screenWidthDp
 
     LaunchedEffect(true) {
         while (true) {
@@ -363,18 +364,17 @@ fun SeriesDetailsContent(
 
                                 SeriesExtras.MORE_LIKE_THIS -> moreLikeSection(
                                     similarMovies = state.similarSeries,
+                                    deviceWidth = deviceWidth,
                                     onClick = { movieId ->
                                         interaction.onClickSimilarMovie(movieId)
                                     }
                                 )
 
                                 SeriesExtras.REVIEWS -> reviewSection(state.reviews, interaction)
-                                SeriesExtras.GALLERY -> item {
-                                    GallerySection(gallery = state.gallery)
-                                }
+                                SeriesExtras.GALLERY -> gallerySection(gallery = state.gallery, deviceWidth = deviceWidth)
 
                                 SeriesExtras.COMPANY_PRODUCTION -> companyProductionSection(
-                                    state.productionCompanies
+                                    state.productionCompanies, deviceWidth
                                 )
                             }
                         }
