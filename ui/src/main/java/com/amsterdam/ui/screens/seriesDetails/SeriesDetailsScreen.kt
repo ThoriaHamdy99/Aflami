@@ -364,6 +364,7 @@ fun SeriesDetailsContent(
 
                                 SeriesExtras.MORE_LIKE_THIS -> moreLikeSection(
                                     similarMovies = state.similarSeries,
+                                    deviceWidth = deviceWidth,
                                     onClick = { movieId ->
                                         interaction.onClickSimilarMovie(movieId)
                                     }

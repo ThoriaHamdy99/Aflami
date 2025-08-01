@@ -324,6 +324,7 @@ fun MovieContent(
                             when (selectedExtra) {
                                 MovieExtras.MORE_LIKE_THIS -> moreLikeSection(
                                     similarMovies = state.similarMovies,
+                                    deviceWidth = deviceWidth,
                                     onClick = { selectedMovieId ->
                                         interactionListener.onClickSimilarMovie(selectedMovieId)
                                     }
