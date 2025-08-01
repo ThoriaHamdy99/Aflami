@@ -299,6 +299,7 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun onClickClearSearch() {
+        _keyword.value = ""
         updateState { currentState ->
             currentState.copy(
                 keyword = "",
