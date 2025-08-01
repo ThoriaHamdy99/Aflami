@@ -47,8 +47,9 @@ interface MovieApiService {
     @GET(MOVIE_DETAILS_ENDPOINT)
     suspend fun getMovieDetailsById(
         @Path("movieId") movieId: Long,
-        @Query("append_to_response") appendToResponse: String = MOVIE_DETAILS_APPEND_PARAMETERS
-    ): RemoteMovieDetailsResponse
+        @Query("append_to_response") append: String = MOVIE_DETAILS_APPEND_PARAMETERS,
+        @Query("include_video_language") videoLang: String = "en"
+        ): RemoteMovieDetailsResponse
 
     @GET(DISCOVER_MOVIE)
     suspend fun getMoviesByGenreIds(

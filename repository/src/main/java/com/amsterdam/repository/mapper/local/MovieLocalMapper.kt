@@ -20,7 +20,7 @@ class MovieLocalMapper @Inject constructor(): EntityMapper<LocalMovieDto, Movie>
             popularity = dto.popularity,
             runTimeInMinutes = dto.movieLength,
             originCountry = dto.originCountry,
-            hasVideo = dto.hasVideo,
+            videoUrl = "",
             productionCompanies = emptyList()
         )
     }
@@ -36,8 +36,7 @@ class MovieLocalMapper @Inject constructor(): EntityMapper<LocalMovieDto, Movie>
             rating = entity.rating,
             popularity = entity.popularity,
             movieLength = entity.runTimeInMinutes,
-            originCountry = entity.originCountry,
-            hasVideo = entity.hasVideo
+            originCountry = entity.originCountry
         )
     }
 }

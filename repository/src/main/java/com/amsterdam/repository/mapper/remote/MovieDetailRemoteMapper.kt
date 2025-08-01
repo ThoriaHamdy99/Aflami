@@ -4,6 +4,7 @@ import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.mapper.shared.EntityMapper
+import com.amsterdam.repository.utils.VideoBaseUrl
 import javax.inject.Inject
 
 class MovieDetailRemoteMapper @Inject constructor(
@@ -37,13 +38,20 @@ class MovieDetailRemoteMapper @Inject constructor(
             )
         }
         return MovieDetails(
-            movie = movieRemoteMapper.toEntity(remoteMovieItemDto),
+            movie = movieRemoteMapper.toEntity(remoteMovieItemDto,isPoster = true,
+                videoUrl = getVideoUrl(response.videos.results.firstOrNull()?.key)),
             reviews = reviewRemoteMapper.toEntityList(response.reviews.results),
             actors = castRemoteMapper.toEntityList(response.credits.cast),
             similarMovies = movieRemoteMapper.toEntityList(response.similar.results,isPoster = false),
             movieGallery = galleryRemoteMapper.toEntity(response.images),
             moviePosters = posterRemoteMapper.toEntity(response.images),
+
         )
+    }
+
+    private fun getVideoUrl(videoId: String?): String {
+        if(videoId == null) return ""
+        return "${VideoBaseUrl.YOUTUBE_BASE_URL}${videoId}"
     }
 
     fun mapMovieDetailsToMovieItemDto(remoteMovieDetailsResponse: RemoteMovieDetailsResponse): RemoteMovieItemDto {
