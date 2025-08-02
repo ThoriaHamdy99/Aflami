@@ -15,6 +15,9 @@ data class EpisodeDto(
     @SerialName("still_path") val stillPath: String?,
     @SerialName("vote_average") val voteAverage: Double,
     @SerialName("season_number") val seasonNumber: Int,
+    @SerialName("video") val video: Boolean,
+    @SerialName("videos") val videoUrl: VideoResponse
+
 ) {
     val fullStillPath: String?
         get() = stillPath?.let { BASE_IMAGE_URL_W500 + it }
