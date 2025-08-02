@@ -3,11 +3,9 @@ package com.amsterdam.repository.repository
 import com.amsterdam.domain.repository.CategoryRepository
 import com.amsterdam.entity.Category
 import com.amsterdam.repository.datasource.local.CategoryLocalSource
-import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.dto.local.LocalMovieCategoryDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryResponse
-import com.amsterdam.repository.mapper.local.MovieCategoryLocalMapper
 import com.amsterdam.repository.mapper.remote.CategoryRemoteMapper
 import com.amsterdam.repository.mapper.remoteToLocal.MovieCategoryRemoteLocalMapper
 import com.google.common.truth.Truth.assertThat

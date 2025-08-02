@@ -9,7 +9,6 @@ import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.MovieLocalSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
-import com.amsterdam.repository.dto.local.utils.SearchType
 import com.amsterdam.repository.dto.remote.RemoteCategoryDto
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
@@ -51,7 +50,6 @@ class MovieRepositoryImpl @Inject constructor(
             actorName,
             page
         )
-
     }
 
     override suspend fun getMoviesByCountry(
@@ -141,8 +139,6 @@ class MovieRepositoryImpl @Inject constructor(
         return movieRemoteMapper.toEntityList(remoteMovies.results)
     }
 
-
-
     override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>): List<Movie> {
         return movieGenreLocalMapper.toDtoList(movieGenres).let { genresIds ->
             movieRemoteMapper.toEntityList(
@@ -157,6 +153,5 @@ class MovieRepositoryImpl @Inject constructor(
         remoteCategories.map(RemoteCategoryDto::id)
             .map { movieLocalSource.incrementGenreInterest(it.toLong()) }
     }
-
 
 }

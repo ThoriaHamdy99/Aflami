@@ -22,9 +22,7 @@ import com.amsterdam.repository.dto.local.LocalMovieDto
 import com.amsterdam.repository.dto.local.LocalSearchDto
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryInterestDto
 import com.amsterdam.repository.dto.local.LocalTvShowDto
-import com.amsterdam.repository.dto.local.MovieCategoryCrossRefDto
 import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
-import com.amsterdam.repository.dto.local.SearchMovieCrossRefDto
 import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
 
 @Database(
@@ -35,8 +33,6 @@ import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
         LocalTvShowDto::class,
         MovieWatchHistoryDto::class,
         TvShowWatchHistoryDto::class,
-        MovieCategoryCrossRefDto::class,
-        SearchMovieCrossRefDto::class,
         LocalMovieCategoryInterestDto::class,
         LocalTvShowCategoryInterestDto::class],
     version = 1,
