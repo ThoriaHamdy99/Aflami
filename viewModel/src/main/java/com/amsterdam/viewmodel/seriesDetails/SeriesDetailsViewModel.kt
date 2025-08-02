@@ -143,6 +143,27 @@ class SeriesDetailsViewModel @Inject constructor(
         }
     }
 
+    override fun onPlayEpisodeClicked(episodeId: Long) {
+        val episodeId = findVideoUrlForEpisode(episodeId)
+        if (episodeId.isNotEmpty()) {
+            sendNewNavigationEffect(SeriesDetailsEffect.LaunchSeriesVideoEffect(episodeId))
+        }
+    }
+
+    override fun onPlayVideoClicked() {
+        sendNewNavigationEffect(SeriesDetailsEffect.LaunchSeriesVideoEffect(state.value.videoUrl))
+    }
+
+    private fun findVideoUrlForEpisode(episodeId: Long): String {
+        state.value.seasons.forEach { season ->
+            season.episodes.firstOrNull { it.id == episodeId }?.let {
+                return it.videoUrl
+            }
+        }
+        return ""
+    }
+
+
     private suspend fun getEpisodesForSeason(seasonNumber: Int): List<Episode> {
         val updatedSeasons = state.value.seasons.map {
             if (it.seasonNumber == seasonNumber && it.episodes.isNotEmpty()) {

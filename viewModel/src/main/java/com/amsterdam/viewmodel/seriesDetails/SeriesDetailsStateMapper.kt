@@ -22,6 +22,7 @@ class SeriesDetailsStateMapper @Inject constructor(
 
     fun toUiState(seriesDetails: TvShowDetails): SeriesDetailsUiState = with(seriesDetails) {
         SeriesDetailsUiState(
+            videoUrl =seriesDetails.tvShow.videoUrl,
             tvShowId = tvShow.id,
             rating = ratingToRatingString(tvShow.rating),
             posterUrl = tvShow.posterUrl,
@@ -75,6 +76,7 @@ class SeriesDetailsStateMapper @Inject constructor(
                     country = company.country
                 )
             },
+
         )
     }
 
@@ -105,7 +107,8 @@ class SeriesDetailsStateMapper @Inject constructor(
                 imageNumber = episode.episodeNumber,
                 description = episode.description,
                 duration = formatDuration(episode.runTimeInMinutes),
-                airDate = dateToString(episode.airDate)
+                airDate = dateToString(episode.airDate),
+                videoUrl = episode.videoUrl
             )
         }
     }

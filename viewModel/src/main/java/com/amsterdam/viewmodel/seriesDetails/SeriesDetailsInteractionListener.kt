@@ -15,4 +15,7 @@ interface SeriesDetailsInteractionListener {
     fun onClickSimilarMovie(movieId: Long)
     fun onDescriptionExpansionToggled()
     fun onReviewExpansionToggled(reviewId: String)
+    fun onPlayEpisodeClicked(episodeId: Long)
+    fun onPlayVideoClicked()
+
 }
