@@ -1,6 +1,7 @@
 package com.amsterdam.ui.screens.seriesDetails
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -49,6 +50,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -72,6 +74,7 @@ import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.components.details.DetailsPostersPager
 import com.amsterdam.ui.navigation.Route
+import com.amsterdam.ui.navigation.Route.*
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
@@ -82,6 +85,7 @@ import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
 import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
+import com.amsterdam.ui.screens.openYouTubeVideo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
 import com.amsterdam.ui.screens.seriesDetails.component.reviewSection
 import com.amsterdam.viewmodel.cast.MediaType
@@ -102,6 +106,7 @@ fun SeriesDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
+    val context: Context = LocalContext.current
 
     SeriesDetailsContent(
         state = state,
@@ -113,7 +118,7 @@ fun SeriesDetailsScreen(
                 SeriesDetailsEffect.NavigateBack -> navController.navigateUp()
                 SeriesDetailsEffect.NavigateToCastScreen -> {
                     navController.navigate(
-                        Route.Cast(
+                        Cast(
                             mediaType = MediaType.TV_SHOW.name,
                             mediaId = state.tvShowId
                         )
@@ -124,8 +129,10 @@ fun SeriesDetailsScreen(
                     Route.Login
                 )
                 is SeriesDetailsEffect.NavigateToSeriesDetails -> {
-                    navController.navigate(Route.SeriesDetails(effect.tvShowId))
+                    navController.navigate(SeriesDetails(effect.tvShowId))
                 }
+
+                is SeriesDetailsEffect.LaunchSeriesVideoEffect -> openYouTubeVideo(context ,effect.url )
             }
         }
     }
@@ -278,7 +285,8 @@ fun SeriesDetailsContent(
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
                                     .offset(y = (-32).dp),
-                                isActive = state.hasVideo
+                                isActive = state.videoUrl.isNotBlank(),
+                                onClick = interaction::onPlayVideoClicked
                             )
                             Column(
                                 modifier = Modifier
@@ -501,7 +509,7 @@ private fun LazyListScope.seasonsSection(
             }
             val episodes = if (season.isExpanded) season.episodes else emptyList()
             items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
-                EpisodesMenu(it)
+                EpisodesMenu(it,interaction::onPlayEpisodeClicked)
             }
         }
     }
@@ -553,6 +561,7 @@ private fun SeasonHeader(
 @Composable
 private fun EpisodesMenu(
     episode: EpisodeUiState,
+    onPlayVideoClicked: (Long) -> Unit
 ) {
     EpisodeCard(
         episodeBanner = episode.imageUrl,
@@ -563,7 +572,9 @@ private fun EpisodesMenu(
         publishedAt = episode.airDate,
         episodeDescription = episode.description,
         modifier = Modifier.padding(vertical = 12.dp),
-        onPlayEpisodeClick = { }
+        onPlayEpisodeClick = {
+            onPlayVideoClicked(episode.id)
+        }
     )
 }
 
@@ -586,6 +597,13 @@ private fun SeriesDetailsContentPreview() {
                 override fun onClickSimilarMovie(movieId: Long) {}
                 override fun onDescriptionExpansionToggled() {}
                 override fun onReviewExpansionToggled(reviewId: String) {}
+                override fun onPlayEpisodeClicked(episodeId: Long) {
+
+                }
+
+                override fun onPlayVideoClicked() {
+
+                }
             }
         )
     }

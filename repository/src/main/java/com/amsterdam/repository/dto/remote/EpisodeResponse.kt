@@ -14,6 +14,7 @@ data class EpisodeResponse(
     @SerialName("poster_path") val posterPath: String?,
     @SerialName("season_number") val seasonNumber: Long,
     @SerialName("vote_average") val voteAverage: Double,
+    @SerialName("videos") val videos: VideoResponse
 ) {
     val fullPosterPath: String?
         get() = posterPath?.let { BASE_IMAGE_URL_W500 + it }
