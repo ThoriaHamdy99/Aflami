@@ -48,7 +48,7 @@ interface MovieApiService {
     suspend fun getMovieDetailsById(
         @Path("movieId") movieId: Long,
         @Query("append_to_response") append: String = MOVIE_DETAILS_APPEND_PARAMETERS,
-        @Query("include_video_language") videoLang: String = "en"
+        @Query("include_video_language") videoLang: String = INCLUDED_VIDEO_LANGUAGE
         ): RemoteMovieDetailsResponse
 
     @GET(DISCOVER_MOVIE)
@@ -81,5 +81,6 @@ interface MovieApiService {
         private const val WITH_CAST_KEY = "with_cast"
         private const val WITH_ORIGIN_COUNTRY_KEY = "with_origin_country"
         private const val TOP_RATED_MOVIES = "movie/top_rated"
+        private const val INCLUDED_VIDEO_LANGUAGE = "en"
     }
 }

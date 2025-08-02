@@ -13,7 +13,7 @@ class MovieRemoteMapper @Inject constructor(
 ) : EntityMapper<RemoteMovieItemDto, Movie> {
     
     override fun toEntity(dto: RemoteMovieItemDto): Movie {
-        return toEntity(dto, isPoster = true,"")
+        return toEntity(dto, isPoster = true)
     }
 
     fun toEntity(dto: RemoteMovieItemDto, isPoster: Boolean,videoUrl: String=""): Movie {
