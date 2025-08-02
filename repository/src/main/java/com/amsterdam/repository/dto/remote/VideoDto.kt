@@ -1,6 +1,5 @@
 package com.amsterdam.repository.dto.remote
 
-import com.amsterdam.repository.utils.ImageBaseUrlsConstant.BASE_IMAGE_URL_W500
 import com.amsterdam.repository.utils.VideoBaseUrl.YOUTUBE_BASE_URL
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName

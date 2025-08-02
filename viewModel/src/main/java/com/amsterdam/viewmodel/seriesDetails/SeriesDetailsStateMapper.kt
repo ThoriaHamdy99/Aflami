@@ -15,7 +15,6 @@ import com.amsterdam.viewmodel.utils.dateToString
 import com.amsterdam.viewmodel.utils.formatDuration
 import com.amsterdam.viewmodel.utils.ratingToRatingString
 import javax.inject.Inject
-import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiStateMapper
 
 class SeriesDetailsStateMapper @Inject constructor(
 ) {
@@ -107,8 +106,7 @@ class SeriesDetailsStateMapper @Inject constructor(
                 imageNumber = episode.episodeNumber,
                 description = episode.description,
                 duration = formatDuration(episode.runTimeInMinutes),
-                airDate = dateToString(episode.airDate),
-                videoUrl = episode.videoUrl
+                airDate = dateToString(episode.airDate)
             )
         }
     }
