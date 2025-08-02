@@ -5,7 +5,6 @@ import com.amsterdam.entity.TvShow
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.mapper.shared.EntityMapper
 import com.amsterdam.repository.mapper.shared.mapCategoryIdToTvShowGenre
-import com.amsterdam.repository.utils.VideoBaseUrl
 import com.amsterdam.repository.utils.toSafeLocalDate
 import javax.inject.Inject
 
@@ -31,7 +30,7 @@ class TvShowDetailsRemoteMapper @Inject constructor(
             seasonCount = dto.seasonCount,
             originCountry = dto.originCountry.firstOrNull() ?: "",
             productionCompanies = productionCompanyMapper.toEntityList(dto.productionCompanies),
-            videoUrl = getVideoUrl(dto.videos.results.firstOrNull()?.key)
+            videoUrl = dto.videos.results.firstOrNull()?.fullVideoUrl ?: ""
         )
 
         return with(dto) {
@@ -46,10 +45,5 @@ class TvShowDetailsRemoteMapper @Inject constructor(
                 productionsCompanies = productionCompanyMapper.toEntityList(productionCompanies),
             )
         }
-    }
-
-    private fun getVideoUrl(videoId: String?): String {
-        if(videoId == null) return ""
-        return "${VideoBaseUrl.YOUTUBE_BASE_URL}${videoId}"
     }
 }

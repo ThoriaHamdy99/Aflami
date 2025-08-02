@@ -3,7 +3,6 @@ package com.amsterdam.repository.mapper.remote
 import com.amsterdam.entity.Episode
 import com.amsterdam.repository.dto.remote.EpisodeDto
 import com.amsterdam.repository.mapper.shared.EntityMapper
-import com.amsterdam.repository.utils.VideoBaseUrl
 import com.amsterdam.repository.utils.toSafeLocalDate
 import javax.inject.Inject
 
@@ -18,12 +17,8 @@ class EpisodeRemoteMapper @Inject constructor(): EntityMapper<EpisodeDto, Episod
             rating = dto.voteAverage.toFloat(),
             airDate = dto.airDate?.toSafeLocalDate(),
             seasonNumber = dto.seasonNumber,
-            runTimeInMinutes = dto.runtime?.toInt() ?: 0,
-            videoUrl = getVideoUrl(dto.videoUrl.results.firstOrNull()?.key)
+            runTimeInMinutes = dto.runtime?.toInt() ?: 0
         )
     }
-    private fun getVideoUrl(videoId: String?): String {
-        if(videoId == null) return ""
-        return "${VideoBaseUrl.YOUTUBE_BASE_URL}${videoId}"
-    }
+
 }

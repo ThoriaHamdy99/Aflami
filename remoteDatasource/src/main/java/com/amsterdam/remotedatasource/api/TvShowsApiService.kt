@@ -33,14 +33,13 @@ interface TvShowsApiService {
     suspend fun getTvShowDetailsById(
         @Path("tvShowId") tvShowId: Long,
         @Query("append_to_response") appendToResponse: String = TV_SHOW_DETAILS_APPEND_PARAMETERS,
-        @Query("include_video_language") videoLang: String = "en"
+        @Query("include_video_language") videoLang: String = INCLUDED_VIDEO_LANGUAGE
     ): TvShowDetailsRemoteResponse
 
     @GET(TV_SHOW_EPISODES_ENDPOINT)
     suspend fun getEpisodesBySeasonNumber(
         @Path("tvShowId") tvShowId: Long,
-        @Path("seasonNumber") seasonNumber: Int,
-        @Query("include_video_language") videoLang: String = "en"
+        @Path("seasonNumber") seasonNumber: Int
     ): EpisodeResponse
 
     companion object {
@@ -55,6 +54,8 @@ interface TvShowsApiService {
         private const val TV_SHOW_CREDITS_ENDPOINT = "tv/{tvShowId}/credits"
         private const val TV_SHOW_DETAILS_ENDPOINT = "tv/{tvShowId}"
         private const val TV_SHOW_DETAILS_APPEND_PARAMETERS = "credits,similar,reviews,images,videos"
-        private const val TV_SHOW_EPISODES_ENDPOINT = "tv/{tvShowId}/season/{seasonNumber},videos"
+        private const val TV_SHOW_EPISODES_ENDPOINT = "tv/{tvShowId}/season/{seasonNumber}"
+        private const val INCLUDED_VIDEO_LANGUAGE = "en"
+
     }
 }

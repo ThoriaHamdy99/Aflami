@@ -1,7 +1,6 @@
 package com.amsterdam.ui.screens.seriesDetails
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -106,7 +105,7 @@ fun SeriesDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
-    val context: Context = LocalContext.current
+    val context = LocalContext.current
 
     SeriesDetailsContent(
         state = state,
@@ -509,7 +508,7 @@ private fun LazyListScope.seasonsSection(
             }
             val episodes = if (season.isExpanded) season.episodes else emptyList()
             items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
-                EpisodesMenu(it,interaction::onPlayEpisodeClicked)
+                EpisodesMenu(it)
             }
         }
     }
@@ -561,7 +560,6 @@ private fun SeasonHeader(
 @Composable
 private fun EpisodesMenu(
     episode: EpisodeUiState,
-    onPlayVideoClicked: (Long) -> Unit
 ) {
     EpisodeCard(
         episodeBanner = episode.imageUrl,
@@ -571,10 +569,7 @@ private fun EpisodesMenu(
         episodeTime = episode.duration,
         publishedAt = episode.airDate,
         episodeDescription = episode.description,
-        modifier = Modifier.padding(vertical = 12.dp),
-        onPlayEpisodeClick = {
-            onPlayVideoClicked(episode.id)
-        }
+        modifier = Modifier.padding(vertical = 12.dp)
     )
 }
 
@@ -597,10 +592,6 @@ private fun SeriesDetailsContentPreview() {
                 override fun onClickSimilarMovie(movieId: Long) {}
                 override fun onDescriptionExpansionToggled() {}
                 override fun onReviewExpansionToggled(reviewId: String) {}
-                override fun onPlayEpisodeClicked(episodeId: Long) {
-
-                }
-
                 override fun onPlayVideoClicked() {
 
                 }
