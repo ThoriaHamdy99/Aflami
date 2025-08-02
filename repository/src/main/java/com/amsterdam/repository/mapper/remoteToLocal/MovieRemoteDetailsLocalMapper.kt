@@ -1,0 +1,26 @@
+package com.amsterdam.repository.mapper.remoteToLocal
+
+import com.amsterdam.repository.dto.local.LocalMovieDto
+import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
+import com.amsterdam.repository.mapper.shared.RemoteToLocalMapper
+import com.amsterdam.repository.utils.toSafeLocalDate
+import javax.inject.Inject
+
+class MovieRemoteDetailsLocalMapper @Inject constructor() :
+    RemoteToLocalMapper<RemoteMovieDetailsResponse, LocalMovieDto> {
+    override fun toLocal(remote: RemoteMovieDetailsResponse, args: List<Any>): LocalMovieDto {
+        return LocalMovieDto(
+            movieId = remote.id,
+            storedLanguage = args.first().toString(),
+            name = remote.title,
+            description = remote.overview,
+            poster = remote.posterPath.orEmpty(),
+            releaseDate = remote.releaseDate.toSafeLocalDate(),
+            rating = remote.voteAverage.toFloat(),
+            popularity = remote.popularity,
+            movieLength = remote.runtime,
+            hasVideo = remote.video,
+            originCountry = remote.originCountry.firstOrNull() ?: "",
+        )
+    }
+}
