@@ -12,7 +12,6 @@ import com.amsterdam.repository.dto.local.relation.MovieWithCategories
 import com.amsterdam.repository.dto.local.utils.SearchType
 import javax.inject.Inject
 
-
 class MovieLocalDataSourceImpl @Inject constructor(
     private val movieDao: MovieDao,
     private val interestDao: MovieCategoryInterestDao
