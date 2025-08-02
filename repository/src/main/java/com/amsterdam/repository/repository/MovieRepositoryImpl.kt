@@ -17,7 +17,6 @@ import com.amsterdam.repository.mapper.local.MovieGenreLocalMapper
 import com.amsterdam.repository.mapper.remote.CastRemoteMapper
 import com.amsterdam.repository.mapper.remote.MovieDetailRemoteMapper
 import com.amsterdam.repository.mapper.remote.MovieRemoteMapper
-import com.amsterdam.repository.mapper.remoteToLocal.MovieGenreIdsRemoteLocalMapper
 import com.amsterdam.repository.mapper.remoteToLocal.MovieRemoteLocalMapper
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -26,7 +25,6 @@ class MovieRepositoryImpl @Inject constructor(
     private val movieLocalSource: MovieLocalSource,
     private val movieRemoteDataSource: MovieRemoteSource,
     private val preferences: AppPreferences,
-    private val movieGenreIdsRemoteLocalMapper: MovieGenreIdsRemoteLocalMapper,
     private val movieRemoteMapper: MovieRemoteMapper,
     private val castRemoteMapper: CastRemoteMapper,
     private val movieDetailRemoteMapper: MovieDetailRemoteMapper,
@@ -144,36 +142,6 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
 
-    private suspend fun saveMoviesWithSearch(
-        remoteMovies: RemoteMovieResponse, keyword: String, searchType: SearchType
-    ) {
-        movieLocalSource.addMoviesBySearchData(
-            movies = movieRemoteLocalMapper.toLocalList(
-                remoteMovies.results,
-                listOf(preferences.getDeviceLanguage().first())
-            ),
-            searchKeyword = keyword,
-            searchType = searchType
-        )
-    }
-
-    private suspend fun saveMovieWithCategories(remoteMovies: RemoteMovieResponse) {
-        remoteMovies.results.forEach { onSaveMovieWithCategories(it) }
-    }
-
-    private suspend fun onSaveMovieWithCategories(remoteMovie: RemoteMovieItemDto) {
-        movieLocalSource.addMovieWithCategories(
-            movie = movieRemoteLocalMapper.toLocal(
-                remoteMovie,
-                listOf(preferences.getDeviceLanguage().first())
-            ),
-            categories = movieGenreIdsRemoteLocalMapper.toLocalList(
-                remoteMovie.genreIds,
-                listOf(preferences.getDeviceLanguage().first())
-            ),
-            storedLanguage = preferences.getDeviceLanguage().first()
-        )
-    }
 
     override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>): List<Movie> {
         return movieGenreLocalMapper.toDtoList(movieGenres).let { genresIds ->
