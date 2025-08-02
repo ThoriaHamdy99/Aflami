@@ -17,7 +17,7 @@ data class MovieDetailsUiState(
     val movieLength: String = "",
     val originCountry: String = "",
     val description: String = "",
-    val hasVideo: Boolean = false,
+    val videoUrl: String = "",
     val moviePostersUrl: List<String> = emptyList(),
     val actors: List<ActorUiState> = emptyList(),
     val extraItem: List<Selectable<MovieExtras>> = listOf(
