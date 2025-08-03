@@ -25,6 +25,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -37,15 +39,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.R
+import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.Text
@@ -65,11 +70,11 @@ import com.amsterdam.ui.navigation.Route.*
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
-import com.amsterdam.ui.screens.movieDetails.components.gallerySection
 import com.amsterdam.ui.screens.movieDetails.components.MovieExtrasSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieInfoSection
 import com.amsterdam.ui.screens.movieDetails.components.PlayButton
 import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
+import com.amsterdam.ui.screens.movieDetails.components.gallerySection
 import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
 import com.amsterdam.ui.screens.movieDetails.components.reviewSection
 import com.amsterdam.ui.screens.openYouTubeVideo
@@ -135,7 +140,7 @@ fun MovieContent(
     val screenWidthDp by remember { mutableStateOf(configuration.screenWidthDp.dp) }
     val screenHeightDp = configuration.screenHeightDp.dp
     var movieExtrasSectionYOffsetDp by remember { mutableStateOf(0.dp) }
-
+    var headerHeight by remember { mutableStateOf(0) }
     val listState = rememberLazyListState()
     val animationDuration by remember { mutableIntStateOf(1000) }
     val pagerState = rememberPagerState { state.moviePostersUrl.size }
@@ -192,10 +197,17 @@ fun MovieContent(
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration)),
         ) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                NoNetworkContainer(
-                    onClickRetry = interactionListener::onClickRetryRequest,
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                contentAlignment = Alignment.Center
+            ) {
+                CenterOfScreenContainer(unneededSpace = headerHeight.dp) {
+                    NoNetworkContainer(
+                        onClickRetry = interactionListener::onClickRetryRequest,
+                    )
+                }
             }
         }
         AnimatedVisibility(
@@ -214,6 +226,7 @@ fun MovieContent(
             exit = fadeOut(tween(animationDuration)),
         ) {
             Box {
+
                 LazyColumn(
                     state = listState,
                     modifier =
@@ -378,27 +391,30 @@ fun MovieContent(
                     }
                 }
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(appBarColor)
-                ) {
-                    DefaultAppBar(
-                        modifier =
-                            Modifier
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                                .statusBarsPadding(),
-                        firstOption = painterResource(R.drawable.ic_outlined_star),
-                        lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
-                        onNavigateBackClicked = interactionListener::onClickBack,
-                        onFirstOptionClicked = interactionListener::onRateClicked,
-                        onLastOptionClicked = interactionListener::onAddToListClicked,
-                    )
-
-                    HorizontalDivider(color = dividerColor)
-                }
             }
         }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(appBarColor)
+            ) {
+                DefaultAppBar(
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .statusBarsPadding()
+                            .zIndex(10f)
+                            .onSizeChanged { headerHeight = it.height },
+                    firstOption = painterResource(R.drawable.ic_outlined_star),
+                    lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
+                    onNavigateBackClicked = interactionListener::onClickBack,
+                    onFirstOptionClicked = interactionListener::onRateClicked,
+                    onLastOptionClicked = interactionListener::onAddToListClicked,
+                )
+
+                HorizontalDivider(color = dividerColor)
+            }
+
     }
 }
 

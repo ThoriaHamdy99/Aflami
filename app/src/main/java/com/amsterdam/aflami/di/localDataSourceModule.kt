@@ -8,7 +8,6 @@ import androidx.datastore.preferences.core.Preferences
 import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl
 import com.amsterdam.localdatasource.dataStore.AuthenticationLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
-import com.amsterdam.localdatasource.roomDataBase.datasource.CategoryLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.CountryLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.MovieLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.RecentSearchLocalDataSourceImpl
@@ -16,7 +15,6 @@ import com.amsterdam.localdatasource.roomDataBase.datasource.TvShowLocalDataSour
 import com.amsterdam.localdatasource.roomDataBase.datasource.WatchHistoryLocalDataSourceImpl
 import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
-import com.amsterdam.repository.datasource.local.CategoryLocalSource
 import com.amsterdam.repository.datasource.local.CountryLocalSource
 import com.amsterdam.repository.datasource.local.MovieLocalSource
 import com.amsterdam.repository.datasource.local.RecentSearchLocalSource
@@ -46,10 +44,6 @@ object LocalDataSourceProviderModule {
     fun provideDatabase(app: Application): AflamiDatabase {
         return AflamiDatabase.getInstance(app)
     }
-
-    @Provides
-    @Singleton
-    fun provideCategoryDao(db: AflamiDatabase) = db.categoryDao()
 
     @Provides
     @Singleton
@@ -96,12 +90,6 @@ abstract class LocalDataSourceBindsModule {
     abstract fun bindAppPreferences(
         impl: AppPreferencesImpl
     ): AppPreferences
-
-    @Binds
-    @Singleton
-    abstract fun bindCategoryLocalDataSource(
-        impl: CategoryLocalDataSourceImpl
-    ): CategoryLocalSource
 
     @Binds
     @Singleton

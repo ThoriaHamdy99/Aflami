@@ -10,7 +10,6 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
-import com.amsterdam.domain.useCase.search.RecentSearchesUseCase
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.search.mapper.toMediaItemUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -30,7 +29,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ActorSearchViewModel @Inject constructor(
     private val getMoviesByActorUseCase: GetMoviesByActorUseCase,
-    private val recentSearchesUseCase: RecentSearchesUseCase,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<ActorSearchUiState, ActorSearchEffect>(
@@ -54,6 +52,7 @@ class ActorSearchViewModel @Inject constructor(
     }
 
     private fun executeActorSearch(query: String) {
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
             action = {
                 Pager(
@@ -76,8 +75,10 @@ class ActorSearchViewModel @Inject constructor(
     }
 
     override fun onUserSearchChange(keyword: String) {
-        keywordFlow.update { keyword }
-        updateState { it.copy(keyword = keyword, isLoading = keyword.isNotBlank()) }
+        if (keyword.trim() != state.value.keyword.trim()) {
+            keywordFlow.update { keyword }
+        }
+        updateState { it.copy(keyword = keyword) }
     }
 
     private fun handleSearchResults(movies: Flow<PagingData<MovieItemUiState>>) {
@@ -85,7 +86,6 @@ class ActorSearchViewModel @Inject constructor(
     }
 
     override fun onClickNavigateBack() {
-        onSaveSearchHistory()
         sendNewNavigationEffect(ActorSearchEffect.NavigateBack)
     }
 
@@ -96,15 +96,6 @@ class ActorSearchViewModel @Inject constructor(
 
     override fun onClickMovie(movieId: Long) {
         sendNewNavigationEffect(ActorSearchEffect.NavigateToDetailsScreen(movieId))
-    }
-
-    override fun onSaveSearchHistory() {
-        if (state.value.keyword.isBlank()) return
-        tryToExecute(
-            action = { recentSearchesUseCase.addRecentSearchForActor(state.value.keyword) },
-            onSuccess = { },
-            onError = { },
-        )
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
