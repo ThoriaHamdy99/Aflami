@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl
 import com.amsterdam.localdatasource.dataStore.AuthenticationLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
+import com.amsterdam.localdatasource.roomDataBase.datasource.CategoryLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.CountryLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.MovieLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.RecentSearchLocalDataSourceImpl
@@ -15,6 +16,7 @@ import com.amsterdam.localdatasource.roomDataBase.datasource.TvShowLocalDataSour
 import com.amsterdam.localdatasource.roomDataBase.datasource.WatchHistoryLocalDataSourceImpl
 import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
+import com.amsterdam.repository.datasource.local.CategoryLocalSource
 import com.amsterdam.repository.datasource.local.CountryLocalSource
 import com.amsterdam.repository.datasource.local.MovieLocalSource
 import com.amsterdam.repository.datasource.local.RecentSearchLocalSource
@@ -30,7 +32,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object LocalDataSourceProviderModule {
-
     @Provides
     @Singleton
     fun provideDataStore(app: Application): DataStore<Preferences> {
@@ -48,6 +49,10 @@ object LocalDataSourceProviderModule {
     @Provides
     @Singleton
     fun provideCountryDao(db: AflamiDatabase) = db.countryDao()
+
+    @Provides
+    @Singleton
+    fun provideCategoryDao(db: AflamiDatabase) = db.categoryDao()
 
     @Provides
     @Singleton
@@ -77,13 +82,11 @@ object LocalDataSourceProviderModule {
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class LocalDataSourceBindsModule {
-
     @Binds
     @Singleton
     abstract fun bindAuthenticationLocalDataSource(
         impl: AuthenticationLocalDataSourceImpl
     ): AuthenticationLocalSource
-
 
     @Binds
     @Singleton
@@ -96,6 +99,12 @@ abstract class LocalDataSourceBindsModule {
     abstract fun bindCountryLocalDataSource(
         impl: CountryLocalDataSourceImpl
     ): CountryLocalSource
+
+    @Binds
+    @Singleton
+    abstract fun bindCategoryLocalSource(
+        impl: CategoryLocalDataSourceImpl
+    ): CategoryLocalSource
 
     @Binds
     @Singleton
@@ -120,5 +129,4 @@ abstract class LocalDataSourceBindsModule {
     abstract fun bindWatchHistoryLocalDataSource(
         impl: WatchHistoryLocalDataSourceImpl
     ): WatchHistoryLocalDataSource
-
 }

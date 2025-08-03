@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import com.amsterdam.localdatasource.roomDataBase.converter.InstantConverter
 import com.amsterdam.localdatasource.roomDataBase.converter.LocalDateConverter
 import com.amsterdam.localdatasource.roomDataBase.converter.SearchTypeConverter
+import com.amsterdam.localdatasource.roomDataBase.daos.CategoryDao
 import com.amsterdam.localdatasource.roomDataBase.daos.CountryDao
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieDao
@@ -20,21 +21,38 @@ import com.amsterdam.repository.dto.local.LocalMovieCategoryDto
 import com.amsterdam.repository.dto.local.LocalMovieCategoryInterestDto
 import com.amsterdam.repository.dto.local.LocalMovieDto
 import com.amsterdam.repository.dto.local.LocalSearchDto
+import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryInterestDto
 import com.amsterdam.repository.dto.local.LocalTvShowDto
+import com.amsterdam.repository.dto.local.MovieCategoryCrossRefDto
 import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
+import com.amsterdam.repository.dto.local.PopularMovieDto
+import com.amsterdam.repository.dto.local.PopularTvShowDto
+import com.amsterdam.repository.dto.local.TopRatedMovieDto
+import com.amsterdam.repository.dto.local.TopRatedTvShowDto
+import com.amsterdam.repository.dto.local.TvShowCategoryCrossRefDto
 import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
+import com.amsterdam.repository.dto.local.UpcomingMovieDto
 
 @Database(
     entities = [LocalSearchDto::class,
         LocalCountryDto::class,
-        LocalMovieCategoryDto::class,
         LocalMovieDto::class,
         LocalTvShowDto::class,
         MovieWatchHistoryDto::class,
         TvShowWatchHistoryDto::class,
         LocalMovieCategoryInterestDto::class,
-        LocalTvShowCategoryInterestDto::class],
+        LocalTvShowCategoryInterestDto::class,
+        LocalMovieCategoryDto::class,
+        LocalTvShowCategoryDto::class,
+        MovieCategoryCrossRefDto::class,
+        TvShowCategoryCrossRefDto::class,
+        PopularMovieDto::class,
+        PopularTvShowDto::class,
+        TopRatedMovieDto::class,
+        TopRatedTvShowDto::class,
+        UpcomingMovieDto::class
+    ],
     version = 1,
     exportSchema = false
 )
@@ -42,6 +60,7 @@ import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
 abstract class AflamiDatabase : RoomDatabase() {
     abstract fun recentSearchDao(): RecentSearchDao
     abstract fun countryDao(): CountryDao
+    abstract fun categoryDao(): CategoryDao
     abstract fun movieDao(): MovieDao
     abstract fun tvShowDao(): TvShowDao
     abstract fun watchHistoryDao(): WatchHistoryDao
