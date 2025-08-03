@@ -1,4 +1,4 @@
-package com.amsterdam.designsystem.components
+package com.amsterdam.ui.screens.onBoarding.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState

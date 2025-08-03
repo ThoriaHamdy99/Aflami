@@ -30,8 +30,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.amsterdam.designsystem.R
-import com.amsterdam.designsystem.components.buttons.AnimatedSkipText
-import com.amsterdam.designsystem.components.buttons.NavigationButton
+import com.amsterdam.ui.screens.onBoarding.component.AnimatedSkipText
+import com.amsterdam.ui.screens.onBoarding.component.NavigationButton
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.viewmodel.onboarding.OnboardingEffect

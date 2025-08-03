@@ -9,10 +9,3 @@ class GetOnboardingStatusUseCase(
         return preferencesRepository.isOnboardingCompleted()
     }
 }
-class SetOnboardingCompletedUseCase(
-    private val preferencesRepository: AppPreferencesRepository
-) {
-    suspend operator fun invoke(isCompleted: Boolean) {
-        preferencesRepository.setOnboardingCompleted(isCompleted)
-    }
-}
