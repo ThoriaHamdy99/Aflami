@@ -6,6 +6,7 @@ import com.amsterdam.domain.repository.CountryRepository
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.repository.RecentSearchRepository
 import com.amsterdam.domain.repository.TvShowRepository
+import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.authentication.LoginAsGuestUseCase
@@ -35,6 +36,7 @@ import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByCountryUseCase
 import com.amsterdam.domain.useCase.search.GetSuggestedCountriesUseCase
 import com.amsterdam.domain.useCase.search.RecentSearchesUseCase
+import com.amsterdam.domain.useCase.lists.GetUserListsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -188,5 +190,9 @@ object UseCaseModule {
         getTopRatedMoviesUseCase,
         getTopRatedTvShowsUseCase
     )
+
+    @Provides
+    fun provideGetUserListsUseCase(repo: UserListRepository): GetUserListsUseCase =
+        GetUserListsUseCase(repo)
 
 }

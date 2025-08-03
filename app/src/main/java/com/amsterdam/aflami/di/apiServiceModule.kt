@@ -4,6 +4,7 @@ import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.remotedatasource.api.AuthenticationApiService
 import com.amsterdam.remotedatasource.api.CategoryApiService
 import com.amsterdam.remotedatasource.api.CountryApiService
+import com.amsterdam.remotedatasource.api.UserListApiService
 import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.api.TvShowsApiService
 import com.amsterdam.remotedatasource.client.RetrofitClient
@@ -56,4 +57,9 @@ object ServiceProvidesModule {
     @Singleton
     fun provideTvShowsApiService(client: RetrofitClient): TvShowsApiService =
         client.tvApiService()
+
+    @Provides
+    @Singleton
+    fun provideUserListApiService(client: RetrofitClient): UserListApiService =
+        client.userListApiService()
 }
