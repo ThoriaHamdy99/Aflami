@@ -8,6 +8,7 @@ import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
+import com.amsterdam.domain.useCase.home.GetEpisodeVideosByEpisodeId
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.entity.Episode
@@ -28,6 +29,7 @@ class SeriesDetailsViewModel @Inject constructor(
     private val getEpisodesBySeasonNumberUseCase: GetEpisodesBySeasonNumberUseCase,
     private val seriesDetailsStateMapper: SeriesDetailsStateMapper,
     private val getsSessionType: GetsSessionType,
+    private val getEpisodeVideosByEpisodeId: GetEpisodeVideosByEpisodeId,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<SeriesDetailsUiState, SeriesDetailsEffect>(
@@ -146,6 +148,26 @@ class SeriesDetailsViewModel @Inject constructor(
     override fun onPlayVideoClicked() {
         sendNewNavigationEffect(SeriesDetailsEffect.LaunchSeriesVideoEffect(state.value.videoUrl))
     }
+
+    override fun onPlayEpisodeClicked(episodeId:Int) {
+
+        val tvShowId = state.value.tvShowId
+        val seasonNumber = state.value.seasons.firstOrNull()?.seasonNumber ?: return
+
+        viewModelScope.launch {
+            tryToExecute(
+                action = {
+                    getEpisodeVideosByEpisodeId(tvShowId, seasonNumber, episodeId.toLong())
+
+                },
+                onSuccess = { videoUrl ->
+                    sendNewNavigationEffect(SeriesDetailsEffect.LaunchSeriesVideoEffect(videoUrl))
+                },
+                onError = ::onError
+            )
+        }
+    }
+
 
     private suspend fun getEpisodesForSeason(seasonNumber: Int): List<Episode> {
         val updatedSeasons = state.value.seasons.map {
