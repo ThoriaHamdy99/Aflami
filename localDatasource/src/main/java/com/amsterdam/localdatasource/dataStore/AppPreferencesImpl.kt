@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys.CURRENT_LANGUAGE
+import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys.RESTRICTION_LEVEL
 import com.amsterdam.repository.datasource.local.AppPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -27,7 +28,20 @@ class AppPreferencesImpl @Inject constructor(
         }
     }
 
+    override fun getRestrictionLevel(): Flow<String> {
+        return dataStore.data.map { preferences ->
+            preferences[RESTRICTION_LEVEL] ?: ""
+        }
+    }
+
+    override suspend fun setRestrictionLevel(restrictionLevel: String) {
+        dataStore.edit { preferences ->
+            preferences[RESTRICTION_LEVEL] = restrictionLevel
+        }
+    }
+
     private object PreferenceKeys {
         val CURRENT_LANGUAGE = stringPreferencesKey("current_language")
+        val RESTRICTION_LEVEL = stringPreferencesKey("restriction_level")
     }
 }

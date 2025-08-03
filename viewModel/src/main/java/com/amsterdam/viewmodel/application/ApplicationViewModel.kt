@@ -1,11 +1,15 @@
 package com.amsterdam.viewmodel.application
 
+import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
+import com.amsterdam.domain.useCase.preferences.GetRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
@@ -13,8 +17,15 @@ import javax.inject.Inject
 class ApplicationViewModel @Inject constructor(
     dispatcherProvider: DispatcherProvider,
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
-    private val getsSessionType: GetsSessionType
+    private val getsSessionType: GetsSessionType,
+    private val getRestrictionLevelUseCase: GetRestrictionLevelUseCase
 ) : BaseViewModel<ApplicationUiState, Unit>(ApplicationUiState(), dispatcherProvider) {
+
+    init {
+        viewModelScope.launch {
+            getRestrictionLevel()
+        }
+    }
 
     suspend fun setStartDestination(): ApplicationUiState.StartDestinations {
         val sessionType = getsSessionType()
@@ -27,5 +38,14 @@ class ApplicationViewModel @Inject constructor(
 
     suspend fun onConfigurationChanged(locale: Locale) {
         manageLocaleLanguageUseCase.setDeviceLanguage(locale.language.lowercase())
+    }
+
+    private suspend fun getRestrictionLevel(){
+        val restrictionLevel = getRestrictionLevelUseCase()
+        restrictionLevel.collectLatest { restriction ->
+            updateState {
+                it.copy(restrictionLevel = restriction)
+            }
+        }
     }
 }

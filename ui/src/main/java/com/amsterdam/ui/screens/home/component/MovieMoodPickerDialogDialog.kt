@@ -26,8 +26,10 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
+import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.DialogTitleRow
 import com.amsterdam.ui.components.MediaCard
+import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 
 @SuppressLint("ContextCastToActivity")
@@ -61,6 +63,7 @@ private fun DialogContent(
     onClickGetAnotherMovie: () -> Unit,
     onClickViewDetails: () -> Unit
 ) {
+    val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     Column(
         modifier = Modifier
             .padding(12.dp)
@@ -89,6 +92,7 @@ private fun DialogContent(
                     model = movie.posterImageUrl,
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
+                    safetyLevel = safetyLevel,
                     onLoading = { ImageLoadingIndicator() },
                     onError = { ImageErrorIndicator() },
                 )
