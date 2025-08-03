@@ -1,5 +1,4 @@
-package com.amsterdam.ui.screens.listDetails
-
+package com.amsterdam.ui.screens.listDetails.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,8 +30,6 @@ import com.amsterdam.ui.R
 import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.screens.search.actorSearch.MovieImage
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
-import com.amsterdam.viewmodel.shared.uiStates.media.MediaItemUiState
-import com.amsterdam.viewmodel.shared.uiStates.media.MediaType
 import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
