@@ -22,6 +22,15 @@ class AuthenticationRemoteDataSourceImpl @Inject constructor(
         return createSession(activeToken.requestToken ?: "").sessionId
     }
 
+    override suspend fun deleteSession(sessionId: String): Boolean {
+        return responseCall(
+            { authenticationApiService.deleteSession(sessionId) }
+        ) {
+            val response = json.decodeFromString<AuthenticationResponseDto>(it)
+            response.statusCode!!
+        }.isSuccess
+    }
+
     private suspend fun createRequestToken(): AuthenticationResponseDto {
         val response =
             responseCall({ authenticationApiService.createRequestToken() }) {
