@@ -1,4 +1,5 @@
-package com.amsterdam.ui.components
+package com.amsterdam.ui.screens.listDetails
+
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,17 +28,18 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.R
-import com.amsterdam.ui.application.AflamiApp
+import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.screens.search.actorSearch.MovieImage
+import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.media.MediaItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.media.MediaType
 import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
-internal fun MediaItemsGrid(
-    mediaItems: LazyPagingItems<MediaItemUiState>,
+internal fun MoviesItemsGrid(
+    movies: LazyPagingItems<MovieItemUiState>,
     modifier: Modifier = Modifier,
-    onClickMediaItem: (Long, MediaType) -> Unit,
+    onClickMovie: (Long) -> Unit,
     hasIconButton: Boolean = false,
     onClickIconButton: () -> Unit = {}
 ) {
@@ -51,22 +53,18 @@ internal fun MediaItemsGrid(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(
-            count = mediaItems.itemCount,
+            count = movies.itemCount,
         ) { index ->
-            val mediaItem = mediaItems[index] ?: return@items
-            val mediaType = when (mediaItem.mediaType) {
-                MediaType.MOVIE -> stringResource(R.string.movie)
-                MediaType.TV_SHOW -> stringResource(R.string.tv_shows)
-            }
+            val movie = movies[index] ?: return@items
 
             Box {
                 MediaCard(
-                    movieImage = { MovieImage(mediaItem.posterImageUrl) },
-                    movieType = mediaType,
-                    movieYear = mediaItem.yearOfRelease,
-                    movieTitle = mediaItem.name,
-                    movieRating = mediaItem.rate,
-                    onClick = { onClickMediaItem(mediaItem.id, mediaItem.mediaType) }
+                    movieImage = { MovieImage(movie.posterImageUrl) },
+                    movieType = stringResource(R.string.movie),
+                    movieYear = movie.yearOfRelease,
+                    movieTitle = movie.name,
+                    movieRating = movie.rate,
+                    onClick = { onClickMovie(movie.id) }
                 )
                 if (hasIconButton) {
                     IconButton(
@@ -84,7 +82,7 @@ internal fun MediaItemsGrid(
             }
         }
 
-        if (mediaItems.loadState.append is LoadState.Loading) {
+        if (movies.loadState.append is LoadState.Loading) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 LoadingIndicator(
                     Modifier
@@ -94,16 +92,16 @@ internal fun MediaItemsGrid(
             }
         }
 
-        if (mediaItems.loadState.append is LoadState.Error) {
+        if (movies.loadState.append is LoadState.Error) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 PlainTextButton(
                     modifier = Modifier
                         .size(48.dp)
                         .padding(top = 8.dp),
                     title = stringResource(R.string.retry),
-                    onClick = { mediaItems.retry() },
+                    onClick = { movies.retry() },
                     isEnabled = true,
-                    isLoading = mediaItems.loadState.append is LoadState.Loading,
+                    isLoading = movies.loadState.append is LoadState.Loading,
                     isNegative = false,
                     colors = ButtonDefaults.textButtonColors()
                 )
@@ -116,9 +114,9 @@ internal fun MediaItemsGrid(
 @Composable
 private fun MediaItemsGridPreview() {
     AflamiTheme {
-        MediaItemsGrid(
-            mediaItems = emptyFlow<PagingData<MediaItemUiState>>().collectAsLazyPagingItems(),
-            onClickMediaItem = { _, _ -> },
+        MoviesItemsGrid(
+            movies = emptyFlow<PagingData<MovieItemUiState>>().collectAsLazyPagingItems(),
+            onClickMovie = { },
             hasIconButton = false,
             onClickIconButton = {}
         )
