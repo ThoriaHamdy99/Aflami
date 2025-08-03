@@ -1,5 +1,6 @@
 package com.amsterdam.remotedatasource.datasource
 
+import android.util.Log
 import com.amsterdam.remotedatasource.api.TvShowsApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
@@ -7,6 +8,8 @@ import com.amsterdam.repository.dto.remote.EpisodeResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.VideoDto
+import com.amsterdam.repository.dto.remote.VideoResponse
 import javax.inject.Inject
 
 class TvRemoteDataSourceImpl @Inject constructor(
@@ -44,6 +47,22 @@ class TvRemoteDataSourceImpl @Inject constructor(
             tvShowsApiService.getEpisodesBySeasonNumber(
                 tvShowId,
                 seasonNumber
+            )
+        }
+    }
+
+    override suspend fun getEpisodeVideosByEpisodeId(
+        tvShowId: Long,
+        seasonNumber: Int,
+        episodeNumber: Int
+    ): VideoResponse {
+        return responseCall {
+            Log.d("tvShowId", "$tvShowId $seasonNumber $episodeNumber")
+
+            tvShowsApiService.getEpisodeVideosByEpisodeId(
+                tvShowId,
+                seasonNumber+1,
+                episodeNumber
             )
         }
     }

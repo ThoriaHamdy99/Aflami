@@ -4,6 +4,8 @@ import com.amsterdam.repository.dto.remote.EpisodeResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.VideoDto
+import com.amsterdam.repository.dto.remote.VideoResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -41,6 +43,13 @@ interface TvShowsApiService {
         @Path("tvShowId") tvShowId: Long,
         @Path("seasonNumber") seasonNumber: Int
     ): EpisodeResponse
+    @GET("tv/{tvShowId}/season/{seasonNumber}/episode/{episodeNumber}/videos")
+    suspend fun getEpisodeVideosByEpisodeId(
+        @Path("tvShowId") tvShowId: Long,
+        @Path("seasonNumber") seasonNumber: Int,
+        @Path("episodeNumber") episodeNumber: Int,
+    ): VideoResponse
+
 
     companion object {
 
@@ -53,8 +62,9 @@ interface TvShowsApiService {
         private const val PAGE_KEY = "page"
         private const val TV_SHOW_CREDITS_ENDPOINT = "tv/{tvShowId}/credits"
         private const val TV_SHOW_DETAILS_ENDPOINT = "tv/{tvShowId}"
+        private const val TV_SHOW_EPISODES_ENDPOINT = "tv/{tvShowId}/season/{seasonNumber},"
+        private const val TV_SHOW_EPISODES_APPEND_PARAMETERS = "tv/{tvShowId}/season/{seasonNumber}/episode/{episodeNumber}/videos"
         private const val TV_SHOW_DETAILS_APPEND_PARAMETERS = "credits,similar,reviews,images,videos"
-        private const val TV_SHOW_EPISODES_ENDPOINT = "tv/{tvShowId}/season/{seasonNumber}"
         private const val INCLUDED_VIDEO_LANGUAGE = "en"
 
     }
