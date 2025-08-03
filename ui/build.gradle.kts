@@ -23,7 +23,6 @@ dependencies {
     uiGraphicsDependencies()
     hiltDependencies()
     kotlinxDateTime()
-    coilDependencies()
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
