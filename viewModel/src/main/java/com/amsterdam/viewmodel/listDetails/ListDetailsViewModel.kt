@@ -9,7 +9,7 @@ import com.amsterdam.domain.useCase.list.GetUserListDetailsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
-import com.amsterdam.viewmodel.shared.uiStates.media.MediaItemUiState
+import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.media.MediaType
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,8 +31,10 @@ class ListDetailsViewModel @Inject constructor(
 ), ListDetailsInteractionListener {
 
     init {
-        // TODO: args
-        updateState { it.copy(listId = 8547208, listName = "My favorite") }
+        updateState { it.copy(
+            listId = args.listId,
+            listName = args.listName
+        ) }
         manageLocaleLanguageUseCase.getDeviceLanguage()
             .onEach { loadListDetails() }
             .launchIn(viewModelScope)
@@ -49,7 +51,7 @@ class ListDetailsViewModel @Inject constructor(
                     pagingSourceFactory = {
                         PagingSource { page ->
                             getUserListDetailsUseCase(state.value.listId, page)
-                                .map { listDetailsUiStateMapper.listItemToMediaItemUiState(it) }
+                                .map { listDetailsUiStateMapper.movieToMovieItemUiState(it) }
                         }
                     }
                 ).flow.cachedIn(viewModelScope)
@@ -60,17 +62,14 @@ class ListDetailsViewModel @Inject constructor(
         )
     }
 
-    private fun onGetListDetailsSuccess(mediaPagingFlow: Flow<PagingData<MediaItemUiState>>) {
-        updateState { it.copy(listItems = mediaPagingFlow) }
+    private fun onGetListDetailsSuccess(moviesPagingFlow: Flow<PagingData<MovieItemUiState>>) {
+        updateState { it.copy(listItems = moviesPagingFlow) }
     }
 
     private fun onCompletion() = updateState { it.copy(isLoading = false) }
 
-    override fun onClickMediaItem(mediaId: Long, mediaType: MediaType) {
-        when(mediaType){
-            MediaType.MOVIE -> sendNewEffect(ListDetailsEffect.NavigateToMovieDetailsScreen(mediaId))
-            MediaType.TV_SHOW -> sendNewEffect(ListDetailsEffect.NavigateToTvShowDetailsEffect(mediaId))
-        }
+    override fun onClickMovie(movieId: Long) {
+        sendNewEffect(ListDetailsEffect.NavigateToMovieDetailsScreen(movieId))
     }
 
     override fun onClickBack() {

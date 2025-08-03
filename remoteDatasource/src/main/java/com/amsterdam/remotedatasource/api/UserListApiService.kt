@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface UserListApiService {
 
     @GET(GET_USER_LIST_DETAILS)
-    suspend fun getUserListDetails(
+    suspend fun getMoviesFromList(
         @Path(LIST_ID) listId: Long,
         @Query(PAGE) page: Int
     ): UserListDetailsResponse

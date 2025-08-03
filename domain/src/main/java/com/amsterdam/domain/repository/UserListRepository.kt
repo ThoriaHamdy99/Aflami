@@ -1,7 +1,7 @@
 package com.amsterdam.domain.repository
 
-import com.amsterdam.entity.UserListItem
+import com.amsterdam.entity.Movie
 
 interface UserListRepository {
-    suspend fun getUserListDetails(listId: Long, page: Int): List<UserListItem>
+    suspend fun getMoviesFromList(listId: Long, page: Int): List<Movie>
 }

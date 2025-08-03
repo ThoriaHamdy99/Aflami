@@ -9,10 +9,10 @@ import javax.inject.Inject
 class UserListRemoteSourceImpl @Inject constructor(
     private val userListApiService: UserListApiService
 ) : UserListRemoteSource {
-    override suspend fun getUserListDetails(
+    override suspend fun getMoviesFromList(
         listId: Long,
         page: Int
     ): UserListDetailsResponse {
-        return responseCall { userListApiService.getUserListDetails(listId, page) }
+        return responseCall { userListApiService.getMoviesFromList(listId, page) }
     }
 }

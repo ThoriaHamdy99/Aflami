@@ -38,7 +38,7 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.domain.models.Mood
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.entity.category.MovieGenre 
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 import com.amsterdam.ui.components.NoNetworkContainer
@@ -52,6 +52,7 @@ import com.amsterdam.ui.screens.home.sections.continueWatchingSection
 import com.amsterdam.ui.screens.home.sections.popularSection
 import com.amsterdam.ui.screens.home.sections.topRatingSection
 import com.amsterdam.ui.screens.home.sections.upcomingMoviesSection
+import com.amsterdam.ui.screens.listDetails.ListsDetailsScreen
 import com.amsterdam.viewmodel.home.HomeEffect
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToMovieDetailsEffect
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToSearchScreenEffect
@@ -90,11 +91,13 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hil
         }
     }
 
-    HomeScreenContent(
-        modifier = modifier,
-        state = state,
-        interactionListener = homeViewModel
-    )
+    ListsDetailsScreen()
+
+//    HomeScreenContent(
+//        modifier = modifier,
+//        state = state,
+//        interactionListener = homeViewModel
+//    )
 }
 
 @SuppressLint("ConfigurationScreenWidthHeight")
