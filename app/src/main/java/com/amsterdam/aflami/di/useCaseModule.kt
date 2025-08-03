@@ -20,6 +20,7 @@ import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
+import com.amsterdam.domain.useCase.home.GetEpisodeVideosByEpisodeId
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
@@ -48,6 +49,9 @@ object UseCaseModule {
     fun provideGetsSessionType(repo: AuthenticationRepository): GetsSessionType =
         GetsSessionType(repo)
 
+    @Provides
+    fun provideGetEpisodeVideosByEpisodeId(repo: TvShowRepository): GetEpisodeVideosByEpisodeId =
+        GetEpisodeVideosByEpisodeId(repo)
 
     @Provides
     fun provideSetCurrentLanguage(repo: AppPreferencesRepository): ManageLocaleLanguageUseCase =
