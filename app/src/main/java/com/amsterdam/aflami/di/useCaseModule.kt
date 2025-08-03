@@ -30,7 +30,7 @@ import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
-import com.amsterdam.domain.useCase.list.GetUserListDetailsUseCase
+import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
@@ -149,9 +149,9 @@ object UseCaseModule {
         GetContinueWatchingTvShowsUseCase(watchHistoryRepository)
 
     @Provides
-    fun provideGetUserListDetailsUseCase(
+    fun provideGetMoviesFromListUseCase(
         userListRepository: UserListRepository
-    ): GetUserListDetailsUseCase = GetUserListDetailsUseCase(userListRepository)
+    ): GetMoviesFromListUseCase = GetMoviesFromListUseCase(userListRepository)
 
     @Provides
     fun provideGetTopRatedTvShowsUseCase(

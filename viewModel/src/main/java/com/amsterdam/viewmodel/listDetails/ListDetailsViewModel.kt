@@ -5,7 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.amsterdam.domain.useCase.list.GetUserListDetailsUseCase
+import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListDetailsViewModel @Inject constructor(
-    private val getUserListDetailsUseCase: GetUserListDetailsUseCase,
+    private val getMoviesFromListUseCase: GetMoviesFromListUseCase,
     private val listDetailsUiStateMapper: ListDetailsUiStateMapper,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     args: ListDetailsArgs,
@@ -49,7 +49,7 @@ class ListDetailsViewModel @Inject constructor(
                     config = PagingConfig(pageSize = 10),
                     pagingSourceFactory = {
                         PagingSource { page ->
-                            getUserListDetailsUseCase(state.value.listId, page)
+                            getMoviesFromListUseCase(state.value.listId, page)
                                 .map { listDetailsUiStateMapper.movieToMovieItemUiState(it) }
                         }
                     }
