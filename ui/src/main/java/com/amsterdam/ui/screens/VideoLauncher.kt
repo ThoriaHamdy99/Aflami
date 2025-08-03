@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.net.toUri
 
-fun openYouTubeVideo(context: Context, videoUrl: String) {
+fun openYouTubeVideo(context: Context, videoUrl: String,onLaunchFailed :()-> Unit) {
     val appIntent = Intent(Intent.ACTION_VIEW, videoUrl.toUri())
         .apply { setPackage("com.google.android.youtube") }
 
@@ -16,7 +16,9 @@ fun openYouTubeVideo(context: Context, videoUrl: String) {
 
     try {
         context.startActivity(appIntent)
-    } catch (e: ActivityNotFoundException) {
+    } catch (_: ActivityNotFoundException) {
         context.startActivity(webIntent)
+    }catch (_:Exception){
+        onLaunchFailed()
     }
 }
