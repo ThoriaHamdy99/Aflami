@@ -30,7 +30,7 @@ open class BaseViewModel<S, E>(
         .throttleFirstSelective(500) { it.second }
         .mapNotNull { it.first }
 
-    private val _state: MutableStateFlow<S> = MutableStateFlow(initialState)
+    val _state: MutableStateFlow<S> = MutableStateFlow(initialState)
 
     val state: StateFlow<S> = _state.asStateFlow()
 

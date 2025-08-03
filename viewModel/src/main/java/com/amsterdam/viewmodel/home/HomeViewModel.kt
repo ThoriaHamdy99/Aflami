@@ -82,7 +82,7 @@ class HomeViewModel @Inject constructor(
     private fun getContinueWatchingData() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            action = { getContinueWatchingScreenDataUseCase(pageSize = 8) },
+            action = { getContinueWatchingScreenDataUseCase(pageSize = 10) },
             onSuccess = ::onGetContinueWatchingScreenDataSuccess,
             onError = ::onError,
             onCompletion = ::onCompletion
