@@ -1,5 +1,6 @@
 package com.amsterdam.repository.repository
 
+import android.util.Log
 import com.amsterdam.domain.repository.CategoryRepository
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
@@ -122,6 +123,17 @@ class TvShowRepositoryImpl @Inject constructor(
                 seasonNumber
             ).episodes
         )
+    }
+
+    override suspend fun getEpisodeVideoUrl(
+        tvShowId: Long,
+        seasonNumber: Int,
+        episodeNumber: Int
+    ): String {
+        val videosDto = remoteTvDataSource.getEpisodeVideosByEpisodeId(tvShowId, seasonNumber, episodeNumber)
+        Log.d("videosDto", videosDto.toString())
+        return videosDto.results.firstOrNull()?.fullVideoUrl?:""
+
     }
 
     override suspend fun getTopRatedTvShows(page: Int): List<TvShow> {

@@ -14,4 +14,9 @@ interface TvShowRepository {
     suspend fun getTvShowDetails(tvShowId: Long): TvShowDetails
     suspend fun getTvShowSeasons(tvShowId: Long): List<Season>
     suspend fun getEpisodesBySeasonNumber(tvShowId: Long, seasonNumber: Int): List<Episode>
+    suspend fun getEpisodeVideoUrl(
+        tvShowId: Long,
+        seasonNumber: Int,
+        episodeNumber: Int
+    ): String
 }
