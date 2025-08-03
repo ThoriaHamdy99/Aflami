@@ -279,13 +279,20 @@ fun ProfileInfoSection() {
                     ),
                     shape = CircleShape
                 )
-                .padding(vertical = 4.dp, horizontal = 8.dp)
+                .padding(vertical = 4.dp, horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "325 Pts.",
                 style = AppTheme.textStyle.label.small,
                 color = AppTheme.color.onPrimary,
-                modifier = Modifier
+                modifier = Modifier.padding(end = 4.dp)
+            )
+            Image(
+                painter = painterResource(com.amsterdam.designsystem.R.drawable.ic_user_pts),
+                contentDescription = stringResource(R.string.profile),
+                modifier = Modifier.size(16.dp),
+                colorFilter = ColorFilter.tint(AppTheme.color.onPrimary)
             )
         }
     }
