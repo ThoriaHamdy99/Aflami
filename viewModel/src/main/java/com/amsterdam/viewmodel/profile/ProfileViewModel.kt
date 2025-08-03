@@ -50,7 +50,6 @@ class ProfileViewModel @Inject constructor(
 
     override fun onClickLogin() {
         viewModelScope.launch {
-            delay(300)
             sendNewNavigationEffect(ProfileEffect.NavigateToLogin)
         }
     }
