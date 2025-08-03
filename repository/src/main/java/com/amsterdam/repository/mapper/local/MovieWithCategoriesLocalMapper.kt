@@ -20,8 +20,7 @@ class MovieWithCategoriesLocalMapper @Inject constructor(
             popularity = dto.movie.popularity,
             originCountry = dto.movie.originCountry,
             runTimeInMinutes = dto.movie.movieLength,
-            hasVideo = dto.movie.hasVideo,
-            productionCompanies = emptyList()
+            hasVideo = dto.movie.hasVideo
         )
     }
 

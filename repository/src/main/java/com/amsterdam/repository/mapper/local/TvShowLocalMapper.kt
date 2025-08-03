@@ -1,6 +1,5 @@
 package com.amsterdam.repository.mapper.local
 
-import android.util.Log
 import com.amsterdam.entity.TvShow
 import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.mapper.shared.DtoMapper
@@ -19,8 +18,7 @@ class TvShowLocalMapper @Inject constructor(): EntityMapper<LocalTvShowDto, TvSh
             categories = emptyList(),
             popularity = dto.popularity,
             seasonCount = dto.seasonCount,
-            originCountry = dto.originCountry,
-            productionCompanies = emptyList()
+            originCountry = dto.originCountry
         )
     }
 
