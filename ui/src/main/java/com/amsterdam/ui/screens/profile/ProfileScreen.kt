@@ -1,8 +1,11 @@
 package com.amsterdam.ui.screens.profile
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,6 +29,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -44,8 +49,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.TopAppBar
 import com.amsterdam.designsystem.components.CenterOfScreenContainer
+import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.OutlinedButton
 import com.amsterdam.designsystem.components.divider.HorizontalDivider
@@ -53,15 +60,41 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.modifierExtensions.dropShadow
 import com.amsterdam.ui.R
+import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.application.LocalScaffoldBottomPadding
+import com.amsterdam.ui.navigation.Route
+import com.amsterdam.viewmodel.profile.ProfileEffect
+import com.amsterdam.viewmodel.profile.ProfileInteractionListener
+import com.amsterdam.viewmodel.profile.ProfileUiState
+import com.amsterdam.viewmodel.profile.ProfileViewModel
 
 @Composable
-fun ProfileScreen() {
-    ProfileScreenContent()
+fun ProfileScreen(
+    viewModel: ProfileViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsState()
+    val navController = LocalNavController.current
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                ProfileEffect.NavigateToLogin -> navController.navigate(Route.Login)
+            }
+        }
+    }
+    ProfileScreenContent(
+        state,
+        interactionListener = viewModel
+    )
 }
 
 @Composable
-private fun ProfileScreenContent() {
+private fun ProfileScreenContent(
+    state: ProfileUiState,
+    interactionListener: ProfileInteractionListener
+) {
+    val animationDuration by remember { mutableIntStateOf(1000) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -70,16 +103,38 @@ private fun ProfileScreenContent() {
             .windowInsetsPadding(WindowInsets(bottom = LocalScaffoldBottomPadding.current)),
         contentAlignment = Alignment.TopStart
     ) {
-        if (true) {
-            NotLoggedInContent()
-        } else {
+        AnimatedVisibility(
+            state.isLoading,
+            enter = fadeIn(tween(animationDuration)),
+            exit = fadeOut(tween(animationDuration)),
+        ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                LoadingContainer()
+            }
+        }
+
+        AnimatedVisibility(
+            state.isUserLoggedIn,
+            enter = fadeIn(tween(animationDuration)),
+            exit = fadeOut(tween(animationDuration)),
+        ) {
             LoggedInContent()
+        }
+
+        AnimatedVisibility(
+            !state.isUserLoggedIn,
+            enter = fadeIn(tween(animationDuration)),
+            exit = fadeOut(tween(animationDuration)),
+        ) {
+            NotLoggedInContent(
+                interactionListener::onClickLogin
+            )
         }
     }
 }
 
 @Composable
-private fun NotLoggedInContent() {
+private fun NotLoggedInContent(onClickLogin: () -> Unit) {
     var topBarHeight by remember { mutableIntStateOf(0) }
     Column(
         modifier = Modifier.statusBarsPadding()
@@ -104,6 +159,7 @@ private fun NotLoggedInContent() {
                 .background(AppTheme.color.surface)
                 .padding(horizontal = 48.dp),
             unneededSpace = topBarHeight.dp,
+            onClickLogin = onClickLogin
         )
     }
 }
@@ -393,7 +449,8 @@ private fun RowScope.CustomCard(
 @Composable
 private fun LoginSection(
     modifier: Modifier = Modifier,
-    unneededSpace: Dp
+    unneededSpace: Dp,
+    onClickLogin: () -> Unit
 ) {
     CenterOfScreenContainer(
         unneededSpace = unneededSpace,
@@ -434,7 +491,7 @@ private fun LoginSection(
                     .padding(top = 24.dp)
                     .width(95.dp),
                 title = stringResource(R.string.login),
-                onClick = {},
+                onClick = onClickLogin,
                 isEnabled = true,
                 isLoading = false,
                 isNegative = false
@@ -446,5 +503,10 @@ private fun LoginSection(
 @ThemeAndLocalePreviews
 @Composable
 private fun ProfileScreenPreview() {
-    ProfileScreenContent()
+    ProfileScreenContent(
+        ProfileUiState(),
+        interactionListener = object : ProfileInteractionListener {
+            override fun onClickLogin() {}
+        }
+    )
 }
