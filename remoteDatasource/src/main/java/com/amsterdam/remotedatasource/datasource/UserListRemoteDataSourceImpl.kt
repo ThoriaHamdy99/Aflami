@@ -9,7 +9,7 @@ class UserListRemoteDataSourceImpl @Inject constructor(
     private val customListApiService: UserListApiService
 ) : UserListRemoteSource {
     
-    override suspend fun getCustomLists(
+    override suspend fun getUserLists(
         accountId: Int,
         page: Int,
         sessionId: String

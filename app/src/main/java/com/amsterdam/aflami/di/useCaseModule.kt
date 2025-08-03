@@ -192,7 +192,10 @@ object UseCaseModule {
     )
 
     @Provides
-    fun provideGetUserListsUseCase(repo: UserListRepository): GetUserListsUseCase =
-        GetUserListsUseCase(repo)
+    fun provideGetUserListsUseCase(
+        userListRepository: UserListRepository,
+        authenticationRepository: AuthenticationRepository
+    ): GetUserListsUseCase =
+        GetUserListsUseCase(userListRepository, authenticationRepository)
 
 }

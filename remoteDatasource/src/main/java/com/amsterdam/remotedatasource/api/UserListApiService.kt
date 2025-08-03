@@ -9,7 +9,7 @@ interface UserListApiService {
 
     @GET(USER_LISTS_ENDPOINT)
     suspend fun getUserLists(
-        @Path("account_id") accountId: Int,
+        @Path("account_id") accountId: Int=0,
         @Query("page") page: Int = 1,
         @Query("session_id") sessionId: String
     ): RemoteUserListResponse

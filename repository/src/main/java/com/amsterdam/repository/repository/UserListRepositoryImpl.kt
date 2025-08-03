@@ -10,12 +10,12 @@ class UserListRepositoryImpl @Inject constructor(
     private val userListRemoteSource: UserListRemoteSource
 ) : UserListRepository {
     
-    override suspend fun getCustomLists(
+    override suspend fun getUserLists(
         accountId: Int,
         page: Int,
         sessionId: String
     ): List<UserList> {
-        return userListRemoteSource.getCustomLists(accountId, page, sessionId)
+        return userListRemoteSource.getUserLists(accountId, page, sessionId)
             .results.map { it.toUserList() }
     }
 } 
