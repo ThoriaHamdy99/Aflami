@@ -41,7 +41,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getUserProfileInfo() {
-        updateState { state -> state.copy(isLoading = false) }
+        updateState { state -> state.copy(isUserLoggedIn = true, isLoading = false) }
     }
 
     private fun onError(aflamiException: AflamiException) {
