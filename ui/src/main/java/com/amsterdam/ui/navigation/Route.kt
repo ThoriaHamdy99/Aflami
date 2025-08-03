@@ -55,4 +55,10 @@ sealed interface Route {
 
     @Serializable
     data object ContinueWatching: Route
+
+    @Serializable
+    data class ListDetails(
+        private val listId: Long,
+        private val listName: String
+    ) : Route
 }

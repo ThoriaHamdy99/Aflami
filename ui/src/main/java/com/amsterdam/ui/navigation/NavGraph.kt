@@ -8,6 +8,7 @@ import com.amsterdam.ui.screens.categories.categoriesScreenRoute
 import com.amsterdam.ui.screens.continueWatching.continueWatchingScreenRoute
 import com.amsterdam.ui.screens.home.homeScreenRoute
 import com.amsterdam.ui.screens.letsPlay.letsPlayScreenRoute
+import com.amsterdam.ui.screens.listDetails.listDetailsScreenRoute
 import com.amsterdam.ui.screens.lists.listsScreenRoute
 import com.amsterdam.ui.screens.login.loginScreenRoute
 import com.amsterdam.ui.screens.movieDetails.movieDetailsScreenRoute
@@ -42,5 +43,6 @@ fun NavGraph(
         registerScreenRoute()
         continueWatchingScreenRoute()
         resetPasswordScreenRoute()
+        listDetailsScreenRoute()
     }
 }
