@@ -42,7 +42,7 @@ internal fun MoviesItemsGrid(
 ) {
     val gridState = rememberLazyGridState()
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 156.dp),
+        columns = GridCells.Adaptive(minSize = 160.dp),
         state = gridState,
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),

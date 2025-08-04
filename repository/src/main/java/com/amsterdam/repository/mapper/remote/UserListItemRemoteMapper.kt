@@ -17,7 +17,6 @@ fun UserListItemDto.toMovie(isPoster: Boolean = true): Movie {
         categories = genreIds.map { toMovieGenre(it.toLong()) },
         popularity = popularity,
         originCountry = originalLanguage,
-        runTimeInMinutes = 0,
-        productionCompanies = emptyList(),
+        runTimeInMinutes = 0
     )
 }
