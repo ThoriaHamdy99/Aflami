@@ -7,4 +7,7 @@ sealed interface SeriesDetailsEffect : BaseViewModel.BaseUiEffect {
     object NavigateToCastScreen : SeriesDetailsEffect
     object NavigateToLoginScreenEffect : SeriesDetailsEffect
     data class NavigateToSeriesDetails(val tvShowId: Long) : SeriesDetailsEffect
+
+    object ShowRatingSuccessSnackBar: SeriesDetailsEffect
+    object ShowRatingErrorSnackBar: SeriesDetailsEffect
 }

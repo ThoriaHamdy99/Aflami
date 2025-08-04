@@ -3,11 +3,13 @@ package com.amsterdam.repository.repository
 import com.amsterdam.domain.repository.CategoryRepository
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
+import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Episode
 import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
 import com.amsterdam.repository.datasource.local.AppPreferences
+import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
 import com.amsterdam.repository.datasource.local.TvShowLocalSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
 import com.amsterdam.repository.dto.local.utils.SearchType
@@ -20,10 +22,12 @@ import com.amsterdam.repository.mapper.remote.CastRemoteMapper
 import com.amsterdam.repository.mapper.remote.EpisodeRemoteMapper
 import com.amsterdam.repository.mapper.remote.SeasonRemoteMapper
 import com.amsterdam.repository.mapper.remote.TvShowDetailsRemoteMapper
+import com.amsterdam.repository.mapper.remote.TvShowRateRemoteMapper
 import com.amsterdam.repository.mapper.remote.TvShowRemoteMapper
 import com.amsterdam.repository.mapper.remoteToLocal.TvShowGenreIdsRemoteLocalMapper
 import com.amsterdam.repository.mapper.remoteToLocal.TvShowRemoteDetailsLocalMapper
 import com.amsterdam.repository.mapper.remoteToLocal.TvShowRemoteLocalMapper
+import com.amsterdam.repository.security.CryptoData
 import com.amsterdam.repository.utils.RecentSearchHandler
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -32,6 +36,7 @@ class TvShowRepositoryImpl @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val localTvDataSource: TvShowLocalSource,
     private val remoteTvDataSource: TvShowsRemoteSource,
+    private val authenticationLocalSource: AuthenticationLocalSource,
     private val preferences: AppPreferences,
     private val tvShowGenreIdsRemoteLocalMapper: TvShowGenreIdsRemoteLocalMapper,
     private val tvRemoteMapper: TvShowRemoteMapper,
@@ -43,6 +48,8 @@ class TvShowRepositoryImpl @Inject constructor(
     private val tvShowRemoteDetailsLocalMapper: TvShowRemoteDetailsLocalMapper,
     private val tvShowDetailsRemoteMapper: TvShowDetailsRemoteMapper,
     private val castRemoteMapper: CastRemoteMapper,
+    private val tvShowRateRemoteMapper: TvShowRateRemoteMapper,
+    val cryptoData: CryptoData,
 ) : TvShowRepository {
     override suspend fun getPopularTvShows(): List<TvShow> {
         return tvRemoteMapper.toEntityList(remoteTvDataSource.getPopularTvShows().results)
@@ -122,6 +129,22 @@ class TvShowRepositoryImpl @Inject constructor(
                 seasonNumber
             ).episodes
         )
+    }
+
+    override suspend fun getUserRatedTvShows(): List<UserRatedTvShow> {
+        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        return tvShowRateRemoteMapper.toEntityList(remoteTvDataSource.getRatedTvShows(sessionId).results)
+    }
+
+    override suspend fun setTvShowRate(rate: Int, tvShowId: Long) {
+        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        remoteTvDataSource.setTvShowRate(rate = rate, tvShowId = tvShowId, sessionId = sessionId)
+    }
+
+    override suspend fun deleteTvShowRate(tvShowId: Long) {
+        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        remoteTvDataSource.deleteTvShowRate(tvShowId = tvShowId, sessionId = sessionId)
+
     }
 
     override suspend fun getTopRatedTvShows(page: Int): List<TvShow> {

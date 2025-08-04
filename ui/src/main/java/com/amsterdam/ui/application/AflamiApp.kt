@@ -20,6 +20,7 @@ import com.amsterdam.designsystem.components.snackBar.SnackBarHost
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.ui.components.bottomNavigation.BottomNavigation
 import com.amsterdam.ui.navigation.NavGraph
+import com.amsterdam.ui.navigation.Route
 import com.amsterdam.viewmodel.application.ApplicationViewModel
 import kotlinx.coroutines.runBlocking
 
@@ -32,6 +33,7 @@ fun AflamiApp(
     val currentDestination = backStackEntry?.destination
     val startDestination = runBlocking {
         getStartDestination(viewModel.setStartDestination())
+        //Route.MyRating
     }
     val localConfigurations = LocalConfiguration.current
 
