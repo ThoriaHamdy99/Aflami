@@ -1,16 +1,15 @@
 package com.amsterdam.repository.dto.remote
 
-import com.amsterdam.repository.utils.VideoBaseUrl.YOUTUBE_BASE_URL
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 @Serializable
 data class VideoDto(
     @SerialName("iso_639_1")
-    val iso6391: String,
+    val languageCode: String,
 
     @SerialName("iso_3166_1")
-    val iso31661: String,
+    val countryCode: String,
 
     @SerialName("name")
     val name: String,
@@ -38,4 +37,8 @@ data class VideoDto(
 ){
     val fullVideoUrl: String?
         get() = YOUTUBE_BASE_URL + key
+
+    private companion object {
+        const val YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v="
+    }
 }

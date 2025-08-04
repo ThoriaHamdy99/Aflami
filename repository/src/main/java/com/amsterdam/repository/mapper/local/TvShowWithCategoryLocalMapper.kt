@@ -16,11 +16,10 @@ class TvShowWithCategoryLocalMapper @Inject constructor(
             posterUrl = dto.tvShow.poster,
             airDate = dto.tvShow.airDate,
             rating = dto.tvShow.rating,
-            categories = tvShowGenreLocalMapper.toEntityList(dto.categories),
+            categories = tvShowGenreLocalMapper.toEntityList(dto.categories.distinctBy { it.categoryId }),
             popularity = dto.tvShow.popularity,
             seasonCount = dto.tvShow.seasonCount,
-            originCountry = dto.tvShow.originCountry,
-            productionCompanies = emptyList()
+            originCountry = dto.tvShow.originCountry
         )
     }
 }

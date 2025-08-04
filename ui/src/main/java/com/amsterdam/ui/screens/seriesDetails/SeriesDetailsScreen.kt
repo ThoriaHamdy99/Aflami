@@ -66,6 +66,7 @@ import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.chip.Chip
 import com.amsterdam.designsystem.components.divider.HorizontalDivider
+import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
@@ -136,7 +137,9 @@ fun SeriesDetailsScreen(
                     navController.navigate(SeriesDetails(effect.tvShowId))
                 }
 
-                is SeriesDetailsEffect.LaunchSeriesVideoEffect -> openYouTubeVideo(context ,effect.url )
+                is SeriesDetailsEffect.LaunchSeriesVideoEffect -> openYouTubeVideo(context ,effect.url ){
+                    SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
+                }
             }
         }
     }

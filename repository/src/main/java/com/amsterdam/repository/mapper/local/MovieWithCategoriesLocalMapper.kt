@@ -16,12 +16,10 @@ class MovieWithCategoriesLocalMapper @Inject constructor(
             posterUrl = dto.movie.poster,
             releaseDate = dto.movie.releaseDate,
             rating = dto.movie.rating,
-            categories = movieGenreLocalMapper.toEntityList(dto.categories),
+            categories = movieGenreLocalMapper.toEntityList(dto.categories.distinctBy { it.categoryId }),
             popularity = dto.movie.popularity,
             originCountry = dto.movie.originCountry,
-            runTimeInMinutes = dto.movie.movieLength,
-            videoUrl = "",
-            productionCompanies = emptyList()
+            runTimeInMinutes = dto.movie.movieLength
         )
     }
 

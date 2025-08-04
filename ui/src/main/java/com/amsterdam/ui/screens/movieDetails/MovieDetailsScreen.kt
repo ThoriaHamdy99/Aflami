@@ -55,6 +55,7 @@ import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.divider.HorizontalDivider
+import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
@@ -91,7 +92,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
-     val context = LocalContext.current
+    val context = LocalContext.current
     MovieContent(
         state = state.value,
         interactionListener = viewModel,
@@ -119,7 +120,11 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                     )
                 }
 
-                is MovieDetailsEffect.LaunchMovieVideoEffect -> openYouTubeVideo(context,effect.url)
+                is MovieDetailsEffect.LaunchMovieVideoEffect ->
+                    openYouTubeVideo(context, effect.url) {
+                        SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
+                    }
+
             }
         }
     }
