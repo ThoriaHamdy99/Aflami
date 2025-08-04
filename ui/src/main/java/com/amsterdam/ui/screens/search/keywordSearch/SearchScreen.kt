@@ -158,14 +158,17 @@ private fun SearchContent(
                 }
             }
 
-            AnimatedVisibility(state.keyword.isNotBlank()) {
+            val selectedItems = if (state.selectedTabOption == TabOption.MOVIES) {
+                movies
+            } else {
+                tvShows
+            }
+
+            AnimatedVisibility(state.keyword.isNotBlank()&& !state.isLoading && state.errorUiState == null && selectedItems.itemCount > 0) {
                 SuccessMediaItemsSection(
-                    selectedTabOption = state.selectedTabOption,
-                    moviesFlow = movies,
-                    tvShowsFlow = tvShows,
                     onMovieClicked = interaction::onClickMovieCard,
                     onTvShowClicked = interaction::onClickTvShowCard,
-                    state = state
+                    selectedItems = selectedItems
                 )
                 val isSelectedTabHasNoData = if (state.selectedTabOption == TabOption.MOVIES) {
                     movies.itemSnapshotList.isEmpty()
