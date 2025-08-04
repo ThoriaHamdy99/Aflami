@@ -40,7 +40,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun loadSettings() {
-        manageLocaleLanguageUseCase.getDeviceLanguage().onEach { language ->
+        manageLocaleLanguageUseCase.getAppLanguage().onEach { language ->
             updateState { state ->
                 state.copy(
                     language = language
@@ -92,7 +92,7 @@ class ProfileViewModel @Inject constructor(
 
     override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {
         viewModelScope.launch(dispatcherProvider.IO) {
-            manageLocaleLanguageUseCase.setDeviceLanguage(
+            manageLocaleLanguageUseCase.setAppLanguage(
                 language.value
             )
         }

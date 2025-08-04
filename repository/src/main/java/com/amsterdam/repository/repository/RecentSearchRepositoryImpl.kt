@@ -50,7 +50,7 @@ class RecentSearchRepositoryImpl @Inject constructor(
             LocalSearchDto(
                 searchKeyword,
                 searchType,
-                preferences.getDeviceLanguage().first(),
+                preferences.getAppLanguage().first(),
                 Clock.System.now().plus(1.hours)
             )
         )

@@ -7,16 +7,16 @@ import kotlinx.coroutines.flow.map
 class ManageLocaleLanguageUseCase(
     private val preferencesRepository: AppPreferencesRepository,
 ) {
-    suspend fun initDeviceLanguage(language: String) {
-        preferencesRepository.initDeviceLanguage(language)
+    suspend fun initAppLanguage(language: String) {
+        preferencesRepository.initAppLanguage(language)
     }
 
-    suspend fun setDeviceLanguage(language: String) {
-        preferencesRepository.setDeviceLanguage(language)
+    suspend fun setAppLanguage(language: String) {
+        preferencesRepository.setAppLanguage(language)
     }
 
-    fun getDeviceLanguage(): Flow<Language> {
-        return preferencesRepository.getDeviceLanguage().map {
+    fun getAppLanguage(): Flow<Language> {
+        return preferencesRepository.getAppLanguage().map {
             Language.fromLanguage(it)
         }
     }

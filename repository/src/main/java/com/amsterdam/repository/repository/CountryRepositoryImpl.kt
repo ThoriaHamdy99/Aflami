@@ -39,7 +39,7 @@ class CountryRepositoryImpl @Inject constructor(
 
             countryLocalMapper.toEntityList(
                 dtoList = localDataSource.getCountries(
-                    storedLanguage = preferences.getDeviceLanguage().first()
+                    storedLanguage = preferences.getAppLanguage().first()
                 )
             )
         } catch (_: Exception) {
@@ -51,7 +51,7 @@ class CountryRepositoryImpl @Inject constructor(
         localDataSource.addCountries(
             countries = countryRemoteLocalMapper.toLocalList(
                 remoteList = remoteCountries,
-                args = listOf(preferences.getDeviceLanguage().first())
+                args = listOf(preferences.getAppLanguage().first())
             )
         )
     }

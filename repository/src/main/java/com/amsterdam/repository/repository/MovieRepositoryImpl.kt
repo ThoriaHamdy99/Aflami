@@ -47,7 +47,7 @@ class MovieRepositoryImpl @Inject constructor(
         return categoryRepository.getMovieCategories().let {
             getCachedMovies(keyword, SearchType.BY_KEYWORD, page, moviesPerPage)
                 ?: recentSearchHandler.deleteRecentSearch(
-                    keyword, SearchType.BY_KEYWORD, preferences.getDeviceLanguage().first()
+                    keyword, SearchType.BY_KEYWORD, preferences.getAppLanguage().first()
                 ).let {
                     getMoviesByKeywordFromRemote(
                         keyword,
@@ -67,7 +67,7 @@ class MovieRepositoryImpl @Inject constructor(
         return categoryRepository.getMovieCategories().let {
             getCachedMovies(actorName, SearchType.BY_ACTOR, page, moviesPerPage)
                 ?: recentSearchHandler.deleteRecentSearch(
-                    actorName, SearchType.BY_ACTOR, preferences.getDeviceLanguage().first()
+                    actorName, SearchType.BY_ACTOR, preferences.getAppLanguage().first()
                 ).let {
                     getMoviesByActorNameFromRemote(
                         actorName,
@@ -89,7 +89,7 @@ class MovieRepositoryImpl @Inject constructor(
                 ?: recentSearchHandler.deleteRecentSearch(
                     country.countryIsoCode,
                     SearchType.BY_COUNTRY,
-                    preferences.getDeviceLanguage().first()
+                    preferences.getAppLanguage().first()
                 )
                     .let {
                         getMoviesByCountryIsoCodeFromRemote(
@@ -119,7 +119,7 @@ class MovieRepositoryImpl @Inject constructor(
     private suspend fun cacheWatchedMovie(remoteMovieItemDto: RemoteMovieItemDto) {
         movieLocalSource.insertMovie(
             movieRemoteLocalMapper.toLocal(
-                remote = remoteMovieItemDto, args = listOf(preferences.getDeviceLanguage().first())
+                remote = remoteMovieItemDto, args = listOf(preferences.getAppLanguage().first())
             )
         )
     }
@@ -147,7 +147,7 @@ class MovieRepositoryImpl @Inject constructor(
         return recentSearchHandler.isRecentSearchExpired(
             keyword,
             searchType,
-            preferences.getDeviceLanguage().first()
+            preferences.getAppLanguage().first()
         )
             .takeIf { isRecentSearchExpired -> !isRecentSearchExpired }
             ?.let { getMoviesFromLocal(keyword, searchType, page, moviesPerPage) }
@@ -220,7 +220,7 @@ class MovieRepositoryImpl @Inject constructor(
                 movieLocalSource.getMoviesByKeywordAndSearchType(
                     keyword = keyword,
                     searchType = searchType,
-                    storedLanguage = preferences.getDeviceLanguage().first(),
+                    storedLanguage = preferences.getAppLanguage().first(),
                     limit = moviesPerPage,
                     offset = moviesPerPage * (page - 1)
                 )
@@ -236,7 +236,7 @@ class MovieRepositoryImpl @Inject constructor(
         movieLocalSource.addMoviesBySearchData(
             movies = movieRemoteLocalMapper.toLocalList(
                 remoteMovies.results,
-                listOf(preferences.getDeviceLanguage().first())
+                listOf(preferences.getAppLanguage().first())
             ),
             searchKeyword = keyword,
             searchType = searchType
@@ -251,13 +251,13 @@ class MovieRepositoryImpl @Inject constructor(
         movieLocalSource.addMovieWithCategories(
             movie = movieRemoteLocalMapper.toLocal(
                 remoteMovie,
-                listOf(preferences.getDeviceLanguage().first())
+                listOf(preferences.getAppLanguage().first())
             ),
             categories = movieGenreIdsRemoteLocalMapper.toLocalList(
                 remoteMovie.genreIds,
-                listOf(preferences.getDeviceLanguage().first())
+                listOf(preferences.getAppLanguage().first())
             ),
-            storedLanguage = preferences.getDeviceLanguage().first()
+            storedLanguage = preferences.getAppLanguage().first()
         )
     }
 

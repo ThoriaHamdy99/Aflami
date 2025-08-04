@@ -39,7 +39,7 @@ class SeriesDetailsViewModel @Inject constructor(
         val tvShowId = args.tvShowId!!
         updateState { it.copy(tvShowId = tvShowId) }
 
-        manageLocaleLanguageUseCase.getDeviceLanguage()
+        manageLocaleLanguageUseCase.getAppLanguage()
             .onEach {
                 loadTvShowDetails()
             }.launchIn(viewModelScope)

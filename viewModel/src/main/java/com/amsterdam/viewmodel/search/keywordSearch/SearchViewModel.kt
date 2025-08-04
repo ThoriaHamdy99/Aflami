@@ -50,7 +50,7 @@ class SearchViewModel @Inject constructor(
 
 
     init {
-        manageLocaleLanguageUseCase.getDeviceLanguage()
+        manageLocaleLanguageUseCase.getAppLanguage()
             .onEach {
                 observeSearchKeywordChanges()
             }.launchIn(viewModelScope)

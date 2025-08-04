@@ -27,7 +27,7 @@ class ApplicationViewModel @Inject constructor(
 
     fun initDeviceLanguage(locale: Locale) {
         tryToExecute(
-            action = { manageLocaleLanguageUseCase.initDeviceLanguage(locale.language) },
+            action = { manageLocaleLanguageUseCase.initAppLanguage(locale.language) },
             onSuccess = {},
             onError = {},
         )

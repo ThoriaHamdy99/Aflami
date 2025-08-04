@@ -3,9 +3,9 @@ package com.amsterdam.domain.repository
 import kotlinx.coroutines.flow.Flow
 
 interface AppPreferencesRepository {
-    fun getDeviceLanguage(): Flow<String>
-    suspend fun setDeviceLanguage(language: String)
-    suspend fun initDeviceLanguage(language: String)
+    fun getAppLanguage(): Flow<String>
+    suspend fun setAppLanguage(language: String)
+    suspend fun initAppLanguage(language: String)
 
     suspend fun initAppTheme(isDarkTheme: Boolean)
     fun getAppTheme(): Flow<Boolean>
