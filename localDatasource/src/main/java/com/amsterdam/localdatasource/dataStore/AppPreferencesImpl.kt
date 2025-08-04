@@ -8,12 +8,22 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys.CURRENT_LANGUAGE
 import com.amsterdam.repository.datasource.local.AppPreferences
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AppPreferencesImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) : AppPreferences {
+
+    override suspend fun initDeviceLanguage(language: String) {
+        val currentLanguage = dataStore.data.map { preferences ->
+            preferences[CURRENT_LANGUAGE]
+        }.firstOrNull()
+        if (currentLanguage == null) {
+            setDeviceLanguage(language)
+        }
+    }
 
     override suspend fun setDeviceLanguage(language: String) {
         dataStore.edit { preferences ->

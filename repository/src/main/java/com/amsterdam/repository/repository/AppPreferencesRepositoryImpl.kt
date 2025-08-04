@@ -12,4 +12,8 @@ class AppPreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun setDeviceLanguage(language: String) =
         preferences.setDeviceLanguage(language)
+
+    override suspend fun initDeviceLanguage(language: String) {
+        preferences.initDeviceLanguage(language)
+    }
 }

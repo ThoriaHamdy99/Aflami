@@ -34,10 +34,7 @@ fun AflamiApp(
         getStartDestination(viewModel.setStartDestination())
     }
     val localConfigurations = LocalConfiguration.current
-
-    LaunchedEffect(localConfigurations) {
-        viewModel.onConfigurationChanged(localConfigurations.locales[0])
-    }
+    viewModel.initDeviceLanguage(localConfigurations.locales[0])
 
     AflamiTheme {
         CompositionLocalProvider(LocalNavController provides navController) {

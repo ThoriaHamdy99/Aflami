@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 interface AppPreferencesRepository {
     fun getDeviceLanguage(): Flow<String>
     suspend fun setDeviceLanguage(language: String)
+    suspend fun initDeviceLanguage(language: String)
 }

@@ -25,7 +25,11 @@ class ApplicationViewModel @Inject constructor(
         }
     }
 
-    suspend fun onConfigurationChanged(locale: Locale) {
-        manageLocaleLanguageUseCase.setDeviceLanguage(locale.language.lowercase())
+    fun initDeviceLanguage(locale: Locale) {
+        tryToExecute(
+            action = { manageLocaleLanguageUseCase.initDeviceLanguage(locale.language) },
+            onSuccess = {},
+            onError = {},
+        )
     }
 }
