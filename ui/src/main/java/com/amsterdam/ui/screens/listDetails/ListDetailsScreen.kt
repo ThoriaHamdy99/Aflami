@@ -104,7 +104,9 @@ private fun ListDetailsContent(
             onNavigateBackClicked = listener::onClickBack,
         )
 
-        AnimatedSectionVisibility(visible = state.isLoading) {
+        AnimatedSectionVisibility(
+            visible = movies.loadState.refresh is LoadState.Loading
+        ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
