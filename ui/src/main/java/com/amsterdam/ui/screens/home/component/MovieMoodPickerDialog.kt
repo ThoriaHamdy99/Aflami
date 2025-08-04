@@ -1,23 +1,20 @@
 package com.amsterdam.ui.screens.home.component
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.Dialog
-import com.amsterdam.designsystem.components.IconButton
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
+import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.components.buttons.OutlinedButton
@@ -34,7 +31,7 @@ import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 
 @SuppressLint("ContextCastToActivity")
 @Composable
-fun MovieMoodPickerDialogDialog(
+fun MovieMoodPickerDialog(
     movie: MovieItemUiState,
     onClickViewDetails: () -> Unit,
     onClickGetAnotherMovie: () -> Unit,
@@ -83,25 +80,28 @@ private fun DialogContent(
 
         )
 
-        MediaCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            movieImage = {
-                SafeImageView(
-                    model = movie.posterImageUrl,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    safetyLevel = safetyLevel,
-                    onLoading = { ImageLoadingIndicator() },
-                    onError = { ImageErrorIndicator() },
-                )
-            },
-            movieType = stringResource(R.string.movie),
-            movieYear = movie.yearOfRelease,
-            movieTitle = movie.name,
-            movieRating = movie.rate
-        )
+        if (movie.id != 0L) {
+            MediaCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+                movieImage = {
+                    SafeImageView(
+                        model = movie.posterImageUrl,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        safetyLevel = safetyLevel,onLoading = { ImageLoadingIndicator() },
+                        onError = { ImageErrorIndicator() },
+                    )
+                },
+                movieType = stringResource(R.string.movie),
+                movieYear = movie.yearOfRelease,
+                movieTitle = movie.name,
+                movieRating = movie.rate
+            )
+        } else {
+            LoadingContainer(Modifier.padding(top = 12.dp).height(222.dp).fillMaxWidth())
+        }
 
         ConfirmButton(
             title = stringResource(R.string.view_details),
@@ -128,7 +128,7 @@ private fun DialogContent(
 @ThemeAndLocalePreviews
 private fun MovieDialogPreview() {
     AflamiTheme {
-        MovieMoodPickerDialogDialog(
+        MovieMoodPickerDialog(
             movie = MovieItemUiState(),
             onDismiss = { },
             onClickViewDetails = {},

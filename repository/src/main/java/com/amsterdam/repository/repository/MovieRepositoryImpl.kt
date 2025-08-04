@@ -116,9 +116,13 @@ class MovieRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>): List<Movie> {
+    override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>, page: Int): List<Movie> {
         return movieGenres.toDtoList().let { genresIds ->
-            movieRemoteDataSource.getMoviesByGenreIds(genresIds).results.toMovieEntityList()
+                movieRemoteDataSource.getMoviesByGenreIds(
+                    genresIds,
+                    page
+                ).results
+            .toMovieEntityList()
         }
     }
 
