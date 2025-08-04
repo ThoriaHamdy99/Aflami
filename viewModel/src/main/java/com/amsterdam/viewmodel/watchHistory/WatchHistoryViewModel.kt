@@ -128,7 +128,7 @@ class WatchHistoryViewModel @Inject constructor(
     }
 
     override fun onClickTabOption(option: TabOption) {
-        _state.update { it.copy(selectedTabOption = option) }
+        updateState { it.copy(selectedTabOption = option) }
         if (option == TabOption.MOVIES) {
             getMoviesWatchHistoryData()
         } else {
