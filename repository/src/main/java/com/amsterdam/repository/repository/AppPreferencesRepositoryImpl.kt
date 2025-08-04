@@ -16,6 +16,14 @@ class AppPreferencesRepositoryImpl @Inject constructor(
     override suspend fun setDeviceLanguage(language: String) =
         preferences.setDeviceLanguage(language)
 
+    override suspend fun setOnboardingCompleted(isCompleted: Boolean) {
+        preferences.setOnboardingCompleted(isCompleted)
+    }
+
+    override suspend fun isOnboardingCompleted(): Boolean {
+        return preferences.isOnboardingCompleted()
+    }
+
     override fun getRestrictionLevel(): Flow<RestrictionLevel> {
         return restrictionLevelMapper.fromLocalRestrictionLevel(preferences.getRestrictionLevel())
     }
