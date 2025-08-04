@@ -34,7 +34,7 @@ fun AflamiApp(
         getStartDestination(viewModel.setStartDestination())
     }
     val localConfigurations = LocalConfiguration.current
-    viewModel.initAppSettings(localConfigurations.locales[0], isSystemInDarkTheme())
+    viewModel.initAppSettings(localConfigurations.locales[0])
 
     AflamiTheme {
         CompositionLocalProvider(LocalNavController provides navController) {

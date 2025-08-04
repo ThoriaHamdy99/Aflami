@@ -29,12 +29,10 @@ class ApplicationViewModel @Inject constructor(
         }
     }
 
-    fun initAppSettings(locale: Locale, isDarkTheme: Boolean) {
+    fun initAppSettings(locale: Locale) {
         viewModelScope.launch(dispatcherProvider.IO) {
             manageLocaleLanguageUseCase.initAppLanguage(locale.language)
-        }
-        viewModelScope.launch(dispatcherProvider.IO) {
-            manageAppThemeUseCase.initAppTheme(isDarkTheme)
+            manageAppThemeUseCase.initAppTheme(isDarkTheme = true)
         }
     }
 }
