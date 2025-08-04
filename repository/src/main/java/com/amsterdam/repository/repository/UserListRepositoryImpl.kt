@@ -26,4 +26,10 @@ class UserListRepositoryImpl @Inject constructor(
             ?: throw UnknownException()
         userListDataSource.deleteList(listId, sessionId)
     }
+
+    override suspend fun removeMovieFromList(listId: Long, movieId: Long) {
+        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId())
+            ?: throw UnknownException()
+        userListDataSource.removeMovieFromList(listId, sessionId, movieId)
+    }
 }

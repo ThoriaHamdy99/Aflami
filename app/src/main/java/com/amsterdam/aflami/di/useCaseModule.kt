@@ -32,6 +32,7 @@ import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.list.DeleteListUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
+import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
@@ -168,6 +169,11 @@ object UseCaseModule {
     fun provideGetPopularTvShowsUseCase(
         tvShowRepository: TvShowRepository
     ): GetPopularTvShowsUseCase = GetPopularTvShowsUseCase(tvShowRepository)
+
+    @Provides
+    fun provideRemoveMovieFromListUseCase(
+        userListRepository: UserListRepository
+    ): RemoveMovieFromListUseCase = RemoveMovieFromListUseCase(userListRepository)
 
     @Provides
     fun provideGetHomeScreenDataUseCase(

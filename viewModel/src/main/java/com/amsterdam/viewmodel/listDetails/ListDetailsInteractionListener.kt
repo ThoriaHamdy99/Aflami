@@ -7,4 +7,5 @@ interface ListDetailsInteractionListener {
     fun onClickDeleteList()
     fun onDeleteListConfirmed()
     fun onDeleteListDialogDismiss()
+    fun onClickRemoveMovie(movieId: Long)
 }

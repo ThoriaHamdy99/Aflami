@@ -226,5 +226,6 @@
     <string name="no_saved_items_here">No saved Items here!</string>
     <string name="confirm_delete">Are you sure to continue deleting?</string>
     <string name="list_deleted_successfully">List deleted successfully</string>
+    <string name="movie_deleted_successfully">Movie deleted Successfully</string>
 
 </resources>

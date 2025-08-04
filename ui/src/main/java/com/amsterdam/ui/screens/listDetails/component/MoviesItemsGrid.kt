@@ -19,6 +19,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.amsterdam.designsystem.components.IconButton
 import com.amsterdam.designsystem.components.LoadingIndicator
 import com.amsterdam.designsystem.components.buttons.ButtonDefaults
@@ -37,8 +38,7 @@ internal fun MoviesItemsGrid(
     movies: LazyPagingItems<MovieItemUiState>,
     modifier: Modifier = Modifier,
     onClickMovie: (Long) -> Unit,
-    hasIconButton: Boolean = false,
-    onClickIconButton: () -> Unit = {}
+    onClickRemoveItem: (Long) -> Unit = {}
 ) {
     val gridState = rememberLazyGridState()
     LazyVerticalGrid(
@@ -51,6 +51,7 @@ internal fun MoviesItemsGrid(
     ) {
         items(
             count = movies.itemCount,
+            key = movies.itemKey { it.id }
         ) { index ->
             val movie = movies[index] ?: return@items
 
@@ -63,19 +64,18 @@ internal fun MoviesItemsGrid(
                     movieRating = movie.rate,
                     onClick = { onClickMovie(movie.id) }
                 )
-                if (hasIconButton) {
-                    IconButton(
-                        modifier = Modifier
-                            .padding(start = 4.dp, top = 4.dp)
-                            .size(32.dp),
-                        paddingValues = PaddingValues(6.dp),
-                        painter = painterResource(R.drawable.ic_remove_item),
-                        contentDescription = stringResource(R.string.remove_from_list),
-                        containerColor = AppTheme.color.iconBackGround,
-                        tint = AppTheme.color.redAccent,
-                        onClick = onClickIconButton
-                    )
-                }
+
+                IconButton(
+                    modifier = Modifier
+                        .padding(start = 4.dp, top = 4.dp)
+                        .size(32.dp),
+                    paddingValues = PaddingValues(6.dp),
+                    painter = painterResource(R.drawable.ic_remove_item),
+                    contentDescription = stringResource(R.string.remove_from_list),
+                    containerColor = AppTheme.color.iconBackGround,
+                    tint = AppTheme.color.redAccent,
+                    onClick = { onClickRemoveItem(movie.id) }
+                )
             }
         }
 
@@ -114,8 +114,7 @@ private fun MediaItemsGridPreview() {
         MoviesItemsGrid(
             movies = emptyFlow<PagingData<MovieItemUiState>>().collectAsLazyPagingItems(),
             onClickMovie = { },
-            hasIconButton = false,
-            onClickIconButton = {}
+            onClickRemoveItem = {}
         )
     }
 }

@@ -64,6 +64,10 @@ fun ListsDetailsScreen(viewModel: ListDetailsViewModel = hiltViewModel()) {
                     )
                 }
 
+                ListDetailsEffect.ShowRemoveMovieSuccessSnackBar -> {
+                    SnackBarManager.showSuccess(context.getString(R.string.movie_deleted_successfully))
+                }
+
                 is ListDetailsEffect.ShowErrorSnackbar -> {
                     SnackBarManager.showError(
                         getListDetailsErrorMessage(state.error, context)
@@ -84,6 +88,7 @@ private fun ListDetailsContent(
     state: ListDetailsUiState,
     listener: ListDetailsInteractionListener
 ) {
+
     val movies = state.listItems.collectAsLazyPagingItems()
 
     Column(
@@ -105,7 +110,7 @@ private fun ListDetailsContent(
         )
 
         AnimatedSectionVisibility(
-            visible = movies.loadState.refresh is LoadState.Loading
+            visible = state.isLoading
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -150,8 +155,7 @@ private fun ListDetailsContent(
                 movies = movies,
                 modifier = Modifier.weight(1f),
                 onClickMovie = listener::onClickMovie,
-                hasIconButton = true,
-                onClickIconButton = { } // TODO:
+                onClickRemoveItem = listener::onClickRemoveMovie
             )
         }
     }
@@ -180,6 +184,7 @@ private fun ListDetailsScreenPreview() {
                 override fun onClickDeleteList() {}
                 override fun onDeleteListConfirmed() {}
                 override fun onDeleteListDialogDismiss() {}
+                override fun onClickRemoveMovie(movieId: Long) {}
             }
         )
     }

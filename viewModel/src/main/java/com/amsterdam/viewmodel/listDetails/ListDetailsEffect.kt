@@ -5,4 +5,5 @@ interface ListDetailsEffect {
     data class NavigateToMovieDetailsScreen(val movieId: Long) : ListDetailsEffect
     data class ShowErrorSnackbar(val error: ListDetailsError?) : ListDetailsEffect
     object ShowDeletionSuccessSnackBar : ListDetailsEffect
+    object ShowRemoveMovieSuccessSnackBar : ListDetailsEffect
 }

@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.listDetails
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -8,6 +9,7 @@ import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.list.DeleteListUseCase
 import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
+import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -20,9 +22,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class ListDetailsViewModel @Inject constructor(
     private val getMoviesFromListUseCase: GetMoviesFromListUseCase,
+    private val removeMovieFromListUseCase: RemoveMovieFromListUseCase,
     private val deleteListUseCase: DeleteListUseCase,
     private val listDetailsUiStateMapper: ListDetailsUiStateMapper,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
@@ -45,6 +49,8 @@ class ListDetailsViewModel @Inject constructor(
         loadListDetails()
     }
 
+    private var currentPagingSource: PagingSource<MovieItemUiState>?  = null
+
     private fun loadListDetails() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
@@ -52,10 +58,11 @@ class ListDetailsViewModel @Inject constructor(
                 Pager(
                     config = PagingConfig(pageSize = 10),
                     pagingSourceFactory = {
-                        PagingSource { page ->
+                        currentPagingSource = PagingSource { page ->
                             getMoviesFromListUseCase(state.value.listId, page)
                                 .map { listDetailsUiStateMapper.movieToMovieItemUiState(it) }
                         }
+                        currentPagingSource!!
                     }
                 ).flow.cachedIn(viewModelScope)
             },
@@ -111,6 +118,32 @@ class ListDetailsViewModel @Inject constructor(
     }
 
     private fun onDeleteListError(exception: AflamiException) {
+        val error = ListDetailsError.toListDetailsError(exception)
+        viewModelScope.launch {
+            updateState { it.copy(
+                error = error,
+                showDeleteListDialog = false,
+                isDeleteLoading = false
+            ) }
+            sendNewEffect(ListDetailsEffect.ShowErrorSnackbar(error = state.value.error))
+        }
+    }
+
+    override fun onClickRemoveMovie(movieId: Long) {
+        tryToExecute(
+            action = { removeMovieFromListUseCase(state.value.listId, movieId) },
+            onSuccess = { onRemoveMovieSuccess() },
+            onError = ::onRemoveMovieError
+        )
+    }
+
+    private fun onRemoveMovieSuccess() {
+        currentPagingSource?.invalidate()
+        updateState { it.copy(error = null) }
+        sendNewEffect(ListDetailsEffect.ShowRemoveMovieSuccessSnackBar)
+    }
+
+    private fun onRemoveMovieError(exception: AflamiException) {
         val error = ListDetailsError.toListDetailsError(exception)
         viewModelScope.launch {
             updateState { it.copy(
