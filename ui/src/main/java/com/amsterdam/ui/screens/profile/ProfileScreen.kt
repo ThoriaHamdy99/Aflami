@@ -18,10 +18,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.components.LoadingContainer
+import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 import com.amsterdam.ui.navigation.Route
@@ -38,11 +41,27 @@ fun ProfileScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
+    val context = LocalContext.current
+
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                ProfileEffect.NavigateToLogin -> navController.navigate(Route.Login)
+                ProfileEffect.NavigateToLogin -> navController.navigate(Route.Login){
+                    popUpTo(0)
+                }
+
+                ProfileEffect.NavigateToResetPassword -> {
+                    navController.navigate(Route.ResetPassword){
+                        popUpTo(Route.Tab.Profile)
+                    }
+                }
+
+                ProfileEffect.ShowError -> {
+                    SnackBarManager.showError(
+                        message = "Unknown Error"
+                    )
+                }
             }
         }
     }
@@ -82,7 +101,10 @@ private fun ProfileScreenContent(
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration)),
         ) {
-            LoggedInContent()
+            LoggedInContent(
+                state = state,
+                interactionListener = interactionListener
+            )
         }
 
         AnimatedVisibility(
@@ -104,6 +126,16 @@ private fun ProfileScreenPreview() {
         ProfileUiState(),
         interactionListener = object : ProfileInteractionListener {
             override fun onClickLogin() {}
+            override fun onClickSettings() {}
+            override fun onDismissSettingsDialog() {}
+            override fun onClickLogout() {}
+            override fun onDismissLogoutDialog() {}
+            override fun onClickForgotPassword() {}
+            override fun onClickContentRestriction() {}
+            override fun onDismissContentRestrictionDialog() {}
+            override fun onClickConfirmLogout() {}
+            override fun onUpdateRestrictionLevel(restrictionLevel: RestrictionLevel) {}
+            override fun onSaveRestrictionLevel() {}
         }
     )
 }

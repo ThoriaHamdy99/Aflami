@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.amsterdam.designsystem.components.Dialog
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.theme.AflamiTheme
@@ -28,43 +29,47 @@ fun LogoutDialog(
     onLogoutClick: () -> Unit,
     onDismissClick: () -> Unit
 ){
-    Column(
-        modifier = modifier.padding(12.dp)
-            .background(AppTheme.color.surface),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Dialog(
+        onDismiss = onDismissClick
     ) {
-        DialogTitleRow(
-            modifier = Modifier.padding(bottom = 24.dp),
-            title = stringResource(R.string.logout),
-            onDismiss = onDismissClick
-        )
-        Image(
-            painter = painterResource(R.drawable.logout_warning),
-            modifier = Modifier.height(100.dp),
-            contentScale = ContentScale.FillHeight,
-            contentDescription = null
-        )
-        Text(
-            modifier = Modifier.padding(top = 12.dp),
-            text = stringResource(R.string.confirm_message),
-            style = AppTheme.textStyle.title.small,
-            color = AppTheme.color.body,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            modifier = Modifier.padding(bottom = 24.dp),
-            text = stringResource(R.string.logout_message),
-            style = AppTheme.textStyle.title.small,
-            color = AppTheme.color.body,
-            textAlign = TextAlign.Center
-        )
-        ConfirmButton(
-            title = stringResource(R.string.logout),
-            onClick = onLogoutClick,
-            isEnabled = true,
-            isLoading = isLogoutButtonLoading,
-            isNegative = true
-        )
+        Column(
+            modifier = modifier.padding(12.dp)
+                .background(AppTheme.color.surface),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            DialogTitleRow(
+                modifier = Modifier.padding(bottom = 24.dp),
+                title = stringResource(R.string.logout),
+                onDismiss = onDismissClick
+            )
+            Image(
+                painter = painterResource(R.drawable.logout_warning),
+                modifier = Modifier.height(100.dp),
+                contentScale = ContentScale.FillHeight,
+                contentDescription = null
+            )
+            Text(
+                modifier = Modifier.padding(top = 12.dp),
+                text = stringResource(R.string.confirm_message),
+                style = AppTheme.textStyle.title.small,
+                color = AppTheme.color.body,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                modifier = Modifier.padding(bottom = 24.dp),
+                text = stringResource(R.string.logout_message),
+                style = AppTheme.textStyle.title.small,
+                color = AppTheme.color.body,
+                textAlign = TextAlign.Center
+            )
+            ConfirmButton(
+                title = stringResource(R.string.logout),
+                onClick = onLogoutClick,
+                isEnabled = true,
+                isLoading = isLogoutButtonLoading,
+                isNegative = true
+            )
+        }
     }
 }
 

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.amsterdam.designsystem.components.Dialog
 import com.amsterdam.designsystem.components.RadioButton
 import com.amsterdam.designsystem.components.RadioState
 import com.amsterdam.designsystem.components.Text
@@ -25,6 +26,7 @@ import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.ui.R
 import com.amsterdam.ui.components.DialogTitleRow
 
@@ -32,58 +34,63 @@ import com.amsterdam.ui.components.DialogTitleRow
 fun ContentRestrictionDialog(
     isSaveButtonLoading: Boolean,
     modifier: Modifier = Modifier,
+    selectedRestriction: RestrictionLevel,
     onSaveClick: () -> Unit,
-    onSelectRestriction: () -> Unit,
+    onSelectRestriction: (RestrictionLevel) -> Unit,
     onDismissClick: () -> Unit
 ){
-    Column(
-        modifier = modifier.padding(12.dp)
+    Dialog(
+        onDismiss = onDismissClick
     ) {
-        DialogTitleRow(
-            modifier = Modifier.padding(bottom = 24.dp),
-            title = stringResource(R.string.content_restriction),
-            onDismiss = onDismissClick
-        )
+        Column(
+            modifier = modifier.padding(12.dp)
+        ) {
+            DialogTitleRow(
+                modifier = Modifier.padding(bottom = 24.dp),
+                title = stringResource(R.string.content_restriction),
+                onDismiss = onDismissClick
+            )
 
-        RestrictionSelection(
-            title = stringResource(R.string.restriction_strict),
-            description = stringResource(R.string.restriction_strict_description),
-            isSelected = true,
-            modifier = Modifier.padding(bottom = 12.dp)
-        ){
-            onSelectRestriction()
+            RestrictionSelection(
+                title = stringResource(R.string.restriction_strict),
+                description = stringResource(R.string.restriction_strict_description),
+                isSelected = selectedRestriction == RestrictionLevel.STRICT,
+                modifier = Modifier.padding(bottom = 12.dp)
+            ){
+                onSelectRestriction(RestrictionLevel.STRICT)
+            }
+
+            RestrictionSelection(
+                title = stringResource(R.string.restriction_moderate),
+                description = stringResource(R.string.restriction_moderate_description),
+                isSelected = selectedRestriction == RestrictionLevel.MODERATE,
+                modifier = Modifier.padding(bottom = 12.dp)
+            ){
+                onSelectRestriction(RestrictionLevel.MODERATE)
+            }
+
+            RestrictionSelection(
+                title = stringResource(R.string.restriction_off),
+                description = stringResource(R.string.restriction_off_description),
+                isSelected = selectedRestriction == RestrictionLevel.OFF,
+                modifier = Modifier.padding(bottom = 24.dp)
+            ){
+                onSelectRestriction(RestrictionLevel.OFF)
+            }
+
+            ConfirmButton(
+                title = stringResource(R.string.save),
+                onClick = onSaveClick,
+                isEnabled = true,
+                isLoading = isSaveButtonLoading,
+                isNegative = false
+            )
         }
-
-        RestrictionSelection(
-            title = stringResource(R.string.restriction_moderate),
-            description = stringResource(R.string.restriction_moderate_description),
-            isSelected = false,
-            modifier = Modifier.padding(bottom = 12.dp)
-        ){
-            onSelectRestriction()
-        }
-
-        RestrictionSelection(
-            title = stringResource(R.string.restriction_off),
-            description = stringResource(R.string.restriction_off_description),
-            isSelected = false,
-            modifier = Modifier.padding(bottom = 24.dp)
-        ){
-            onSelectRestriction()
-        }
-
-        ConfirmButton(
-            title = stringResource(R.string.save),
-            onClick = onSaveClick,
-            isEnabled = true,
-            isLoading = isSaveButtonLoading,
-            isNegative = false
-        )
     }
 }
 
 @Composable
-fun RestrictionSelection(
+private fun RestrictionSelection(
     title: String,
     description: String,
     isSelected: Boolean,
@@ -142,6 +149,7 @@ private fun ContentRestrictionDialogPreview(){
         ContentRestrictionDialog(
             onDismissClick = {},
             isSaveButtonLoading = false,
+            selectedRestriction = RestrictionLevel.STRICT,
             onSaveClick = {  },
             onSelectRestriction = {}
         )
