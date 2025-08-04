@@ -12,9 +12,9 @@ class MovieDetailRemoteMapper @Inject constructor(
     private val castRemoteMapper: CastRemoteMapper,
     private val galleryRemoteMapper: GalleryRemoteMapper,
     private val posterRemoteMapper: PostersRemoteMapper,
-): EntityMapper<RemoteMovieDetailsResponse, MovieDetails> {
+) : EntityMapper<RemoteMovieDetailsResponse, MovieDetails> {
     override fun toEntity(response: RemoteMovieDetailsResponse): MovieDetails {
-        val remoteMovieItemDto = with(response){
+        val remoteMovieItemDto = with(response) {
             RemoteMovieItemDto(
                 adult = adult,
                 backdropPath = backdropPath,
@@ -36,15 +36,22 @@ class MovieDetailRemoteMapper @Inject constructor(
                 genres = genres
             )
         }
+
         return MovieDetails(
-            movie = movieRemoteMapper.toEntity(remoteMovieItemDto),
-            reviews = reviewRemoteMapper.toEntityList(response.reviews.results),
-            actors = castRemoteMapper.toEntityList(response.credits.cast),
-            similarMovies = movieRemoteMapper.toEntityList(response.similar.results,isPoster = false),
-            movieGallery = galleryRemoteMapper.toEntity(response.images),
-            moviePosters = posterRemoteMapper.toEntity(response.images),
-        )
+            movie = movieRemoteMapper.toEntity(
+                remoteMovieItemDto, isPoster = true,
+                videoUrl = response.videos.results.firstOrNull()?.fullVideoUrl ?: ""),
+                reviews = reviewRemoteMapper.toEntityList(response.reviews.results),
+                actors = castRemoteMapper.toEntityList(response.credits.cast),
+                similarMovies = movieRemoteMapper.toEntityList(
+                    response.similar.results,
+                    isPoster = false
+                ),
+                movieGallery = galleryRemoteMapper.toEntity(response.images),
+                moviePosters = posterRemoteMapper.toEntity(response.images),
+            )
     }
+
 
     fun mapMovieDetailsToMovieItemDto(remoteMovieDetailsResponse: RemoteMovieDetailsResponse): RemoteMovieItemDto {
         return with(remoteMovieDetailsResponse) {
