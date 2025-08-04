@@ -30,7 +30,7 @@ class AppPreferencesImpl @Inject constructor(
 
     override fun getRestrictionLevel(): Flow<String> {
         return dataStore.data.map { preferences ->
-            preferences[RESTRICTION_LEVEL] ?: ""
+            preferences[RESTRICTION_LEVEL] ?: "STRICT"
         }
     }
 
