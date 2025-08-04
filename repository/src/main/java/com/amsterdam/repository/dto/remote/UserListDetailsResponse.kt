@@ -11,7 +11,7 @@ data class UserListDetailsResponse(
     @SerialName("item_count") val itemCount: Int,
     @SerialName("favorite_count") val favoriteCount: Int,
     @SerialName("created_by") val createdBy: String,
-    @SerialName("items") val items: List<RemoteMovieItemDto>,
+    @SerialName("items") val items: List<UserListItemDto>,
     @SerialName("poster_path") val posterPath: String?
 )
 
