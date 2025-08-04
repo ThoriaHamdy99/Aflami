@@ -1,10 +1,10 @@
 package com.amsterdam.ui.application
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -34,7 +34,7 @@ fun AflamiApp(
         getStartDestination(viewModel.setStartDestination())
     }
     val localConfigurations = LocalConfiguration.current
-    viewModel.initDeviceLanguage(localConfigurations.locales[0])
+    viewModel.initAppSettings(localConfigurations.locales[0], isSystemInDarkTheme())
 
     AflamiTheme {
         CompositionLocalProvider(LocalNavController provides navController) {

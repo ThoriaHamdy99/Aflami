@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
+import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
 import com.amsterdam.domain.utils.SessionType
@@ -20,6 +21,7 @@ class ProfileViewModel @Inject constructor(
     private val getSessionTypeUseCase: GetsSessionType,
     private val getAccountDetailsUseCase: GetAccountDetailsUseCase,
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
+    private val manageAppThemeUseCase: ManageAppThemeUseCase,
     private val dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<ProfileUiState, ProfileEffect>(
     initialState = ProfileUiState(),
@@ -44,6 +46,14 @@ class ProfileViewModel @Inject constructor(
             updateState { state ->
                 state.copy(
                     language = language
+                )
+            }
+        }
+
+        manageAppThemeUseCase.getAppTheme().onEach { isDarkTheme ->
+            updateState { state ->
+                state.copy(
+                    isDarkTheme = isDarkTheme
                 )
             }
         }
@@ -78,10 +88,6 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun onError(aflamiException: AflamiException) {
-
-    }
-
     override fun onClickLogin() {
         sendNewNavigationEffect(ProfileEffect.NavigateToLogin)
     }
@@ -109,12 +115,18 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun onChangeTheme(isDarkTheme: Boolean) {
-        //Change theme here
+        viewModelScope.launch(dispatcherProvider.IO) {
+            manageAppThemeUseCase.setAppTheme(isDarkTheme)
+        }
         updateState { state -> state.copy(isDarkTheme = isDarkTheme) }
         onDismissLanguageDialog()
     }
 
     override fun onDismissThemeDialog() {
         updateState { state -> state.copy(showThemeDialog = false) }
+    }
+
+    private fun onError(aflamiException: AflamiException) {
+
     }
 }

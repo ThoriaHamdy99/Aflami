@@ -1,18 +1,22 @@
 package com.amsterdam.viewmodel.application
 
+import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
+import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class ApplicationViewModel @Inject constructor(
-    dispatcherProvider: DispatcherProvider,
+    private val dispatcherProvider: DispatcherProvider,
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
+    private val manageAppThemeUseCase: ManageAppThemeUseCase,
     private val getsSessionType: GetsSessionType
 ) : BaseViewModel<ApplicationUiState, Unit>(ApplicationUiState(), dispatcherProvider) {
 
@@ -25,11 +29,12 @@ class ApplicationViewModel @Inject constructor(
         }
     }
 
-    fun initDeviceLanguage(locale: Locale) {
-        tryToExecute(
-            action = { manageLocaleLanguageUseCase.initAppLanguage(locale.language) },
-            onSuccess = {},
-            onError = {},
-        )
+    fun initAppSettings(locale: Locale, isDarkTheme: Boolean) {
+        viewModelScope.launch(dispatcherProvider.IO) {
+            manageLocaleLanguageUseCase.initAppLanguage(locale.language)
+        }
+        viewModelScope.launch(dispatcherProvider.IO) {
+            manageAppThemeUseCase.initAppTheme(isDarkTheme)
+        }
     }
 }
