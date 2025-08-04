@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -218,7 +219,7 @@ private fun HomeScreenContent(
                     onClickViewDetails = interactionListener::onClickViewDetails,
                     onClickGetAnotherMovie = interactionListener::onClickGetAnotherMovie,
                     onDismiss = interactionListener::onDismissMoodPickerDialog,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.wrapContentSize()
                 )
             }
             HomeAppBar(
