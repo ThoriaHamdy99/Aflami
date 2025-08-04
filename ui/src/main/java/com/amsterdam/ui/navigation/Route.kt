@@ -64,4 +64,8 @@ sealed interface Route {
         private val listId: Long,
         private val listName: String
     ) : Route
+
+    @Serializable
+    data object WatchHistory: Route
+
 }

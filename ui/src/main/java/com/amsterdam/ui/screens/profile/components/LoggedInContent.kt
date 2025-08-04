@@ -35,7 +35,8 @@ import com.amsterdam.viewmodel.profile.ProfileUiState
 @Composable
 fun LoggedInContent(
     state: ProfileUiState,
-    interactionListener: ProfileInteractionListener
+    interactionListener: ProfileInteractionListener,
+    onClickHistory: () -> Unit
 ) {
     val lazyListState = rememberLazyListState()
     val scrollOffset = remember {
@@ -87,7 +88,7 @@ fun LoggedInContent(
         ) {
             item { ProfileImageSection() }
             item { ProfileInfoSection() }
-            item { HistoryAndRatingSection() }
+            item { HistoryAndRatingSection(onClickHistory = onClickHistory) }
             item { HorizontalDivider() }
             item { SettingsSection(
                 onSettingsClicked = interactionListener::onClickSettings
@@ -139,7 +140,8 @@ private fun LoggedInContentPreview() {
                 override fun onClickConfirmLogout() {}
                 override fun onUpdateRestrictionLevel(restrictionLevel: RestrictionLevel) {}
                 override fun onSaveRestrictionLevel() {}
-            }
+            },
+            onClickHistory = {}
         )
     }
 }
