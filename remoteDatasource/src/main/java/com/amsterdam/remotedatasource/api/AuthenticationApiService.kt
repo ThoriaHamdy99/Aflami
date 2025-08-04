@@ -3,11 +3,12 @@ package com.amsterdam.remotedatasource.api
 import com.amsterdam.repository.dto.remote.authentication.AuthenticationResponseDto
 import com.amsterdam.repository.dto.remote.authentication.CreateSessionDto
 import com.amsterdam.repository.dto.remote.authentication.CreateSessionResponseDto
+import com.amsterdam.repository.dto.remote.authentication.DeleteSessionDto
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 
 interface AuthenticationApiService {
@@ -25,10 +26,13 @@ interface AuthenticationApiService {
         @Field("request_token") requestToken: String,
     ): CreateSessionResponseDto
 
-
-    @DELETE(DELETE_SESSION_URL)
+    @HTTP(
+        method = "DELETE",
+        path = DELETE_SESSION_URL,
+        hasBody = true
+    )
     suspend fun deleteSession(
-        @Field("session_id") sessionId: String
+        @Body deleteSessionRequest: DeleteSessionDto
     ): AuthenticationResponseDto
 
     companion object {

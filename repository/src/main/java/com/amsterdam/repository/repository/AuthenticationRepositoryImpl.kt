@@ -36,7 +36,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
         sessionTypeMapper.fromLocalSessionType(authenticationLocalSource.getSessionType())
 
     override suspend fun logout() {
-        val sessionId = authenticationLocalSource.getCachedSessionId()
+        val sessionId = getSessionId()
         if (authenticationRemoteSource.deleteSession(sessionId)){
             authenticationLocalSource.clearCachedSessionId()
             authenticationLocalSource.setSessionType(sessionTypeMapper.toLocalSessionType(SessionType.NOT_LOGGED_IN))

@@ -1,10 +1,12 @@
 package com.amsterdam.remotedatasource.datasource
 
+import android.util.Log
 import com.amsterdam.remotedatasource.api.AuthenticationApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
 import com.amsterdam.repository.dto.remote.authentication.AuthenticationResponseDto
 import com.amsterdam.repository.dto.remote.authentication.CreateSessionDto
+import com.amsterdam.repository.dto.remote.authentication.DeleteSessionDto
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
@@ -24,7 +26,7 @@ class AuthenticationRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun deleteSession(sessionId: String): Boolean {
         return responseCall(
-            { authenticationApiService.deleteSession(sessionId) }
+            { authenticationApiService.deleteSession(DeleteSessionDto(sessionId)) }
         ) {
             val response = json.decodeFromString<AuthenticationResponseDto>(it)
             response.statusCode!!
