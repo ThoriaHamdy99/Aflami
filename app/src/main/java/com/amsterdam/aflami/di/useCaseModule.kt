@@ -10,6 +10,7 @@ import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.authentication.LoginAsGuestUseCase
 import com.amsterdam.domain.useCase.authentication.LoginWithPasswordUseCase
+import com.amsterdam.domain.useCase.authentication.LogoutUseCase
 import com.amsterdam.domain.useCase.common.AddMovieWatchHistoryUseCase
 import com.amsterdam.domain.useCase.common.AddTvShowWatchHistoryUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
@@ -28,7 +29,9 @@ import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.preferences.GetRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+import com.amsterdam.domain.useCase.preferences.SetRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
@@ -43,6 +46,14 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object UseCaseModule {
+
+    @Provides
+    fun provideGetRestrictionLevel(repo: AppPreferencesRepository): GetRestrictionLevelUseCase =
+        GetRestrictionLevelUseCase(repo)
+
+    @Provides
+    fun provideSetRestrictionLevel(repo: AppPreferencesRepository): SetRestrictionLevelUseCase =
+        SetRestrictionLevelUseCase(repo)
 
     @Provides
     fun provideGetsSessionType(repo: AuthenticationRepository): GetsSessionType =
@@ -60,6 +71,10 @@ object UseCaseModule {
     @Provides
     fun provideLoginWithPasswordUseCase(repo: AuthenticationRepository): LoginWithPasswordUseCase =
         LoginWithPasswordUseCase(repo)
+
+    @Provides
+    fun provideLogoutUseCase(repo: AuthenticationRepository): LogoutUseCase =
+        LogoutUseCase(repo)
 
     @Provides
     fun provideAddMovieWatchHistoryUseCase(watchHistoryRepository: WatchHistoryRepository): AddMovieWatchHistoryUseCase =
