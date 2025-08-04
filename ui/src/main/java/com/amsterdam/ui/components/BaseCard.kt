@@ -1,6 +1,5 @@
 package com.amsterdam.ui.components
 
-import android.R.attr.onClick
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
