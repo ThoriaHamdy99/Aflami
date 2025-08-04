@@ -28,6 +28,12 @@ import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.myRating.movie.DeleteUserRatedMovieUseCase
+import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase
+import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
+import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
+import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
+import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
@@ -189,4 +195,33 @@ object UseCaseModule {
         getTopRatedTvShowsUseCase
     )
 
+    @Provides
+    fun provideGetUserMovieRatingUseCase(
+        movieRepository: MovieRepository,
+    ) = GetUserRatedMoviesUseCase(movieRepository)
+
+    @Provides
+    fun provideSetUserMovieRatingUseCase(
+        movieRepository: MovieRepository,
+    ) = SetUserMovieRatingUseCase(movieRepository)
+
+    @Provides
+    fun provideDeleteUserMovieRateUseCase(
+        movieRepository: MovieRepository,
+    ) = DeleteUserRatedMovieUseCase(movieRepository)
+
+    @Provides
+    fun provideGetUserTvShowRatingUseCase(
+        tvShowRepository: TvShowRepository,
+    ) = GetUserRatedTvShowsUseCase(tvShowRepository)
+
+    @Provides
+    fun provideSetUserTvShowRatingUseCase(
+        tvShowRepository: TvShowRepository,
+    ) = SetUserTvShowRatingUseCase(tvShowRepository)
+
+    @Provides
+    fun provideDeleteUserTvShowRateUseCase(
+        tvShowRepository: TvShowRepository,
+    ) = DeleteUserRatedTvShowUseCase(tvShowRepository)
 }
