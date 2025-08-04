@@ -13,7 +13,7 @@ internal object NsfwDetectorConfig {
     val NSFW_DETECTION_RULE_MODERATE = NsfwDetectorRule(
         nudeIndex = 1,
         nonNudeIndex = 0,
-        nsfwThreshold = 1f,
-        sfwThreshold = 0f
+        nsfwThreshold = 0.5f,
+        sfwThreshold = 0.7f
     )
 }
