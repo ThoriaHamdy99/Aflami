@@ -223,5 +223,6 @@
     <string name="there_is_no_company_production">There Is No Company Production</string>
     <string name="there_is_no_seasons">It Seem Like There Is No Seasons Yet</string>
     <string name="remove_from_list">Remove from list</string>
+    <string name="no_saved_items_here">No saved Items here!</string>
 
 </resources>

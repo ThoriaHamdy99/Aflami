@@ -221,4 +221,8 @@
     <!-- Details Screen -->
     <string name="there_is_no_gallery">لا توجد صور</string>
     <string name="there_is_no_company_production">لا توجد شركات إنتاج</string>
+
+    <!-- List -->
+    <string name="remove_from_list">حذف عنصر</string>
+    <string name="no_saved_items_here">لا توجد عناصر محفوظة</string>
 </resources>

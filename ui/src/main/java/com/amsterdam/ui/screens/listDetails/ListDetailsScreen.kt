@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -106,7 +107,7 @@ private fun ListDetailsContent(
             ) {
                 NoDataContainer(
                     imageRes = painterResource(R.drawable.no_saved_items),
-                    title = "No saved Items here!"
+                    title = stringResource(R.string.no_saved_items_here)
                 )
             }
         }
