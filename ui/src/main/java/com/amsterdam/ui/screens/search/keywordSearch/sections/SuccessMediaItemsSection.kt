@@ -18,8 +18,6 @@ import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.utils.toSafetyLevel
-import com.amsterdam.viewmodel.search.keywordSearch.SearchUiState
-import com.amsterdam.viewmodel.search.keywordSearch.TabOption
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState
 
@@ -39,7 +37,8 @@ fun SuccessMediaItemsSection(
             count = selectedItems.itemCount,
         ) { index ->
             val mediaItem = selectedItems[index]
-            val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()when (mediaItem) {
+            val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
+            when (mediaItem) {
                 is MovieItemUiState -> {
                     MediaCard(
                         movieImage = {
@@ -47,7 +46,7 @@ fun SuccessMediaItemsSection(
                                 modifier = Modifier.fillMaxSize(),
                                 contentDescription = mediaItem.name,
                                 model = mediaItem.posterImageUrl,
-                                contentScale = ContentScale.Crop,safetyLevel = safetyLevel,
+                                contentScale = ContentScale.Crop, safetyLevel = safetyLevel,
                                 onLoading = { ImageLoadingIndicator() },
                                 onError = { ImageErrorIndicator() },
                             )
@@ -68,7 +67,7 @@ fun SuccessMediaItemsSection(
                                 contentDescription = mediaItem.name,
                                 model = mediaItem.posterImageUrl,
                                 contentScale = ContentScale.Crop,
-                                safetyLevel = safetyLevel,onLoading = { ImageLoadingIndicator() },
+                                safetyLevel = safetyLevel, onLoading = { ImageLoadingIndicator() },
                                 onError = { ImageErrorIndicator() },
                             )
                         },
