@@ -29,7 +29,9 @@ import com.amsterdam.ui.R
 
 
 @Composable
-fun LoggedInContent() {
+fun LoggedInContent(
+    onClickHistory: () -> Unit
+) {
     val lazyListState = rememberLazyListState()
     val scrollOffset = remember {
         derivedStateOf { lazyListState.firstVisibleItemScrollOffset }
@@ -46,7 +48,7 @@ fun LoggedInContent() {
         ) {
             item { ProfileImageSection() }
             item { ProfileInfoSection() }
-            item { HistoryAndRatingSection() }
+            item { HistoryAndRatingSection(onClickHistory = onClickHistory) }
             item { HorizontalDivider() }
             item { SettingsSection() }
             item {
@@ -82,6 +84,6 @@ fun LoggedInContent() {
 @Composable
 private fun LoggedInContentPreview() {
     AflamiTheme {
-        LoggedInContent()
+        LoggedInContent(onClickHistory = {})
     }
 }
