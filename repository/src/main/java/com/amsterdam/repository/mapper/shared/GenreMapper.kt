@@ -28,33 +28,8 @@ fun toMovieGenre(id: Long): MovieGenre {
     }
 }
 
-fun mapCategoryIdToMovieGenre(genreId: Long): MovieGenre {
-    return when (genreId) {
-        28L -> MovieGenre.ACTION
-        12L -> MovieGenre.ADVENTURE
-        16L -> MovieGenre.ANIMATION
-        35L -> MovieGenre.COMEDY
-        80L -> MovieGenre.CRIME
-        99L -> MovieGenre.DOCUMENTARY
-        18L -> MovieGenre.DRAMA
-        10751L -> MovieGenre.FAMILY
-        14L -> MovieGenre.FANTASY
-        36L -> MovieGenre.HISTORY
-        27L -> MovieGenre.HORROR
-        10402L -> MovieGenre.MUSIC
-        9648L -> MovieGenre.MYSTERY
-        10749L -> MovieGenre.ROMANCE
-        878L -> MovieGenre.SCIENCE_FICTION
-        10770L -> MovieGenre.TV_MOVIE
-        53L -> MovieGenre.THRILLER
-        10752L -> MovieGenre.WAR
-        37L -> MovieGenre.WESTERN
-        else -> MovieGenre.ALL
-    }
-}
-
-fun mapCategoryIdToTvShowGenre(genreId: Long): TvShowGenre {
-    return when (genreId) {
+fun toTvShowGenre(id: Long): TvShowGenre {
+    return when (id) {
         10759L -> TvShowGenre.ACTION_ADVENTURE
         16L -> TvShowGenre.ANIMATION
         35L -> TvShowGenre.COMEDY
