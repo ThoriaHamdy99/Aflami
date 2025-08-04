@@ -15,4 +15,8 @@ class UserListRemoteSourceImpl @Inject constructor(
     ): UserListDetailsResponse {
         return responseCall { userListApiService.getMoviesFromList(listId, page) }
     }
+
+    override suspend fun deleteList(listId: Long, sessionId: String) {
+        responseCall { userListApiService.deleteList(listId, sessionId) }
+    }
 }

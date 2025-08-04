@@ -29,6 +29,7 @@ import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.list.DeleteListUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
@@ -152,6 +153,11 @@ object UseCaseModule {
     fun provideGetMoviesFromListUseCase(
         userListRepository: UserListRepository
     ): GetMoviesFromListUseCase = GetMoviesFromListUseCase(userListRepository)
+
+    @Provides
+    fun provideDeleteListUseCase(
+        userListRepository: UserListRepository
+    ): DeleteListUseCase = DeleteListUseCase(userListRepository)
 
     @Provides
     fun provideGetTopRatedTvShowsUseCase(
