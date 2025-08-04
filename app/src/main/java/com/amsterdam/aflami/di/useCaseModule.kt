@@ -29,10 +29,9 @@ import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
-import com.amsterdam.domain.useCase.preferences.GetRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
-import com.amsterdam.domain.useCase.preferences.SetRestrictionLevelUseCase
+import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
@@ -50,12 +49,9 @@ import dagger.hilt.android.components.ViewModelComponent
 object UseCaseModule {
 
     @Provides
-    fun provideGetRestrictionLevel(repo: AppPreferencesRepository): GetRestrictionLevelUseCase =
-        GetRestrictionLevelUseCase(repo)
+    fun provideManageRestrictionLevelUseCase(repo: AppPreferencesRepository): ManageRestrictionLevelUseCase =
+        ManageRestrictionLevelUseCase(repo)
 
-    @Provides
-    fun provideSetRestrictionLevel(repo: AppPreferencesRepository): SetRestrictionLevelUseCase =
-        SetRestrictionLevelUseCase(repo)
 
     @Provides
     fun provideGetsSessionType(repo: AuthenticationRepository): GetsSessionType =

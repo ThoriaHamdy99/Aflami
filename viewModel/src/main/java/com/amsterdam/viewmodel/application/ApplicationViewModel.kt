@@ -2,9 +2,9 @@ package com.amsterdam.viewmodel.application
 
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
-import com.amsterdam.domain.useCase.preferences.GetRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -20,7 +20,7 @@ class ApplicationViewModel @Inject constructor(
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     private val getOnboardingStatusUseCase: GetOnboardingStatusUseCase,
     private val getsSessionType: GetsSessionType,
-    private val getRestrictionLevelUseCase: GetRestrictionLevelUseCase
+    private val manageRestrictionLevelUseCase: ManageRestrictionLevelUseCase
 ) : BaseViewModel<ApplicationUiState, Unit>(ApplicationUiState(), dispatcherProvider) {
 
     init {
@@ -49,7 +49,7 @@ class ApplicationViewModel @Inject constructor(
     }
 
     private suspend fun getRestrictionLevel(){
-        val restrictionLevel = getRestrictionLevelUseCase()
+        val restrictionLevel = manageRestrictionLevelUseCase.getRestrictionLevel()
         restrictionLevel.collectLatest { restriction ->
             updateState {
                 it.copy(restrictionLevel = restriction)
