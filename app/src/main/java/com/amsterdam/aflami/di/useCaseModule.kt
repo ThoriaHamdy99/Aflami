@@ -29,6 +29,7 @@ import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
@@ -54,6 +55,10 @@ object UseCaseModule {
     @Provides
     fun provideSetCurrentLanguage(repo: AppPreferencesRepository): ManageLocaleLanguageUseCase =
         ManageLocaleLanguageUseCase(repo)
+
+    @Provides
+    fun provideManageAppThemeUseCase(repo: AppPreferencesRepository): ManageAppThemeUseCase =
+        ManageAppThemeUseCase(repo)
 
     @Provides
     fun provideLoginAsGuestUseCase(repo: AuthenticationRepository): LoginAsGuestUseCase =
