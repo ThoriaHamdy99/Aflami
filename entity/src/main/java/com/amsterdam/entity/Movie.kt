@@ -14,6 +14,5 @@ data class Movie(
     val popularity: Double,
     val originCountry: String,
     val runTimeInMinutes: Int,
-    val videoUrl: String = "",
-    val productionCompanies: List<ProductionCompany>
+    val videoUrl: String = ""
 )
