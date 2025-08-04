@@ -58,6 +58,7 @@ private fun ProfileScreenContent(
     interactionListener: ProfileInteractionListener
 ) {
     val animationDuration by remember { mutableIntStateOf(1000) }
+    val navController = LocalNavController.current
 
     Box(
         modifier = Modifier
@@ -82,7 +83,11 @@ private fun ProfileScreenContent(
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration)),
         ) {
-            LoggedInContent()
+            LoggedInContent(
+                onClickHistory = {
+                    navController.navigate(Route.WatchHistory)
+                }
+            )
         }
 
         AnimatedVisibility(
