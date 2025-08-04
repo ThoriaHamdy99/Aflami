@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.search.keywordSearch.sections
+package com.amsterdam.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +16,6 @@ import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalRestrictionLevel
-import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState

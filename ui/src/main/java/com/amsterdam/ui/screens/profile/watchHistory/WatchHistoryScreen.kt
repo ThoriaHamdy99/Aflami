@@ -26,7 +26,7 @@ import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.home.sections.AnimatedSectionVisibility
-import com.amsterdam.ui.screens.search.keywordSearch.sections.SuccessMediaItemsSection
+import com.amsterdam.ui.components.SuccessMediaItemsSection
 import com.amsterdam.viewmodel.search.keywordSearch.TabOption
 import com.amsterdam.viewmodel.watchHistory.WatchHistoryEffect
 import com.amsterdam.viewmodel.watchHistory.WatchHistoryInteractionListener
