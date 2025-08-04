@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,16 +22,26 @@ import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.ui.R
+import com.amsterdam.ui.screens.profile.model.Language
+import com.amsterdam.viewmodel.profile.ProfileInteractionListener
+import com.amsterdam.viewmodel.profile.ProfileUiState
 
 @Composable
-fun SettingsSection() {
+fun SettingsSection(state: ProfileUiState, interactionListener: ProfileInteractionListener) {
+
+    val language = Language.fromUiState(state.language)
+
     CustomSettingCard(
         modifier = Modifier.padding(top = 24.dp),
         startIconResourceId = com.amsterdam.designsystem.R.drawable.ic_language,
         endIconResourceId = com.amsterdam.designsystem.R.drawable.ic_arrow_right,
         startText = stringResource(R.string.language),
-        endText = "ENG",
+        endText = stringResource(language.nameResourceId),
+        onClick = {
+            interactionListener.onClickLanguage()
+        }
     )
 
     CustomSettingCard(
@@ -56,12 +67,16 @@ private fun CustomSettingCard(
     @DrawableRes endIconResourceId: Int,
     startText: String,
     modifier: Modifier = Modifier,
-    endText: String = ""
+    endText: String = "",
+    onClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable {
+                onClick()
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -121,6 +136,28 @@ private fun CustomSettingCard(
 @Composable
 private fun SettingsSectionPreview() {
     AflamiTheme {
-        SettingsSection()
+        SettingsSection(
+            ProfileUiState(),
+            interactionListener = object : ProfileInteractionListener {
+                override fun onClickLogin() {}
+                override fun onClickLanguage() {
+                }
+
+                override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {
+                }
+
+                override fun onDismissLanguageDialog() {
+                }
+
+                override fun onClickTheme() {
+                }
+
+                override fun onChangeTheme(isDarkTheme: Boolean) {
+                }
+
+                override fun onDismissThemeDialog() {
+                }
+            },
+        )
     }
 }

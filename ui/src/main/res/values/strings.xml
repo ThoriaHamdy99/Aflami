@@ -119,6 +119,8 @@
     <string name="dark">Dark</string>
     <string name="english">English</string>
     <string name="arabic">Arabic</string>
+    <string name="english_example">Aa</string>
+    <string name="arabic_example">ع عـ</string>
     <string name="world_tour_title">World Tour</string>
     <string name="world_tour_description">Explore World Cinema</string>
     <string name="country_tour_title">Country Tour</string>

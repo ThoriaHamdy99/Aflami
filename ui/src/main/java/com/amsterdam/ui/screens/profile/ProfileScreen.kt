@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 import com.amsterdam.ui.navigation.Route
@@ -104,6 +105,20 @@ private fun ProfileScreenPreview() {
         ProfileUiState(),
         interactionListener = object : ProfileInteractionListener {
             override fun onClickLogin() {}
+            override fun onClickLanguage() {}
+
+            override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {}
+
+            override fun onDismissLanguageDialog() {}
+
+            override fun onClickTheme() {
+            }
+
+            override fun onChangeTheme(isDarkTheme: Boolean) {
+            }
+
+            override fun onDismissThemeDialog() {
+            }
         }
     )
 }

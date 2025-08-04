@@ -1,7 +1,10 @@
 package com.amsterdam.ui.screens.profile.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -25,7 +29,9 @@ import com.amsterdam.designsystem.components.divider.HorizontalDivider
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.ui.R
+import com.amsterdam.ui.screens.profile.model.Language
 import com.amsterdam.viewmodel.profile.ProfileInteractionListener
 import com.amsterdam.viewmodel.profile.ProfileUiState
 
@@ -50,7 +56,7 @@ fun LoggedInContent(state: ProfileUiState, interactionListener: ProfileInteracti
             item { ProfileInfoSection(state.userInfo.username, state.userInfo.userPoints) }
             item { HistoryAndRatingSection() }
             item { HorizontalDivider() }
-            item { SettingsSection() }
+            item { SettingsSection(state, interactionListener) }
             item {
                 Text(
                     text = "v 1.1",
@@ -77,6 +83,25 @@ fun LoggedInContent(state: ProfileUiState, interactionListener: ProfileInteracti
             modifier = Modifier
                 .background(appBarColor)
         )
+        AnimatedVisibility(
+            state.showLanguageDialog,
+            enter = fadeIn(tween(2000)),
+            exit = fadeOut(tween(2000)),
+        ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                LanguageDialog(
+                    language = Language.fromUiState(state.language),
+                    onConfirm = {
+                        interactionListener.onChangeLanguage(
+                            ManageLocaleLanguageUseCase.Language.toLanguage(
+                                it.name
+                            )
+                        )
+                    },
+                    onDismiss = { interactionListener.onDismissLanguageDialog() }
+                )
+            }
+        }
     }
 }
 
@@ -86,6 +111,23 @@ private fun LoggedInContentPreview() {
     AflamiTheme {
         LoggedInContent(ProfileUiState(), object : ProfileInteractionListener {
             override fun onClickLogin() {}
+            override fun onClickLanguage() {
+            }
+
+            override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {
+            }
+
+            override fun onDismissLanguageDialog() {
+            }
+
+            override fun onClickTheme() {
+            }
+
+            override fun onChangeTheme(isDarkTheme: Boolean) {
+            }
+
+            override fun onDismissThemeDialog() {
+            }
         })
     }
 }
