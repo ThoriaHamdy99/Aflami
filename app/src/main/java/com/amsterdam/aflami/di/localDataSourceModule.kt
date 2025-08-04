@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl
 import com.amsterdam.localdatasource.dataStore.AuthenticationLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
+import com.amsterdam.localdatasource.roomDataBase.datasource.CategoryLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.CountryLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.MovieLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.RecentSearchLocalDataSourceImpl
@@ -15,6 +16,7 @@ import com.amsterdam.localdatasource.roomDataBase.datasource.TvShowLocalDataSour
 import com.amsterdam.localdatasource.roomDataBase.datasource.WatchHistoryLocalDataSourceImpl
 import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
+import com.amsterdam.repository.datasource.local.CategoryLocalSource
 import com.amsterdam.repository.datasource.local.CountryLocalSource
 import com.amsterdam.repository.datasource.local.MovieLocalSource
 import com.amsterdam.repository.datasource.local.RecentSearchLocalSource
@@ -30,95 +32,101 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object LocalDataSourceProviderModule {
-
     @Provides
     @Singleton
-    fun provideDataStore(app: Application): DataStore<Preferences> {
+    fun provideDataStore(application: Application): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create {
-            app.dataStoreFile("app.preferences_pb")
+            application.dataStoreFile("application.preferences_pb")
         }
     }
 
     @Provides
     @Singleton
-    fun provideDatabase(app: Application): AflamiDatabase {
-        return AflamiDatabase.getInstance(app)
+    fun provideDatabase(application: Application): AflamiDatabase {
+        return AflamiDatabase.getInstance(application)
     }
 
     @Provides
     @Singleton
-    fun provideCountryDao(db: AflamiDatabase) = db.countryDao()
+    fun provideCountryDao(aflamiDatabase: AflamiDatabase) = aflamiDatabase.countryDao()
 
     @Provides
     @Singleton
-    fun provideMovieDao(db: AflamiDatabase) = db.movieDao()
+    fun provideCategoryDao(aflamiDatabase: AflamiDatabase) = aflamiDatabase.categoryDao()
 
     @Provides
     @Singleton
-    fun provideTvShowDao(db: AflamiDatabase) = db.tvShowDao()
+    fun provideMovieDao(aflamiDatabase: AflamiDatabase) = aflamiDatabase.movieDao()
 
     @Provides
     @Singleton
-    fun provideWatchHistoryDao(db: AflamiDatabase) = db.watchHistoryDao()
+    fun provideTvShowDao(aflamiDatabase: AflamiDatabase) = aflamiDatabase.tvShowDao()
 
     @Provides
     @Singleton
-    fun provideRecentSearchDao(db: AflamiDatabase) = db.recentSearchDao()
+    fun provideWatchHistoryDao(aflamiDatabase: AflamiDatabase) = aflamiDatabase.watchHistoryDao()
 
     @Provides
     @Singleton
-    fun provideMovieCategoryInterestDao(db: AflamiDatabase) = db.movieCategoryInterestDao()
+    fun provideRecentSearchDao(aflamiDatabase: AflamiDatabase) = aflamiDatabase.recentSearchDao()
 
     @Provides
     @Singleton
-    fun provideTvShowCategoryInterestDao(db: AflamiDatabase) = db.tvShowCategoryInterestDao()
+    fun provideMovieCategoryInterestDao(aflamiDatabase: AflamiDatabase) = aflamiDatabase.movieCategoryInterestDao()
+
+    @Provides
+    @Singleton
+    fun provideTvShowCategoryInterestDao(aflamiDatabase: AflamiDatabase) = aflamiDatabase.tvShowCategoryInterestDao()
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class LocalDataSourceBindsModule {
-
     @Binds
     @Singleton
     abstract fun bindAuthenticationLocalDataSource(
-        impl: AuthenticationLocalDataSourceImpl
+        authenticationLocalDataSourceImpl: AuthenticationLocalDataSourceImpl
     ): AuthenticationLocalSource
-
 
     @Binds
     @Singleton
     abstract fun bindAppPreferences(
-        impl: AppPreferencesImpl
+        appPreferencesImpl: AppPreferencesImpl
     ): AppPreferences
 
     @Binds
     @Singleton
     abstract fun bindCountryLocalDataSource(
-        impl: CountryLocalDataSourceImpl
+        countryLocalDataSourceImpl: CountryLocalDataSourceImpl
     ): CountryLocalSource
 
     @Binds
     @Singleton
+    abstract fun bindCategoryLocalSource(
+        impl: CategoryLocalDataSourceImpl
+    ): CategoryLocalSource
+
+    @Binds
+    @Singleton
     abstract fun bindMovieLocalDataSource(
-        impl: MovieLocalDataSourceImpl
+        movieLocalDataSourceImpl: MovieLocalDataSourceImpl
     ): MovieLocalSource
 
     @Binds
     @Singleton
     abstract fun bindTvShowLocalDataSource(
-        impl: TvShowLocalDataSourceImpl
+        tvShowLocalDataSourceImpl: TvShowLocalDataSourceImpl
     ): TvShowLocalSource
 
     @Binds
     @Singleton
     abstract fun bindRecentSearchLocalDataSource(
-        impl: RecentSearchLocalDataSourceImpl
+        recentSearchLocalDataSourceImpl: RecentSearchLocalDataSourceImpl
     ): RecentSearchLocalSource
 
     @Binds
     @Singleton
     abstract fun bindWatchHistoryLocalDataSource(
-        impl: WatchHistoryLocalDataSourceImpl
+        watchHistoryLocalDataSourceImpl: WatchHistoryLocalDataSourceImpl
     ): WatchHistoryLocalDataSource
-
 }

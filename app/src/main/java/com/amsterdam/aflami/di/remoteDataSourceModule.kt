@@ -1,11 +1,13 @@
 package com.amsterdam.aflami.di
 
 import com.amsterdam.remotedatasource.datasource.AuthenticationRemoteDataSourceImpl
+import com.amsterdam.remotedatasource.datasource.CategoryRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.CountryRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.MovieRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.TvRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.UserListRemoteSourceImpl
 import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
+import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.datasource.remote.CountryRemoteSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
@@ -23,27 +25,31 @@ abstract class RemoteDataSourceBindModule {
     @Binds
     @Singleton
     abstract fun bindAuthenticationRemoteSource(
-        impl: AuthenticationRemoteDataSourceImpl
+        authenticationRemoteDataSourceImpl: AuthenticationRemoteDataSourceImpl
     ): AuthenticationRemoteSource
 
-
+    @Binds
+    @Singleton
+    abstract fun bindCategoryRemoteSource(
+        categoryRemoteDataSourceImpl: CategoryRemoteDataSourceImpl
+    ): CategoryRemoteSource
 
     @Binds
     @Singleton
     abstract fun bindCountryRemoteSource(
-        impl: CountryRemoteDataSourceImpl
+        countryRemoteDataSourceImpl: CountryRemoteDataSourceImpl
     ): CountryRemoteSource
 
     @Binds
     @Singleton
     abstract fun bindMovieRemoteSource(
-        impl: MovieRemoteDataSourceImpl
+        movieRemoteDataSourceImpl: MovieRemoteDataSourceImpl
     ): MovieRemoteSource
 
     @Binds
     @Singleton
     abstract fun bindTvShowsRemoteSource(
-        impl: TvRemoteDataSourceImpl
+        tvRemoteDataSourceImpl: TvRemoteDataSourceImpl
     ): TvShowsRemoteSource
 
     @Binds

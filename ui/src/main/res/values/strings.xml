@@ -228,4 +228,6 @@
     <string name="list_deleted_successfully">List deleted successfully</string>
     <string name="movie_deleted_successfully">Movie deleted Successfully</string>
 
+    <string name="video_launch_error">Failed to play the video</string>
+
 </resources>
