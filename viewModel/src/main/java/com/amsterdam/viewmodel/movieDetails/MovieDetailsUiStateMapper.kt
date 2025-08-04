@@ -46,7 +46,7 @@ class MovieDetailsUiStateMapper @Inject constructor() {
                     posterUrl = it.posterUrl
                 )
             },
-            productionCompany = movie.productionCompanies.map { company ->
+            productionCompany = productionCompanies.map { company ->
                 ProductionCompanyUiState(
                     image = company.imageUrl,
                     name = company.name,
