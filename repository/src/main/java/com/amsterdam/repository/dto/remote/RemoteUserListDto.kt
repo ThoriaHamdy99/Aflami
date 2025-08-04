@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RemoteUserListDto(
-    @SerialName("id") val id: Long,
+    @SerialName("id") val id: Int,
     @SerialName("name") val name: String,
     @SerialName("description") val description: String,
     @SerialName("item_count") val itemCount: Int,

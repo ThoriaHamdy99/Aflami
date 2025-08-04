@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.lists
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.useCase.lists.GetUserListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
@@ -34,13 +35,12 @@ class UserListsViewModel @Inject constructor(
         loadCustomLists()
     }
 
-    private fun loadCustomLists() {
+    private fun loadCustomLists(startLoading: Boolean = true) {
+        startLoading(startLoading)
         tryToExecute(
-            action = {
-                getUserListsUseCase()
-            },
+            action = { getUserListsUseCase() },
             onSuccess = { customLists ->
-                updateState {
+               updateState {
                     it.copy(
                         userLists = customLists.map { it.toUserListItemUiState() },
                         isLoading = false,
@@ -66,6 +66,8 @@ class UserListsViewModel @Inject constructor(
     override fun onClickRetryFetchList() {
         loadCustomLists()
     }
+
+    private fun startLoading(start: Boolean = true) = updateState { it.copy(isLoading = start) }
 
 
 }

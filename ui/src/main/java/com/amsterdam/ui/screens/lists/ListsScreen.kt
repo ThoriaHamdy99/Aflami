@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layosut.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.theme.AflamiTheme
+import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.ListItem
 import com.amsterdam.ui.components.NoDataContainer
@@ -44,8 +47,6 @@ import com.amsterdam.viewmodel.lists.ListsInteractionListener
 import com.amsterdam.viewmodel.lists.ListsUiState
 import com.amsterdam.viewmodel.lists.UserListsViewModel
 import com.amsterdam.viewmodel.shared.uiStates.UserListItemUiState
-
-import com.amsterdam.designsystem.theme.AppTheme
 
 @Composable
 fun ListsScreen(
@@ -86,7 +87,7 @@ private fun ListsScreenContent(
                 .background(color = AppTheme.color.surface)
                 .statusBarsPadding()
                 .navigationBarsPadding(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         DefaultAppBar(
@@ -105,15 +106,8 @@ private fun ListsScreenContent(
         ) { (isLoading, errorState, lists) ->
 
             when {
-                isLoading -> LoadingContainer()
-
-                state.userLists.isEmpty() -> {
-                    NoDataContainer(
-                        modifier = Modifier.fillMaxSize(),
-                        title = stringResource(com.amsterdam.ui.R.string.no_list_yet),
-                        description = stringResource(com.amsterdam.ui.R.string.no_list_description),
-                        imageRes = painterResource(id = com.amsterdam.ui.R.drawable.placeholder_no_saved_items),
-                    )
+                isLoading -> {
+                   LoadingContainer()
                 }
 
                 errorState == ListsErrorState.NoNetworkConnection -> {
@@ -123,18 +117,30 @@ private fun ListsScreenContent(
                     )
                 }
 
-                lists.isNotEmpty() -> {
+                lists.isEmpty() -> {
+                    NoDataContainer(
+                        modifier = Modifier.fillMaxSize(),
+                        title = stringResource(com.amsterdam.ui.R.string.no_list_yet),
+                        description = stringResource(com.amsterdam.ui.R.string.no_list_description),
+                        imageRes = painterResource(id = com.amsterdam.ui.R.drawable.placeholder_no_saved_items),
+                    )
+                }
+
+                else -> {
+
                     LazyVerticalGrid(
                         modifier = Modifier.fillMaxSize(),
-                        columns = GridCells.Adaptive(104.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        columns = GridCells.Adaptive(minSize = 156.dp),
+                        state = rememberLazyGridState(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                        contentPadding = PaddingValues(horizontal = 16.dp)
                     ) {
                         items(lists) { userList ->
                             ListItem(
                                 title = userList.name,
-                                count = userList.itemCount
+                                count = userList.itemCount,
+                                modifier = Modifier.size(156.dp, 147.dp)
                             )
                         }
                     }
@@ -192,25 +198,25 @@ private fun ListsScreenPreview_WithData() {
                 isLoading = false,
                 userLists = listOf(
                     UserListItemUiState(
-                        id = 1L,
+                        id = 1,
                         name = "Favorite Movies",
                         description = "My favorite movies collection",
                         itemCount = 15
                     ),
                     UserListItemUiState(
-                        id = 2L,
+                        id = 2,
                         name = "Watch Later",
                         description = "Movies to watch later",
                         itemCount = 8
                     ),
                     UserListItemUiState(
-                        id = 3L,
+                        id = 3,
                         name = "Action Movies",
                         description = "Action genre movies",
                         itemCount = 23
                     ),
                     UserListItemUiState(
-                        id = 4L,
+                        id = 4,
                         name = "Comedy Collection",
                         description = "Funny movies",
                         itemCount = 12

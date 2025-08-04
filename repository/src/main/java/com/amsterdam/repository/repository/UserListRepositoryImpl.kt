@@ -1,5 +1,6 @@
 package com.amsterdam.repository.repository
 
+import android.util.Log
 import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.entity.UserList
 import com.amsterdam.repository.datasource.remote.UserListRemoteSource
@@ -9,7 +10,7 @@ import javax.inject.Inject
 class UserListRepositoryImpl @Inject constructor(
     private val userListRemoteSource: UserListRemoteSource
 ) : UserListRepository {
-    
+
     override suspend fun getUserLists(
         accountId: Int,
         page: Int,
