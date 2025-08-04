@@ -55,7 +55,9 @@ internal fun MoviesItemsGrid(
         ) { index ->
             val movie = movies[index] ?: return@items
 
-            Box {
+            Box(
+                modifier = Modifier.animateItem()
+            ) {
                 MediaCard(
                     movieImage = { MovieImage(movie.posterImageUrl) },
                     movieType = stringResource(R.string.movie),
