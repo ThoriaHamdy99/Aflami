@@ -43,7 +43,7 @@ fun MustLoginDialog(
             DialogProperties(
                 usePlatformDefaultWidth = false,
                 dismissOnBackPress = true,
-                dismissOnClickOutside = false
+                dismissOnClickOutside = true
             ),
     ) {
         Column(
