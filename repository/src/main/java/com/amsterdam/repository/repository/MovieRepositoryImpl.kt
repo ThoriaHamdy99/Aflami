@@ -3,11 +3,13 @@ package com.amsterdam.repository.repository
 import com.amsterdam.domain.repository.CategoryRepository
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
+import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase.UserRatedMovie
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.datasource.local.AppPreferences
+import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
 import com.amsterdam.repository.datasource.local.MovieLocalSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
 import com.amsterdam.repository.dto.local.utils.SearchType
@@ -18,9 +20,11 @@ import com.amsterdam.repository.mapper.local.MovieGenreLocalMapper
 import com.amsterdam.repository.mapper.local.MovieWithCategoriesLocalMapper
 import com.amsterdam.repository.mapper.remote.CastRemoteMapper
 import com.amsterdam.repository.mapper.remote.MovieDetailRemoteMapper
+import com.amsterdam.repository.mapper.remote.MovieRateRemoteMapper
 import com.amsterdam.repository.mapper.remote.MovieRemoteMapper
 import com.amsterdam.repository.mapper.remoteToLocal.MovieGenreIdsRemoteLocalMapper
 import com.amsterdam.repository.mapper.remoteToLocal.MovieRemoteLocalMapper
+import com.amsterdam.repository.security.CryptoData
 import com.amsterdam.repository.utils.RecentSearchHandler
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -29,15 +33,18 @@ class MovieRepositoryImpl @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val movieLocalSource: MovieLocalSource,
     private val movieRemoteDataSource: MovieRemoteSource,
+    private val authenticationLocalSource: AuthenticationLocalSource,
     private val preferences: AppPreferences,
     private val movieGenreIdsRemoteLocalMapper: MovieGenreIdsRemoteLocalMapper,
     private val movieRemoteMapper: MovieRemoteMapper,
+    private val movieRateRemoteMapper: MovieRateRemoteMapper,
     private val recentSearchHandler: RecentSearchHandler,
     private val castRemoteMapper: CastRemoteMapper,
     private val movieDetailRemoteMapper: MovieDetailRemoteMapper,
     private val movieWithCategoriesLocalMapper: MovieWithCategoriesLocalMapper,
     private val movieRemoteLocalMapper: MovieRemoteLocalMapper,
     private val movieGenreLocalMapper: MovieGenreLocalMapper,
+    val cryptoData: CryptoData,
 ) : MovieRepository {
     override suspend fun getMoviesByKeyword(
         keyword: String,
@@ -269,6 +276,27 @@ class MovieRepositoryImpl @Inject constructor(
                 ).results
             )
         }
+    }
+
+    override suspend fun setMovieRate(rate: Int, movieId: Long) {
+        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+         movieRemoteDataSource.setMovieRate(rate = rate, movieId = movieId, sessionId = sessionId)
+    }
+
+//    override suspend fun getRatedMovie(movieId: Long): UserRatedMovie? {
+//        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+//
+//        return movieRateRemoteMapper.toEntity(movieRemoteDataSource.getRatedMovie(sessionId).results)
+//    }
+
+    override suspend fun getUserRatedMovies(): List<UserRatedMovie> {
+        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        return movieRateRemoteMapper.toEntityList(movieRemoteDataSource.getRatedMovies(sessionId).results)
+    }
+
+    override suspend fun deleteMovieRate(movieId: Long) {
+        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        movieRemoteDataSource.deleteMovieRate(movieId = movieId, sessionId = sessionId)
     }
 
     private suspend fun incrementUserInterestByMovie(remoteCategories: List<RemoteCategoryDto>) {

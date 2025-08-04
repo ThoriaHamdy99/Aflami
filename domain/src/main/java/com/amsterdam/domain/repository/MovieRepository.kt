@@ -1,6 +1,7 @@
 package com.amsterdam.domain.repository
 
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
+import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase.UserRatedMovie
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie
@@ -18,4 +19,9 @@ interface MovieRepository {
     suspend fun getTopRatedMovies(page: Int): List<Movie>
     suspend fun getUpcomingMovies(): List<Movie>
     suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>): List<Movie>
+
+    suspend fun setMovieRate(rate: Int, movieId: Long)
+   // suspend fun getRatedMovie(movieId: Long): UserRatedMovie?
+    suspend fun getUserRatedMovies(): List<UserRatedMovie>
+    suspend fun deleteMovieRate(movieId: Long)
 }

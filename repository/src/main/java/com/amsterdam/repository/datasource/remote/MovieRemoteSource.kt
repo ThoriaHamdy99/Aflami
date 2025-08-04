@@ -1,5 +1,6 @@
 package com.amsterdam.repository.datasource.remote
 
+import com.amsterdam.repository.dto.remote.RatingResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
@@ -25,4 +26,13 @@ interface MovieRemoteSource {
     suspend fun getTopRatedMovies(page: Int): RemoteMovieResponse
 
     suspend fun getMoviesByGenreIds(genresIds: List<Long>): RemoteMovieResponse
+
+    suspend fun getRatedMovies(sessionId: String): RemoteMovieResponse
+
+    suspend fun setMovieRate(rate: Int, movieId: Long, sessionId: String): RatingResponse?
+
+    suspend fun deleteMovieRate(movieId: Long, sessionId: String)
+
+   // suspend fun getRatedMovie(sessionId: String, movieId: Long): RemoteMovieItemDto?
+
 }

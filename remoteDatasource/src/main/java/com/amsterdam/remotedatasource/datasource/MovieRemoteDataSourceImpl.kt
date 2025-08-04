@@ -3,14 +3,14 @@ package com.amsterdam.remotedatasource.datasource
 import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
-import com.amsterdam.repository.dto.remote.RemoteActorSearchResponse
+import com.amsterdam.repository.dto.remote.RatingResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import javax.inject.Inject
 
 class MovieRemoteDataSourceImpl @Inject constructor(
-    private val movieApiService: MovieApiService
+    private val movieApiService: MovieApiService,
 ) : MovieRemoteSource {
 
     override suspend fun getMoviesByKeyword(keyword: String, page: Int): RemoteMovieResponse {
@@ -58,4 +58,27 @@ class MovieRemoteDataSourceImpl @Inject constructor(
     override suspend fun getMoviesByGenreIds(genresIds: List<Long>): RemoteMovieResponse {
         return responseCall { movieApiService.getMoviesByGenreIds(genresIds) }
     }
+
+    override suspend fun setMovieRate(rate: Int, movieId: Long, sessionId: String): RatingResponse? {
+        return responseCall { movieApiService.postMovieRating(
+            movieId = movieId,
+            rate = rate.toFloat(),
+            sessionId = sessionId
+        ) }
+    }
+
+    override suspend fun getRatedMovies(sessionId: String): RemoteMovieResponse {
+        return responseCall { movieApiService.getRatedMovies(sessionId = sessionId) }
+    }
+
+    override suspend fun deleteMovieRate(movieId: Long, sessionId: String) {
+        responseCall { movieApiService.deleteMovieRate(movieId = movieId, sessionId = sessionId) }
+    }
+
+//    override suspend fun getRatedMovie(
+//        sessionId: String,
+//        movieId: Long
+//    ): RatingResponse? {
+//        responseCall { movieApiService.get }
+//    }
 }
