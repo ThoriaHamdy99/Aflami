@@ -26,10 +26,12 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.R
+import com.amsterdam.viewmodel.profile.ProfileInteractionListener
+import com.amsterdam.viewmodel.profile.ProfileUiState
 
 
 @Composable
-fun LoggedInContent() {
+fun LoggedInContent(state: ProfileUiState, interactionListener: ProfileInteractionListener) {
     val lazyListState = rememberLazyListState()
     val scrollOffset = remember {
         derivedStateOf { lazyListState.firstVisibleItemScrollOffset }
@@ -44,8 +46,8 @@ fun LoggedInContent() {
             modifier = Modifier.fillMaxSize(),
             state = lazyListState
         ) {
-            item { ProfileImageSection() }
-            item { ProfileInfoSection() }
+            item { ProfileImageSection(state.userInfo.userAvatarUrl) }
+            item { ProfileInfoSection(state.userInfo.username, state.userInfo.userPoints) }
             item { HistoryAndRatingSection() }
             item { HorizontalDivider() }
             item { SettingsSection() }
@@ -82,6 +84,8 @@ fun LoggedInContent() {
 @Composable
 private fun LoggedInContentPreview() {
     AflamiTheme {
-        LoggedInContent()
+        LoggedInContent(ProfileUiState(), object : ProfileInteractionListener {
+            override fun onClickLogin() {}
+        })
     }
 }

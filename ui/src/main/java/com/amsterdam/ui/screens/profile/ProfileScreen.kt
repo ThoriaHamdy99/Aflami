@@ -82,7 +82,7 @@ private fun ProfileScreenContent(
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration)),
         ) {
-            LoggedInContent()
+            LoggedInContent(state, interactionListener)
         }
 
         AnimatedVisibility(
