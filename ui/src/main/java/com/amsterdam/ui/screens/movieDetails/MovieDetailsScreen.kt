@@ -44,6 +44,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -80,6 +81,7 @@ import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.gallerySection
 import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
 import com.amsterdam.ui.screens.movieDetails.components.reviewSection
+import com.amsterdam.ui.screens.openYouTubeVideo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.viewmodel.cast.MediaType
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsEffect
@@ -99,6 +101,8 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
     val successRateMessage = stringResource(R.string.your_rating_has_been_saved)
     val failedRateMessage = stringResource(R.string.failed_to_save_your_rating)
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
@@ -117,12 +121,20 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                 )
 
                 is MovieDetailsEffect.NavigateToMovieDetails -> {
-                    navController.navigate(MovieDetails(effect.movieId))
+                    navController.navigate(
+                        MovieDetails(effect.movieId)
+                    )
                 }
 
                 MovieDetailsEffect.ShowRatingSuccessSnackBar -> SnackBarManager.showSuccess(message = successRateMessage)
 
                 MovieDetailsEffect.ShowRatingErrorSnackBar -> SnackBarManager.showError(message = failedRateMessage)
+
+                is MovieDetailsEffect.LaunchMovieVideoEffect ->
+                    openYouTubeVideo(context, effect.url) {
+                        SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
+                    }
+
             }
         }
     }
@@ -294,7 +306,8 @@ fun MovieContent(
                                     Modifier
                                         .align(Alignment.CenterHorizontally)
                                         .offset(y = (-32).dp),
-                                isActive = state.hasVideo,
+                                isActive = state.videoUrl.isNotBlank(),
+                                onClick = interactionListener::onPlayVideoClicked
                             )
                             Column(
                                 modifier =
@@ -458,6 +471,7 @@ private fun SearchByActorContentPreview() {
                     override fun onClickSimilarMovie(movieId: Long) {}
                     override fun onDescriptionExpansionToggled() {}
                     override fun onReviewExpansionToggled(reviewId: String) {}
+                    override fun onPlayVideoClicked() {}
                 },
             rateDialogInteractionListener = object : RateDialogInteractionListener{
                 override fun onClickCancel() {}

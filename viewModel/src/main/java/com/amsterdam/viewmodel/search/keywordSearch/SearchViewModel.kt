@@ -60,7 +60,8 @@ class SearchViewModel @Inject constructor(
         observeSearchKeywordChanges()
     }
 
-    private fun fetchRecentSearches() {
+    private fun fetchRecentSearches(startLoading: Boolean = true) {
+        startLoading(startLoading)
         tryToExecute(
             action = { recentSearchesUseCase.getRecentSearches() },
             onSuccess = ::onLoadRecentSearchesSuccess,
@@ -69,7 +70,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun onLoadRecentSearchesSuccess(recentSearches: List<String>) {
-        updateState { it.copy(recentSearches = recentSearches, errorUiState = null) }
+        updateState { it.copy(recentSearches = recentSearches, errorUiState = null, isLoading = false) }
     }
 
     private fun observeSearchKeywordChanges() {
@@ -96,7 +97,7 @@ class SearchViewModel @Inject constructor(
                     config = PagingConfig(pageSize = 20),
                     pagingSourceFactory = {
                         PagingSource { page ->
-                            getAndFilterMoviesByKeywordUseCase(
+                          getAndFilterMoviesByKeywordUseCase(
                                 keyword = keyword,
                                 page = page,
                                 rating = state.value.movieFilterItemUiState.selectedStarIndex,
@@ -215,7 +216,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun onFetchError(exception: AflamiException) {
-        updateState { it.copy(errorUiState = SearchErrorState.toSearchErrorState(exception)) }
+        updateState { it.copy(errorUiState = SearchErrorState.toSearchErrorState(exception), isLoading = false) }
     }
 
     private fun resetFilterState() {
@@ -227,7 +228,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun startLoading() = updateState { it.copy(isLoading = true) }
+    private fun startLoading(start: Boolean = true) = updateState { it.copy(isLoading = start) }
 
     override fun onChangeSearchKeyword(keyword: String) {
         if (keyword.trim() != state.value.keyword.trim()) {
@@ -279,10 +280,9 @@ class SearchViewModel @Inject constructor(
     override fun onClickRecentSearch(keyword: String) = onChangeSearchKeyword(keyword)
 
     override fun onClickClearRecentSearch(keyword: String) {
-        startLoading()
         tryToExecute(
             action = { recentSearchesUseCase.deleteRecentSearch(searchKeyword = keyword) },
-            onSuccess = { fetchRecentSearches() },
+            onSuccess = { fetchRecentSearches(startLoading = false)},
             onError = ::onFetchError,
         )
     }
@@ -297,7 +297,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun onClearAllRecentSearchesSuccess(unit: Unit) {
-        updateState { it.copy(recentSearches = emptyList()) }
+        updateState { it.copy(recentSearches = emptyList(), isLoading = false) }
     }
 
     override fun onClickClearSearch() {

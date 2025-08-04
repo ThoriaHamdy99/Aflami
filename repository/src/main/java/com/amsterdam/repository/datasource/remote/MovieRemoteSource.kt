@@ -35,4 +35,5 @@ interface MovieRemoteSource {
 
    // suspend fun getRatedMovie(sessionId: String, movieId: Long): RemoteMovieItemDto?
 
+    suspend fun getMoviesByGenreIds(genresIds: List<Long>, page: Int): RemoteMovieResponse
 }

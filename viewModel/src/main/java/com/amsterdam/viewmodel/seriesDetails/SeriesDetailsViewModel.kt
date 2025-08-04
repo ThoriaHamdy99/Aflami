@@ -49,8 +49,6 @@ class SeriesDetailsViewModel @Inject constructor(
             .onEach {
                 loadTvShowDetails()
             }.launchIn(viewModelScope)
-
-        loadTvShowDetails()
     }
 
     private fun loadTvShowDetails() {
@@ -173,6 +171,10 @@ class SeriesDetailsViewModel @Inject constructor(
             }
             state.copy(reviews = updatedReviews)
         }
+    }
+
+    override fun onPlayVideoClicked() {
+        sendNewNavigationEffect(SeriesDetailsEffect.LaunchSeriesVideoEffect(state.value.videoUrl))
     }
 
     private suspend fun getEpisodesForSeason(seasonNumber: Int): List<Episode> {
