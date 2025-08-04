@@ -60,6 +60,12 @@ sealed interface Route {
     data object Onboarding : Route
 
     @Serializable
+    data class ListDetails(
+        private val listId: Long,
+        private val listName: String
+    ) : Route
+
+    @Serializable
     data object WatchHistory: Route
 
 }
