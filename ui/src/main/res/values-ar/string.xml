@@ -225,4 +225,6 @@
     <!-- List -->
     <string name="remove_from_list">حذف عنصر</string>
     <string name="no_saved_items_here">لا توجد عناصر محفوظة</string>
+    <string name="confirm_delete">هل أنت متأكد من مواصلة الحذف؟</string>
+    <string name="list_deleted_successfully">تم حذف القائمة بنجاح</string>
 </resources>

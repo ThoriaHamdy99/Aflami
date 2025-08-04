@@ -52,7 +52,6 @@ import com.amsterdam.ui.screens.home.sections.continueWatchingSection
 import com.amsterdam.ui.screens.home.sections.popularSection
 import com.amsterdam.ui.screens.home.sections.topRatingSection
 import com.amsterdam.ui.screens.home.sections.upcomingMoviesSection
-import com.amsterdam.ui.screens.listDetails.ListsDetailsScreen
 import com.amsterdam.viewmodel.home.HomeEffect
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToMovieDetailsEffect
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToSearchScreenEffect

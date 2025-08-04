@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.LoadingContainer
+import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
@@ -31,7 +33,9 @@ import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.home.sections.AnimatedSectionVisibility
+import com.amsterdam.ui.screens.listDetails.component.DeleteListDialog
 import com.amsterdam.ui.screens.listDetails.component.MoviesItemsGrid
+import com.amsterdam.ui.screens.listDetails.component.getListDetailsErrorMessage
 import com.amsterdam.viewmodel.listDetails.ListDetailsEffect
 import com.amsterdam.viewmodel.listDetails.ListDetailsInteractionListener
 import com.amsterdam.viewmodel.listDetails.ListDetailsUiState
@@ -40,6 +44,8 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ListsDetailsScreen(viewModel: ListDetailsViewModel = hiltViewModel()) {
+
+    val context = LocalContext.current
     val navController = LocalNavController.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -50,8 +56,18 @@ fun ListsDetailsScreen(viewModel: ListDetailsViewModel = hiltViewModel()) {
                     navController.navigate(Route.MovieDetails(effect.movieId))
                 }
 
-                ListDetailsEffect.NavigateBack -> {
-                    navController.navigateUp()
+                ListDetailsEffect.NavigateBack -> navController.navigateUp()
+
+                ListDetailsEffect.ShowDeletionSuccessSnackBar -> {
+                    SnackBarManager.showSuccess(
+                        context.getString(R.string.list_deleted_successfully)
+                    )
+                }
+
+                is ListDetailsEffect.ShowErrorSnackbar -> {
+                    SnackBarManager.showError(
+                        getListDetailsErrorMessage(state.error, context)
+                    )
                 }
             }
         }
@@ -84,7 +100,7 @@ private fun ListDetailsContent(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_delete),
             lastOptionIconTint = AppTheme.color.redAccent,
-            onLastOptionClicked = { }, // TODO,
+            onLastOptionClicked = listener::onClickDeleteList,
             onNavigateBackClicked = listener::onClickBack,
         )
 
@@ -137,6 +153,16 @@ private fun ListDetailsContent(
             )
         }
     }
+
+    AnimatedSectionVisibility(
+        visible = state.showDeleteListDialog
+    ) {
+        DeleteListDialog(
+            isLoading = state.isDeleteLoading,
+            onDismiss = listener::onDeleteListDialogDismiss,
+            onConfirm = listener::onDeleteListConfirmed
+        )
+    }
 }
 
 @ThemeAndLocalePreviews
@@ -149,6 +175,9 @@ private fun ListDetailsScreenPreview() {
                 override fun onClickBack() {}
                 override fun onClickRetryLoading() {}
                 override fun onClickMovie(movieId: Long) {}
+                override fun onClickDeleteList() {}
+                override fun onDeleteListConfirmed() {}
+                override fun onDeleteListDialogDismiss() {}
             }
         )
     }

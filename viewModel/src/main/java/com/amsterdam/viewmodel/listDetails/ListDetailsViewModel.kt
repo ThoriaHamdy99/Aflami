@@ -5,6 +5,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.useCase.list.DeleteListUseCase
 import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.paging.PagingSource
@@ -15,11 +17,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ListDetailsViewModel @Inject constructor(
     private val getMoviesFromListUseCase: GetMoviesFromListUseCase,
+    private val deleteListUseCase: DeleteListUseCase,
     private val listDetailsUiStateMapper: ListDetailsUiStateMapper,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     args: ListDetailsArgs,
@@ -57,7 +61,7 @@ class ListDetailsViewModel @Inject constructor(
             },
             onSuccess = ::onGetListDetailsSuccess,
             onError = {},
-            onCompletion = ::onCompletion
+            onCompletion = ::onGetListDetailsCompletion
         )
     }
 
@@ -65,7 +69,7 @@ class ListDetailsViewModel @Inject constructor(
         updateState { it.copy(listItems = moviesPagingFlow) }
     }
 
-    private fun onCompletion() = updateState { it.copy(isLoading = false) }
+    private fun onGetListDetailsCompletion() = updateState { it.copy(isLoading = false) }
 
     override fun onClickMovie(movieId: Long) {
         sendNewEffect(ListDetailsEffect.NavigateToMovieDetailsScreen(movieId))
@@ -77,5 +81,44 @@ class ListDetailsViewModel @Inject constructor(
 
     override fun onClickRetryLoading() {
         loadListDetails()
+    }
+
+    override fun onClickDeleteList() {
+        updateState { it.copy(showDeleteListDialog = true) }
+    }
+
+    override fun onDeleteListDialogDismiss() {
+        updateState { it.copy(showDeleteListDialog = false) }
+    }
+
+    override fun onDeleteListConfirmed() {
+        updateState { it.copy(isDeleteLoading = true) }
+        tryToExecute(
+            action = { deleteListUseCase(state.value.listId) },
+            onSuccess = { onDeleteListSuccess() },
+            onError = ::onDeleteListError
+        )
+    }
+
+    private fun onDeleteListSuccess() {
+        updateState { it.copy(
+            showDeleteListDialog = false,
+            isDeleteLoading = false,
+            error = null
+        ) }
+        sendNewNavigationEffect(ListDetailsEffect.NavigateBack)
+        sendNewEffect(ListDetailsEffect.ShowDeletionSuccessSnackBar)
+    }
+
+    private fun onDeleteListError(exception: AflamiException) {
+        val error = ListDetailsError.toListDetailsError(exception)
+        viewModelScope.launch {
+            updateState { it.copy(
+                error = error,
+                showDeleteListDialog = false,
+                isDeleteLoading = false
+            ) }
+            sendNewEffect(ListDetailsEffect.ShowErrorSnackbar(error = state.value.error))
+        }
     }
 }
