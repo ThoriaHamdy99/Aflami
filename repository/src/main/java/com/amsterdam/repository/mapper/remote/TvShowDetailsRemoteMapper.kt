@@ -28,7 +28,8 @@ class TvShowDetailsRemoteMapper @Inject constructor(
             rating = dto.voteAverage.toFloat(),
             popularity = dto.popularity,
             seasonCount = dto.seasonCount,
-            originCountry = dto.originCountry.firstOrNull() ?: ""
+            originCountry = dto.originCountry.firstOrNull() ?: "",
+            videoUrl = dto.videos.results.firstOrNull()?.fullVideoUrl ?: ""
         )
 
         return with(dto) {

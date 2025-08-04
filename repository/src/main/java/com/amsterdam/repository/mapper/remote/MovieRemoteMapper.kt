@@ -9,12 +9,12 @@ import com.amsterdam.repository.utils.toSafeLocalDate
 import javax.inject.Inject
 
 class MovieRemoteMapper @Inject constructor() : EntityMapper<RemoteMovieItemDto, Movie> {
-    
+
     override fun toEntity(dto: RemoteMovieItemDto): Movie {
         return toEntity(dto, isPoster = true)
     }
 
-    fun toEntity(dto: RemoteMovieItemDto, isPoster: Boolean): Movie {
+    fun toEntity(dto: RemoteMovieItemDto, isPoster: Boolean,videoUrl: String=""): Movie {
         val genresIds = dto.genreIds.ifEmpty { dto.genres.map { it.id } }
         val imageUrl = if (isPoster) dto.fullPosterUrl else dto.fullBackdropUrl
         return Movie(
@@ -28,7 +28,7 @@ class MovieRemoteMapper @Inject constructor() : EntityMapper<RemoteMovieItemDto,
             popularity = dto.popularity,
             originCountry = dto.originCountry.firstOrNull() ?: "",
             runTimeInMinutes = dto.runtime,
-            hasVideo = dto.video
+            videoUrl = videoUrl
         )
     }
 

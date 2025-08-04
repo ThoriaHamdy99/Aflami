@@ -24,7 +24,7 @@ class MovieDetailsUiStateMapper @Inject constructor() {
             movieLength = movieLengthToHourMinuteString(movie.runTimeInMinutes),
             originCountry = movie.originCountry,
             description = movie.description,
-            hasVideo = movie.hasVideo,
+            videoUrl = movie.videoUrl,
             actors = actors.map {
                 ActorUiState(
                     photo = it.imageUrl,

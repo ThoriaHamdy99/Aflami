@@ -13,5 +13,6 @@ data class TvShow(
     val rating: Float,
     val popularity: Double,
     val seasonCount: Int,
-    val originCountry: String
+    val originCountry: String,
+    val videoUrl: String = ""
 )

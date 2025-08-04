@@ -6,7 +6,8 @@ import com.amsterdam.repository.mapper.shared.DtoMapper
 import com.amsterdam.repository.mapper.shared.EntityMapper
 import javax.inject.Inject
 
-class TvShowLocalMapper @Inject constructor(): EntityMapper<LocalTvShowDto, TvShow>, DtoMapper<TvShow, LocalTvShowDto> {
+class TvShowLocalMapper @Inject constructor() : EntityMapper<LocalTvShowDto, TvShow>,
+    DtoMapper<TvShow, LocalTvShowDto> {
     override fun toEntity(dto: LocalTvShowDto): TvShow {
         return TvShow(
             id = dto.tvShowId,
