@@ -14,6 +14,5 @@ data class TvShow(
     val popularity: Double,
     val seasonCount: Int,
     val originCountry: String,
-    val videoUrl: String = "",
-    val productionCompanies: List<ProductionCompany>
+    val videoUrl: String = ""
 )

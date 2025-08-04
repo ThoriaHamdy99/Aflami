@@ -8,10 +8,8 @@ import com.amsterdam.repository.mapper.shared.mapCategoryIdToMovieGenre
 import com.amsterdam.repository.utils.toSafeLocalDate
 import javax.inject.Inject
 
-class MovieRemoteMapper @Inject constructor(
-    private val movieProductionCompanyRemoteMapper: ProductionCompanyRemoteMapper
-) : EntityMapper<RemoteMovieItemDto, Movie> {
-    
+class MovieRemoteMapper @Inject constructor() : EntityMapper<RemoteMovieItemDto, Movie> {
+
     override fun toEntity(dto: RemoteMovieItemDto): Movie {
         return toEntity(dto, isPoster = true)
     }
@@ -30,12 +28,10 @@ class MovieRemoteMapper @Inject constructor(
             popularity = dto.popularity,
             originCountry = dto.originCountry.firstOrNull() ?: "",
             runTimeInMinutes = dto.runtime,
-            productionCompanies = movieProductionCompanyRemoteMapper.toEntityList(
-                dto.productionCompanies
-            ),
             videoUrl = videoUrl
         )
     }
+
     fun toEntityList(dtoList: List<RemoteMovieItemDto>, isPoster: Boolean): List<Movie> {
         return dtoList.map { toEntity(it, isPoster) }
     }
