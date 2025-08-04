@@ -142,18 +142,9 @@ class ProfileViewModel @Inject constructor(
             tryToExecute(
                 action = ::onConfirmLogout,
                 onSuccess = { onConfirmLogoutSuccess() },
-                onError = ::onError
+                onError = ::onError,
+                onCompletion = ::onConfirmLogoutCompletion
             )
-        }
-
-        viewModelScope.launch {
-            updateState {
-                it.copy(
-                    settingsState = it.settingsState.copy(
-                        isLogoutButtonLoading = false
-                    )
-                )
-            }
         }
     }
 
@@ -163,6 +154,20 @@ class ProfileViewModel @Inject constructor(
 
     private fun onConfirmLogoutSuccess(){
         sendNewNavigationEffect(ProfileEffect.NavigateToLogin)
+    }
+
+    private fun onConfirmLogoutCompletion(){
+        viewModelScope.launch {
+            updateState {
+                it.copy(
+                    settingsState = it.settingsState.copy(
+                        isLogoutButtonLoading = false,
+                        isLogoutDialogVisible = false,
+                        isSettingsDialogVisible = false
+                    )
+                )
+            }
+        }
     }
 
     override fun onClickForgotPassword() {

@@ -30,6 +30,7 @@ import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.profile.components.LoggedInContent
 import com.amsterdam.ui.screens.profile.components.NotLoggedInContent
+import com.amsterdam.ui.screens.profile.components.getProfileErrorMessage
 import com.amsterdam.viewmodel.profile.ProfileEffect
 import com.amsterdam.viewmodel.profile.ProfileInteractionListener
 import com.amsterdam.viewmodel.profile.ProfileUiState
@@ -59,7 +60,7 @@ fun ProfileScreen(
 
                 ProfileEffect.ShowError -> {
                     SnackBarManager.showError(
-                        message = "Unknown Error"
+                        message = getProfileErrorMessage(state.profileErrorState, context)
                     )
                 }
             }
