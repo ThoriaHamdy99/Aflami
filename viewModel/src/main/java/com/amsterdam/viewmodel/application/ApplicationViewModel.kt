@@ -2,6 +2,7 @@ package com.amsterdam.viewmodel.application
 
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
+import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
@@ -16,11 +17,17 @@ import javax.inject.Inject
 class ApplicationViewModel @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
+    private val getOnboardingStatusUseCase: GetOnboardingStatusUseCase,
     private val manageAppThemeUseCase: ManageAppThemeUseCase,
     private val getsSessionType: GetsSessionType
 ) : BaseViewModel<ApplicationUiState, Unit>(ApplicationUiState(), dispatcherProvider) {
-
     suspend fun setStartDestination(): ApplicationUiState.StartDestinations {
+        val isOnboardingCompleted = getOnboardingStatusUseCase()
+
+        if (!isOnboardingCompleted) {
+            return ApplicationUiState.StartDestinations.ON_BOARDING
+        }
+
         val sessionType = getsSessionType()
         return when (sessionType) {
             SessionType.NOT_LOGGED_IN -> ApplicationUiState.StartDestinations.LOGIN

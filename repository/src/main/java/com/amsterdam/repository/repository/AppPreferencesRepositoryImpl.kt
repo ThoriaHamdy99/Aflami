@@ -28,4 +28,11 @@ class AppPreferencesRepositoryImpl @Inject constructor(
     override suspend fun setAppTheme(isDarkTheme: Boolean) {
         preferences.setAppTheme(isDarkTheme)
     }
+    override suspend fun setOnboardingCompleted(isCompleted: Boolean) {
+        preferences.setOnboardingCompleted(isCompleted)
+    }
+
+    override suspend fun isOnboardingCompleted(): Boolean {
+        return preferences.isOnboardingCompleted()
+    }
 }

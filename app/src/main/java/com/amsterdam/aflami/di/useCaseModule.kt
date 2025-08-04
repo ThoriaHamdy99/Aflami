@@ -29,8 +29,10 @@ import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
@@ -50,6 +52,14 @@ object UseCaseModule {
     @Provides
     fun provideGetsSessionType(repo: AuthenticationRepository): GetsSessionType =
         GetsSessionType(repo)
+
+    @Provides
+    fun provideGetOnboardingStatusUseCase(repo: AppPreferencesRepository): GetOnboardingStatusUseCase =
+        GetOnboardingStatusUseCase(repo)
+
+    @Provides
+    fun provideSetOnboardingCompletedUseCase(repo: AppPreferencesRepository): SetOnboardingCompletedUseCase =
+        SetOnboardingCompletedUseCase(repo)
 
 
     @Provides

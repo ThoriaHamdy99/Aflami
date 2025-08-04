@@ -25,9 +25,7 @@ fun AflamiTheme(
     val view = LocalView.current
 
     if (activity != null) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
-            activity.window.navigationBarColor = theme.surface.toArgb()
-        }
+        activity.window.navigationBarColor = theme.surface.toArgb()
         WindowCompat.getInsetsController(activity.window, view).isAppearanceLightStatusBars =
             !isDarkTheme
     }
