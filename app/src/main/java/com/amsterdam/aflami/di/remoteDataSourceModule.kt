@@ -4,11 +4,13 @@ import com.amsterdam.remotedatasource.datasource.AuthenticationRemoteDataSourceI
 import com.amsterdam.remotedatasource.datasource.CategoryRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.CountryRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.MovieRemoteDataSourceImpl
+import com.amsterdam.remotedatasource.datasource.ProfileDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.TvRemoteDataSourceImpl
 import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.datasource.remote.CountryRemoteSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
+import com.amsterdam.repository.datasource.remote.ProfileDataSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
 import dagger.Binds
 import dagger.Module
@@ -49,4 +51,10 @@ abstract class RemoteDataSourceBindModule {
     abstract fun bindTvShowsRemoteSource(
         impl: TvRemoteDataSourceImpl
     ): TvShowsRemoteSource
+
+    @Binds
+    @Singleton
+    abstract fun bindProfileDataSource(
+        profileDataSourceImpl: ProfileDataSourceImpl
+    ): ProfileDataSource
 }
