@@ -1,5 +1,6 @@
 package com.amsterdam.ui.components
 
+import android.R.attr.onClick
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -41,6 +42,7 @@ fun BaseCard(
     modifier: Modifier = Modifier,
     movieRating: String? = null,
     topIcon: Painter? = null,
+    onTopIconClick: () -> Unit = {},
     onClick: () -> Unit = {},
 ) {
     Box(
@@ -69,7 +71,7 @@ fun BaseCard(
                 rating = it,
             )
         }
-        topIcon?.let { IconContainer(it) }
+        topIcon?.let { IconContainer(topIcon = it, onClick = { onTopIconClick()  }) }
         MovieInfoSection(movieTitle, movieType, movieYear)
         GradientOverlay()
     }
@@ -148,7 +150,7 @@ private fun BoxScope.GradientOverlay() {
 }
 
 @Composable
-private fun BoxScope.IconContainer(topIcon: Painter) {
+private fun BoxScope.IconContainer(topIcon: Painter, onClick: () -> Unit = {}) {
     Box(
         modifier =
             Modifier
@@ -158,7 +160,10 @@ private fun BoxScope.IconContainer(topIcon: Painter) {
                 .background(
                     color = AppTheme.color.iconBackGround,
                     RoundedCornerShape(12.dp),
-                ),
+                )
+                .clip(RoundedCornerShape(12.dp))
+                .clickable{ onClick() }
+        ,
         contentAlignment = Alignment.Center,
     ) {
         Icon(
