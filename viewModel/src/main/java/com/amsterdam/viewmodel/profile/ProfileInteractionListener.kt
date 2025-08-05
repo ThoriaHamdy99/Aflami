@@ -35,4 +35,5 @@ interface ProfileInteractionListener {
     fun onApplyTheme()
     fun onDismissThemeDialog()
 
+    fun onClickRating()
 }

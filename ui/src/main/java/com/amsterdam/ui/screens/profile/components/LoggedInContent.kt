@@ -92,7 +92,7 @@ fun LoggedInContent(
         ) {
             item { ProfileImageSection(state.userInfo.userAvatarUrl) }
             item { ProfileInfoSection(state.userInfo.username, state.userInfo.userPoints) }
-            item { HistoryAndRatingSection(onClickHistory = onClickHistory) }
+            item { HistoryAndRatingSection(onClickHistory = onClickHistory, onClickRating = interactionListener::onClickRating) }
             item { HorizontalDivider() }
             item { SettingsSection(
                 state,
@@ -192,7 +192,7 @@ private fun LoggedInContentPreview() {
             override fun onClickConfirmLogout() {}
             override fun onUpdateRestrictionLevel(restrictionLevel: RestrictionLevel) {}
             override fun onSaveRestrictionLevel() {}
-        },
+        override fun onClickRating() {}},
             onClickHistory = {})
     }
 }

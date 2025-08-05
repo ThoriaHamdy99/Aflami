@@ -120,6 +120,8 @@ fun ProfileScreen(
                         context.getString(R.string.failed_to_load_user_data)
                     )
                 }
+
+                ProfileEffect.NavigateToMyRating -> navController.navigate(Route.MyRating)
             }
         }
     }
@@ -212,6 +214,7 @@ private fun ProfileScreenPreview() {
             override fun onApplyTheme() {}
 
             override fun onDismissThemeDialog() {}
+            override fun onClickRating() {}
         }
     )
 }
