@@ -24,6 +24,7 @@ import com.amsterdam.repository.mapper.remote.toMovieDetailsEntity
 import com.amsterdam.repository.mapper.remote.toEntity
 import com.amsterdam.repository.mapper.remote.toMovieEntityList
 import com.amsterdam.repository.mapper.remote.toMovieItemDto
+import com.amsterdam.repository.mapper.remote.toMovieUserRateEntityList
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalDto
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalMovieDtoList
 import com.amsterdam.repository.security.CryptoData
@@ -37,6 +38,7 @@ class MovieRepositoryImpl @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val movieLocalSource: MovieLocalSource,
     private val movieRemoteDataSource: MovieRemoteSource,
+    private val authenticationLocalSource: AuthenticationLocalSource,
     private val preferences: AppPreferences,
     val cryptoData: CryptoData,
     ) : MovieRepository {
@@ -267,7 +269,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun getUserRatedMovies(): List<UserRatedMovie> {
         val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
-        return movieRateRemoteMapper.toEntityList(movieRemoteDataSource.getRatedMovies(sessionId).results)
+        return movieRemoteDataSource.getRatedMovies(sessionId).results.toMovieUserRateEntityList()
     }
 
     override suspend fun deleteMovieRate(movieId: Long) {

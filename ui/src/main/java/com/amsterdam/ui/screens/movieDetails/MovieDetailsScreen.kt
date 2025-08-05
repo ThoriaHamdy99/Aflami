@@ -307,7 +307,7 @@ fun MovieContent(
                                         .align(Alignment.CenterHorizontally)
                                         .offset(y = (-32).dp),
                                 isActive = state.videoUrl.isNotBlank(),
-                                onClick = interactionListener::onPlayVideoClicked
+                                onClick = movieDetailsInteractionListener::onPlayVideoClicked
                             )
                             Column(
                                 modifier =
