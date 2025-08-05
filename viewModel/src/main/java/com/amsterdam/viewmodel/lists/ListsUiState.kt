@@ -7,16 +7,18 @@ data class ListsUiState(
     val isLoading: Boolean = false,
     val userLists: List<UserListItemUiState> = emptyList(),
     val errorUiState: ListsErrorState? = null
-)
+) {
+    sealed interface ListsErrorState {
+        data object NoNetworkConnection : ListsErrorState
 
-sealed interface ListsErrorState {
-    data object NoNetworkConnection : ListsErrorState
-    data object UnknownError : ListsErrorState
-    companion object {
-        fun toListsErrorState(exception: Throwable): ListsErrorState =
-            when (exception) {
-                is NetworkException -> NoNetworkConnection
-                else -> UnknownError
-            }
+        data object UnknownError : ListsErrorState
+
+        companion object {
+            fun toListsErrorState(exception: Throwable): ListsErrorState =
+                when (exception) {
+                    is NetworkException -> NoNetworkConnection
+                    else -> UnknownError
+                }
+        }
     }
-} 
+}
