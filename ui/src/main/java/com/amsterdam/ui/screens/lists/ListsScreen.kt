@@ -146,8 +146,7 @@ private fun ListsScreenContent(
                     Modifier
                         .fillMaxSize()
                         .background(color = AppTheme.color.surface)
-                        .statusBarsPadding()
-                        .navigationBarsPadding(),
+                        .statusBarsPadding(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -162,9 +161,7 @@ private fun ListsScreenContent(
                 AnimatedContent(
                     modifier =
                         Modifier
-                            .fillMaxSize()
-                            .navigationBarsPadding()
-                            .windowInsetsPadding(WindowInsets(bottom = LocalScaffoldBottomPadding.current)),
+                            .fillMaxSize(),
                     targetState = Triple(state.isLoading, state.errorUiState, state.userLists),
                     transitionSpec = {
                         fadeIn(tween(700)) togetherWith fadeOut(tween(700))
