@@ -69,6 +69,7 @@ data class SeriesDetailsUiState(
             val description: String = "",
             val duration: String = "",
             val airDate: String = "",
+            val hasVideo: Boolean = false
         )
     }
 }
