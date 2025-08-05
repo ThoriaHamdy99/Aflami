@@ -16,7 +16,7 @@ class UserListRemoteSourceImpl @Inject constructor(
         language: String,
         sessionId: String,
     ): CreateUserListResponse {
-        TODO("Not yet implemented")
+        return responseCall { userListApiService.createNewList(sessionId, listName, description, language) }
     }
 
     override suspend fun getMoviesFromList(
