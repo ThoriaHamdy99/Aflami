@@ -24,6 +24,7 @@ fun CreateNewListDialog(
     onDismiss: () -> Unit = {},
 ) {
     var newListName by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
     Dialog(
         modifier = modifier,
         onDismiss = onDismiss,
@@ -48,9 +49,10 @@ fun CreateNewListDialog(
             ConfirmButton(
                 title = stringResource(R.string.create),
                 isEnabled = newListName.isNotEmpty(),
-                isLoading = false,
+                isLoading = isLoading,
                 isNegative = false,
                 onClick = {
+                    isLoading = true
                     onCreateListClick(newListName)
                 },
             )

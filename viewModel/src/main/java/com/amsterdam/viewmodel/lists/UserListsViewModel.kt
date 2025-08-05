@@ -94,7 +94,7 @@ class UserListsViewModel @Inject constructor(
                 loadCustomLists()
             },
             onError = {
-                sendNewEffect(ListsEffect.ListCreatedSuccessfully)
+                sendNewEffect(ListsEffect.FailedToCreateList)
             },
             onCompletion = {
                 updateState { it.copy(isCreateNewListDialogVisible = false) }
