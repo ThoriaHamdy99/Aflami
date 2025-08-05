@@ -249,4 +249,17 @@
     <string name="theme_not_changed">لم يتم تغيير النمط، يرجى المحاولة مرة أخرى</string>
 
     <string name="failed_to_load_user_data">حدث خطأ أثناء تحميل بيانات المستخدم، يرجى المحاولة مرة أخرى</string>
+
+
+    <plurals name="item_count">
+        <item quantity="zero">لا عناصر</item>
+        <item quantity="one">عنصر واحد</item>
+        <item quantity="two">عنصران</item>
+        <item quantity="few">%d عناصر</item>
+        <item quantity="many">%d عنصراً</item>
+        <item quantity="other">%d عنصر</item>
+    </plurals>
+
+    <string name="added_to_list_successfully">تمت الإضافة إلى القائمة بنجاح.</string>
+    <string name="failed_to_add_to_list">فشل في الإضافة إلى القائمة.</string>
 </resources>

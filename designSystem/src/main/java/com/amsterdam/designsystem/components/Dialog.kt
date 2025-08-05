@@ -62,9 +62,8 @@ fun Dialog(
                     .padding(contentPadding)
                     .background(
                         color = contentColor,
-                        shape = dialogCornerShape
-                    )
-                    .align(Alignment.Center)
+                        shape = dialogCornerShape,
+                    ).align(Alignment.Center)
                     .verticalScroll(rememberScrollState()),
             ) {
                 content()

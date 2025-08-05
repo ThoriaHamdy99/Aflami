@@ -249,4 +249,13 @@
 
     <string name="failed_to_load_user_data">Failure while loading user data, please try again</string>
 
+
+    <plurals name="item_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+
+    <string name="added_to_list_successfully">Added to list successfully.</string>
+    <string name="failed_to_add_to_list">Failed to add to list.</string>
+
 </resources>

@@ -1,7 +1,25 @@
 package com.amsterdam.aflami.di
 
-import com.amsterdam.domain.repository.*
-import com.amsterdam.repository.repository.*
+import com.amsterdam.domain.repository.AppPreferencesRepository
+import com.amsterdam.domain.repository.AuthenticationRepository
+import com.amsterdam.domain.repository.CategoryRepository
+import com.amsterdam.domain.repository.CountryRepository
+import com.amsterdam.domain.repository.MovieRepository
+import com.amsterdam.domain.repository.ProfileRepository
+import com.amsterdam.domain.repository.RecentSearchRepository
+import com.amsterdam.domain.repository.TvShowRepository
+import com.amsterdam.domain.repository.UserListRepository
+import com.amsterdam.domain.repository.WatchHistoryRepository
+import com.amsterdam.repository.repository.AppPreferencesRepositoryImpl
+import com.amsterdam.repository.repository.AuthenticationRepositoryImpl
+import com.amsterdam.repository.repository.CategoryRepositoryImpl
+import com.amsterdam.repository.repository.CountryRepositoryImpl
+import com.amsterdam.repository.repository.MovieRepositoryImpl
+import com.amsterdam.repository.repository.ProfileRepositoryImpl
+import com.amsterdam.repository.repository.RecentSearchRepositoryImpl
+import com.amsterdam.repository.repository.TvShowRepositoryImpl
+import com.amsterdam.repository.repository.UserListRepositoryImpl
+import com.amsterdam.repository.repository.WatchHistoryRepositoryImpl
 import com.amsterdam.repository.security.CryptoData
 import com.amsterdam.repository.security.CryptoDataImpl
 import dagger.Binds

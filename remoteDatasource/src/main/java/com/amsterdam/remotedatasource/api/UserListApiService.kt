@@ -1,5 +1,6 @@
 package com.amsterdam.remotedatasource.api
 
+import com.amsterdam.repository.dto.remote.AddItemToListResponse
 import com.amsterdam.repository.dto.remote.CreateUserListResponse
 import com.amsterdam.repository.dto.remote.RemoteUserListResponse
 import com.amsterdam.repository.dto.remote.UserListDetailsResponse
@@ -22,9 +23,9 @@ interface UserListApiService {
     ): CreateUserListResponse
     @GET(USER_LISTS_ENDPOINT)
     suspend fun getUserLists(
-        @Path("account_id") accountId: Int = 0,
-        @Query("page") page: Int = 1,
-        @Query("session_id") sessionId: String,
+        @Path(ACCOUNT_ID) accountId: Int = 0,
+        @Query(PAGE) page: Int = 1,
+        @Query(SESSION_ID) sessionId: String,
     ): RemoteUserListResponse
 
     @GET(GET_USER_LIST_DETAILS)
@@ -40,6 +41,13 @@ interface UserListApiService {
     )
 
     @FormUrlEncoded
+    @POST(ADD_MOVIE_TO_LIST)
+    suspend fun addMediaItemToList(
+        @Path(LIST_ID) listId: Long,
+        @Query(SESSION_ID) sessionId: String,
+        @Field(MEDIA_ID) movieId: Int,
+    ): AddItemToListResponse
+
     @POST(DELETE_MOVIE_FROM_LIST)
     suspend fun removeMovieFromList(
         @Path(LIST_ID) listId: Long,
@@ -48,6 +56,7 @@ interface UserListApiService {
     )
 
     companion object {
+        private const val ACCOUNT_ID = "account_id"
         private const val NAME = "name"
         private const val DESCRIPTION = "description"
         private const val LANGUAGE = "language"
@@ -57,6 +66,7 @@ interface UserListApiService {
         private const val MEDIA_ID = "media_id"
         private const val CREATE_LIST = "list"
 
+        const val ADD_MOVIE_TO_LIST = "list/{list_id}/add_item"
         const val USER_LISTS_ENDPOINT = "account/{account_id}/lists"
 
         private const val GET_USER_LIST_DETAILS = "list/{list_id}"

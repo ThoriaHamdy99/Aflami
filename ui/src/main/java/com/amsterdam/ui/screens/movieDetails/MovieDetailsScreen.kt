@@ -65,13 +65,16 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.application.LocalNavController
+import com.amsterdam.ui.components.AddToListDialog
+import com.amsterdam.ui.components.CreateNewListDialog
 import com.amsterdam.ui.components.MustLoginDialog
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.components.details.DetailsPostersPager
 import com.amsterdam.ui.navigation.Route
-import com.amsterdam.ui.navigation.Route.*
+import com.amsterdam.ui.navigation.Route.Cast
+import com.amsterdam.ui.navigation.Route.MovieDetails
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
@@ -91,6 +94,7 @@ import com.amsterdam.viewmodel.movieDetails.MovieDetailsInteractionListener
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsViewModel
+import com.amsterdam.viewmodel.movieDetails.UserListUiState
 import com.amsterdam.viewmodel.myRating.RateDialogInteractionListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -139,7 +143,31 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                     openYouTubeVideo(context, effect.url) {
                         SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
                     }
+                MovieDetailsEffect.MovieAddedToListError -> {
+                    SnackBarManager.showError(
+                        context.getString(com.amsterdam.ui.R.string.failed_to_add_to_list),
+                    )
+                }
 
+                MovieDetailsEffect.MovieAddedToListSuccessfully -> {
+                    SnackBarManager.showSuccess(
+                        context.getString(com.amsterdam.ui.R.string.added_to_list_successfully),
+                    )
+                }
+
+                MovieDetailsEffect.FailedToCreateList -> {
+                    SnackBarManager
+                        .showError(
+                            message = context.resources.getString(R.string.general_error_message),
+                        )
+                }
+
+                MovieDetailsEffect.ListCreatedSuccessfully -> {
+                    SnackBarManager
+                        .showSuccess(
+                            message = context.resources.getString(R.string.list_added_success_message),
+                        )
+                }
             }
         }
     }
@@ -243,14 +271,47 @@ fun MovieContent(
                 }
             }
         }
+
+        AnimatedVisibility(
+            modifier = Modifier,
+            visible = state.isCreateNewListDialogVisible,
+        ) {
+            CreateNewListDialog(
+                isCreateListLoading = state.isCreateListLoading,
+                listName = state.listName,
+                onListNameChange = movieDetailsInteractionListener::onChangeListName,
+                onCreateListClick = movieDetailsInteractionListener::onClickCreateNewList,
+                onDismiss = movieDetailsInteractionListener::onClickCancel,
+            )
+        }
+
         AnimatedVisibility(
             modifier = Modifier,
             visible = state.isLoginDialogVisible
         ) {
             MustLoginDialog(
                 title = state.dialogType.getMovieAndSeriesDetailsDialogTitle(),
-                onDismiss = movieDetailsInteractionListener::onCancelClicked,
-                onClickLogin = movieDetailsInteractionListener::onNavigateToLoginClicked,
+                onDismiss = movieDetailsInteractionListener::onClickCancel,
+                onClickLogin = movieDetailsInteractionListener::onClickNavigateToLogin,
+            )
+        }
+
+        AnimatedVisibility(
+            modifier = Modifier,
+            visible = state.isAddToListDialogVisible,
+        ) {
+            AddToListDialog(
+                userLists = state.userLists,
+                selectedList = state.selectedList,
+                onSelectedListChange = movieDetailsInteractionListener::onSelectedListChange,
+                onAddToSelectedList = { listId ->
+                    movieDetailsInteractionListener.onSaveMovieToList(
+                        movieId = state.movieId.toInt(),
+                        listId = listId,
+                    )
+                },
+                onCreateNewList = movieDetailsInteractionListener::onClickCreateList,
+                onDismiss = movieDetailsInteractionListener::onClickCancel,
             )
         }
 
@@ -322,7 +383,7 @@ fun MovieContent(
                                         .align(Alignment.CenterHorizontally)
                                         .offset(y = (-32).dp),
                                 isActive = state.videoUrl.isNotBlank(),
-                                onClick = movieDetailsInteractionListener::onPlayVideoClicked
+                                onClick = movieDetailsInteractionListener::onClickPlayVideo,
                             )
                             Column(
                                 modifier =
@@ -445,9 +506,10 @@ fun MovieContent(
             }
         }
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(appBarColor)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(appBarColor),
         ) {
             DefaultAppBar(
                 modifier =
@@ -459,8 +521,8 @@ fun MovieContent(
                 firstOption = painterResource(R.drawable.ic_outlined_star),
                 lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
                 onNavigateBackClicked = movieDetailsInteractionListener::onClickBack,
-                onFirstOptionClicked = movieDetailsInteractionListener::onRateClicked,
-                onLastOptionClicked = movieDetailsInteractionListener::onAddToListClicked,
+                onFirstOptionClicked = movieDetailsInteractionListener::onClickRate,
+                onLastOptionClicked = movieDetailsInteractionListener::onClickAddToList,
             )
             Column(
                 modifier = Modifier
@@ -477,8 +539,8 @@ fun MovieContent(
                     firstOption = painterResource(R.drawable.ic_outlined_star),
                     lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
                     onNavigateBackClicked = movieDetailsInteractionListener::onClickBack,
-                    onFirstOptionClicked = movieDetailsInteractionListener::onRateClicked,
-                    onLastOptionClicked = movieDetailsInteractionListener::onAddToListClicked,
+                    onFirstOptionClicked = movieDetailsInteractionListener::onClickRate,
+                    onLastOptionClicked = movieDetailsInteractionListener::onClickAddToList,
                 )
 
                 HorizontalDivider(color = dividerColor)
@@ -499,17 +561,34 @@ private fun SearchByActorContentPreview() {
                     override fun onClickShowAllCast() {}
                     override fun onClickBack() {}
                     override fun onClickRetryRequest() {}
-                    override fun onAddToListClicked() {}
-                    override fun onRateClicked() {}
-                    override fun onNavigateToLoginClicked() {}
-                    override fun onCancelClicked() {}
+
+                    override fun onClickAddToList() {}
+
+                    override fun onSaveMovieToList(
+                        movieId: Int,
+                        listId: Long) {}
+
+                    override fun onClickCreateList() {}
+
+                    override fun onChangeListName(listName: String) {}
+
+                    override fun onClickCreateNewList() {}
+
+                    override fun onSelectedListChange(selectedList: UserListUiState) {}
+
+                    override fun onClickRate() {}
+
+                    override fun onClickNavigateToLogin() {}
+
+                    override fun onClickCancel() {}
                     override fun onClickSimilarMovie(movieId: Long) {}
                     override fun onDescriptionExpansionToggled() {}
                     override fun onReviewExpansionToggled(reviewId: String) {}
-                    override fun onPlayVideoClicked() {}
+
+                    override fun onClickPlayVideo() {}
                 },
             rateDialogInteractionListener = object : RateDialogInteractionListener {
-                override fun onClickCancel() {}
+                override fun onClickCancelRateDialog() {}
                 override fun onClickSubmit() {}
                 override fun onChangeRating(newRate: Int) {}
 
