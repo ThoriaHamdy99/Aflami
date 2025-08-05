@@ -599,7 +599,7 @@ private fun EpisodesMenu(
                 onPlayEpisodeClicked(episode.number)
             }
         },
-        isActive = episode.hasVideo
+        isActive = true
     )
 }
 
