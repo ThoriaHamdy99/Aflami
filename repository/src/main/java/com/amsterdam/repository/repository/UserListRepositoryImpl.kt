@@ -32,12 +32,13 @@ class UserListRepositoryImpl
         override suspend fun getUserLists(
             accountId: Int,
             page: Int,
-            sessionId: String,
-        ): List<UserList> =
-            userListRemoteSource
+        ): List<UserList> {
+            val sessionId = authenticationRepository.getSessionId()
+            return userListDataSource
                 .getUserLists(accountId, page, sessionId)
                 .results
                 .map { it.toUserList() }
+        }
 
         override suspend fun removeMovieFromList(
             listId: Long,
