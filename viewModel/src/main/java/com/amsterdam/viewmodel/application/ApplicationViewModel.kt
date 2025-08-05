@@ -59,10 +59,13 @@ class ApplicationViewModel @Inject constructor(
                     )
                 }
             }
+        }
+
+        viewModelScope.launch(dispatcherProvider.IO) {
             manageLocaleLanguageUseCase.getAppLanguage().collect { language ->
                 updateState { state ->
                     state.copy(
-                        language = language,
+                        language = language
                     )
                 }
             }
