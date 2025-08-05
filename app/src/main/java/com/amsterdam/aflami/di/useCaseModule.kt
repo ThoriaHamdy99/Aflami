@@ -37,9 +37,10 @@ import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
 import com.amsterdam.domain.useCase.list.DeleteListUseCase
-import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
+import com.amsterdam.domain.useCase.list.GetUserListsUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
+import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
@@ -229,6 +230,12 @@ object UseCaseModule {
         getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase
     ): GetTopRatedScreenDataUseCase =
         GetTopRatedScreenDataUseCase(getTopRatedMoviesUseCase, getTopRatedTvShowsUseCase)
+
+    @Provides
+    fun provideGetUserListsUseCase(
+        userListRepository: UserListRepository,
+    ): GetUserListsUseCase =
+        GetUserListsUseCase(userListRepository)
 
 
     @Provides
