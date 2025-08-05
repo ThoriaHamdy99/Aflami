@@ -47,11 +47,10 @@ fun CreateNewListDialog(
 
             ConfirmButton(
                 title = stringResource(R.string.create),
-                isEnabled = true,
+                isEnabled = newListName.isNotEmpty(),
                 isLoading = false,
                 isNegative = false,
                 onClick = {
-                    if (newListName.isEmpty()) return@ConfirmButton
                     onCreateListClick(newListName)
                 },
             )
