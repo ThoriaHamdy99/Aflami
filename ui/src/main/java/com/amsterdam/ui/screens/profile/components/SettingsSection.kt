@@ -28,6 +28,7 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.ripple
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.ui.R
 import com.amsterdam.ui.screens.profile.model.Language
 import com.amsterdam.viewmodel.profile.ProfileInteractionListener
@@ -152,6 +153,20 @@ private fun SettingsSectionPreview() {
             ProfileUiState(),
             interactionListener = object : ProfileInteractionListener {
                 override fun onClickLogin() {}
+                override fun onClickSettings() {}
+
+                override fun onDismissSettingsDialog() {}
+                override fun onClickLogout() {}
+                override fun onDismissLogoutDialog() {}
+
+                override fun onClickForgotPassword() {}
+                override fun onClickContentRestriction() {}
+                override fun onDismissContentRestrictionDialog() {}
+
+                override fun onClickConfirmLogout() {}
+                override fun onUpdateRestrictionLevel(restrictionLevel: RestrictionLevel) {}
+                override fun onSaveRestrictionLevel() {}
+
                 override fun onClickLanguageSetting() {}
 
                 override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {}

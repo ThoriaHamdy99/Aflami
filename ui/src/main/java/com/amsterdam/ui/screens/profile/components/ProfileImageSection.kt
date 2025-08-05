@@ -69,8 +69,7 @@ fun ProfileImageSection(userAvatarUrl: String) {
                     shape = RoundedCornerShape(24.dp)
                 ),
             onLoading = { ImageLoadingIndicator() },
-            onError = { ProfileImagePlaceholder() },
-            isSafeEnabled = false
+            onError = { ProfileImagePlaceholder() }
         )
     }
 }
