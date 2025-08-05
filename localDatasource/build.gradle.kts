@@ -72,3 +72,21 @@ private fun DependencyHandlerScope.datastoreDependencies() {
 
     implementation(libs.javax.inject)
 }
+
+kover.reports{
+    filters.excludes {
+        androidGeneratedClasses()
+        packages(
+            "*.converter",
+            "*.daos",
+            "*.dataStore"
+        )
+        classes(
+            "*AflamiDatabase*"
+        )
+    }
+
+    verify.rule {
+        minBound(80)
+    }
+}
