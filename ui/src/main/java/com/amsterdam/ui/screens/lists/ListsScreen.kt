@@ -28,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,13 +35,13 @@ import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
+import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.ListItem
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.viewmodel.lists.ListsEffect
-import com.amsterdam.viewmodel.lists.ListsErrorState
 import com.amsterdam.viewmodel.lists.ListsInteractionListener
 import com.amsterdam.viewmodel.lists.ListsUiState
 import com.amsterdam.viewmodel.lists.UserListsViewModel
@@ -110,7 +109,7 @@ private fun ListsScreenContent(
                    LoadingContainer()
                 }
 
-                errorState == ListsErrorState.NoNetworkConnection -> {
+                errorState == ListsUiState.ListsErrorState.NoNetworkConnection -> {
                     NoNetworkContainer(
                         modifier = Modifier.fillMaxSize(),
                         onClickRetry = interaction::onClickRetryFetchList,
@@ -152,10 +151,10 @@ private fun ListsScreenContent(
 
 }
 
-@Preview(showBackground = true)
+@ThemeAndLocalePreviews
 @Composable
 private fun ListsScreenPreview_Loading() {
-    AflamiTheme(isDarkTheme = true) {
+    AflamiTheme {
         ListsScreenContent(
             state = ListsUiState(isLoading = true),
             interaction = object : ListsInteractionListener {
@@ -169,10 +168,10 @@ private fun ListsScreenPreview_Loading() {
     }
 }
 
-@Preview(showBackground = true)
+@ThemeAndLocalePreviews
 @Composable
 private fun ListsScreenPreview_Empty() {
-    AflamiTheme(isDarkTheme = true) {
+    AflamiTheme {
         ListsScreenContent(
             state = ListsUiState(
                 isLoading = false,
@@ -189,10 +188,10 @@ private fun ListsScreenPreview_Empty() {
     }
 }
 
-@Preview(showBackground = true)
+@ThemeAndLocalePreviews
 @Composable
 private fun ListsScreenPreview_WithData() {
-    AflamiTheme(isDarkTheme = true) {
+    AflamiTheme {
         ListsScreenContent(
             state = ListsUiState(
                 isLoading = false,
@@ -233,15 +232,15 @@ private fun ListsScreenPreview_WithData() {
     }
 }
 
-@Preview(showBackground = true)
+@ThemeAndLocalePreviews
 @Composable
 private fun ListsScreenPreview_Error() {
-    AflamiTheme(isDarkTheme = true) {
+    AflamiTheme {
         ListsScreenContent(
             state = ListsUiState(
                 isLoading = false,
                 userLists = emptyList(),
-                errorUiState = ListsErrorState.NoNetworkConnection
+                errorUiState = ListsUiState.ListsErrorState.NoNetworkConnection,
             ),
             interaction = object : ListsInteractionListener {
                 override fun onClickAddCustomList() {

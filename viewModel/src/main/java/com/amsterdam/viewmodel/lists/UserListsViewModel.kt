@@ -1,8 +1,7 @@
 package com.amsterdam.viewmodel.lists
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.amsterdam.domain.useCase.lists.GetUserListsUseCase
+import com.amsterdam.domain.useCase.list.GetUserListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -21,10 +20,6 @@ class UserListsViewModel @Inject constructor(
     dispatcherProvider,
 ),
     ListsInteractionListener {
-
-    init {
-        loadCustomLists()
-    }
 
     init {
         manageLocaleLanguageUseCase.getDeviceLanguage()
@@ -52,7 +47,7 @@ class UserListsViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         isLoading = false,
-                        errorUiState = ListsErrorState.toListsErrorState(exception)
+                        errorUiState = ListsUiState.ListsErrorState.toListsErrorState(exception),
                     )
                 }
             }
