@@ -120,7 +120,7 @@ private fun ProfileScreenContent(
             exit = fadeOut(tween(animationDuration)),
         ) {
             NotLoggedInContent(
-                interactionListener::onClickLogin
+                onClickLogin = interactionListener::onClickLogin,
             )
         }
     }
