@@ -7,9 +7,9 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys.CURRENT_LANGUAGE
-import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys.RESTRICTION_LEVEL
-import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys.IS_ONBOARDING_COMPLETED
 import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys.IS_DARK_THEME
+import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys.IS_ONBOARDING_COMPLETED
+import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys.RESTRICTION_LEVEL
 import com.amsterdam.repository.datasource.local.AppPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -22,12 +22,9 @@ class AppPreferencesImpl @Inject constructor(
 ) : AppPreferences {
 
     override suspend fun initAppLanguage(language: String) {
-        val currentLanguage = dataStore.data.map { preferences ->
+        dataStore.data.map { preferences ->
             preferences[CURRENT_LANGUAGE]
-        }.firstOrNull()
-        if (currentLanguage == null) {
-            setAppLanguage(language)
-        }
+        }.firstOrNull() ?: setAppLanguage(language)
     }
 
     override suspend fun setAppLanguage(language: String) {
@@ -37,12 +34,9 @@ class AppPreferencesImpl @Inject constructor(
     }
 
     override suspend fun initAppTheme(isDarkTheme: Boolean) {
-        val isDarkThemeFromLocal = dataStore.data.map { preferences ->
+        dataStore.data.map { preferences ->
             preferences[IS_DARK_THEME]
-        }.firstOrNull()
-        if (isDarkThemeFromLocal == null) {
-            setAppTheme(isDarkTheme)
-        }
+        }.firstOrNull() ?: setAppTheme(isDarkTheme)
     }
 
     override fun getAppTheme(): Flow<Boolean> {
