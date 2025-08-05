@@ -84,10 +84,15 @@ class UserListsViewModel @Inject constructor(
         }
     }
 
-    override fun onCreateNewListClick(listName: String) {
+    override fun onListNameChange(listName: String) {
+        updateState { it.copy(listName = listName) }
+    }
+
+    override fun onCreateNewListClick() {
+        updateState { it.copy(isCreateListLoading = true) }
         tryToExecute(
             action = {
-                createListUseCase(listName)
+                createListUseCase(state.value.listName)
             },
             onSuccess = {
                 sendNewEffect(ListsEffect.ListCreatedSuccessfully)
@@ -97,7 +102,13 @@ class UserListsViewModel @Inject constructor(
                 sendNewEffect(ListsEffect.FailedToCreateList)
             },
             onCompletion = {
-                updateState { it.copy(isCreateNewListDialogVisible = false) }
+                updateState {
+                    it.copy(
+                        isCreateNewListDialogVisible = false,
+                        listName = "",
+                        isCreateListLoading = false,
+                    )
+                }
             },
         )
     }

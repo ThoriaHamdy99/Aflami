@@ -3,7 +3,9 @@ package com.amsterdam.viewmodel.lists
 interface ListsInteractionListener {
     fun onClickAddList()
 
-    fun onCreateNewListClick(listName: String)
+    fun onListNameChange(listName: String)
+
+    fun onCreateNewListClick()
 
     fun onListClick(
         listId: Long,

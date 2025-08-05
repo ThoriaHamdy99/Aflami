@@ -27,10 +27,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -111,8 +107,6 @@ private fun ListsScreenContent(
     state: ListsUiState,
     interaction: ListsInteractionListener,
 ) {
-    var headerHeight by remember { mutableStateOf(0.dp) }
-
     Box(
         modifier =
             modifier
@@ -124,6 +118,9 @@ private fun ListsScreenContent(
             visible = state.isCreateNewListDialogVisible,
         ) {
             CreateNewListDialog(
+                isCreateListLoading = state.isCreateListLoading,
+                listName = state.listName,
+                onListNameChange = interaction::onListNameChange,
                 onCreateListClick = interaction::onCreateNewListClick,
                 onDismiss = interaction::onDismiss,
             )
@@ -237,7 +234,10 @@ private fun ListsScreenPreview_Loading() {
                     override fun onClickAddList() {
                     }
 
-                    override fun onCreateNewListClick(listName: String) {
+                    override fun onListNameChange(listName: String) {
+                    }
+
+                    override fun onCreateNewListClick() {
                     }
 
                     override fun onListClick(
@@ -273,7 +273,10 @@ private fun ListsScreenPreview_Empty() {
                     override fun onClickAddList() {
                     }
 
-                    override fun onCreateNewListClick(listName: String) {
+                    override fun onListNameChange(listName: String) {
+                    }
+
+                    override fun onCreateNewListClick() {
                     }
 
                     override fun onListClick(
@@ -335,7 +338,10 @@ private fun ListsScreenPreview_WithData() {
                     override fun onClickAddList() {
                     }
 
-                    override fun onCreateNewListClick(listName: String) {
+                    override fun onListNameChange(listName: String) {
+                    }
+
+                    override fun onCreateNewListClick() {
                     }
 
                     override fun onListClick(
@@ -372,7 +378,10 @@ private fun ListsScreenPreview_Error() {
                     override fun onClickAddList() {
                     }
 
-                    override fun onCreateNewListClick(listName: String) {
+                    override fun onListNameChange(listName: String) {
+                    }
+
+                    override fun onCreateNewListClick() {
                     }
 
                     override fun onListClick(

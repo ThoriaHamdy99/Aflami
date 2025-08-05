@@ -9,6 +9,8 @@ data class ListsUiState(
     val errorUiState: ListsErrorState? = null,
     val isCreateNewListDialogVisible: Boolean = false,
     val isUserLoggedIn: Boolean = true,
+    val listName: String = "",
+    val isCreateListLoading: Boolean = false,
 ) {
     sealed interface ListsErrorState {
         data object NoNetworkConnection : ListsErrorState
