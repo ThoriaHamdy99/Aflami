@@ -44,10 +44,10 @@ jobs:
         run: ./gradlew clean
 
       - name: Run Unit Tests With Kover Report
-        run: ./gradlew koverVerify --build-cache
+        run: ./gradlew :localDatasource:koverVerify --build-cache
 
       - name: Generate kover coverage report
-        run: ./gradlew :koverXmlReport
+        run: ./gradlew :localDatasource:koverXmlReport
         continue-on-error: true
 
       - name: Upload XML Coverage Report
@@ -55,7 +55,7 @@ jobs:
         if: always()
         with:
           name: kover-xml-report
-          path: '**/build/reports/kover/**/*.xml'
+          path: '**/localDatasource/build/reports/kover/**/*.xml'
 
 
       - name: Post Kover Code Coverage Comment
