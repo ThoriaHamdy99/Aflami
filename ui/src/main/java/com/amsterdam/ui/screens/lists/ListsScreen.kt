@@ -146,8 +146,7 @@ private fun ListsScreenContent(
                     Modifier
                         .fillMaxSize()
                         .background(color = AppTheme.color.surface)
-                        .statusBarsPadding()
-                        .navigationBarsPadding(),
+                        .statusBarsPadding(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
