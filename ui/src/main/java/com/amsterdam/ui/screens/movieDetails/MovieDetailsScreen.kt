@@ -258,15 +258,15 @@ fun MovieContent(
             visible = state.rateDialogUiState.isVisible,
             enter = expandIn(),
             exit = shrinkOut()
-            ) {
-            with(state.rateDialogUiState){
+        ) {
+            with(state.rateDialogUiState) {
                 RateDialog(
                     interaction = rateDialogInteractionListener,
                     isSubmittingEnabled = isSubmittingEnabled,
                     isLoading = isLoading,
                     selectedStarIndex = selectedStarIndex,
 
-                )
+                    )
             }
         }
         AnimatedVisibility(
@@ -400,7 +400,9 @@ fun MovieContent(
                                     similarMovies = state.similarMovies,
                                     deviceWidth = deviceWidth,
                                     onClick = { selectedMovieId ->
-                                        movieDetailsInteractionListener.onClickSimilarMovie(selectedMovieId)
+                                        movieDetailsInteractionListener.onClickSimilarMovie(
+                                            selectedMovieId
+                                        )
                                     }
                                 )
 
@@ -442,6 +444,24 @@ fun MovieContent(
 
             }
         }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(appBarColor)
+        ) {
+            DefaultAppBar(
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .statusBarsPadding()
+                        .zIndex(10f)
+                        .onSizeChanged { headerHeight = it.height },
+                firstOption = painterResource(R.drawable.ic_outlined_star),
+                lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
+                onNavigateBackClicked = movieDetailsInteractionListener::onClickBack,
+                onFirstOptionClicked = movieDetailsInteractionListener::onRateClicked,
+                onLastOptionClicked = movieDetailsInteractionListener::onAddToListClicked,
+            )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -460,28 +480,10 @@ fun MovieContent(
                     onFirstOptionClicked = movieDetailsInteractionListener::onRateClicked,
                     onLastOptionClicked = movieDetailsInteractionListener::onAddToListClicked,
                 )
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(appBarColor)
-        ) {
-            DefaultAppBar(
-                modifier =
-                    Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .statusBarsPadding()
-                        .zIndex(10f)
-                        .onSizeChanged { headerHeight = it.height },
-                firstOption = painterResource(R.drawable.ic_outlined_star),
-                lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
-                onNavigateBackClicked = interactionListener::onClickBack,
-                onFirstOptionClicked = interactionListener::onRateClicked,
-                onLastOptionClicked = interactionListener::onAddToListClicked,
-            )
 
-            HorizontalDivider(color = dividerColor)
+                HorizontalDivider(color = dividerColor)
+            }
         }
-
     }
 }
 
@@ -506,7 +508,7 @@ private fun SearchByActorContentPreview() {
                     override fun onReviewExpansionToggled(reviewId: String) {}
                     override fun onPlayVideoClicked() {}
                 },
-            rateDialogInteractionListener = object : RateDialogInteractionListener{
+            rateDialogInteractionListener = object : RateDialogInteractionListener {
                 override fun onClickCancel() {}
                 override fun onClickSubmit() {}
                 override fun onChangeRating(newRate: Int) {}
