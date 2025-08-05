@@ -48,41 +48,38 @@ fun AflamiApp(
     val layoutDirection =
         if (state.language.value == "ar") LayoutDirection.Rtl else LayoutDirection.Ltr
 
-    key(state.language.value) {
-        val context = LocalContext.current
-        LaunchedEffect(state.language.value) {
-            viewModel.setLocale(context, state.language.value)
-        }
 
-        AflamiTheme(
-            isDarkTheme = state.isDarkTheme,
-        ) {
-            CompositionLocalProvider(LocalNavController provides navController) {
-                CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
-                    Scaffold(
-                        bottomBar = {
-                            BottomNavigation(
-                                currentDestination = currentDestination,
-                                onNavigate = {
-                                    navController.navigate(it) {
-                                        popUpTo(it) {
-                                            inclusive = true
-                                        }
+    val context = LocalContext.current
+    viewModel.setLocale(context, state.language.value)
+
+    AflamiTheme(
+        isDarkTheme = state.isDarkTheme,
+    ) {
+        CompositionLocalProvider(LocalNavController provides navController) {
+            CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
+                Scaffold(
+                    bottomBar = {
+                        BottomNavigation(
+                            currentDestination = currentDestination,
+                            onNavigate = {
+                                navController.navigate(it) {
+                                    popUpTo(it) {
+                                        inclusive = true
                                     }
-                                },
+                                }
+                            },
+                        )
+                    }
+                ) { paddingValues ->
+                    CompositionLocalProvider(
+                        LocalScaffoldBottomPadding provides paddingValues.calculateBottomPadding()
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            NavGraph(
+                                navController = navController,
+                                startDestination = startDestination
                             )
-                        }
-                    ) { paddingValues ->
-                        CompositionLocalProvider(
-                            LocalScaffoldBottomPadding provides paddingValues.calculateBottomPadding()
-                        ) {
-                            Box(modifier = Modifier.fillMaxSize()) {
-                                NavGraph(
-                                    navController = navController,
-                                    startDestination = startDestination
-                                )
-                                SnackBarHost()
-                            }
+                            SnackBarHost()
                         }
                     }
                 }
