@@ -38,10 +38,7 @@ fun ThemeDialog(
             isDarkTheme = isDarkTheme,
             onConfirm = { onConfirm() },
             onDismiss = { onDismiss() },
-            onChangeTheme = {
-                Log.d("ThemeDialog", "onChangeTheme $it")
-                onChangeTheme(it) }
-        )
+            onChangeTheme = { onChangeTheme(it) })
     }
 }
 
