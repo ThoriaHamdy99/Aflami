@@ -1,20 +1,24 @@
 package com.amsterdam.viewmodel.lists
 
 import androidx.lifecycle.viewModelScope
+import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.list.CreateNewListUseCase
 import com.amsterdam.domain.useCase.list.GetUserListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class UserListsViewModel @Inject constructor(
     private val getUserListsUseCase: GetUserListsUseCase,
     private val createListUseCase: CreateNewListUseCase,
+    private val getsSessionType: GetsSessionType,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<ListsUiState, ListsEffect>(
@@ -24,12 +28,23 @@ class UserListsViewModel @Inject constructor(
     ListsInteractionListener {
 
     init {
-        manageLocaleLanguageUseCase.getDeviceLanguage()
-            .onEach {
-                loadCustomLists()
-            }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            runIfLoggedIn(
+                onLoggedIn = {
+                    updateState { it.copy(isUserLoggedIn = true) }
+                    manageLocaleLanguageUseCase
+                        .getDeviceLanguage()
+                        .onEach {
+                            loadCustomLists()
+                        }.launchIn(viewModelScope)
 
-        loadCustomLists()
+                    loadCustomLists()
+                },
+                onGuest = {
+                    updateState { it.copy(isUserLoggedIn = false, isLoading = false) }
+                },
+            )
+        }
     }
 
     private fun loadCustomLists(startLoading: Boolean = true) {
@@ -57,7 +72,16 @@ class UserListsViewModel @Inject constructor(
     }
 
     override fun onClickAddList() {
-        updateState { it.copy(isCreateNewListDialogVisible = true) }
+        viewModelScope.launch {
+            runIfLoggedIn(
+                onLoggedIn = {
+                    updateState { it.copy(isCreateNewListDialogVisible = true, isUserLoggedIn = true) }
+                },
+                onGuest = {
+                    updateState { it.copy(isUserLoggedIn = false) }
+                },
+            )
+        }
     }
 
     override fun onCreateNewListClick(listName: String) {
@@ -78,6 +102,17 @@ class UserListsViewModel @Inject constructor(
         )
     }
 
+    private suspend fun runIfLoggedIn(
+        onLoggedIn: () -> Unit,
+        onGuest: () -> Unit,
+    ) {
+        if (getsSessionType() != SessionType.GUEST) {
+            onLoggedIn()
+        } else {
+            onGuest()
+        }
+    }
+
     override fun onListClick(
         listId: Long,
         listName: String,
@@ -91,6 +126,10 @@ class UserListsViewModel @Inject constructor(
 
     override fun onDismiss() {
         updateState { it.copy(isCreateNewListDialogVisible = false) }
+    }
+
+    override fun onNavigateToLoginClicked() {
+        sendNewEffect(ListsEffect.NavigateToLogin)
     }
 
     private fun startLoading(start: Boolean = true) = updateState { it.copy(isLoading = start) }

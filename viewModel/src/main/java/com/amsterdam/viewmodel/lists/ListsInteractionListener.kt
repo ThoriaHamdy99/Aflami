@@ -13,4 +13,6 @@ interface ListsInteractionListener {
     fun onClickRetryFetchList()
 
     fun onDismiss()
+
+    fun onNavigateToLoginClicked()
 }

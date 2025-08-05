@@ -9,4 +9,6 @@ sealed interface ListsEffect {
         val listId: Long,
         val listName: String,
     ) : ListsEffect
+
+    object NavigateToLogin : ListsEffect
 }

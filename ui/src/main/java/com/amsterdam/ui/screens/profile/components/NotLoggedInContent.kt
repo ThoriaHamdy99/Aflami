@@ -36,7 +36,10 @@ import com.amsterdam.designsystem.utils.modifierExtensions.dropShadow
 import com.amsterdam.ui.R
 
 @Composable
-fun NotLoggedInContent(onClickLogin: () -> Unit) {
+fun NotLoggedInContent(
+    title: String = stringResource(R.string.profile),
+    onClickLogin: () -> Unit,
+) {
     var topBarHeight by remember { mutableIntStateOf(0) }
     Column(
         modifier = Modifier.statusBarsPadding()
@@ -44,7 +47,7 @@ fun NotLoggedInContent(onClickLogin: () -> Unit) {
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(R.string.profile),
+                    text = title,
                     style = AppTheme.textStyle.title.large,
                     color = AppTheme.color.title,
                     modifier = Modifier

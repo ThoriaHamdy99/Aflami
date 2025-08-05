@@ -47,7 +47,9 @@ import com.amsterdam.ui.components.ListItem
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
+import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.navigation.Route.ListDetails
+import com.amsterdam.ui.screens.profile.components.NotLoggedInContent
 import com.amsterdam.viewmodel.lists.ListsEffect
 import com.amsterdam.viewmodel.lists.ListsInteractionListener
 import com.amsterdam.viewmodel.lists.ListsUiState
@@ -83,6 +85,10 @@ fun ListsScreen(
                             message = context.resources.getString(R.string.list_added_success_message),
                         )
                 }
+
+                ListsEffect.NavigateToLogin -> {
+                    navController.navigate(Route.Login)
+                }
             }
         }
     }
@@ -111,75 +117,89 @@ private fun ListsScreenContent(
                 onDismiss = interaction::onDismiss,
             )
         }
-        Column(
-            modifier =
-                modifier
-                    .fillMaxSize()
-                    .background(color = AppTheme.color.surface)
-                    .statusBarsPadding()
-                    .navigationBarsPadding(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
+
+        AnimatedVisibility(
+            visible = !state.isUserLoggedIn && !state.isLoading,
         ) {
-            DefaultAppBar(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                showNavigateBackButton = false,
-                title = stringResource(com.amsterdam.ui.R.string.lists),
-                lastOption = painterResource(R.drawable.ic_add),
-                onLastOptionClicked = interaction::onClickAddList,
+            NotLoggedInContent(
+                stringResource(com.amsterdam.ui.R.string.lists),
+                interaction::onNavigateToLoginClicked,
             )
+        }
 
-            AnimatedContent(
-                modifier = Modifier.fillMaxSize(),
-                targetState = Triple(state.isLoading, state.errorUiState, state.userLists),
-                transitionSpec = {
-                    fadeIn(tween(700)) togetherWith fadeOut(tween(700))
-                },
-            ) { (isLoading, errorState, lists) ->
+        AnimatedVisibility(
+            state.isUserLoggedIn,
+        ) {
+            Column(
+                modifier =
+                    modifier
+                        .fillMaxSize()
+                        .background(color = AppTheme.color.surface)
+                        .statusBarsPadding()
+                        .navigationBarsPadding(),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                DefaultAppBar(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    showNavigateBackButton = false,
+                    title = stringResource(com.amsterdam.ui.R.string.lists),
+                    lastOption = painterResource(R.drawable.ic_add),
+                    onLastOptionClicked = interaction::onClickAddList,
+                )
 
-                when {
-                    isLoading -> {
-                        LoadingContainer()
-                    }
+                AnimatedContent(
+                    modifier = Modifier.fillMaxSize(),
+                    targetState = Triple(state.isLoading, state.errorUiState, state.userLists),
+                    transitionSpec = {
+                        fadeIn(tween(700)) togetherWith fadeOut(tween(700))
+                    },
+                ) { (isLoading, errorState, lists) ->
 
-                    errorState == ListsUiState.ListsErrorState.NoNetworkConnection -> {
-                        NoNetworkContainer(
-                            modifier = Modifier.fillMaxSize(),
-                            onClickRetry = interaction::onClickRetryFetchList,
-                        )
-                    }
+                    when {
+                        isLoading -> {
+                            LoadingContainer()
+                        }
 
-                    lists.isEmpty() -> {
-                        NoDataContainer(
-                            modifier = Modifier.fillMaxSize(),
-                            title = stringResource(com.amsterdam.ui.R.string.no_list_yet),
-                            description = stringResource(com.amsterdam.ui.R.string.no_list_description),
-                            imageRes = painterResource(id = com.amsterdam.ui.R.drawable.placeholder_no_saved_items),
-                        )
-                    }
+                        errorState == ListsUiState.ListsErrorState.NoNetworkConnection -> {
+                            NoNetworkContainer(
+                                modifier = Modifier.fillMaxSize(),
+                                onClickRetry = interaction::onClickRetryFetchList,
+                            )
+                        }
 
-                    else -> {
-                        LazyVerticalGrid(
-                            modifier = Modifier.fillMaxSize(),
-                            columns = GridCells.Adaptive(minSize = 156.dp),
-                            state = rememberLazyGridState(),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                        ) {
-                            items(lists) { userList ->
-                                ListItem(
-                                    title = userList.name,
-                                    count = userList.itemCount,
-                                    modifier =
-                                        Modifier
-                                            .size(156.dp, 147.dp)
-                                            .clickable(
-                                                onClick = {
-                                                    interaction.onListClick(userList.id.toLong(), userList.name)
-                                                },
-                                            ),
-                                )
+                        lists.isEmpty() -> {
+                            NoDataContainer(
+                                modifier = Modifier.fillMaxSize(),
+                                title = stringResource(com.amsterdam.ui.R.string.no_list_yet),
+                                description = stringResource(com.amsterdam.ui.R.string.no_list_description),
+                                imageRes = painterResource(id = com.amsterdam.ui.R.drawable.placeholder_no_saved_items),
+                            )
+                        }
+
+                        else -> {
+                            LazyVerticalGrid(
+                                modifier = Modifier.fillMaxSize(),
+                                columns = GridCells.Adaptive(minSize = 156.dp),
+                                state = rememberLazyGridState(),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(horizontal = 16.dp),
+                            ) {
+                                items(lists) { userList ->
+                                    ListItem(
+                                        title = userList.name,
+                                        count = userList.itemCount,
+                                        modifier =
+                                            Modifier
+                                                .size(156.dp, 147.dp)
+                                                .clickable(
+                                                    onClick = {
+                                                        interaction.onListClick(userList.id.toLong(), userList.name)
+                                                    },
+                                                ),
+                                    )
+                                }
                             }
                         }
                     }
@@ -214,6 +234,9 @@ private fun ListsScreenPreview_Loading() {
 
                 override fun onDismiss() {
                 }
+
+                override fun onNavigateToLoginClicked() {
+                }
             },
         )
     }
@@ -244,6 +267,9 @@ private fun ListsScreenPreview_Empty() {
                 override fun onClickRetryFetchList() {}
 
                 override fun onDismiss() {
+                }
+
+                override fun onNavigateToLoginClicked() {
                 }
             },
         )
@@ -301,7 +327,10 @@ private fun ListsScreenPreview_WithData() {
 
                 override fun onDismiss() {
                 }
-            }
+
+                override fun onNavigateToLoginClicked() {
+                }
+            },
         )
     }
 }
@@ -331,7 +360,10 @@ private fun ListsScreenPreview_Error() {
 
                 override fun onDismiss() {
                 }
-            }
+
+                override fun onNavigateToLoginClicked() {
+                }
+            },
         )
     }
 }
