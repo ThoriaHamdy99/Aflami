@@ -58,8 +58,8 @@ object UseCaseModule {
         ManageRestrictionLevelUseCase(appPreferencesRepository)
 
     @Provides
-    fun provideGetEpisodeVideosByEpisodeId(repo: TvShowRepository): GetEpisodeVideosByEpisodeId =
-        GetEpisodeVideosByEpisodeId(repo)
+    fun provideGetEpisodeVideosByEpisodeId(tvShowRepository: TvShowRepository): GetEpisodeVideosByEpisodeId =
+        GetEpisodeVideosByEpisodeId(tvShowRepository)
 
     @Provides
     fun provideGetsSessionType(authenticationRepository: AuthenticationRepository): GetsSessionType =
