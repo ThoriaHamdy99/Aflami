@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -42,6 +44,7 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.application.LocalNavController
+import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 import com.amsterdam.ui.components.CreateNewListDialog
 import com.amsterdam.ui.components.ListItem
 import com.amsterdam.ui.components.NoDataContainer
@@ -59,7 +62,7 @@ import com.amsterdam.viewmodel.shared.uiStates.UserListItemUiState
 @Composable
 fun ListsScreen(
     modifier: Modifier = Modifier,
-    viewModel: UserListsViewModel = hiltViewModel()
+    viewModel: UserListsViewModel = hiltViewModel(),
 ) {
     val navController = LocalNavController.current
     val uiState = viewModel.state.collectAsStateWithLifecycle()
@@ -96,7 +99,7 @@ fun ListsScreen(
     ListsScreenContent(
         modifier = modifier,
         state = uiState.value,
-        interaction = viewModel
+        interaction = viewModel,
     )
 }
 
@@ -104,7 +107,7 @@ fun ListsScreen(
 private fun ListsScreenContent(
     modifier: Modifier = Modifier,
     state: ListsUiState,
-    interaction: ListsInteractionListener
+    interaction: ListsInteractionListener,
 ) {
     var headerHeight by remember { mutableStateOf(0.dp) }
     Box {
@@ -149,7 +152,11 @@ private fun ListsScreenContent(
                 )
 
                 AnimatedContent(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .navigationBarsPadding()
+                            .windowInsetsPadding(WindowInsets(bottom = LocalScaffoldBottomPadding.current)),
                     targetState = Triple(state.isLoading, state.errorUiState, state.userLists),
                     transitionSpec = {
                         fadeIn(tween(700)) togetherWith fadeOut(tween(700))
@@ -179,7 +186,9 @@ private fun ListsScreenContent(
 
                         else -> {
                             LazyVerticalGrid(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize(),
                                 columns = GridCells.Adaptive(minSize = 156.dp),
                                 state = rememberLazyGridState(),
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -207,8 +216,6 @@ private fun ListsScreenContent(
             }
         }
     }
-
-
 }
 
 @ThemeAndLocalePreviews
@@ -217,27 +224,28 @@ private fun ListsScreenPreview_Loading() {
     AflamiTheme {
         ListsScreenContent(
             state = ListsUiState(isLoading = true),
-            interaction = object : ListsInteractionListener {
-                override fun onClickAddList() {
-                }
+            interaction =
+                object : ListsInteractionListener {
+                    override fun onClickAddList() {
+                    }
 
-                override fun onCreateNewListClick(listName: String) {
-                }
+                    override fun onCreateNewListClick(listName: String) {
+                    }
 
-                override fun onListClick(
-                    listId: Long,
-                    listName: String,
-                ) {
-                }
+                    override fun onListClick(
+                        listId: Long,
+                        listName: String,
+                    ) {
+                    }
 
-                override fun onClickRetryFetchList() {}
+                    override fun onClickRetryFetchList() {}
 
-                override fun onDismiss() {
-                }
+                    override fun onDismiss() {
+                    }
 
-                override fun onNavigateToLoginClicked() {
-                }
-            },
+                    override fun onNavigateToLoginClicked() {
+                    }
+                },
         )
     }
 }
@@ -247,31 +255,33 @@ private fun ListsScreenPreview_Loading() {
 private fun ListsScreenPreview_Empty() {
     AflamiTheme {
         ListsScreenContent(
-            state = ListsUiState(
-                isLoading = false,
-                userLists = emptyList()
-            ),
-            interaction = object : ListsInteractionListener {
-                override fun onClickAddList() {
-                }
+            state =
+                ListsUiState(
+                    isLoading = false,
+                    userLists = emptyList(),
+                ),
+            interaction =
+                object : ListsInteractionListener {
+                    override fun onClickAddList() {
+                    }
 
-                override fun onCreateNewListClick(listName: String) {
-                }
+                    override fun onCreateNewListClick(listName: String) {
+                    }
 
-                override fun onListClick(
-                    listId: Long,
-                    listName: String,
-                ) {
-                }
+                    override fun onListClick(
+                        listId: Long,
+                        listName: String,
+                    ) {
+                    }
 
-                override fun onClickRetryFetchList() {}
+                    override fun onClickRetryFetchList() {}
 
-                override fun onDismiss() {
-                }
+                    override fun onDismiss() {
+                    }
 
-                override fun onNavigateToLoginClicked() {
-                }
-            },
+                    override fun onNavigateToLoginClicked() {
+                    }
+                },
         )
     }
 }
@@ -281,56 +291,59 @@ private fun ListsScreenPreview_Empty() {
 private fun ListsScreenPreview_WithData() {
     AflamiTheme {
         ListsScreenContent(
-            state = ListsUiState(
-                isLoading = false,
-                userLists = listOf(
-                    UserListItemUiState(
-                        id = 1,
-                        name = "Favorite Movies",
-                        description = "My favorite movies collection",
-                        itemCount = 15
-                    ),
-                    UserListItemUiState(
-                        id = 2,
-                        name = "Watch Later",
-                        description = "Movies to watch later",
-                        itemCount = 8
-                    ),
-                    UserListItemUiState(
-                        id = 3,
-                        name = "Action Movies",
-                        description = "Action genre movies",
-                        itemCount = 23
-                    ),
-                    UserListItemUiState(
-                        id = 4,
-                        name = "Comedy Collection",
-                        description = "Funny movies",
-                        itemCount = 12
-                    )
-                )
-            ),
-            interaction = object : ListsInteractionListener {
-                override fun onClickAddList() {
-                }
+            state =
+                ListsUiState(
+                    isLoading = false,
+                    userLists =
+                        listOf(
+                            UserListItemUiState(
+                                id = 1,
+                                name = "Favorite Movies",
+                                description = "My favorite movies collection",
+                                itemCount = 15,
+                            ),
+                            UserListItemUiState(
+                                id = 2,
+                                name = "Watch Later",
+                                description = "Movies to watch later",
+                                itemCount = 8,
+                            ),
+                            UserListItemUiState(
+                                id = 3,
+                                name = "Action Movies",
+                                description = "Action genre movies",
+                                itemCount = 23,
+                            ),
+                            UserListItemUiState(
+                                id = 4,
+                                name = "Comedy Collection",
+                                description = "Funny movies",
+                                itemCount = 12,
+                            ),
+                        ),
+                ),
+            interaction =
+                object : ListsInteractionListener {
+                    override fun onClickAddList() {
+                    }
 
-                override fun onCreateNewListClick(listName: String) {
-                }
+                    override fun onCreateNewListClick(listName: String) {
+                    }
 
-                override fun onListClick(
-                    listId: Long,
-                    listName: String,
-                ) {
-                }
+                    override fun onListClick(
+                        listId: Long,
+                        listName: String,
+                    ) {
+                    }
 
-                override fun onClickRetryFetchList() {}
+                    override fun onClickRetryFetchList() {}
 
-                override fun onDismiss() {
-                }
+                    override fun onDismiss() {
+                    }
 
-                override fun onNavigateToLoginClicked() {
-                }
-            },
+                    override fun onNavigateToLoginClicked() {
+                    }
+                },
         )
     }
 }
@@ -340,31 +353,34 @@ private fun ListsScreenPreview_WithData() {
 private fun ListsScreenPreview_Error() {
     AflamiTheme {
         ListsScreenContent(
-            state = ListsUiState(
-                isLoading = false,
-                userLists = emptyList(),
-                errorUiState = ListsUiState.ListsErrorState.NoNetworkConnection,
-            ),
-            interaction = object : ListsInteractionListener {
-                override fun onClickAddList() {
-                }
+            state =
+                ListsUiState(
+                    isLoading = false,
+                    userLists = emptyList(),
+                    errorUiState = ListsUiState.ListsErrorState.NoNetworkConnection,
+                ),
+            interaction =
+                object : ListsInteractionListener {
+                    override fun onClickAddList() {
+                    }
 
-                override fun onCreateNewListClick(listName: String) {
-                }
+                    override fun onCreateNewListClick(listName: String) {
+                    }
 
-                override fun onListClick(
-                    listId: Long, listName: String) {
-                }
+                    override fun onListClick(
+                        listId: Long,
+                        listName: String,
+                    ) {
+                    }
 
-                override fun onClickRetryFetchList() {}
+                    override fun onClickRetryFetchList() {}
 
-                override fun onDismiss() {
-                }
+                    override fun onDismiss() {
+                    }
 
-                override fun onNavigateToLoginClicked() {
-                }
-            },
+                    override fun onNavigateToLoginClicked() {
+                    }
+                },
         )
     }
 }
-
