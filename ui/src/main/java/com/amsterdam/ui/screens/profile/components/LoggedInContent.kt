@@ -29,6 +29,7 @@ import com.amsterdam.designsystem.components.divider.HorizontalDivider
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.ui.R
 import com.amsterdam.viewmodel.profile.ProfileInteractionListener
@@ -36,7 +37,11 @@ import com.amsterdam.viewmodel.profile.ProfileUiState
 
 
 @Composable
-fun LoggedInContent(state: ProfileUiState, interactionListener: ProfileInteractionListener) {
+fun LoggedInContent(
+    state: ProfileUiState,
+    interactionListener: ProfileInteractionListener,
+    onClickHistory: () -> Unit
+) {
     val lazyListState = rememberLazyListState()
     val scrollOffset = remember {
         derivedStateOf { lazyListState.firstVisibleItemScrollOffset }
@@ -46,6 +51,40 @@ fun LoggedInContent(state: ProfileUiState, interactionListener: ProfileInteracti
         animationSpec = tween(800),
         label = "AppBarScrollColor"
     )
+
+    AnimatedVisibility(
+        state.settingsState.isSettingsDialogVisible
+    ) {
+        SettingsDialog(
+            onChangePasswordClick = interactionListener::onClickForgotPassword,
+            onContentRestrictionClick = interactionListener::onClickContentRestriction,
+            onLogoutClick = interactionListener::onClickLogout,
+            onDismissClick = interactionListener::onDismissSettingsDialog
+        )
+    }
+
+    AnimatedVisibility(
+        state.settingsState.isLogoutDialogVisible
+    ) {
+        LogoutDialog(
+            isLogoutButtonLoading = state.settingsState.isLogoutButtonLoading,
+            onLogoutClick = interactionListener::onClickConfirmLogout,
+            onDismissClick = interactionListener::onDismissLogoutDialog
+        )
+    }
+
+    AnimatedVisibility(
+        state.settingsState.isContentRestrictionDialogVisible
+    ) {
+        ContentRestrictionDialog(
+            isSaveButtonLoading = state.settingsState.isContentRestrictionSaveButtonLoading,
+            selectedRestriction = state.settingsState.contentRestrictionLevel,
+            onSaveClick = interactionListener::onSaveRestrictionLevel,
+            onSelectRestriction = interactionListener::onUpdateRestrictionLevel,
+            onDismissClick = interactionListener::onDismissContentRestrictionDialog
+        )
+    }
+
     Box {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -53,9 +92,13 @@ fun LoggedInContent(state: ProfileUiState, interactionListener: ProfileInteracti
         ) {
             item { ProfileImageSection(state.userInfo.userAvatarUrl) }
             item { ProfileInfoSection(state.userInfo.username, state.userInfo.userPoints) }
-            item { HistoryAndRatingSection() }
+            item { HistoryAndRatingSection(onClickHistory = onClickHistory) }
             item { HorizontalDivider() }
-            item { SettingsSection(state, interactionListener) }
+            item { SettingsSection(
+                state,
+                interactionListener,
+                onSettingsClicked = interactionListener::onClickSettings
+            ) }
             item {
                 Text(
                     text = "v 1.1",
@@ -138,6 +181,17 @@ private fun LoggedInContentPreview() {
             override fun onApplyTheme() {}
 
             override fun onDismissThemeDialog() {}
-        })
+            override fun onClickSettings() {}
+            override fun onDismissSettingsDialog() {}
+            override fun onClickLogout() {}
+            override fun onDismissLogoutDialog() {}
+            override fun onClickForgotPassword() {}
+            override fun onClickContentRestriction() {}
+            override fun onDismissContentRestrictionDialog() {}
+            override fun onClickConfirmLogout() {}
+            override fun onUpdateRestrictionLevel(restrictionLevel: RestrictionLevel) {}
+            override fun onSaveRestrictionLevel() {}
+        },
+            onClickHistory = {})
     }
 }

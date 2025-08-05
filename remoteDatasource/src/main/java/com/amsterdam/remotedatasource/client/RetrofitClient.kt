@@ -8,6 +8,7 @@ import com.amsterdam.remotedatasource.api.CountryApiService
 import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.api.ProfileApiService
 import com.amsterdam.remotedatasource.api.TvShowsApiService
+import com.amsterdam.remotedatasource.api.UserListApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -79,5 +80,6 @@ class RetrofitClient(
     fun categoryApiService(): CategoryApiService = retrofit.create(CategoryApiService::class.java)
     fun countryApiService(): CountryApiService = retrofit.create(CountryApiService::class.java)
     fun tvApiService(): TvShowsApiService = retrofit.create(TvShowsApiService::class.java)
+    fun userListApiService(): UserListApiService = retrofit.create(UserListApiService::class.java)
     fun profileApiService(): ProfileApiService = retrofit.create(ProfileApiService::class.java)
 }

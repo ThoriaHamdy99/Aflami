@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,8 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -22,6 +26,7 @@ import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.designsystem.utils.ripple
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.ui.R
 import com.amsterdam.ui.screens.profile.model.Language
@@ -29,7 +34,11 @@ import com.amsterdam.viewmodel.profile.ProfileInteractionListener
 import com.amsterdam.viewmodel.profile.ProfileUiState
 
 @Composable
-fun SettingsSection(state: ProfileUiState, interactionListener: ProfileInteractionListener) {
+fun SettingsSection(
+    state: ProfileUiState,
+    interactionListener: ProfileInteractionListener,
+    onSettingsClicked: () -> Unit
+) {
 
     val language = Language.fromUiState(state.updatedLanguage)
 
@@ -55,7 +64,8 @@ fun SettingsSection(state: ProfileUiState, interactionListener: ProfileInteracti
         modifier = Modifier.padding(top = 8.dp),
         startIconResourceId = com.amsterdam.designsystem.R.drawable.ic_settings,
         endIconResourceId = com.amsterdam.designsystem.R.drawable.ic_arrow_right,
-        startText = stringResource(R.string.settings)
+        startText = stringResource(R.string.settings),
+        onClick = onSettingsClicked
     )
 }
 
@@ -67,11 +77,14 @@ private fun CustomSettingCard(
     startText: String,
     modifier: Modifier = Modifier,
     endText: String = "",
-    onClick: () -> Unit = {},
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clickable(
+                onClick = onClick,
+            )
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable {
                 onClick()
@@ -155,6 +168,7 @@ private fun SettingsSectionPreview() {
 
                 override fun onDismissThemeDialog() {}
             },
+            onSettingsClicked = {}
         )
     }
 }

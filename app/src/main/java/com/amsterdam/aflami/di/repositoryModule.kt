@@ -54,20 +54,26 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindRecentSearchRepository(
-        impl: RecentSearchRepositoryImpl
+        recentSearchRepositoryImpl: RecentSearchRepositoryImpl
     ): RecentSearchRepository
 
     @Binds
     @Singleton
     abstract fun bindTvShowRepository(
-        impl: TvShowRepositoryImpl
+        tvShowRepositoryImpl: TvShowRepositoryImpl
     ): TvShowRepository
 
     @Binds
     @Singleton
     abstract fun bindWatchHistoryRepository(
-        impl: WatchHistoryRepositoryImpl
+        watchHistoryRepositoryImpl: WatchHistoryRepositoryImpl
     ): WatchHistoryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserListRepository(
+        userListRepositoryImpl: UserListRepositoryImpl
+    ): UserListRepository
 
     @Binds
     @Singleton

@@ -24,6 +24,7 @@ import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavController
@@ -31,6 +32,7 @@ import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.profile.components.LoggedInContent
 import com.amsterdam.ui.screens.profile.components.NotLoggedInContent
+import com.amsterdam.ui.screens.profile.components.getProfileErrorMessage
 import com.amsterdam.viewmodel.profile.ProfileEffect
 import com.amsterdam.viewmodel.profile.ProfileInteractionListener
 import com.amsterdam.viewmodel.profile.ProfileUiState
@@ -47,7 +49,21 @@ fun ProfileScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                ProfileEffect.NavigateToLogin -> navController.navigate(Route.Login)
+                ProfileEffect.NavigateToLogin -> navController.navigate(Route.Login){
+                    popUpTo(0)
+                }
+
+                ProfileEffect.NavigateToResetPassword -> {
+                    navController.navigate(Route.ResetPassword){
+                        popUpTo(Route.Tab.Profile)
+                    }
+                }
+
+                ProfileEffect.ShowError -> {
+                    SnackBarManager.showError(
+                        message = getProfileErrorMessage(state.profileErrorState, context)
+                    )
+                }
                 is ProfileEffect.LanguageChanged -> {
                     SnackBarManager.showSuccess(
                         when (state.language) {
@@ -119,6 +135,7 @@ private fun ProfileScreenContent(
     interactionListener: ProfileInteractionListener
 ) {
     val animationDuration by remember { mutableIntStateOf(1000) }
+    val navController = LocalNavController.current
 
     Box(
         modifier = Modifier
@@ -143,7 +160,13 @@ private fun ProfileScreenContent(
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration)),
         ) {
-            LoggedInContent(state, interactionListener)
+            LoggedInContent(
+                state = state,
+                interactionListener = interactionListener,
+                onClickHistory = {
+                    navController.navigate(Route.WatchHistory)
+                }
+            )
         }
 
         AnimatedVisibility(
@@ -152,7 +175,7 @@ private fun ProfileScreenContent(
             exit = fadeOut(tween(animationDuration)),
         ) {
             NotLoggedInContent(
-                interactionListener::onClickLogin
+                onClickLogin = interactionListener::onClickLogin,
             )
         }
     }
@@ -165,6 +188,16 @@ private fun ProfileScreenPreview() {
         ProfileUiState(),
         interactionListener = object : ProfileInteractionListener {
             override fun onClickLogin() {}
+            override fun onClickSettings() {}
+            override fun onDismissSettingsDialog() {}
+            override fun onClickLogout() {}
+            override fun onDismissLogoutDialog() {}
+            override fun onClickForgotPassword() {}
+            override fun onClickContentRestriction() {}
+            override fun onDismissContentRestrictionDialog() {}
+            override fun onClickConfirmLogout() {}
+            override fun onUpdateRestrictionLevel(restrictionLevel: RestrictionLevel) {}
+            override fun onSaveRestrictionLevel() {}
             override fun onClickLanguageSetting() {}
 
             override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {}

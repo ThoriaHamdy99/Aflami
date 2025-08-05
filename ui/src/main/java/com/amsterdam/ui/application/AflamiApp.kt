@@ -23,8 +23,10 @@ import androidx.navigation.compose.rememberNavController
 import com.amsterdam.designsystem.components.Scaffold
 import com.amsterdam.designsystem.components.snackBar.SnackBarHost
 import com.amsterdam.designsystem.theme.AflamiTheme
+import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.ui.components.bottomNavigation.BottomNavigation
 import com.amsterdam.ui.navigation.NavGraph
+import com.amsterdam.ui.navigation.Route
 import com.amsterdam.viewmodel.application.ApplicationViewModel
 import kotlinx.coroutines.runBlocking
 
@@ -43,6 +45,7 @@ fun AflamiApp(
     LaunchedEffect(Unit) {
         viewModel.initAppSettings(localConfigurations.locales[0])
     }
+    val restrictionLevel = state.restrictionLevel
 
     val layoutDirection =
         if (state.language.value == "ar") LayoutDirection.Rtl else LayoutDirection.Ltr
@@ -54,7 +57,10 @@ fun AflamiApp(
     AflamiTheme(
         isDarkTheme = state.isDarkTheme,
     ) {
-        CompositionLocalProvider(LocalNavController provides navController) {
+        CompositionLocalProvider(
+            LocalNavController provides navController,
+            LocalRestrictionLevel provides restrictionLevel
+        ) {
             CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
                 Scaffold(
                     bottomBar = {
@@ -62,9 +68,12 @@ fun AflamiApp(
                             currentDestination = currentDestination,
                             onNavigate = {
                                 navController.navigate(it) {
-                                    popUpTo(it) {
-                                        inclusive = true
+                                    popUpTo(Route.Tab.Home) {
+                                        saveState = true
                                     }
+
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
                             },
                         )
@@ -89,6 +98,10 @@ fun AflamiApp(
 
 val LocalNavController = staticCompositionLocalOf<NavController> {
     error("NavController not found")
+}
+
+val LocalRestrictionLevel = compositionLocalOf<RestrictionLevel> {
+    error("No Restriction Level")
 }
 
 val LocalScaffoldBottomPadding = compositionLocalOf { 0.dp }

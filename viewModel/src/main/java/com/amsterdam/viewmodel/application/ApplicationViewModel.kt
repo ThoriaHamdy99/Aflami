@@ -6,6 +6,7 @@ import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -21,11 +22,15 @@ class ApplicationViewModel @Inject constructor(
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     private val getOnboardingStatusUseCase: GetOnboardingStatusUseCase,
     private val manageAppThemeUseCase: ManageAppThemeUseCase,
-    private val getsSessionType: GetsSessionType
+    private val getsSessionType: GetsSessionType,
+    private val manageRestrictionLevelUseCase: ManageRestrictionLevelUseCase
 ) : BaseViewModel<ApplicationUiState, Unit>(ApplicationUiState(), dispatcherProvider) {
 
     init {
         listenToAppSettings()
+        viewModelScope.launch {
+            getRestrictionLevel()
+        }
     }
 
     suspend fun setStartDestination(): ApplicationUiState.StartDestinations {
@@ -79,5 +84,14 @@ class ApplicationViewModel @Inject constructor(
         val configuration = resources.configuration
         configuration.setLocale(locale)
         resources.updateConfiguration(configuration, resources.displayMetrics)
+    }
+
+    private suspend fun getRestrictionLevel(){
+        val restrictionLevel = manageRestrictionLevelUseCase.getRestrictionLevel()
+        restrictionLevel.collectLatest { restriction ->
+            updateState {
+                it.copy(restrictionLevel = restriction)
+            }
+        }
     }
 }
