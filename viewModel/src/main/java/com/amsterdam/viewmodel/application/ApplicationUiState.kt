@@ -1,7 +1,11 @@
 package com.amsterdam.viewmodel.application
 
+import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+
 data class ApplicationUiState(
-    val startDestination: StartDestinations = StartDestinations.LOGIN
+    val startDestination: StartDestinations = StartDestinations.LOGIN,
+    val isDarkTheme: Boolean = true,
+    val language: ManageLocaleLanguageUseCase.Language = ManageLocaleLanguageUseCase.Language.ENGLISH
 ){
     enum class StartDestinations{
         HOME,

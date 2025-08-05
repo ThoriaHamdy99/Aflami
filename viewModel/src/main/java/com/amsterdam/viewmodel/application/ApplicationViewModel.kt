@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.application
 
+import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
@@ -9,6 +10,7 @@ import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
@@ -21,6 +23,11 @@ class ApplicationViewModel @Inject constructor(
     private val manageAppThemeUseCase: ManageAppThemeUseCase,
     private val getsSessionType: GetsSessionType
 ) : BaseViewModel<ApplicationUiState, Unit>(ApplicationUiState(), dispatcherProvider) {
+
+    init {
+        listenToAppSettings()
+    }
+
     suspend fun setStartDestination(): ApplicationUiState.StartDestinations {
         val isOnboardingCompleted = getOnboardingStatusUseCase()
 
@@ -41,5 +48,33 @@ class ApplicationViewModel @Inject constructor(
             manageLocaleLanguageUseCase.initAppLanguage(locale.language)
             manageAppThemeUseCase.initAppTheme(isDarkTheme = true)
         }
+    }
+
+    private fun listenToAppSettings() {
+        viewModelScope.launch(dispatcherProvider.IO) {
+            manageAppThemeUseCase.getAppTheme().collectLatest { isDarkTheme ->
+                updateState { state ->
+                    state.copy(
+                        isDarkTheme = isDarkTheme
+                    )
+                }
+            }
+            manageLocaleLanguageUseCase.getAppLanguage().collectLatest { language ->
+                updateState { state ->
+                    state.copy(
+                        language = language,
+                    )
+                }
+            }
+        }
+    }
+
+    fun setLocale(context: Context, languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val resources = context.resources
+        val configuration = resources.configuration
+        configuration.setLocale(locale)
+        resources.updateConfiguration(configuration, resources.displayMetrics)
     }
 }

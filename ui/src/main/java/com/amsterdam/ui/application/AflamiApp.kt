@@ -1,15 +1,21 @@
 package com.amsterdam.ui.application
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -33,34 +39,51 @@ fun AflamiApp(
     val startDestination = runBlocking {
         getStartDestination(viewModel.setStartDestination())
     }
-    val localConfigurations = LocalConfiguration.current
-    viewModel.initAppSettings(localConfigurations.locales[0])
+    val state by viewModel.state.collectAsState()
+    val localConfigurations by rememberUpdatedState(LocalConfiguration.current)
+    LaunchedEffect(Unit) {
+        viewModel.initAppSettings(localConfigurations.locales[0])
+    }
 
-    AflamiTheme {
-        CompositionLocalProvider(LocalNavController provides navController) {
-            Scaffold(
-                bottomBar = {
-                    BottomNavigation(
-                        currentDestination = currentDestination,
-                        onNavigate = {
-                            navController.navigate(it) {
-                                popUpTo(it) {
-                                    inclusive = true
-                                }
+    val layoutDirection =
+        if (state.language.value == "ar") LayoutDirection.Rtl else LayoutDirection.Ltr
+
+    key(state.language.value) {
+        val context = LocalContext.current
+        LaunchedEffect(state.language.value) {
+            viewModel.setLocale(context, state.language.value)
+        }
+
+        AflamiTheme(
+            isDarkTheme = state.isDarkTheme,
+        ) {
+            CompositionLocalProvider(LocalNavController provides navController) {
+                CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
+                    Scaffold(
+                        bottomBar = {
+                            BottomNavigation(
+                                currentDestination = currentDestination,
+                                onNavigate = {
+                                    navController.navigate(it) {
+                                        popUpTo(it) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                            )
+                        }
+                    ) { paddingValues ->
+                        CompositionLocalProvider(
+                            LocalScaffoldBottomPadding provides paddingValues.calculateBottomPadding()
+                        ) {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                NavGraph(
+                                    navController = navController,
+                                    startDestination = startDestination
+                                )
+                                SnackBarHost()
                             }
-                        },
-                    )
-                }
-            ) { paddingValues ->
-                CompositionLocalProvider(
-                    LocalScaffoldBottomPadding provides paddingValues.calculateBottomPadding()
-                ) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        NavGraph(
-                            navController = navController,
-                            startDestination = startDestination
-                        )
-                        SnackBarHost()
+                        }
                     }
                 }
             }
