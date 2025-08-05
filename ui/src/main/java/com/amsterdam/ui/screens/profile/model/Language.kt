@@ -9,11 +9,11 @@ enum class Language(
 ) {
     ENGLISH(
         R.string.english,
-        R.string.english_example
+        R.string.language_sample_english
     ),
     ARABIC(
         R.string.arabic,
-        R.string.arabic_example
+        R.string.language_sample_arabic
     );
 
     companion object {
