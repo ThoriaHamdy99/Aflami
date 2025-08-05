@@ -52,14 +52,14 @@ class ApplicationViewModel @Inject constructor(
 
     private fun listenToAppSettings() {
         viewModelScope.launch(dispatcherProvider.IO) {
-            manageAppThemeUseCase.getAppTheme().collectLatest { isDarkTheme ->
+            manageAppThemeUseCase.getAppTheme().collect { isDarkTheme ->
                 updateState { state ->
                     state.copy(
                         isDarkTheme = isDarkTheme
                     )
                 }
             }
-            manageLocaleLanguageUseCase.getAppLanguage().collectLatest { language ->
+            manageLocaleLanguageUseCase.getAppLanguage().collect { language ->
                 updateState { state ->
                     state.copy(
                         language = language,

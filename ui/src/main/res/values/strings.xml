@@ -225,4 +225,12 @@
     <string name="there_is_no_company_production">There Is No Company Production</string>
     <string name="there_is_no_seasons">It Seem Like There Is No Seasons Yet</string>
 
+    <string name="language_changed">Language changed to %1$s</string>
+    <string name="language_not_changed">Language not changed, please try again</string>
+
+    <string name="theme_changed">Theme changed to %1$s</string>
+    <string name="theme_not_changed">Theme not changed, please try again</string>
+
+    <string name="failed_to_load_user_data">Failure while loading user data, please try again</string>
+
 </resources>

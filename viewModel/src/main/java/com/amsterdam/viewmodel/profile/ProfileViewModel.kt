@@ -1,8 +1,8 @@
 package com.amsterdam.viewmodel.profile
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
@@ -37,28 +37,36 @@ class ProfileViewModel @Inject constructor(
         tryToExecute(
             action = { getSessionTypeUseCase() },
             onSuccess = ::onGetSessionTypeSuccess,
-            onError = ::onError
+            onError = ::onUserDataNotLoaded
         )
     }
 
     private fun loadSettings() {
         viewModelScope.launch {
-            manageLocaleLanguageUseCase.getAppLanguage().collectLatest { language ->
-                updateState { state ->
-                    state.copy(
-                        language = language
-                    )
-                }
-                sendNewEffect(ProfileEffect.LanguageChanged(language.value))
+            manageLocaleLanguageUseCase.getAppLanguage().collect { language ->
+                onGetAppLanguage(language)
             }
-            manageAppThemeUseCase.getAppTheme().collectLatest { isDarkTheme ->
-                updateState { state ->
-                    state.copy(
-                        isDarkTheme = isDarkTheme
-                    )
-                }
-                sendNewEffect(ProfileEffect.ThemeChanged(isDarkTheme))
+            manageAppThemeUseCase.getAppTheme().collect { isDarkTheme ->
+                onGetAppTheme(isDarkTheme)
             }
+        }
+    }
+
+    private fun onGetAppTheme(isDarkTheme: Boolean) {
+        updateState { state ->
+            state.copy(
+                isDarkTheme = isDarkTheme,
+                updatedIsDarkTheme = isDarkTheme
+            )
+        }
+    }
+
+    private fun onGetAppLanguage(language: ManageLocaleLanguageUseCase.Language) {
+        updateState { state ->
+            state.copy(
+                language = language,
+                updatedLanguage = language
+            )
         }
     }
 
@@ -75,12 +83,11 @@ class ProfileViewModel @Inject constructor(
         tryToExecute(
             action = { getAccountDetailsUseCase() },
             onSuccess = ::onGetUserProfileInfoSuccess,
-            onError = ::onError
+            onError = ::onUserDataNotLoaded
         )
     }
 
     private fun onGetUserProfileInfoSuccess(accountDetails: AccountDetails) {
-        Log.d("ProfileViewModel", "onGetUserProfileInfoSuccess: $accountDetails")
         updateState { state ->
             state.copy(
                 userInfo = state.userInfo.copy(
@@ -104,12 +111,21 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun onApplyLanguage() {
-        viewModelScope.launch(dispatcherProvider.IO) {
-            manageLocaleLanguageUseCase.setAppLanguage(
-                state.value.language
-            )
+        viewModelScope.launch {
+            manageLocaleLanguageUseCase.setAppLanguage(state.value.language)
         }
+        onApplyLanguageSuccess(Unit)
+    }
+
+    private fun onApplyLanguageFailure(aflamiException: AflamiException) {
+        updateState { state -> state.copy(language = state.updatedLanguage) }
+        //sendNewEffect(ProfileEffect.LanguageNotChanged)
+    }
+
+    private fun onApplyLanguageSuccess(unit: Unit) {
+        updateState { state -> state.copy(updatedLanguage = state.language) }
         onDismissLanguageDialog()
+        //sendNewEffect(ProfileEffect.LanguageChanged)
     }
 
     override fun onDismissLanguageDialog() {
@@ -125,17 +141,31 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun onApplyTheme() {
-        viewModelScope.launch(dispatcherProvider.IO) {
+        viewModelScope.launch {
             manageAppThemeUseCase.setAppTheme(state.value.isDarkTheme)
         }
+        onApplyThemeSuccess(Unit)
+    }
+
+    private fun onApplyThemeFailure(aflamiException: AflamiException) {
+        updateState { state -> state.copy(isDarkTheme = state.updatedIsDarkTheme) }
+        //sendNewEffect(ProfileEffect.ThemeNotChanged)
+    }
+
+    private fun onApplyThemeSuccess(unit: Unit) {
+        updateState { state -> state.copy(updatedIsDarkTheme = state.isDarkTheme) }
         onDismissThemeDialog()
+        //sendNewEffect(ProfileEffect.ThemeChanged)
     }
 
     override fun onDismissThemeDialog() {
         updateState { state -> state.copy(showThemeDialog = false) }
     }
 
-    private fun onError(aflamiException: AflamiException) {
-
+    private fun onUserDataNotLoaded(aflamiException: AflamiException) {
+        when (aflamiException) {
+            is NetworkException -> sendNewEffect(ProfileEffect.UserDataNotLoaded)
+            else -> {}
+        }
     }
 }

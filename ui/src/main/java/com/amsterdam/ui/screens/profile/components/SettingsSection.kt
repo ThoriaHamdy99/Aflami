@@ -31,7 +31,7 @@ import com.amsterdam.viewmodel.profile.ProfileUiState
 @Composable
 fun SettingsSection(state: ProfileUiState, interactionListener: ProfileInteractionListener) {
 
-    val language = Language.fromUiState(state.language)
+    val language = Language.fromUiState(state.updatedLanguage)
 
     CustomSettingCard(
         modifier = Modifier.padding(top = 24.dp),
@@ -47,7 +47,7 @@ fun SettingsSection(state: ProfileUiState, interactionListener: ProfileInteracti
         startIconResourceId = com.amsterdam.designsystem.R.drawable.ic_moon,
         endIconResourceId = com.amsterdam.designsystem.R.drawable.ic_arrow_right,
         startText = stringResource(R.string.app_theme),
-        endText = if (state.isDarkTheme) stringResource(R.string.dark) else stringResource(R.string.light),
+        endText = if (state.updatedIsDarkTheme) stringResource(R.string.dark) else stringResource(R.string.light),
         onClick = { interactionListener.onClickThemeSetting() }
     )
 

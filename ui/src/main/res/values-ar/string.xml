@@ -223,4 +223,12 @@
     <!-- Details Screen -->
     <string name="there_is_no_gallery">لا توجد صور</string>
     <string name="there_is_no_company_production">لا توجد شركات إنتاج</string>
+
+    <string name="language_changed">تم تغيير اللغة إلى %1$s</string>
+    <string name="language_not_changed">لم يتم تغيير اللغة، يرجى المحاولة مرة أخرى</string>
+
+    <string name="theme_changed">تم تغيير النمط إلى %1$s</string>
+    <string name="theme_not_changed">لم يتم تغيير النمط، يرجى المحاولة مرة أخرى</string>
+
+    <string name="failed_to_load_user_data">حدث خطأ أثناء تحميل بيانات المستخدم، يرجى المحاولة مرة أخرى</string>
 </resources>

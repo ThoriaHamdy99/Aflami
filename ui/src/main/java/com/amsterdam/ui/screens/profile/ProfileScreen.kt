@@ -18,11 +18,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.components.LoadingContainer
+import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 import com.amsterdam.ui.navigation.Route
@@ -39,15 +42,67 @@ fun ProfileScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 ProfileEffect.NavigateToLogin -> navController.navigate(Route.Login)
                 is ProfileEffect.LanguageChanged -> {
+                    SnackBarManager.showSuccess(
+                        when (state.updatedLanguage) {
+                            ManageLocaleLanguageUseCase.Language.ENGLISH -> {
+                                context.getString(
+                                    R.string.language_changed,
+                                    context.getString(R.string.english)
+                                )
+                            }
+
+                            ManageLocaleLanguageUseCase.Language.ARABIC -> {
+                                context.getString(
+                                    R.string.language_changed,
+                                    context.getString(R.string.arabic)
+                                )
+                            }
+                        },
+                    )
                 }
 
                 is ProfileEffect.ThemeChanged -> {
+                    SnackBarManager.showSuccess(
+                        when (state.updatedIsDarkTheme) {
+                            false -> {
+                                context.getString(
+                                    R.string.theme_changed,
+                                    context.getString(R.string.light)
+                                )
+                            }
+                            true -> {
+                                context.getString(
+                                    R.string.theme_changed,
+                                    context.getString(R.string.dark)
+                                )
+                            }
+                        },
+                    )
+                }
+
+                ProfileEffect.LanguageNotChanged -> {
+                    SnackBarManager.showError(
+                        context.getString(R.string.language_not_changed)
+                    )
+                }
+
+                ProfileEffect.ThemeNotChanged -> {
+                    SnackBarManager.showError(
+                        context.getString(R.string.theme_not_changed)
+                    )
+                }
+
+                ProfileEffect.UserDataNotLoaded -> {
+                    SnackBarManager.showError(
+                        context.getString(R.string.failed_to_load_user_data)
+                    )
                 }
             }
         }
