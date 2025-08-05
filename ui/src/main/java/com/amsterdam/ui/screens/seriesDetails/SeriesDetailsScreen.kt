@@ -189,7 +189,7 @@ fun SeriesDetailsContent(
                     .filter { !it }
                     .collect {
                         delay(4000)
-                        val nextPage = (pagerState.currentPage + 1) % state.postersUrls.size
+                        val nextPage = (pagerState.currentPage + 1) % 10
                         pagerState.animateScrollToPage(nextPage)
                     }
             }

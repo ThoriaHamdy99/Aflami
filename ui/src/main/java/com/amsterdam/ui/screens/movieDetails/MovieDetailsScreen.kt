@@ -174,7 +174,7 @@ fun MovieContent(
                     .filter { !it }
                     .collect {
                         delay(4000)
-                        val nextPage = (pagerState.currentPage + 1) % state.moviePostersUrl.size
+                        val nextPage = (pagerState.currentPage + 1) % 10
                         pagerState.animateScrollToPage(nextPage)
                     }
             }
