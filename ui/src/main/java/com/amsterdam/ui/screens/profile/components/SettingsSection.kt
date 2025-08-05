@@ -47,7 +47,8 @@ fun SettingsSection(state: ProfileUiState, interactionListener: ProfileInteracti
         startIconResourceId = com.amsterdam.designsystem.R.drawable.ic_moon,
         endIconResourceId = com.amsterdam.designsystem.R.drawable.ic_arrow_right,
         startText = stringResource(R.string.app_theme),
-        endText = "Dark",
+        endText = if (state.isDarkTheme) stringResource(R.string.dark) else stringResource(R.string.light),
+        onClick = { interactionListener.onClickThemeSetting() }
     )
 
     CustomSettingCard(

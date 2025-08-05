@@ -12,7 +12,7 @@ import com.amsterdam.entity.AccountDetails
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -116,16 +116,19 @@ class ProfileViewModel @Inject constructor(
         updateState { state -> state.copy(showLanguageDialog = false) }
     }
 
-    override fun onClickTheme() {
+    override fun onClickThemeSetting() {
         updateState { state -> state.copy(showThemeDialog = true) }
     }
 
     override fun onChangeTheme(isDarkTheme: Boolean) {
-        viewModelScope.launch(dispatcherProvider.IO) {
-            manageAppThemeUseCase.setAppTheme(isDarkTheme)
-        }
         updateState { state -> state.copy(isDarkTheme = isDarkTheme) }
-        onDismissLanguageDialog()
+    }
+
+    override fun onApplyTheme() {
+        viewModelScope.launch(dispatcherProvider.IO) {
+            manageAppThemeUseCase.setAppTheme(state.value.isDarkTheme)
+        }
+        onDismissThemeDialog()
     }
 
     override fun onDismissThemeDialog() {
