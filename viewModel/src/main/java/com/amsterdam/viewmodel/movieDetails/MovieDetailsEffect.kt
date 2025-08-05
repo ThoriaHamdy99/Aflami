@@ -6,4 +6,7 @@ sealed interface MovieDetailsEffect {
     object NavigateToLoginScreenEffect : MovieDetailsEffect
     data class NavigateToMovieDetails(val movieId: Long) : MovieDetailsEffect
     data class LaunchMovieVideoEffect(val url: String) : MovieDetailsEffect
+
+    object ShowRatingSuccessSnackBar: MovieDetailsEffect
+    object ShowRatingErrorSnackBar: MovieDetailsEffect
 }
