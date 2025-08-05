@@ -21,7 +21,7 @@ class UserListRepositoryImpl @Inject constructor(
             .createNewList(
                 listName = listName,
                 description = "",
-                language = preferences.getDeviceLanguage().first(),
+                language = preferences.getAppLanguage().first(),
                 sessionId = authenticationRepository.getSessionId(),
             ).listId
 
