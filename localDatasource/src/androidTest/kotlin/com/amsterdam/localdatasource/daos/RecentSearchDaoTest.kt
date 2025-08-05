@@ -35,7 +35,7 @@ class RecentSearchDaoTest {
         // Given
         val search = createLocalSearchDto("barbie")
 
-        // Act
+        // When
         dao.upsertRecentSearch(search)
 
         // Then
@@ -49,7 +49,7 @@ class RecentSearchDaoTest {
         val original = createLocalSearchDto("oppenheimer")
         val updated = createLocalSearchDto("oppenheimer")
 
-        // Act
+        // When
         dao.upsertRecentSearch(original)
         dao.upsertRecentSearch(updated)
 
@@ -66,7 +66,7 @@ class RecentSearchDaoTest {
         // Given
         dao.upsertRecentSearch(createLocalSearchDto("foo"))
         dao.upsertRecentSearch(createLocalSearchDto("bar"))
-        //Act
+        //When
         dao.deleteAllSearches()
         //Then
         val result = dao.getRecentSearches()
@@ -81,7 +81,7 @@ class RecentSearchDaoTest {
 
         dao.upsertRecentSearch(deletedSearch)
         dao.upsertRecentSearch(otherSearch)
-        //Act
+        //When
         dao.deleteSearchByKeyword(deletedSearch.searchKeyword)
         //Then
         val result = dao.getRecentSearches()
