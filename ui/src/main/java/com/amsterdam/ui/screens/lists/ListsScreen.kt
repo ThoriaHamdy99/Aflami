@@ -23,6 +23,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -176,8 +178,11 @@ private fun ListsScreenContent(
 
                         errorState == ListsUiState.ListsErrorState.NoNetworkConnection -> {
                             NoNetworkContainer(
-                                modifier = Modifier.fillMaxSize(),
-                                onClickRetry = interaction::onClickRetryFetchList,
+                                modifier =
+                                    Modifier
+                                        .fillMaxSize()
+                                        .verticalScroll(rememberScrollState()),
+                                    onClickRetry = interaction::onClickRetryFetchList,
                             )
                         }
 
