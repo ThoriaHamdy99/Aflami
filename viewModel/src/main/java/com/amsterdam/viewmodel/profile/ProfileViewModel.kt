@@ -46,6 +46,8 @@ class ProfileViewModel @Inject constructor(
             manageLocaleLanguageUseCase.getAppLanguage().collect { language ->
                 onGetAppLanguage(language)
             }
+        }
+        viewModelScope.launch {
             manageAppThemeUseCase.getAppTheme().collect { isDarkTheme ->
                 onGetAppTheme(isDarkTheme)
             }
