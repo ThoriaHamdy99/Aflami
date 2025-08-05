@@ -7,6 +7,6 @@ fun AccountDetailsDto.toEntity(): AccountDetails {
     return AccountDetails(
         id = this.id,
         username = this.username,
-        avatarUrl = this.accountAvatar.tmdbData.fullAvatarPath.orEmpty(),
+        avatarUrl = this.accountAvatar.movieDBData.fullAvatarPath.orEmpty(),
     )
 }
