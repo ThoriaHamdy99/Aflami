@@ -57,6 +57,7 @@ object ServiceProvidesModule {
     @Singleton
     fun provideTvShowsApiService(retrofitClient: RetrofitClient): TvShowsApiService =
         retrofitClient.tvApiService()
+
     @Provides
     @Singleton
     fun provideUserListApiService(retrofitClient: RetrofitClient): UserListApiService =

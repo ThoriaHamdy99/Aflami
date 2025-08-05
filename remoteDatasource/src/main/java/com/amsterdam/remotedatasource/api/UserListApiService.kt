@@ -1,5 +1,6 @@
 package com.amsterdam.remotedatasource.api
 
+import com.amsterdam.repository.dto.remote.RemoteUserListResponse
 import com.amsterdam.repository.dto.remote.UserListDetailsResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Field
@@ -10,17 +11,23 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UserListApiService {
+    @GET(USER_LISTS_ENDPOINT)
+    suspend fun getUserLists(
+        @Path("account_id") accountId: Int = 0,
+        @Query("page") page: Int = 1,
+        @Query("session_id") sessionId: String,
+    ): RemoteUserListResponse
 
     @GET(GET_USER_LIST_DETAILS)
     suspend fun getMoviesFromList(
         @Path(LIST_ID) listId: Long,
-        @Query(PAGE) page: Int
+        @Query(PAGE) page: Int,
     ): UserListDetailsResponse
 
     @DELETE(DELETE_LIST)
     suspend fun deleteList(
         @Path(LIST_ID) listId: Long,
-        @Query(SESSION_ID) sessionId: String
+        @Query(SESSION_ID) sessionId: String,
     )
 
     @FormUrlEncoded
@@ -28,10 +35,11 @@ interface UserListApiService {
     suspend fun removeMovieFromList(
         @Path(LIST_ID) listId: Long,
         @Query(SESSION_ID) sessionId: String,
-        @Field(MEDIA_ID) movieId: Long
+        @Field(MEDIA_ID) movieId: Long,
     )
 
     companion object {
+        const val USER_LISTS_ENDPOINT = "account/{account_id}/lists"
         private const val PAGE = "page"
         private const val LIST_ID = "list_id"
         private const val SESSION_ID = "session_id"
