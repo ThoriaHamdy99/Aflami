@@ -27,6 +27,7 @@ import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.ui.components.bottomNavigation.BottomNavigation
 import com.amsterdam.ui.navigation.NavGraph
 import com.amsterdam.ui.navigation.Route
+import com.amsterdam.ui.utils.setLocale
 import com.amsterdam.viewmodel.application.ApplicationViewModel
 import kotlinx.coroutines.runBlocking
 
@@ -52,7 +53,7 @@ fun AflamiApp(
 
 
     val context = LocalContext.current
-    viewModel.setLocale(context, state.language.value)
+    context.setLocale(state.language.value)
 
     AflamiTheme(
         isDarkTheme = state.isDarkTheme,
