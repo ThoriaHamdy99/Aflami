@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,6 +42,7 @@ import com.amsterdam.ui.components.ListItem
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
+import com.amsterdam.ui.navigation.Route
 import com.amsterdam.viewmodel.lists.ListsEffect
 import com.amsterdam.viewmodel.lists.ListsInteractionListener
 import com.amsterdam.viewmodel.lists.ListsUiState
@@ -60,7 +62,9 @@ fun ListsScreen(
             when (effect) {
                 is ListsEffect.NavigateToAddCustomList -> {}
 
-                is ListsEffect.NavigateToListDetails -> {}
+                is ListsEffect.NavigateToListDetails -> {
+                    navController.navigate(Route.ListDetails(listId = effect.listId, listName = effect.listName))
+                }
             }
         }
     }
@@ -139,7 +143,14 @@ private fun ListsScreenContent(
                             ListItem(
                                 title = userList.name,
                                 count = userList.itemCount,
-                                modifier = Modifier.size(156.dp, 147.dp)
+                                modifier =
+                                    Modifier
+                                        .size(156.dp, 147.dp)
+                                        .clickable(
+                                            onClick = {
+                                                interaction.onListClick(userList.id.toLong(), userList.name)
+                                            },
+                                        ),
                             )
                         }
                     }
@@ -162,6 +173,12 @@ private fun ListsScreenPreview_Loading() {
 
                 }
 
+                override fun onListClick(
+                    listId: Long,
+                    listName: String,
+                ) {
+                }
+
                 override fun onClickRetryFetchList() {}
             }
         )
@@ -179,7 +196,12 @@ private fun ListsScreenPreview_Empty() {
             ),
             interaction = object : ListsInteractionListener {
                 override fun onClickAddCustomList() {
+                }
 
+                override fun onListClick(
+                    listId: Long,
+                    listName: String,
+                ) {
                 }
 
                 override fun onClickRetryFetchList() {}
@@ -226,6 +248,12 @@ private fun ListsScreenPreview_WithData() {
                 override fun onClickAddCustomList() {
                 }
 
+                override fun onListClick(
+                    listId: Long,
+                    listName: String,
+                ) {
+                }
+
                 override fun onClickRetryFetchList() {}
             }
         )
@@ -244,6 +272,10 @@ private fun ListsScreenPreview_Error() {
             ),
             interaction = object : ListsInteractionListener {
                 override fun onClickAddCustomList() {
+                }
+
+                override fun onListClick(
+                    listId: Long, listName: String) {
                 }
 
                 override fun onClickRetryFetchList() {}

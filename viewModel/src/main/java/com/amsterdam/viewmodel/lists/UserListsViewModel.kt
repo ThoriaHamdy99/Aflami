@@ -58,6 +58,13 @@ class UserListsViewModel @Inject constructor(
         sendNewEffect(ListsEffect.NavigateToAddCustomList)
     }
 
+    override fun onListClick(
+        listId: Long,
+        listName: String,
+    ) {
+        sendNewEffect(ListsEffect.NavigateToListDetails(listId, listName))
+    }
+
     override fun onClickRetryFetchList() {
         loadCustomLists()
     }
