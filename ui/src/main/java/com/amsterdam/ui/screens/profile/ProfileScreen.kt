@@ -50,7 +50,7 @@ fun ProfileScreen(
                 ProfileEffect.NavigateToLogin -> navController.navigate(Route.Login)
                 is ProfileEffect.LanguageChanged -> {
                     SnackBarManager.showSuccess(
-                        when (state.updatedLanguage) {
+                        when (state.language) {
                             ManageLocaleLanguageUseCase.Language.ENGLISH -> {
                                 context.getString(
                                     R.string.language_changed,
@@ -70,7 +70,7 @@ fun ProfileScreen(
 
                 is ProfileEffect.ThemeChanged -> {
                     SnackBarManager.showSuccess(
-                        when (state.updatedIsDarkTheme) {
+                        when (state.isDarkTheme) {
                             false -> {
                                 context.getString(
                                     R.string.theme_changed,

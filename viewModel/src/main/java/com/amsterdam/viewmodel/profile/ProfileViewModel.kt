@@ -12,7 +12,6 @@ import com.amsterdam.entity.AccountDetails
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -113,21 +112,22 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun onApplyLanguage() {
-        viewModelScope.launch {
-            manageLocaleLanguageUseCase.setAppLanguage(state.value.language)
-        }
-        onApplyLanguageSuccess(Unit)
+        tryToExecute(
+            action = { manageLocaleLanguageUseCase.setAppLanguage(state.value.language) },
+            onSuccess = ::onApplyLanguageSuccess,
+            onError = ::onApplyLanguageFailure
+        )
     }
 
     private fun onApplyLanguageFailure(aflamiException: AflamiException) {
         updateState { state -> state.copy(language = state.updatedLanguage) }
-        //sendNewEffect(ProfileEffect.LanguageNotChanged)
+        sendNewEffect(ProfileEffect.LanguageNotChanged)
     }
 
     private fun onApplyLanguageSuccess(unit: Unit) {
         updateState { state -> state.copy(updatedLanguage = state.language) }
         onDismissLanguageDialog()
-        //sendNewEffect(ProfileEffect.LanguageChanged)
+        sendNewEffect(ProfileEffect.LanguageChanged)
     }
 
     override fun onDismissLanguageDialog() {
@@ -143,21 +143,23 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun onApplyTheme() {
-        viewModelScope.launch {
-            manageAppThemeUseCase.setAppTheme(state.value.isDarkTheme)
-        }
+        tryToExecute(
+            action = { manageAppThemeUseCase.setAppTheme(state.value.isDarkTheme) },
+            onSuccess = ::onApplyThemeSuccess,
+            onError = ::onApplyThemeFailure
+        )
         onApplyThemeSuccess(Unit)
     }
 
     private fun onApplyThemeFailure(aflamiException: AflamiException) {
         updateState { state -> state.copy(isDarkTheme = state.updatedIsDarkTheme) }
-        //sendNewEffect(ProfileEffect.ThemeNotChanged)
+        sendNewEffect(ProfileEffect.ThemeNotChanged)
     }
 
     private fun onApplyThemeSuccess(unit: Unit) {
         updateState { state -> state.copy(updatedIsDarkTheme = state.isDarkTheme) }
         onDismissThemeDialog()
-        //sendNewEffect(ProfileEffect.ThemeChanged)
+        sendNewEffect(ProfileEffect.ThemeChanged)
     }
 
     override fun onDismissThemeDialog() {
