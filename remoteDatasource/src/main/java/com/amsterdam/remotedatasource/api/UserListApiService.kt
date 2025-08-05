@@ -12,6 +12,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UserListApiService {
+    @FormUrlEncoded
     @POST(CREATE_LIST)
     suspend fun createNewList(
         @Query(SESSION_ID) sessionId: String,

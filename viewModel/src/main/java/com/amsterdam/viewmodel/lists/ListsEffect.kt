@@ -1,7 +1,9 @@
 package com.amsterdam.viewmodel.lists
 
 sealed interface ListsEffect {
-    data object NavigateToAddCustomList : ListsEffect
+    object ListCreatedSuccessfully : ListsEffect
+
+    object FailedToCreateList : ListsEffect
 
     data class NavigateToListDetails(
         val listId: Long,

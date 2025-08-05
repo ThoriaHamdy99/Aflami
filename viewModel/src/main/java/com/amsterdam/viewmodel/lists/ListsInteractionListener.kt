@@ -1,7 +1,9 @@
 package com.amsterdam.viewmodel.lists
 
 interface ListsInteractionListener {
-    fun onClickAddCustomList()
+    fun onClickAddList()
+
+    fun onCreateNewListClick(listName: String)
 
     fun onListClick(
         listId: Long,
@@ -9,4 +11,6 @@ interface ListsInteractionListener {
     )
 
     fun onClickRetryFetchList()
+
+    fun onDismiss()
 }

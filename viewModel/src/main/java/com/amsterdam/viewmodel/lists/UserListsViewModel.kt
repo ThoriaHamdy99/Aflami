@@ -1,6 +1,7 @@
 package com.amsterdam.viewmodel.lists
 
 import androidx.lifecycle.viewModelScope
+import com.amsterdam.domain.useCase.list.CreateNewListUseCase
 import com.amsterdam.domain.useCase.list.GetUserListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -13,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserListsViewModel @Inject constructor(
     private val getUserListsUseCase: GetUserListsUseCase,
+    private val createListUseCase: CreateNewListUseCase,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<ListsUiState, ListsEffect>(
@@ -54,8 +56,26 @@ class UserListsViewModel @Inject constructor(
         )
     }
 
-    override fun onClickAddCustomList() {
-        sendNewEffect(ListsEffect.NavigateToAddCustomList)
+    override fun onClickAddList() {
+        updateState { it.copy(isCreateNewListDialogVisible = true) }
+    }
+
+    override fun onCreateNewListClick(listName: String) {
+        tryToExecute(
+            action = {
+                createListUseCase(listName)
+            },
+            onSuccess = {
+                sendNewEffect(ListsEffect.ListCreatedSuccessfully)
+                loadCustomLists()
+            },
+            onError = {
+                sendNewEffect(ListsEffect.ListCreatedSuccessfully)
+            },
+            onCompletion = {
+                updateState { it.copy(isCreateNewListDialogVisible = false) }
+            },
+        )
     }
 
     override fun onListClick(
@@ -67,6 +87,10 @@ class UserListsViewModel @Inject constructor(
 
     override fun onClickRetryFetchList() {
         loadCustomLists()
+    }
+
+    override fun onDismiss() {
+        updateState { it.copy(isCreateNewListDialogVisible = false) }
     }
 
     private fun startLoading(start: Boolean = true) = updateState { it.copy(isLoading = start) }

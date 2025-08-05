@@ -51,7 +51,7 @@ fun CreateNewListDialog(
                 isLoading = false,
                 isNegative = false,
                 onClick = {
-                    if (newListName.isNotEmpty()) return@ConfirmButton
+                    if (newListName.isEmpty()) return@ConfirmButton
                     onCreateListClick(newListName)
                 },
             )

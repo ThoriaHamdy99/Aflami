@@ -6,7 +6,8 @@ import com.amsterdam.viewmodel.shared.uiStates.UserListItemUiState
 data class ListsUiState(
     val isLoading: Boolean = false,
     val userLists: List<UserListItemUiState> = emptyList(),
-    val errorUiState: ListsErrorState? = null
+    val errorUiState: ListsErrorState? = null,
+    val isCreateNewListDialogVisible: Boolean = false,
 ) {
     sealed interface ListsErrorState {
         data object NoNetworkConnection : ListsErrorState
