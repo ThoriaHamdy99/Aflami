@@ -95,12 +95,21 @@ class TvShowRepositoryImpl @Inject constructor(
         seasonNumber: Int,
         episodeNumber: Int
     ): String {
-        return remoteTvDataSource.getEpisodeVideosByEpisodeId(
+        val videos = remoteTvDataSource.getEpisodeVideosByEpisodeId(
             tvShowId,
             seasonNumber,
             episodeNumber
-        ).results.firstOrNull()?.fullVideoUrl?:""
+        ).results
+
+        val youtubeVideo = videos.firstOrNull {
+            it.site.equals("YouTube", ignoreCase = true) &&
+                    it.key.isNotBlank() &&
+                    (it.type.equals("Trailer", ignoreCase = true) || it.type.equals("Teaser", ignoreCase = true))
+        }
+
+        return youtubeVideo?.fullVideoUrl ?: ""
     }
+
 
     private suspend fun cacheWatchedTvShow(remoteTvShowItemDto: TvShowDetailsRemoteResponse) {
         localTvDataSource.insertTvShow(
