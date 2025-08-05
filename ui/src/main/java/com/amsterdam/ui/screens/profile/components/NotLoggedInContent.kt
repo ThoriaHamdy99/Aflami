@@ -5,12 +5,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -34,6 +39,7 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.modifierExtensions.dropShadow
 import com.amsterdam.ui.R
+import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 
 @Composable
 fun NotLoggedInContent(
@@ -42,7 +48,11 @@ fun NotLoggedInContent(
 ) {
     var topBarHeight by remember { mutableIntStateOf(0) }
     Column(
-        modifier = Modifier.statusBarsPadding()
+        modifier =
+            Modifier
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .windowInsetsPadding(WindowInsets(bottom = LocalScaffoldBottomPadding.current)),
     ) {
         TopAppBar(
             title = {
@@ -62,7 +72,8 @@ fun NotLoggedInContent(
             modifier = Modifier
                 .fillMaxSize()
                 .background(AppTheme.color.surface)
-                .padding(horizontal = 48.dp),
+                .padding(horizontal = 48.dp)
+                .verticalScroll(rememberScrollState()),
             unneededSpace = topBarHeight.dp,
             onClickLogin = onClickLogin
         )
