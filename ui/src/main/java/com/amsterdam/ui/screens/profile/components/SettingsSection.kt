@@ -5,8 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,10 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,19 +22,16 @@ import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.designsystem.utils.ripple
-import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
-import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.ui.R
 import com.amsterdam.ui.screens.profile.model.Language
-import com.amsterdam.viewmodel.profile.ProfileInteractionListener
 import com.amsterdam.viewmodel.profile.ProfileUiState
 
 @Composable
 fun SettingsSection(
     state: ProfileUiState,
-    interactionListener: ProfileInteractionListener,
-    onSettingsClicked: () -> Unit
+    onSettingsClicked: () -> Unit,
+    onClickLanguage: () -> Unit,
+    onClickTheme: () -> Unit
 ) {
 
     val language = Language.fromUiState(state.updatedLanguage)
@@ -49,7 +42,7 @@ fun SettingsSection(
         endIconResourceId = com.amsterdam.designsystem.R.drawable.ic_arrow_right,
         startText = stringResource(R.string.language),
         endText = stringResource(language.nameResourceId),
-        onClick = { interactionListener.onClickLanguageSetting() }
+        onClick = { onClickLanguage() }
     )
 
     CustomSettingCard(
@@ -58,7 +51,7 @@ fun SettingsSection(
         endIconResourceId = com.amsterdam.designsystem.R.drawable.ic_arrow_right,
         startText = stringResource(R.string.app_theme),
         endText = if (state.updatedIsDarkTheme) stringResource(R.string.dark) else stringResource(R.string.light),
-        onClick = { interactionListener.onClickThemeSetting() }
+        onClick = { onClickTheme() }
     )
 
     CustomSettingCard(
@@ -151,39 +144,9 @@ private fun SettingsSectionPreview() {
     AflamiTheme {
         SettingsSection(
             ProfileUiState(),
-            interactionListener = object : ProfileInteractionListener {
-                override fun onClickLogin() {}
-                override fun onClickSettings() {}
-
-                override fun onDismissSettingsDialog() {}
-                override fun onClickLogout() {}
-                override fun onDismissLogoutDialog() {}
-
-                override fun onClickForgotPassword() {}
-                override fun onClickContentRestriction() {}
-                override fun onDismissContentRestrictionDialog() {}
-
-                override fun onClickConfirmLogout() {}
-                override fun onUpdateRestrictionLevel(restrictionLevel: RestrictionLevel) {}
-                override fun onSaveRestrictionLevel() {}
-
-                override fun onClickLanguageSetting() {}
-
-                override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {}
-
-                override fun onApplyLanguage() {}
-
-                override fun onDismissLanguageDialog() {}
-
-                override fun onClickThemeSetting() {}
-
-                override fun onChangeTheme(isDarkTheme: Boolean) {}
-
-                override fun onApplyTheme() {}
-
-                override fun onDismissThemeDialog() {}
-            },
-            onSettingsClicked = {}
+            onSettingsClicked = {},
+            onClickLanguage = {},
+            onClickTheme = {}
         )
     }
 }

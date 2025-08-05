@@ -96,8 +96,9 @@ fun LoggedInContent(
             item { HorizontalDivider() }
             item { SettingsSection(
                 state,
-                interactionListener,
-                onSettingsClicked = interactionListener::onClickSettings
+                onSettingsClicked = interactionListener::onClickSettings,
+                onClickLanguage = interactionListener::onClickLanguageSetting,
+                onClickTheme = interactionListener::onClickThemeSetting
             ) }
             item {
                 Text(
