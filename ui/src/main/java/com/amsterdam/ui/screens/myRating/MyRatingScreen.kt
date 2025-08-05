@@ -76,7 +76,7 @@ fun MyRatingScreen(
                     is MyRatingUiEffect.NavigateToMovieDetails -> navigate(MovieDetails(movieId = effect.movieId))
                     is MyRatingUiEffect.NavigateToSeriesDetails -> navigate(SeriesDetails(tvShowId = effect.tvShowId))
                     MyRatingUiEffect.ShowDeleteRateSuccessSnackBar -> SnackBarManager.showSuccess(message = successRateDeletionMessage)
-                    MyRatingUiEffect.ShowDeleteRateErrorSnackBar -> SnackBarManager.showSuccess(message = errorRateDeletionMessage)
+                    MyRatingUiEffect.ShowDeleteRateErrorSnackBar -> SnackBarManager.showError(message = errorRateDeletionMessage)
                 }
             }
         }
