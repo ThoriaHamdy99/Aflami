@@ -13,8 +13,4 @@ class ManageAppThemeUseCase(
     fun getAppTheme(): Flow<Boolean> {
         return preferencesRepository.getAppTheme()
     }
-
-    suspend fun initAppTheme(isDarkTheme: Boolean) {
-        preferencesRepository.initAppTheme(isDarkTheme)
-    }
 }

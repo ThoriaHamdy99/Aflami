@@ -9,11 +9,10 @@ interface AppPreferencesRepository {
 
     fun getRestrictionLevel(): Flow<RestrictionLevel>
     suspend fun setRestrictionLevel(restrictionLevel: RestrictionLevel)
-    fun getAppLanguage(): Flow<String>
-    suspend fun setAppLanguage(language: String)
-    suspend fun initAppLanguage(language: String)
 
-    suspend fun initAppTheme(isDarkTheme: Boolean)
-    fun getAppTheme(): Flow<Boolean>
+    suspend fun setAppLanguage(language: String)
+    fun getAppLanguage(): Flow<String>
+
     suspend fun setAppTheme(isDarkTheme: Boolean)
+    fun getAppTheme(): Flow<Boolean>
 }

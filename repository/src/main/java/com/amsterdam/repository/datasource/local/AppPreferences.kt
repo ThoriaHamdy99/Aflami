@@ -9,11 +9,9 @@ interface AppPreferences {
     fun getRestrictionLevel(): Flow<String>
     suspend fun setRestrictionLevel(restrictionLevel: String)
 
-    suspend fun initAppLanguage(language: String)
-    fun getAppLanguage(): Flow<String>
     suspend fun setAppLanguage(language: String)
+    fun getAppLanguage(): Flow<String>
 
-    suspend fun initAppTheme(isDarkTheme: Boolean)
-    fun getAppTheme(): Flow<Boolean>
     suspend fun setAppTheme(isDarkTheme: Boolean)
+    fun getAppTheme(): Flow<Boolean>
 }

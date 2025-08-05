@@ -2,14 +2,19 @@ package com.amsterdam.domain.useCase.preferences
 
 import com.amsterdam.domain.repository.AppPreferencesRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class ManageLocaleLanguageUseCase(
     private val preferencesRepository: AppPreferencesRepository,
 ) {
     suspend fun initAppLanguage(language: String) {
-        val updatedLanguage = Language.fromLanguage(language).value
-        preferencesRepository.initAppLanguage(updatedLanguage)
+        preferencesRepository.getAppLanguage().firstOrNull()?.let {
+            it.takeIf { it.isEmpty() }.let {
+                setAppLanguage(Language.fromLanguage(language))
+            }
+            return
+        } ?: setAppLanguage(Language.fromLanguage(language))
     }
 
     suspend fun setAppLanguage(language: Language) {

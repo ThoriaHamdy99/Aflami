@@ -51,7 +51,6 @@ class ApplicationViewModel @Inject constructor(
     fun initAppSettings(locale: Locale) {
         viewModelScope.launch(dispatcherProvider.IO) {
             manageLocaleLanguageUseCase.initAppLanguage(locale.language)
-            manageAppThemeUseCase.initAppTheme(isDarkTheme = true)
         }
     }
 

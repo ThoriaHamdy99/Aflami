@@ -1,6 +1,5 @@
 package com.amsterdam.localdatasource.dataStore
 
-import android.os.LocaleList
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -12,8 +11,8 @@ import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys
 import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl.PreferenceKeys.RESTRICTION_LEVEL
 import com.amsterdam.repository.datasource.local.AppPreferences
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -21,27 +20,15 @@ class AppPreferencesImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) : AppPreferences {
 
-    override suspend fun initAppLanguage(language: String) {
-        dataStore.data.map { preferences ->
-            preferences[CURRENT_LANGUAGE]
-        }.firstOrNull() ?: setAppLanguage(language)
-    }
-
     override suspend fun setAppLanguage(language: String) {
         dataStore.edit { preferences ->
             preferences[CURRENT_LANGUAGE] = language
         }
     }
 
-    override suspend fun initAppTheme(isDarkTheme: Boolean) {
-        dataStore.data.map { preferences ->
-            preferences[IS_DARK_THEME]
-        }.firstOrNull() ?: setAppTheme(isDarkTheme)
-    }
-
-    override fun getAppTheme(): Flow<Boolean> {
+    override fun getAppLanguage(): Flow<String> {
         return dataStore.data.map { preferences ->
-            preferences[IS_DARK_THEME] ?: true
+            preferences[CURRENT_LANGUAGE] ?: emptyFlow<String>().first()
         }
     }
 
@@ -51,9 +38,9 @@ class AppPreferencesImpl @Inject constructor(
         }
     }
 
-    override fun getAppLanguage(): Flow<String> {
+    override fun getAppTheme(): Flow<Boolean> {
         return dataStore.data.map { preferences ->
-            preferences[CURRENT_LANGUAGE] ?: LocaleList.getDefault()[0].language.lowercase()
+            preferences[IS_DARK_THEME] ?: true
         }
     }
 

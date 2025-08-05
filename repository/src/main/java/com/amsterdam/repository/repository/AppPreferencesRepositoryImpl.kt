@@ -16,14 +16,6 @@ class AppPreferencesRepositoryImpl @Inject constructor(
     override suspend fun setAppLanguage(language: String) =
         preferences.setAppLanguage(language)
 
-    override suspend fun initAppLanguage(language: String) {
-        preferences.initAppLanguage(language)
-    }
-
-    override suspend fun initAppTheme(isDarkTheme: Boolean) {
-        preferences.initAppTheme(isDarkTheme)
-    }
-
     override fun getAppTheme(): Flow<Boolean> {
         return preferences.getAppTheme()
     }
