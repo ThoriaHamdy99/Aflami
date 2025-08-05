@@ -8,11 +8,12 @@ class ManageLocaleLanguageUseCase(
     private val preferencesRepository: AppPreferencesRepository,
 ) {
     suspend fun initAppLanguage(language: String) {
-        preferencesRepository.initAppLanguage(language)
+        val updatedLanguage = Language.fromLanguage(language).value
+        preferencesRepository.initAppLanguage(updatedLanguage)
     }
 
-    suspend fun setAppLanguage(language: String) {
-        preferencesRepository.setAppLanguage(language)
+    suspend fun setAppLanguage(language: Language) {
+        preferencesRepository.setAppLanguage(language.value)
     }
 
     fun getAppLanguage(): Flow<Language> {
@@ -30,13 +31,6 @@ class ManageLocaleLanguageUseCase(
                 return when (value) {
                     "en" -> ENGLISH
                     "ar" -> ARABIC
-                    else -> ENGLISH
-                }
-            }
-            fun toLanguage(languageName: String): Language {
-                return when (languageName) {
-                    "ENGLISH" -> ENGLISH
-                    "ARABIC" -> ARABIC
                     else -> ENGLISH
                 }
             }
