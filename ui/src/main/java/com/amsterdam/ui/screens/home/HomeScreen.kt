@@ -174,20 +174,19 @@ private fun HomeScreenContent(
                 )
 
                 item {
-                    AnimatedVisibility(visible = !state.isLoading) {
+                    AnimatedSectionVisibility(visible = !state.isLoading && state.error == null) {
                         MoodPickerSection(
-                            state,
-                            interactionListener,
+                            state = state,
+                            interactionListener = interactionListener
                         )
                     }
-
                 }
 
                 upcomingMoviesSection(
                     state = state.upcomingMoviesSectionUiState,
                     onChangeMovieGenre = interactionListener::onChangeUpcomingMovieGenre,
                     onMovieClicked = interactionListener::onClickUpcomingMovieCard,
-                    isVisible = state.error == null,
+                    isVisible = !state.isLoading&&state.error == null,
                     onVerticalOffsetChange = {
                         upcomingMoviesSectionYOffsetDp = it
                     },
