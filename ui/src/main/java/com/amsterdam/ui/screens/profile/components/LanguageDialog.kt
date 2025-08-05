@@ -5,11 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,13 +17,16 @@ import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.R
+import com.amsterdam.ui.components.selection.LanguageSelectionItem
 import com.amsterdam.ui.screens.profile.model.Language
+import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language as DomainLanguage
 
 @Composable
 fun LanguageDialog(
-    language: Language,
+    language: DomainLanguage,
     modifier: Modifier = Modifier,
-    onConfirm: (language: Language) -> Unit,
+    onChangeLanguage: (DomainLanguage) -> Unit,
+    onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
 
@@ -38,8 +37,9 @@ fun LanguageDialog(
     ) {
         DialogContent(
             language = language,
-            onConfirm = { onConfirm(language) },
-            onDismiss = onDismiss
+            onConfirm = { onConfirm() },
+            onDismiss = { onDismiss() },
+            onChangeLanguage = { onChangeLanguage(it) }
         )
     }
 }
@@ -47,12 +47,11 @@ fun LanguageDialog(
 
 @Composable
 fun DialogContent(
-    language: Language,
-    onConfirm: (language: Language) -> Unit,
+    language: DomainLanguage,
+    onConfirm: () -> Unit,
+    onChangeLanguage: (DomainLanguage) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val updatedLanguage by remember { mutableStateOf(language) }
-
     Column(
         modifier = Modifier
             .padding(12.dp)
@@ -78,19 +77,25 @@ fun DialogContent(
             )
         }
 
-        SelectionContainer {
-            Row {
-                Text(
-                    text = updatedLanguage.name,
-                    style = AppTheme.textStyle.body.medium,
-                    color = AppTheme.color.title,
-                    modifier = Modifier.padding(top = 24.dp)
-                )
-            }
-        }
+        LanguageSelectionItem(
+            modifier = Modifier.padding(top = 24.dp),
+            isSelected = Language.ENGLISH.name == language.name,
+            onClick = { onChangeLanguage(DomainLanguage.ENGLISH) },
+            text = stringResource(Language.ENGLISH.nameResourceId),
+            trailingText = stringResource(Language.ENGLISH.exampleResourceId)
+        )
+
+        LanguageSelectionItem(
+            modifier = Modifier.padding(top = 12.dp),
+            isSelected = Language.ARABIC.name == language.name,
+            onClick = { onChangeLanguage(DomainLanguage.ARABIC) },
+            text = stringResource(Language.ARABIC.nameResourceId),
+            trailingText = stringResource(Language.ARABIC.exampleResourceId)
+        )
+
         ConfirmButton(
             title = stringResource(R.string.apply),
-            onClick = { onConfirm(updatedLanguage) },
+            onClick = { onConfirm() },
             isEnabled = true,
             isLoading = false,
             isNegative = false,

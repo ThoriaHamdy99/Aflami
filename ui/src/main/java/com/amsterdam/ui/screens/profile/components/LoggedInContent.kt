@@ -31,7 +31,6 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.ui.R
-import com.amsterdam.ui.screens.profile.model.Language
 import com.amsterdam.viewmodel.profile.ProfileInteractionListener
 import com.amsterdam.viewmodel.profile.ProfileUiState
 
@@ -90,15 +89,27 @@ fun LoggedInContent(state: ProfileUiState, interactionListener: ProfileInteracti
         ) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 LanguageDialog(
-                    language = Language.fromUiState(state.language),
-                    onConfirm = {
-                        interactionListener.onChangeLanguage(
-                            ManageLocaleLanguageUseCase.Language.toLanguage(
-                                it.name
-                            )
-                        )
-                    },
-                    onDismiss = { interactionListener.onDismissLanguageDialog() }
+                    language = state.language,
+                    onConfirm = { interactionListener.onApplyLanguage() },
+                    onDismiss = { interactionListener.onDismissLanguageDialog() },
+                    onChangeLanguage = { language -> interactionListener.onChangeLanguage(language) }
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            state.showThemeDialog,
+            enter = fadeIn(tween(2000)),
+            exit = fadeOut(tween(2000)),
+        ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                ThemeDialog(
+                    isDarkTheme = state.isDarkTheme,
+                    onConfirm = { interactionListener.onApplyTheme() },
+                    onDismiss = { interactionListener.onDismissThemeDialog() },
+                    onChangeTheme = { isDarkTheme ->
+                        interactionListener.onChangeTheme(isDarkTheme)
+                    }
                 )
             }
         }
@@ -111,23 +122,22 @@ private fun LoggedInContentPreview() {
     AflamiTheme {
         LoggedInContent(ProfileUiState(), object : ProfileInteractionListener {
             override fun onClickLogin() {}
-            override fun onClickLanguage() {
-            }
 
-            override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {
-            }
+            override fun onClickLanguageSetting() {}
 
-            override fun onDismissLanguageDialog() {
-            }
+            override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {}
 
-            override fun onClickTheme() {
-            }
+            override fun onApplyLanguage() {}
 
-            override fun onChangeTheme(isDarkTheme: Boolean) {
-            }
+            override fun onDismissLanguageDialog() {}
 
-            override fun onDismissThemeDialog() {
-            }
+            override fun onClickThemeSetting() {}
+
+            override fun onChangeTheme(isDarkTheme: Boolean) {}
+
+            override fun onApplyTheme() {}
+
+            override fun onDismissThemeDialog() {}
         })
     }
 }

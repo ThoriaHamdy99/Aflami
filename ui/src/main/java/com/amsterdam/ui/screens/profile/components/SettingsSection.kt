@@ -39,9 +39,7 @@ fun SettingsSection(state: ProfileUiState, interactionListener: ProfileInteracti
         endIconResourceId = com.amsterdam.designsystem.R.drawable.ic_arrow_right,
         startText = stringResource(R.string.language),
         endText = stringResource(language.nameResourceId),
-        onClick = {
-            interactionListener.onClickLanguage()
-        }
+        onClick = { interactionListener.onClickLanguageSetting() }
     )
 
     CustomSettingCard(
@@ -140,23 +138,21 @@ private fun SettingsSectionPreview() {
             ProfileUiState(),
             interactionListener = object : ProfileInteractionListener {
                 override fun onClickLogin() {}
-                override fun onClickLanguage() {
-                }
+                override fun onClickLanguageSetting() {}
 
-                override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {
-                }
+                override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {}
 
-                override fun onDismissLanguageDialog() {
-                }
+                override fun onApplyLanguage() {}
 
-                override fun onClickTheme() {
-                }
+                override fun onDismissLanguageDialog() {}
 
-                override fun onChangeTheme(isDarkTheme: Boolean) {
-                }
+                override fun onClickThemeSetting() {}
 
-                override fun onDismissThemeDialog() {
-                }
+                override fun onChangeTheme(isDarkTheme: Boolean) {}
+
+                override fun onApplyTheme() {}
+
+                override fun onDismissThemeDialog() {}
             },
         )
     }

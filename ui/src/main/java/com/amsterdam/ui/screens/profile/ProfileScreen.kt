@@ -44,6 +44,11 @@ fun ProfileScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 ProfileEffect.NavigateToLogin -> navController.navigate(Route.Login)
+                is ProfileEffect.LanguageChanged -> {
+                }
+
+                is ProfileEffect.ThemeChanged -> {
+                }
             }
         }
     }
@@ -105,20 +110,20 @@ private fun ProfileScreenPreview() {
         ProfileUiState(),
         interactionListener = object : ProfileInteractionListener {
             override fun onClickLogin() {}
-            override fun onClickLanguage() {}
+            override fun onClickLanguageSetting() {}
 
             override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {}
+            override fun onApplyLanguage() {}
 
             override fun onDismissLanguageDialog() {}
 
-            override fun onClickTheme() {
-            }
+            override fun onClickThemeSetting() {}
 
-            override fun onChangeTheme(isDarkTheme: Boolean) {
-            }
+            override fun onChangeTheme(isDarkTheme: Boolean) {}
 
-            override fun onDismissThemeDialog() {
-            }
+            override fun onApplyTheme() {}
+
+            override fun onDismissThemeDialog() {}
         }
     )
 }

@@ -42,19 +42,22 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun loadSettings() {
-        manageLocaleLanguageUseCase.getAppLanguage().onEach { language ->
-            updateState { state ->
-                state.copy(
-                    language = language
-                )
+        viewModelScope.launch {
+            manageLocaleLanguageUseCase.getAppLanguage().collectLatest { language ->
+                updateState { state ->
+                    state.copy(
+                        language = language
+                    )
+                }
+                sendNewEffect(ProfileEffect.LanguageChanged(language.value))
             }
-        }
-
-        manageAppThemeUseCase.getAppTheme().onEach { isDarkTheme ->
-            updateState { state ->
-                state.copy(
-                    isDarkTheme = isDarkTheme
-                )
+            manageAppThemeUseCase.getAppTheme().collectLatest { isDarkTheme ->
+                updateState { state ->
+                    state.copy(
+                        isDarkTheme = isDarkTheme
+                    )
+                }
+                sendNewEffect(ProfileEffect.ThemeChanged(isDarkTheme))
             }
         }
     }
@@ -92,17 +95,20 @@ class ProfileViewModel @Inject constructor(
         sendNewNavigationEffect(ProfileEffect.NavigateToLogin)
     }
 
-    override fun onClickLanguage() {
+    override fun onClickLanguageSetting() {
         updateState { state -> state.copy(showLanguageDialog = true) }
     }
 
     override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {
+        updateState { state -> state.copy(language = language) }
+    }
+
+    override fun onApplyLanguage() {
         viewModelScope.launch(dispatcherProvider.IO) {
             manageLocaleLanguageUseCase.setAppLanguage(
-                language.value
+                state.value.language
             )
         }
-        updateState { state -> state.copy(language = language) }
         onDismissLanguageDialog()
     }
 
