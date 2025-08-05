@@ -36,7 +36,6 @@ fun AflamiApp(
     val appUiState by viewModel.state.collectAsState()
     val startDestination = runBlocking {
         getStartDestination(viewModel.setStartDestination())
-        //Route.MyRating
     }
     val restrictionLevel = appUiState.restrictionLevel
     val localConfigurations = LocalConfiguration.current

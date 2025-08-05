@@ -27,7 +27,7 @@ interface MovieRemoteSource {
 
     suspend fun getRatedMovies(sessionId: String): RemoteMovieResponse
 
-    suspend fun setMovieRate(rate: Int, movieId: Long, sessionId: String): RatingResponse?
+    suspend fun setMovieRate(rate: Float, movieId: Long, sessionId: String): RatingResponse?
 
     suspend fun deleteMovieRate(movieId: Long, sessionId: String)
 

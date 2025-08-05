@@ -264,7 +264,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun setMovieRate(rate: Int, movieId: Long) {
         val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
-         movieRemoteDataSource.setMovieRate(rate = rate, movieId = movieId, sessionId = sessionId)
+         movieRemoteDataSource.setMovieRate(rate = rate.toFloat(), movieId = movieId, sessionId = sessionId)
     }
 
     override suspend fun getUserRatedMovies(): List<UserRatedMovie> {
