@@ -5,7 +5,6 @@ import com.amsterdam.remotedatasource.BuildConfig
 import com.amsterdam.remotedatasource.api.AuthenticationApiService
 import com.amsterdam.remotedatasource.api.CategoryApiService
 import com.amsterdam.remotedatasource.api.CountryApiService
-import com.amsterdam.remotedatasource.api.UserListApiService
 import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.api.TvShowsApiService
 import com.amsterdam.remotedatasource.api.UserListApiService
