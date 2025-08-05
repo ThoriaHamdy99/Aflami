@@ -158,7 +158,11 @@ private fun ListsScreenContent(
                 )
 
                 AnimatedContent(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .navigationBarsPadding()
+                            .windowInsetsPadding(WindowInsets(bottom = LocalScaffoldBottomPadding.current)),
                     targetState = Triple(state.isLoading, state.errorUiState, state.userLists),
                     transitionSpec = {
                         fadeIn(tween(700)) togetherWith fadeOut(tween(700))
