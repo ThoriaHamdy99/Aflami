@@ -45,9 +45,10 @@ interface TvShowsApiService {
     ): EpisodeResponse
     @GET(TV_SHOW_EPISODES_Videos)
     suspend fun getEpisodeVideosByEpisodeId(
-        @Path("tvShowId") tvShowId: Long,
-        @Path("seasonNumber") seasonNumber: Int,
-        @Path("episodeNumber") episodeNumber: Int,
+        @Path("series_id") tvShowId: Long,
+        @Path("season_number") seasonNumber: Int,
+        @Path("episode_number") episodeNumber: Int,
+        @Query("include_video_language") videoLang: String = INCLUDED_VIDEO_LANGUAGE
     ): VideoResponse
 
 
@@ -63,7 +64,7 @@ interface TvShowsApiService {
         private const val TV_SHOW_CREDITS_ENDPOINT = "tv/{tvShowId}/credits"
         private const val TV_SHOW_DETAILS_ENDPOINT = "tv/{tvShowId}"
         private const val TV_SHOW_EPISODES_ENDPOINT = "tv/{tvShowId}/season/{seasonNumber},"
-        private const val TV_SHOW_EPISODES_Videos = "tv/{tvShowId}/season/{seasonNumber}/episode/{episodeNumber}/videos"
+        private const val TV_SHOW_EPISODES_Videos = "tv/{series_id}/season/{season_number}/episode/{episode_number}/videos"
         private const val TV_SHOW_DETAILS_APPEND_PARAMETERS = "credits,similar,reviews,images,videos"
         private const val INCLUDED_VIDEO_LANGUAGE = "en"
 

@@ -49,6 +49,7 @@ fun EpisodeCard(
     episodeTime: String,
     publishedAt: String,
     episodeDescription: String,
+    isActive: Boolean,
     modifier: Modifier = Modifier,
     onPlayEpisodeClick: () -> Unit = {},
 ) {
@@ -80,7 +81,7 @@ fun EpisodeCard(
                     publishedAt = publishedAt,
                 )
             }
-            PlayEpisodeButton(onPlayEpisodeClick)
+            PlayEpisodeButton(onPlayEpisodeClick,isActive )
         }
         EpisodeDescription(
             episodeDescription = episodeDescription,
@@ -204,13 +205,14 @@ private fun EpisodeDescription(episodeDescription: String) {
 }
 
 @Composable
-private fun PlayEpisodeButton(onPlayEpisodeClick: () -> Unit) {
+private fun PlayEpisodeButton(onPlayEpisodeClick: () -> Unit,isActive:Boolean ) {
+    val playButtonColor = if (isActive) AppTheme.color.primary else AppTheme.color.disable
     IconButton(
         painter = painterResource(R.drawable.ic_play),
         contentDescription = null,
         onClick = onPlayEpisodeClick,
         containerColor = AppTheme.color.surfaceHigh,
-        tint = AppTheme.color.primary,
+        tint = playButtonColor,
         modifier =
             Modifier
                 .border(
@@ -243,6 +245,7 @@ private fun EpisodeCardPreview() {
                 publishedAt = "3 Sep 2020",
                 episodeDescription = "In 1935, corrections officer Paul Edgecomb oversees ",
                 onPlayEpisodeClick = { },
+                isActive = true
             )
         }
     }

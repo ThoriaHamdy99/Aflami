@@ -106,6 +106,18 @@ class TvShowRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun getEpisodeVideoUrl(
+        tvShowId: Long,
+        seasonNumber: Int,
+        episodeNumber: Int
+    ): String {
+        return remoteTvDataSource.getEpisodeVideosByEpisodeId(
+            tvShowId,
+            seasonNumber,
+            episodeNumber
+        ).results.firstOrNull()?.fullVideoUrl?:""
+    }
+
     private suspend fun cacheWatchedTvShow(remoteTvShowItemDto: TvShowDetailsRemoteResponse) {
         localTvDataSource.insertTvShow(
             tvShowRemoteDetailsLocalMapper.toLocal(

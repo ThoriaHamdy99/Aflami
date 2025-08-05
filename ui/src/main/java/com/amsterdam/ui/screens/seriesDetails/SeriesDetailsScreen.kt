@@ -383,7 +383,9 @@ fun SeriesDetailsContent(
                                 SeriesExtras.SEASONS -> {
                                     seasonsSection(
                                         seasons = state.seasons,
-                                        interaction = interaction
+                                        interaction = interaction,
+                                        state = state
+
                                     )
                                 }
 
@@ -515,6 +517,7 @@ private fun SeriesExtrasSection(
 
 private fun LazyListScope.seasonsSection(
     seasons: List<SeasonUiState>,
+    state: SeriesDetailsUiState,
     interaction: SeriesDetailsInteractionListener
 ) {
     if (seasons.isEmpty()) {
@@ -531,7 +534,7 @@ private fun LazyListScope.seasonsSection(
             }
             val episodes = if (season.isExpanded) season.episodes else emptyList()
             items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
-                EpisodesMenu(it, interaction::onPlayEpisodeClicked)
+                EpisodesMenu(it, isActive = state.videoUrl.isNotBlank(),interaction::onPlayEpisodeClicked,)
             }
         }
     }
@@ -583,6 +586,7 @@ private fun SeasonHeader(
 @Composable
 private fun EpisodesMenu(
     episode: EpisodeUiState,
+    isActive:Boolean ,
     onPlayEpisodeClicked: (Int) -> Unit
 ) {
     EpisodeCard(
@@ -593,6 +597,7 @@ private fun EpisodesMenu(
         episodeTime = episode.duration,
         publishedAt = episode.airDate,
         episodeDescription = episode.description,
+        isActive = isActive,
         modifier = Modifier.padding(vertical = 12.dp),
         onPlayEpisodeClick = { onPlayEpisodeClicked(episode.number) }
     )
