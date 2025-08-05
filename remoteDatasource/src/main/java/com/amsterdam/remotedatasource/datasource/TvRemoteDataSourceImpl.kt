@@ -55,9 +55,10 @@ class TvRemoteDataSourceImpl @Inject constructor(
         episodeNumber: Int
     ): VideoResponse {
         return responseCall {
+            val actualSeasonNumber = if (seasonNumber == 0) 1 else seasonNumber
             tvShowsApiService.getEpisodeVideosByEpisodeId(
                 tvShowId,
-                seasonNumber+1,
+                actualSeasonNumber,
                 episodeNumber
             )
         }
