@@ -5,7 +5,7 @@ import com.amsterdam.remotedatasource.datasource.CategoryRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.CountryRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.MovieRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.TvRemoteDataSourceImpl
-import com.amsterdam.remotedatasource.datasource.UserListRemoteSourceImpl
+import com.amsterdam.remotedatasource.datasource.UserListRemoteDataSourceImpl
 import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.datasource.remote.CountryRemoteSource
@@ -55,6 +55,6 @@ abstract class RemoteDataSourceBindModule {
     @Binds
     @Singleton
     abstract fun bindUserListRemoteSource(
-        impl: UserListRemoteSourceImpl
+        impl: UserListRemoteDataSourceImpl
     ): UserListRemoteSource
 }
