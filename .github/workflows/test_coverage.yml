@@ -55,7 +55,7 @@ jobs:
         if: always()
         with:
           name: kover-xml-report
-          path: '**/localDatasource/build/reports/kover/**/*.xml'
+          path: 'localDatasource/build/reports/kover/html/index.html'
 
 
       - name: Post Kover Code Coverage Comment
