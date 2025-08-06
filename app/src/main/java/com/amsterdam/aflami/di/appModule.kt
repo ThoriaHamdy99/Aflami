@@ -22,7 +22,7 @@ abstract class AppModule {
 
     @Binds
     @Singleton
-    abstract fun provideAppVersionProvider(
+    abstract fun bindAppVersionProvider(
         appVersionProviderImpl: AppVersionProviderImpl
     ): AppVersionProvider
 }
