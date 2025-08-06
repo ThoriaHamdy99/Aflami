@@ -90,8 +90,13 @@ class LoginViewModel @Inject constructor(
                 loginError = LoginErrorState.toLoginErrorState(exception),
             )
         }
-        sendNewEffect(LoginEffect.ShowCredentialsError)
     }
+    fun onLoginErrorHandled() {
+        updateState {
+            it.copy(loginError = null)
+        }
+    }
+
 
     private fun onLoginComplete() {
         updateState { it.copy(isLoginButtonLoading = false) }
