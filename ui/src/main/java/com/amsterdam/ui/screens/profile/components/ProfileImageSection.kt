@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,7 +32,7 @@ import com.amsterdam.ui.R
 fun ProfileImageSection(userAvatarUrl: String) {
     Box {
         Image(
-            painter = painterResource(getProfileBackgroundImageResourceId()),
+            painter = getProfileBackgroundImageResourceId(),
             contentDescription = stringResource(R.string.profile),
             modifier = Modifier
                 .padding(bottom = 27.dp)
@@ -100,11 +101,11 @@ private fun Modifier.bottomProfileOverlay() = this.background(
 )
 
 @Composable
-private fun getProfileBackgroundImageResourceId(): Int {
+private fun getProfileBackgroundImageResourceId(): Painter {
     if (LocalIsDarkTheme.current) {
-        return R.drawable.profile_background_image_dark
+        return painterResource(R.drawable.profile_background_image_dark)
     }
-    return R.drawable.profile_background_image
+    return painterResource(R.drawable.profile_background_image)
 }
 
 @Composable
