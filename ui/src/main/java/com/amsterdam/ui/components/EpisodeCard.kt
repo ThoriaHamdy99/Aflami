@@ -1,5 +1,6 @@
 package com.amsterdam.ui.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -206,7 +207,10 @@ private fun EpisodeDescription(episodeDescription: String) {
 
 @Composable
 private fun PlayEpisodeButton(onPlayEpisodeClick: () -> Unit,isActive:Boolean ) {
-    val playButtonColor = if (isActive) AppTheme.color.primary else AppTheme.color.disable
+    val playButtonColor by animateColorAsState(
+        targetValue = if (isActive) AppTheme.color.primary else AppTheme.color.stroke,
+        label = "PlayButtonColor"
+    )
     IconButton(
         painter = painterResource(R.drawable.ic_play),
         contentDescription = null,
