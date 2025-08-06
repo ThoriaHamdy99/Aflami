@@ -19,7 +19,7 @@ interface TvShowsRemoteSource {
         page: Int,
     ): RemoteTvShowResponse
 
-    suspend fun getTvShowDetailsById(tvShowId: Long): TvShowDetailsRemoteResponse
+    suspend fun getTvShowDetailsById(tvShowId: Long, sessionId: String = ""): TvShowDetailsRemoteResponse
 
     suspend fun getEpisodesBySeasonNumber(tvShowId: Long, seasonNumber: Int): EpisodeResponse
 

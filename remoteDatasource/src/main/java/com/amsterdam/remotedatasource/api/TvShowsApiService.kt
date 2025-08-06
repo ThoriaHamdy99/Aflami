@@ -37,6 +37,7 @@ interface TvShowsApiService {
     @GET(TV_SHOW_DETAILS_ENDPOINT)
     suspend fun getTvShowDetailsById(
         @Path("tvShowId") tvShowId: Long,
+        @Query("session_id") sessionId: String = "",
         @Query("append_to_response") appendToResponse: String = TV_SHOW_DETAILS_APPEND_PARAMETERS,
         @Query("include_video_language") videoLang: String = INCLUDED_VIDEO_LANGUAGE
     ): TvShowDetailsRemoteResponse
@@ -78,7 +79,7 @@ interface TvShowsApiService {
         private const val PAGE_KEY = "page"
         private const val TV_SHOW_CREDITS_ENDPOINT = "tv/{tvShowId}/credits"
         private const val TV_SHOW_DETAILS_ENDPOINT = "tv/{tvShowId}"
-        private const val TV_SHOW_DETAILS_APPEND_PARAMETERS = "credits,similar,reviews,images,videos"
+        private const val TV_SHOW_DETAILS_APPEND_PARAMETERS = "credits,similar,reviews,images,videos,account_states"
         private const val TV_SHOW_EPISODES_ENDPOINT = "tv/{tvShowId}/season/{seasonNumber}"
         private const val TV_RATE_ENDPOINT = "tv/{tv_id}/rating"
         private const val RATED_TV_SHOWS_ENDPOINT = "account/{account_id}/rated/tv"

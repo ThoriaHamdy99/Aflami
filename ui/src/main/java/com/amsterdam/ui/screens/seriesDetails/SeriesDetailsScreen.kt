@@ -481,7 +481,7 @@ fun SeriesDetailsContent(
                 firstOption = painterResource(R.drawable.ic_outlined_star),
                 lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
                 onNavigateBackClicked = seriesDetailsInteractionListener::onNavigateBack,
-                onFirstOptionClicked = seriesDetailsInteractionListener::onRateClicked,
+                onFirstOptionClicked = seriesDetailsInteractionListener::onClickRate,
                 onLastOptionClicked = seriesDetailsInteractionListener::onAddToListClicked
             )
             HorizontalDivider(color = dividerColor)
@@ -651,7 +651,7 @@ private fun SeriesDetailsContentPreview() {
                 override fun onClickRetryButton() {}
                 override fun onClickShowAllCast() {}
                 override fun onAddToListClicked() {}
-                override fun onRateClicked() {}
+                override fun onClickRate() {}
                 override fun onClickSeasonMenu(seasonNumber: Int) {}
                 override fun onNavigateToLoginClicked() {}
                 override fun onCancelClicked() {}

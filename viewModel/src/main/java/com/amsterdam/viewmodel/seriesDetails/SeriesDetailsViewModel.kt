@@ -8,8 +8,6 @@ import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
-import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
-import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
@@ -17,6 +15,7 @@ import com.amsterdam.entity.Episode
 import com.amsterdam.viewmodel.myRating.RateDialogInteractionListener
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 import com.amsterdam.viewmodel.shared.BaseViewModel
+import com.amsterdam.viewmodel.shared.RateDialogUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.MovieAndSeriesDetailsDialogType
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +31,6 @@ class SeriesDetailsViewModel @Inject constructor(
     private val getEpisodesBySeasonNumberUseCase: GetEpisodesBySeasonNumberUseCase,
     private val seriesDetailsStateMapper: SeriesDetailsStateMapper,
     private val getsSessionType: GetsSessionType,
-    private val getUserRatedTvShowsUseCase: GetUserRatedTvShowsUseCase,
     private val setUserTvShowRatingUseCase: SetUserTvShowRatingUseCase,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider
@@ -101,39 +99,25 @@ class SeriesDetailsViewModel @Inject constructor(
         }
     }
 
-    override fun onRateClicked() {
+    override fun onClickRate() {
         viewModelScope.launch {
             runIfLoggedIn(
                 onLoggedIn = {
-                    updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isVisible = true, isLoading = true)) }
-                    tryToExecute(
-                        action = { getUserRatedTvShowsUseCase.getRatedTvShow(state.value.tvShowId) },
-                        onSuccess = ::onGetRatedTvShowSuccess,
-                        onError = ::onGetRatedTvShowError
-                    )
+                    val userRate = state.value.rateDialogUiState.selectedStarIndex
+                    updateState {
+                        it.copy(
+                            rateDialogUiState = RateDialogUiState(
+                                isVisible = true,
+                                isSubmittingEnabled = false,
+                                selectedStarIndex = userRate,
+                                previousStarIndex = userRate
+                            )
+                        )
+                    }
                 },
                 onGuest = { showMustLoginDialog(MovieAndSeriesDetailsDialogType.Rate) }
             )
         }
-    }
-
-    private fun onGetRatedTvShowSuccess(tvShow: UserRatedTvShow?) {
-        tvShow?.let { ratedMovie ->
-            updateState {
-                it.copy(
-                    rateDialogUiState = it.rateDialogUiState.copy(
-                        selectedStarIndex = ratedMovie.userRate.toInt(),
-                        previousStarIndex = ratedMovie.userRate.toInt(),
-                        isLoading = false,
-                        isSubmittingEnabled = false
-                    )
-                )
-            }
-        }
-    }
-
-    private fun onGetRatedTvShowError(exception: AflamiException) {
-        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(selectedStarIndex = null, isLoading = false, isSubmittingEnabled = true))}
     }
 
     override fun onClickSeasonMenu(seasonNumber: Int) {
@@ -246,7 +230,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     override fun onClickCancelRateDialog() {
-        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isVisible = false)) }
+        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isVisible = false, selectedStarIndex = state.value.rateDialogUiState.previousStarIndex)) }
     }
 
     override fun onClickSubmit() {
@@ -254,7 +238,7 @@ class SeriesDetailsViewModel @Inject constructor(
         tryToExecute(
             action = {
                 setUserTvShowRatingUseCase.setUserMovieRate(
-                    rate = state.value.rateDialogUiState.selectedStarIndex ?: 1,
+                    rate = state.value.rateDialogUiState.selectedStarIndex ?: 0,
                     tvShowId = state.value.tvShowId
                 )
             },
@@ -264,27 +248,13 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     private fun onSubmitRateSuccess(unit: Unit) {
-        resetRateDialogUiState()
-        sendNewNavigationEffect(SeriesDetailsEffect.ShowRatingSuccessSnackBar)
+        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isVisible = false, isLoading = false)) }
+        sendNewEffect(SeriesDetailsEffect.ShowRatingSuccessSnackBar)
     }
 
     private fun onSubmitRateError(exception: AflamiException) {
-        resetRateDialogUiState()
+        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isVisible = false, isLoading = false, selectedStarIndex = it.rateDialogUiState.previousStarIndex)) }
         sendNewNavigationEffect(SeriesDetailsEffect.ShowRatingErrorSnackBar)
-    }
-
-    private fun resetRateDialogUiState(){
-        updateState {
-            it.copy(
-                rateDialogUiState = it.rateDialogUiState.copy(
-                    isLoading = false,
-                    isVisible = false,
-                    previousStarIndex = null,
-                    selectedStarIndex = null,
-                    isSubmittingEnabled = false
-                )
-            )
-        }
     }
 
     override fun onChangeRating(newRate: Int) {
