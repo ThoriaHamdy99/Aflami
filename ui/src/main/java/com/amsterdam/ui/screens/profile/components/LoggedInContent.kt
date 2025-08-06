@@ -85,6 +85,38 @@ fun LoggedInContent(
         )
     }
 
+    AnimatedVisibility(
+        state.showLanguageDialog,
+        enter = fadeIn(tween(2000)),
+        exit = fadeOut(tween(2000)),
+    ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            LanguageDialog(
+                language = state.language,
+                onConfirm = { interactionListener.onApplyLanguage() },
+                onDismiss = { interactionListener.onDismissLanguageDialog() },
+                onChangeLanguage = { language -> interactionListener.onChangeLanguage(language) }
+            )
+        }
+    }
+
+    AnimatedVisibility(
+        state.showThemeDialog,
+        enter = fadeIn(tween(2000)),
+        exit = fadeOut(tween(2000)),
+    ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            ThemeDialog(
+                isDarkTheme = state.isDarkTheme,
+                onConfirm = { interactionListener.onApplyTheme() },
+                onDismiss = { interactionListener.onDismissThemeDialog() },
+                onChangeTheme = { isDarkTheme ->
+                    interactionListener.onChangeTheme(isDarkTheme)
+                }
+            )
+        }
+    }
+
     Box {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -126,37 +158,6 @@ fun LoggedInContent(
             modifier = Modifier
                 .background(appBarColor)
         )
-        AnimatedVisibility(
-            state.showLanguageDialog,
-            enter = fadeIn(tween(2000)),
-            exit = fadeOut(tween(2000)),
-        ) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                LanguageDialog(
-                    language = state.language,
-                    onConfirm = { interactionListener.onApplyLanguage() },
-                    onDismiss = { interactionListener.onDismissLanguageDialog() },
-                    onChangeLanguage = { language -> interactionListener.onChangeLanguage(language) }
-                )
-            }
-        }
-
-        AnimatedVisibility(
-            state.showThemeDialog,
-            enter = fadeIn(tween(2000)),
-            exit = fadeOut(tween(2000)),
-        ) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                ThemeDialog(
-                    isDarkTheme = state.isDarkTheme,
-                    onConfirm = { interactionListener.onApplyTheme() },
-                    onDismiss = { interactionListener.onDismissThemeDialog() },
-                    onChangeTheme = { isDarkTheme ->
-                        interactionListener.onChangeTheme(isDarkTheme)
-                    }
-                )
-            }
-        }
     }
 }
 
