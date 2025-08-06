@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
+import com.amsterdam.designsystem.theme.LocalIsDarkTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.modifierExtensions.dropShadow
 import com.amsterdam.imageviewer.ui.SafeImageView
@@ -30,26 +31,24 @@ import com.amsterdam.ui.R
 fun ProfileImageSection(userAvatarUrl: String) {
     Box {
         Image(
-            painter = painterResource(R.drawable.profile_background_image),
+            painter = painterResource(getProfileBackgroundImageResourceId()),
             contentDescription = stringResource(R.string.profile),
             modifier = Modifier
                 .padding(bottom = 27.dp)
                 .fillMaxWidth()
                 .height(211.dp)
-                .dropShadow(
-                    blur = 4.dp,
-                    shape = RoundedCornerShape(24.dp),
-                    color = AppTheme.color.profileOverlay
-                )
                 .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            AppTheme.color.surface,
-                            AppTheme.color.surface
-                        )
-                    )
+                    color = AppTheme.color.profileOverlay
                 ),
             contentScale = ContentScale.Crop
+        )
+        Box(
+            modifier = Modifier
+                .padding(bottom = 27.dp)
+                .fillMaxWidth()
+                .height(211.dp)
+                .topProfileOverlay()
+                .bottomProfileOverlay()
         )
         SafeImageView(
             model = userAvatarUrl,
@@ -72,6 +71,40 @@ fun ProfileImageSection(userAvatarUrl: String) {
             onError = { ProfileImagePlaceholder() }
         )
     }
+}
+
+@Composable
+private fun Modifier.topProfileOverlay() = this.background(
+    brush = Brush.verticalGradient(
+        colors = listOf(
+            AppTheme.color.overlayGradient[1],
+            AppTheme.color.overlayGradient[0],
+            AppTheme.color.overlayGradient[0],
+            AppTheme.color.overlayGradient[0],
+            AppTheme.color.overlayGradient[0],
+        ),
+    ),
+)
+
+@Composable
+private fun Modifier.bottomProfileOverlay() = this.background(
+    brush = Brush.verticalGradient(
+        colors = listOf(
+            AppTheme.color.overlayGradient[0],
+            AppTheme.color.overlayGradient[0],
+            AppTheme.color.overlayGradient[0],
+            AppTheme.color.overlayGradient[0],
+            AppTheme.color.overlayGradient[1],
+        ),
+    ),
+)
+
+@Composable
+private fun getProfileBackgroundImageResourceId(): Int {
+    if (LocalIsDarkTheme.current) {
+        return R.drawable.profile_background_image_dark
+    }
+    return R.drawable.profile_background_image
 }
 
 @Composable
