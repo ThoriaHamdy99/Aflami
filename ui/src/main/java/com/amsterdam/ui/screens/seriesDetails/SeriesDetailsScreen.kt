@@ -581,7 +581,7 @@ private fun LazyListScope.seasonsSection(
             }
             val episodes = if (season.isExpanded) season.episodes else emptyList()
             items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
-                EpisodesMenu(it)
+                EpisodesMenu(it, interaction::onPlayEpisodeClicked,)
             }
         }
     }
@@ -633,6 +633,7 @@ private fun SeasonHeader(
 @Composable
 private fun EpisodesMenu(
     episode: EpisodeUiState,
+    onPlayEpisodeClicked: (Int) -> Unit
 ) {
     EpisodeCard(
         episodeBanner = episode.imageUrl,
@@ -642,7 +643,13 @@ private fun EpisodesMenu(
         episodeTime = episode.duration,
         publishedAt = episode.airDate,
         episodeDescription = episode.description,
-        modifier = Modifier.padding(vertical = 12.dp)
+        modifier = Modifier.padding(vertical = 12.dp),
+        onPlayEpisodeClick = {
+            if (episode.videoUrl.isNotBlank()) {
+                onPlayEpisodeClicked(episode.number)
+            }
+        },
+        isActive = episode.videoUrl.isNotBlank()
     )
 }
 
@@ -666,8 +673,11 @@ private fun SeriesDetailsContentPreview() {
                 override fun onDescriptionExpansionToggled() {}
                 override fun onReviewExpansionToggled(reviewId: String) {}
                 override fun onPlayVideoClicked() {}
+                override fun onPlayEpisodeClicked(episodeId: Int) {
 
-                                                                                         },
+                }
+
+            },
             rateDialogInteractionListener = object : RateDialogInteractionListener{
                 override fun onClickCancelRateDialog() {}
 
