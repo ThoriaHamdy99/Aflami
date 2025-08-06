@@ -70,7 +70,7 @@ object UseCaseModule {
         ManageRestrictionLevelUseCase(appPreferencesRepository)
 
     @Provides
-    fun provideGetEpisodeVideosByEpisodeId(tvShowRepository: TvShowRepository): GetEpisodeVideosUseCase =
+    fun provideGetEpisodeVideosUseCase(tvShowRepository: TvShowRepository): GetEpisodeVideosUseCase =
         GetEpisodeVideosUseCase(tvShowRepository)
 
     @Provides
