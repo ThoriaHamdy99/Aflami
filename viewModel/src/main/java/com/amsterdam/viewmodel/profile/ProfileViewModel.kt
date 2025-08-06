@@ -16,6 +16,7 @@ import com.amsterdam.entity.AccountDetails
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -164,7 +165,11 @@ class ProfileViewModel @Inject constructor(
 
     private fun onApplyLanguageSuccess(unit: Unit) {
         updateState { state -> state.copy(updatedLanguage = state.language) }
-        sendNewEffect(ProfileEffect.LanguageChanged)
+        tryToExecute(
+            action = { delay(200)},
+            onSuccess = {sendNewEffect(ProfileEffect.LanguageChanged)},
+            onError = {sendNewEffect(ProfileEffect.LanguageChanged)}
+        )
     }
 
     override fun onDismissLanguageDialog() {
