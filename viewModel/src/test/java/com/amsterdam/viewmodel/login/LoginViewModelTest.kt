@@ -17,12 +17,12 @@ import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LoginViewModelTest {
+
     private lateinit var viewModel: LoginViewModel
     private lateinit var loginAsGuestUseCase: LoginAsGuestUseCase
-
-    private val testDispatcherProvider = TestDispatcherProvider()
-    private var testScope = TestScope(testDispatcherProvider.testDispatcher)
     private val loginWithPasswordUseCase: LoginWithPasswordUseCase = mockk(relaxed = true)
+    private val testDispatcherProvider = TestDispatcherProvider()
+    private val testScope = TestScope(testDispatcherProvider.testDispatcher)
 
     @BeforeEach
     fun setUp() {
@@ -35,259 +35,275 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `onUserNameUpdated should update username`() =
-        testScope.runTest {
-            val username = "testuser"
+    fun `onUserNameUpdated should update username`() = testScope.runTest {
+        // Given
+        val username = "testuser"
 
-            viewModel.onUserNameUpdated(username)
-            advanceUntilIdle()
+        // When
+        viewModel.onUserNameUpdated(username)
+        advanceUntilIdle()
 
-            val state = viewModel.state.value
-            assertThat(state.username).isEqualTo(username)
-        }
-
-    @Test
-    fun `onPasswordUpdate should update password`() =
-        testScope.runTest {
-            val password = "testpassword"
-
-            viewModel.onPasswordUpdate(password)
-            advanceUntilIdle()
-
-            val state = viewModel.state.value
-            assertThat(state.password).isEqualTo(password)
-        }
+        // Then
+        assertThat(viewModel.state.value.username).isEqualTo(username)
+    }
 
     @Test
-    fun `onUserNameUpdated should clear username errors`() =
-        testScope.runTest {
+    fun `onPasswordUpdate should update password`() = testScope.runTest {
+        // Given
+        val password = "testpassword"
 
-            val username = "testuser"
+        // When
+        viewModel.onPasswordUpdate(password)
+        advanceUntilIdle()
 
-            viewModel.onUserNameUpdated(username)
-            advanceUntilIdle()
-
-            val state = viewModel.state.value
-            assertThat(state.loginError).isNull()
-        }
-
-    @Test
-    fun `onPasswordUpdate should clear password errors`() =
-        testScope.runTest {
-
-            val password = "testpassword"
-
-            viewModel.onPasswordUpdate(password)
-            advanceUntilIdle()
-
-            val state = viewModel.state.value
-            assertThat(state.loginError).isNull()
-        }
+        // Then
+        assertThat(viewModel.state.value.password).isEqualTo(password)
+    }
 
     @Test
-    fun `should set username error when login fail happens`() =
-        testScope.runTest {
-            viewModel.onUserNameUpdated("testuser")
-            testScope.testScheduler.advanceUntilIdle()
-            viewModel.onLoginClicked()
-            advanceUntilIdle()
-            val state = viewModel.state.value
-            assertThat(state.loginError).isNull()
-        }
+    fun `onUserNameUpdated should clear username errors`() = testScope.runTest {
+        // Given
+        val username = "testuser"
 
+        // When
+        viewModel.onUserNameUpdated(username)
+        advanceUntilIdle()
 
-    @Test
-    fun `should set password error when login fail happens`() =
-        testScope.runTest {
-            viewModel.onPasswordUpdate("testpassword")
-            testScope.testScheduler.advanceUntilIdle()
-            viewModel.onLoginClicked()
-            advanceUntilIdle()
-            val state = viewModel.state.value
-            assertThat(state.loginError).isNull()
-        }
+        // Then
+        assertThat(viewModel.state.value.loginError).isNull()
+    }
 
     @Test
-    fun `onShowPasswordClicked should toggle password visibility when called`() =
-        testScope.runTest {
-            val initialState = viewModel.state.value.isPasswordShown
+    fun `onPasswordUpdate should clear password errors`() = testScope.runTest {
+        // Given
+        val password = "testpassword"
 
-            viewModel.onShowPasswordClicked()
-            advanceUntilIdle()
+        // When
+        viewModel.onPasswordUpdate(password)
+        advanceUntilIdle()
 
-            assertThat(viewModel.state.value.isPasswordShown).isEqualTo(!initialState)
-
-            viewModel.onShowPasswordClicked()
-            advanceUntilIdle()
-
-            assertThat(viewModel.state.value.isPasswordShown).isEqualTo(initialState)
-        }
+        // Then
+        assertThat(viewModel.state.value.loginError).isNull()
+    }
 
     @Test
-    fun `onUserNameUpdated should set login button to be enabled when both username and password are not blank`() =
-        testScope.runTest {
-            viewModel.onPasswordUpdate("testpassword")
-            viewModel.onUserNameUpdated("testuser")
-            advanceUntilIdle()
-            val result = viewModel.state.value.isLoginButtonEnabled
-            assertThat(result).isTrue()
-        }
+    fun `should set username error when login fail happens`() = testScope.runTest {
+        // When
+        viewModel.onUserNameUpdated("testuser")
+        viewModel.onLoginClicked()
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.loginError).isNull()
+    }
 
     @Test
-    fun `onUserNameUpdated should set login button to be non enabled when both username is blank`() =
-        testScope.runTest {
-            viewModel.onUserNameUpdated("")
-            viewModel.onPasswordUpdate("testpassword")
-            advanceUntilIdle()
+    fun `should set password error when login fail happens`() = testScope.runTest {
+        // When
+        viewModel.onPasswordUpdate("testpassword")
+        viewModel.onLoginClicked()
+        advanceUntilIdle()
 
-            val result = viewModel.state.value.isLoginButtonEnabled
-            assertThat(result).isFalse()
-        }
-
-    @Test
-    fun `login button should be disabled when username is blank`() =
-        testScope.runTest {
-            viewModel.onUserNameUpdated("")
-            viewModel.onPasswordUpdate("testpassword")
-            advanceUntilIdle()
-
-            val result = viewModel.state.value.isLoginButtonLoading
-            assertThat(result).isFalse()
-        }
+        // Then
+        assertThat(viewModel.state.value.loginError).isNull()
+    }
 
     @Test
-    fun `login button should be disabled when password is blank`() =
-        testScope.runTest {
-            viewModel.onUserNameUpdated("testuser")
-            viewModel.onPasswordUpdate("")
-            advanceUntilIdle()
+    fun `onShowPasswordClicked should toggle password visibility when called`() = testScope.runTest {
+        // Given
+        val initialState = viewModel.state.value.isPasswordShown
 
-            val result = viewModel.state.value.isLoginButtonLoading
-            assertThat(result).isFalse()
-        }
+        // When
+        viewModel.onShowPasswordClicked()
+        advanceUntilIdle()
 
-    @Test
-    fun `login button should be disabled when both username and password are blank`() =
-        testScope.runTest {
-            viewModel.onUserNameUpdated("")
-            viewModel.onPasswordUpdate("")
-            advanceUntilIdle()
+        // Then
+        assertThat(viewModel.state.value.isPasswordShown).isEqualTo(!initialState)
 
-            val result = viewModel.state.value.isLoginButtonLoading
-            assertThat(result).isFalse()
-        }
+        // When again
+        viewModel.onShowPasswordClicked()
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.isPasswordShown).isEqualTo(initialState)
+    }
 
     @Test
-    fun `clearing username should disable login button when password is set`() =
-        testScope.runTest {
+    fun `onUserNameUpdated should set login button to be enabled when both username and password are not blank`() = testScope.runTest {
+        // Given
+        viewModel.onPasswordUpdate("testpassword")
 
+        // When
+        viewModel.onUserNameUpdated("testuser")
+        advanceUntilIdle()
 
-            viewModel.onUserNameUpdated("")
-            advanceUntilIdle()
-
-            val result = viewModel.state.value.isLoginButtonLoading
-            assertThat(result).isFalse()
-        }
-
-    @Test
-    fun `clearing password should disable login button when username is set`() =
-        testScope.runTest {
-
-
-            viewModel.onPasswordUpdate("")
-            testScope.testScheduler.advanceUntilIdle()
-
-            val result = viewModel.state.value.isLoginButtonLoading
-            assertThat(result).isFalse()
-        }
-
+        // Then
+        assertThat(viewModel.state.value.isLoginButtonEnabled).isTrue()
+    }
 
     @Test
-    fun `onLoginClicked should set loading to false after operation regardless of outcome`() =
-        testScope.runTest {
-            coEvery { loginWithPasswordUseCase(any(), any()) } throws AflamiException()
-            viewModel.onLoginClicked()
-            advanceUntilIdle()
-            val result = viewModel.state.value.isLoginButtonLoading
-            assertThat(result).isFalse()
-        }
+    fun `onUserNameUpdated should set login button to be non enabled when username is blank`() = testScope.runTest {
+        // When
+        viewModel.onUserNameUpdated("")
+        viewModel.onPasswordUpdate("testpassword")
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.isLoginButtonEnabled).isFalse()
+    }
 
     @Test
-    fun `onLoginClicked should send NavigateToHome effect when login is successful`() =
-        testScope.runTest {
-            val effects = mutableListOf<LoginEffect>()
-            val job = launch { viewModel.effect.collect { it.let { effects.add(it) } } }
-            viewModel.onLoginClicked()
-            advanceUntilIdle()
-            job.cancel()
-            assertThat(effects).contains(LoginEffect.NavigateToHome)
-        }
+    fun `login button should be disabled when username is blank`() = testScope.runTest {
+        // When
+        viewModel.onUserNameUpdated("")
+        viewModel.onPasswordUpdate("testpassword")
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.isLoginButtonLoading).isFalse()
+    }
 
     @Test
-    fun `onContinueAsGuestClicked should send NavigateToHome effect after success`() =
-        testScope.runTest {
-            val effects = mutableListOf<LoginEffect>()
-            val job = launch { viewModel.effect.collect { it.let { effects.add(it) } } }
-            viewModel.onContinueAsGuestClicked()
-            advanceUntilIdle()
-            job.cancel()
-            assertThat(effects).contains(LoginEffect.NavigateToHome)
-        }
+    fun `login button should be disabled when password is blank`() = testScope.runTest {
+        // When
+        viewModel.onUserNameUpdated("testuser")
+        viewModel.onPasswordUpdate("")
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.isLoginButtonLoading).isFalse()
+    }
 
     @Test
-    fun `onForgotPasswordClicked should send NavigateToResetPassword effect`() =
-        testScope.runTest {
-            val effects = mutableListOf<LoginEffect>()
-            val job = launch { viewModel.effect.collect { it.let { effects.add(it) } } }
-            viewModel.onForgotPasswordClicked()
-            advanceUntilIdle()
-            job.cancel()
-            assertThat(effects).contains(LoginEffect.NavigateToResetPassword)
-        }
+    fun `login button should be disabled when both username and password are blank`() = testScope.runTest {
+        // When
+        viewModel.onUserNameUpdated("")
+        viewModel.onPasswordUpdate("")
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.isLoginButtonLoading).isFalse()
+    }
 
     @Test
-    fun `onCreateAccountClicked should send NavigateToRegister effect`() =
-        testScope.runTest {
-            val effects = mutableListOf<LoginEffect>()
-            val job = launch { viewModel.effect.collect { it.let { effects.add(it) } } }
-            viewModel.onCreateAccountClicked()
-            advanceUntilIdle()
-            job.cancel()
-            assertThat(effects).contains(LoginEffect.NavigateToRegister)
-        }
+    fun `clearing username should disable login button when password is set`() = testScope.runTest {
+        // When
+        viewModel.onUserNameUpdated("")
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.isLoginButtonLoading).isFalse()
+    }
 
     @Test
-    fun `onLoginClicked should send ShowCredentialsError effect when login fails`() =
-        testScope.runTest {
-            coEvery { loginWithPasswordUseCase(any(), any()) } throws AflamiException()
-            viewModel.onLoginClicked()
-            val effects = mutableListOf<LoginEffect>()
-            val job = launch { viewModel.effect.collect { it.let { effects.add(it) } } }
-            advanceUntilIdle()
-            job.cancel()
-            assertThat(effects).contains(LoginEffect.ShowCredentialsError)
-        }
+    fun `clearing password should disable login button when username is set`() = testScope.runTest {
+        // When
+        viewModel.onPasswordUpdate("")
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.isLoginButtonLoading).isFalse()
+    }
 
     @Test
-    fun `onLoginClicked should set ShowCredentialsError effect when login fails`() =
-        testScope.runTest {
-            coEvery { loginWithPasswordUseCase(any(), any()) } throws AflamiException()
-            viewModel.onLoginClicked()
-            val effects = mutableListOf<LoginEffect>()
-            val job = launch { viewModel.effect.collect { it.let { effects.add(it) } } }
-            advanceUntilIdle()
-            job.cancel()
-            assertThat(effects).contains(LoginEffect.ShowCredentialsError)
-        }
+    fun `onLoginClicked should set loading to false after operation regardless of outcome`() = testScope.runTest {
+        // Given
+        coEvery { loginWithPasswordUseCase(any(), any()) } throws AflamiException()
+
+        // When
+        viewModel.onLoginClicked()
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.isLoginButtonLoading).isFalse()
+    }
 
     @Test
-    fun `onContinueAsGuestClicked should update error state when login fails`() = testScope
-        .runTest {
-            coEvery { loginAsGuestUseCase() } throws AflamiException()
+    fun `onLoginClicked should send NavigateToHome effect when login is successful`() = testScope.runTest {
+        // Given
+        val effects = mutableListOf<LoginEffect>()
+        val job = launch { viewModel.effect.collect { effects.add(it) } }
 
-            viewModel.onContinueAsGuestClicked()
-            advanceUntilIdle()
-            val result = viewModel.state.value.loginError
-            assertThat(result).isNotNull()
-        }
+        // When
+        viewModel.onLoginClicked()
+        advanceUntilIdle()
+        job.cancel()
+
+        // Then
+        assertThat(effects).contains(LoginEffect.NavigateToHome)
+    }
+
+    @Test
+    fun `onContinueAsGuestClicked should send NavigateToHome effect after success`() = testScope.runTest {
+        // Given
+        val effects = mutableListOf<LoginEffect>()
+        val job = launch { viewModel.effect.collect { effects.add(it) } }
+
+        // When
+        viewModel.onContinueAsGuestClicked()
+        advanceUntilIdle()
+        job.cancel()
+
+        // Then
+        assertThat(effects).contains(LoginEffect.NavigateToHome)
+    }
+
+    @Test
+    fun `onForgotPasswordClicked should send NavigateToResetPassword effect`() = testScope.runTest {
+        // Given
+        val effects = mutableListOf<LoginEffect>()
+        val job = launch { viewModel.effect.collect { effects.add(it) } }
+
+        // When
+        viewModel.onForgotPasswordClicked()
+        advanceUntilIdle()
+        job.cancel()
+
+        // Then
+        assertThat(effects).contains(LoginEffect.NavigateToResetPassword)
+    }
+
+    @Test
+    fun `onCreateAccountClicked should send NavigateToRegister effect`() = testScope.runTest {
+        // Given
+        val effects = mutableListOf<LoginEffect>()
+        val job = launch { viewModel.effect.collect { effects.add(it) } }
+
+        // When
+        viewModel.onCreateAccountClicked()
+        advanceUntilIdle()
+        job.cancel()
+
+        // Then
+        assertThat(effects).contains(LoginEffect.NavigateToRegister)
+    }
+
+    @Test
+    fun `onLoginClicked should send ShowCredentialsError effect when login fails`() = testScope.runTest {
+        // Given
+        coEvery { loginWithPasswordUseCase(any(), any()) } throws AflamiException()
+        val effects = mutableListOf<LoginEffect>()
+        val job = launch { viewModel.effect.collect { effects.add(it) } }
+
+        // When
+        viewModel.onLoginClicked()
+        advanceUntilIdle()
+        job.cancel()
+
+        // Then
+        assertThat(effects).contains(LoginEffect.ShowCredentialsError)
+    }
+
+    @Test
+    fun `onContinueAsGuestClicked should update error state when login fails`() = testScope.runTest {
+        // Given
+        coEvery { loginAsGuestUseCase() } throws AflamiException()
+
+        // When
+        viewModel.onContinueAsGuestClicked()
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.loginError).isNotNull()
+    }
 }
