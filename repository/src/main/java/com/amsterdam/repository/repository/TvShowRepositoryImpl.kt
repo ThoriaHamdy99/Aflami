@@ -104,19 +104,13 @@ class TvShowRepositoryImpl @Inject constructor(
         seasonNumber: Int,
         episodeNumber: Int
     ): String {
-        val videos = remoteTvDataSource.getEpisodeVideos(
+        return remoteTvDataSource.getEpisodeVideos(
             tvShowId,
             seasonNumber,
             episodeNumber
-        ).results
+        ).results.firstOrNull()?.fullVideoUrl?:""
 
-        val youtubeVideo = videos.firstOrNull {
-            it.site.equals("YouTube", ignoreCase = true) &&
-                    it.key.isNotBlank() &&
-                    (it.type.equals("Trailer", ignoreCase = true) || it.type.equals("Teaser", ignoreCase = true))
-        }
 
-        return youtubeVideo?.fullVideoUrl ?: ""
     }
 
 
