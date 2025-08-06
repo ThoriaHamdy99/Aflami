@@ -102,7 +102,7 @@ fun LoggedInContent(
             ) }
             item {
                 Text(
-                    text = "v 1.1",
+                    text = "v ${state.appVersion}",
                     style = AppTheme.textStyle.label.small,
                     color = AppTheme.color.hint,
                     modifier = Modifier

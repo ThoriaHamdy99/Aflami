@@ -9,6 +9,7 @@ import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
+import com.amsterdam.domain.utils.AppVersionProvider
 import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.entity.AccountDetails
@@ -26,6 +27,7 @@ class ProfileViewModel @Inject constructor(
     private val manageAppThemeUseCase: ManageAppThemeUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val manageRestrictionLevelUseCase: ManageRestrictionLevelUseCase,
+    private val appVersionProvider: AppVersionProvider,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<ProfileUiState, ProfileEffect>(
     initialState = ProfileUiState(),
@@ -71,6 +73,12 @@ class ProfileViewModel @Inject constructor(
                 onGetAppTheme(isDarkTheme)
             }
         }
+        getAppVersion()
+    }
+
+    private fun getAppVersion() {
+        val appVersion = appVersionProvider.getAppVersion()
+        updateState { state -> state.copy(appVersion = appVersion) }
     }
 
     private fun onGetAppTheme(isDarkTheme: Boolean) {
