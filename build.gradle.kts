@@ -44,26 +44,12 @@ kover.reports {
             "*State*", "*Effect*", "*AflamiDatabase*", "*Args*"
         )
 
-        // todo: remove this after adding all mapper tests
-        classes(
-            "*Mapper*"
-        )
-
-        // todo: remove this after adding all viewModel and repository tests
+        // todo: remove this after adding the related module tests
         packages(
-            "*.viewmodel", "*.repository"
-        )
-
-        // todo: remove this after adding related localDatasource tests
-        classes(
-            "*TvShowLocal*", "*MovieLocal*"
-        )
-
-        // todo: remove this after adding related useCase tests
-        classes(
-            "*GetMovieCastUseCase*", "*GetMovieDetailsUseCase*", "*GetPopularMoviesUseCase*", "*GetUpcomingMoviesUseCase*"
+            "*.viewmodel", "*.repository", "*.remoteDatasource", "*.domain"
         )
     }
+
     verify.rule {
         minBound(80)
     }

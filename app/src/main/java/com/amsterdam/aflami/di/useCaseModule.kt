@@ -4,6 +4,7 @@ import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.repository.CountryRepository
 import com.amsterdam.domain.repository.MovieRepository
+import com.amsterdam.domain.repository.ProfileRepository
 import com.amsterdam.domain.repository.RecentSearchRepository
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.repository.UserListRepository
@@ -31,14 +32,24 @@ import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.myRating.movie.DeleteUserRatedMovieUseCase
+import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase
+import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
+import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
+import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
+import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
+import com.amsterdam.domain.useCase.list.CreateNewListUseCase
+import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
 import com.amsterdam.domain.useCase.list.DeleteListUseCase
 import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
 import com.amsterdam.domain.useCase.list.GetUserListsUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
+import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
+import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
@@ -82,6 +93,10 @@ object UseCaseModule {
     @Provides
     fun provideLoginAsGuestUseCase(authenticationRepository: AuthenticationRepository): LoginAsGuestUseCase =
         LoginAsGuestUseCase(authenticationRepository)
+
+    @Provides
+    fun provideManageAppThemeUseCase(repo: AppPreferencesRepository): ManageAppThemeUseCase =
+        ManageAppThemeUseCase(repo)
 
     @Provides
     fun provideLoginWithPasswordUseCase(authenticationRepository: AuthenticationRepository): LoginWithPasswordUseCase =
@@ -234,4 +249,47 @@ object UseCaseModule {
         userListRepository: UserListRepository,
     ): GetUserListsUseCase =
         GetUserListsUseCase(userListRepository)
+    @Provides
+    fun provideAddMovieToListUseCase(userListRepository: UserListRepository): AddMovieToListUseCase =
+        AddMovieToListUseCase(userListRepository)
+
+    @Provides
+    fun provideCreateNewListUseCase(userListRepository: UserListRepository): CreateNewListUseCase =
+        CreateNewListUseCase(userListRepository)
+
+
+    @Provides
+    fun provideGetUserMovieRatingUseCase(
+        movieRepository: MovieRepository,
+    ) = GetUserRatedMoviesUseCase(movieRepository)
+
+    @Provides
+    fun provideSetUserMovieRatingUseCase(
+        movieRepository: MovieRepository,
+    ) = SetUserMovieRatingUseCase(movieRepository)
+
+    @Provides
+    fun provideDeleteUserMovieRateUseCase(
+        movieRepository: MovieRepository,
+    ) = DeleteUserRatedMovieUseCase(movieRepository)
+
+    @Provides
+    fun provideGetUserTvShowRatingUseCase(
+        tvShowRepository: TvShowRepository,
+    ) = GetUserRatedTvShowsUseCase(tvShowRepository)
+
+    @Provides
+    fun provideSetUserTvShowRatingUseCase(
+        tvShowRepository: TvShowRepository,
+    ) = SetUserTvShowRatingUseCase(tvShowRepository)
+
+    @Provides
+    fun provideDeleteUserTvShowRateUseCase(
+        tvShowRepository: TvShowRepository,
+    ) = DeleteUserRatedTvShowUseCase(tvShowRepository)
+
+    @Provides
+    fun provideGetAccountDetailsUseCase(repo: ProfileRepository): GetAccountDetailsUseCase =
+        GetAccountDetailsUseCase(repo)
+
 }

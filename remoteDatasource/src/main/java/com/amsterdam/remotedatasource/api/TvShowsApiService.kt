@@ -1,12 +1,17 @@
 package com.amsterdam.remotedatasource.api
 
 import com.amsterdam.repository.dto.remote.EpisodeResponse
+import com.amsterdam.repository.dto.remote.RatingResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
+import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import com.amsterdam.repository.dto.remote.VideoDto
 import com.amsterdam.repository.dto.remote.VideoResponse
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -52,6 +57,26 @@ interface TvShowsApiService {
     ): VideoResponse
 
 
+    @FormUrlEncoded
+    @POST(TV_RATE_ENDPOINT)
+    suspend fun postTvRating(
+        @Path("tv_id") tvId: Long,
+        @Field("value") rate: Float,
+        @Query("session_id") sessionId: String
+    ): RatingResponse
+
+    @DELETE(TV_RATE_ENDPOINT)
+    suspend fun deleteTvRating(
+        @Path("tv_id") tvId: Long,
+        @Query("session_id") sessionId: String
+    ): RatingResponse
+
+    @GET(RATED_TV_SHOWS_ENDPOINT)
+    suspend fun getRatedTvShows(
+        @Path("account_id") accountId: Int = 0,
+        @Query("session_id") sessionId: String
+    ): RemoteTvShowResponse
+
     companion object {
 
         private const val TV_POPULAR = "tv/popular"
@@ -66,6 +91,8 @@ interface TvShowsApiService {
         private const val TV_SHOW_EPISODES_ENDPOINT = "tv/{tvShowId}/season/{seasonNumber},"
         private const val TV_SHOW_EPISODES_Videos = "tv/{series_id}/season/{season_number}/episode/{episode_number}/videos"
         private const val TV_SHOW_DETAILS_APPEND_PARAMETERS = "credits,similar,reviews,images,videos"
+        private const val TV_RATE_ENDPOINT = "tv/{tv_id}/rating"
+        private const val RATED_TV_SHOWS_ENDPOINT = "account/{account_id}/rated/tv"
         private const val INCLUDED_VIDEO_LANGUAGE = "en"
 
     }

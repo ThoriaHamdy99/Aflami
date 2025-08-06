@@ -8,10 +8,14 @@ import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
+import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
+import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
+import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
 import com.amsterdam.domain.useCase.home.GetEpisodeVideosByEpisodeId
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.entity.Episode
+import com.amsterdam.viewmodel.myRating.RateDialogInteractionListener
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.MovieAndSeriesDetailsDialogType
@@ -29,19 +33,21 @@ class SeriesDetailsViewModel @Inject constructor(
     private val getEpisodesBySeasonNumberUseCase: GetEpisodesBySeasonNumberUseCase,
     private val seriesDetailsStateMapper: SeriesDetailsStateMapper,
     private val getsSessionType: GetsSessionType,
+    private val getUserRatedTvShowsUseCase: GetUserRatedTvShowsUseCase,
+    private val setUserTvShowRatingUseCase: SetUserTvShowRatingUseCase,
     private val getEpisodeVideosByEpisodeId: GetEpisodeVideosByEpisodeId,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<SeriesDetailsUiState, SeriesDetailsEffect>(
     SeriesDetailsUiState(),
     dispatcherProvider
-), SeriesDetailsInteractionListener {
+), SeriesDetailsInteractionListener, RateDialogInteractionListener {
 
     init {
         val tvShowId = args.tvShowId!!
         updateState { it.copy(tvShowId = tvShowId) }
 
-        manageLocaleLanguageUseCase.getDeviceLanguage()
+        manageLocaleLanguageUseCase.getAppLanguage()
             .onEach {
                 loadTvShowDetails()
             }.launchIn(viewModelScope)
@@ -100,10 +106,36 @@ class SeriesDetailsViewModel @Inject constructor(
     override fun onRateClicked() {
         viewModelScope.launch {
             runIfLoggedIn(
-                onLoggedIn = {},
+                onLoggedIn = {
+                    updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isVisible = true, isLoading = true)) }
+                    tryToExecute(
+                        action = { getUserRatedTvShowsUseCase.getRatedTvShow(state.value.tvShowId) },
+                        onSuccess = ::onGetRatedTvShowSuccess,
+                        onError = ::onGetRatedTvShowError
+                    )
+                },
                 onGuest = { showMustLoginDialog(MovieAndSeriesDetailsDialogType.Rate) }
             )
         }
+    }
+
+    private fun onGetRatedTvShowSuccess(tvShow: UserRatedTvShow?) {
+        tvShow?.let { ratedMovie ->
+            updateState {
+                it.copy(
+                    rateDialogUiState = it.rateDialogUiState.copy(
+                        selectedStarIndex = ratedMovie.userRate.toInt(),
+                        previousStarIndex = ratedMovie.userRate.toInt(),
+                        isLoading = false,
+                        isSubmittingEnabled = false
+                    )
+                )
+            }
+        }
+    }
+
+    private fun onGetRatedTvShowError(exception: AflamiException) {
+        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(selectedStarIndex = null, isLoading = false, isSubmittingEnabled = true))}
     }
 
     override fun onClickSeasonMenu(seasonNumber: Int) {
@@ -232,6 +264,63 @@ class SeriesDetailsViewModel @Inject constructor(
             }
 
             else -> {}
+        }
+    }
+
+    override fun onClickCancelRateDialog() {
+        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isVisible = false)) }
+    }
+
+    override fun onClickSubmit() {
+        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isLoading = true)) }
+        tryToExecute(
+            action = {
+                setUserTvShowRatingUseCase.setUserMovieRate(
+                    rate = state.value.rateDialogUiState.selectedStarIndex ?: 1,
+                    tvShowId = state.value.tvShowId
+                )
+            },
+            onSuccess = ::onSubmitRateSuccess,
+            onError = ::onSubmitRateError
+        )
+    }
+
+    private fun onSubmitRateSuccess(unit: Unit) {
+        resetRateDialogUiState()
+        sendNewNavigationEffect(SeriesDetailsEffect.ShowRatingSuccessSnackBar)
+    }
+
+    private fun onSubmitRateError(exception: AflamiException) {
+        resetRateDialogUiState()
+        sendNewNavigationEffect(SeriesDetailsEffect.ShowRatingErrorSnackBar)
+    }
+
+    private fun resetRateDialogUiState(){
+        updateState {
+            it.copy(
+                rateDialogUiState = it.rateDialogUiState.copy(
+                    isLoading = false,
+                    isVisible = false,
+                    previousStarIndex = null,
+                    selectedStarIndex = null,
+                    isSubmittingEnabled = false
+                )
+            )
+        }
+    }
+
+    override fun onChangeRating(newRate: Int) {
+        val previousRate = state.value.rateDialogUiState.previousStarIndex
+        val isChanged = newRate != previousRate
+
+        updateState {
+            it.copy(
+                rateDialogUiState = it.rateDialogUiState.copy(
+                    selectedStarIndex = newRate,
+                    isSubmittingEnabled = isChanged,
+                    isLoading = false
+                )
+            )
         }
     }
 }

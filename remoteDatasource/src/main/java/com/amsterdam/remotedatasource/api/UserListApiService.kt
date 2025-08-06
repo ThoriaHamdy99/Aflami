@@ -1,5 +1,7 @@
 package com.amsterdam.remotedatasource.api
 
+import com.amsterdam.repository.dto.remote.AddItemToListResponse
+import com.amsterdam.repository.dto.remote.CreateUserListResponse
 import com.amsterdam.repository.dto.remote.RemoteUserListResponse
 import com.amsterdam.repository.dto.remote.UserListDetailsResponse
 import retrofit2.http.DELETE
@@ -11,11 +13,19 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UserListApiService {
+    @FormUrlEncoded
+    @POST(CREATE_LIST)
+    suspend fun createNewList(
+        @Query(SESSION_ID) sessionId: String,
+        @Field(NAME) listName: String,
+        @Field(DESCRIPTION) description: String,
+        @Field(LANGUAGE) language: String,
+    ): CreateUserListResponse
     @GET(USER_LISTS_ENDPOINT)
     suspend fun getUserLists(
-        @Path("account_id") accountId: Int = 0,
-        @Query("page") page: Int = 1,
-        @Query("session_id") sessionId: String,
+        @Path(ACCOUNT_ID) accountId: Int = 0,
+        @Query(PAGE) page: Int = 1,
+        @Query(SESSION_ID) sessionId: String,
     ): RemoteUserListResponse
 
     @GET(GET_USER_LIST_DETAILS)
@@ -31,6 +41,13 @@ interface UserListApiService {
     )
 
     @FormUrlEncoded
+    @POST(ADD_MOVIE_TO_LIST)
+    suspend fun addMediaItemToList(
+        @Path(LIST_ID) listId: Long,
+        @Query(SESSION_ID) sessionId: String,
+        @Field(MEDIA_ID) movieId: Int,
+    ): AddItemToListResponse
+
     @POST(DELETE_MOVIE_FROM_LIST)
     suspend fun removeMovieFromList(
         @Path(LIST_ID) listId: Long,
@@ -39,11 +56,18 @@ interface UserListApiService {
     )
 
     companion object {
-        const val USER_LISTS_ENDPOINT = "account/{account_id}/lists"
+        private const val ACCOUNT_ID = "account_id"
+        private const val NAME = "name"
+        private const val DESCRIPTION = "description"
+        private const val LANGUAGE = "language"
         private const val PAGE = "page"
         private const val LIST_ID = "list_id"
         private const val SESSION_ID = "session_id"
         private const val MEDIA_ID = "media_id"
+        private const val CREATE_LIST = "list"
+
+        const val ADD_MOVIE_TO_LIST = "list/{list_id}/add_item"
+        const val USER_LISTS_ENDPOINT = "account/{account_id}/lists"
 
         private const val GET_USER_LIST_DETAILS = "list/{list_id}"
         private const val DELETE_LIST = "list/{list_id}"

@@ -6,8 +6,10 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -44,7 +46,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -78,12 +82,14 @@ import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.components.details.DetailsPostersPager
 import com.amsterdam.ui.navigation.Route
-import com.amsterdam.ui.navigation.Route.*
+import com.amsterdam.ui.navigation.Route.Cast
+import com.amsterdam.ui.navigation.Route.SeriesDetails
 import com.amsterdam.ui.screens.movieDetails.components.CastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
 import com.amsterdam.ui.screens.movieDetails.components.EmptyStateText
 import com.amsterdam.ui.screens.movieDetails.components.PlayButton
+import com.amsterdam.ui.screens.movieDetails.components.RateDialog
 import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.gallerySection
 import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
@@ -103,6 +109,9 @@ import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsViewModel
 import com.amsterdam.viewmodel.shared.Selectable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 
 @Composable
 fun SeriesDetailsScreen(
@@ -111,10 +120,13 @@ fun SeriesDetailsScreen(
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
     val context = LocalContext.current
+    val successRateMessage = stringResource(R.string.your_rating_has_been_saved)
+    val failedRateMessage = stringResource(R.string.failed_to_save_your_rating)
 
     SeriesDetailsContent(
         state = state,
-        interaction = viewModel
+        seriesDetailsInteractionListener = viewModel,
+        rateDialogInteractionListener = viewModel
     )
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -140,6 +152,9 @@ fun SeriesDetailsScreen(
                 is SeriesDetailsEffect.LaunchSeriesVideoEffect -> openYouTubeVideo(context ,effect.url ){
                     SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
                 }
+
+                SeriesDetailsEffect.ShowRatingSuccessSnackBar -> SnackBarManager.showSuccess(message = successRateMessage)
+                SeriesDetailsEffect.ShowRatingErrorSnackBar -> SnackBarManager.showError(message = failedRateMessage)
             }
         }
     }
@@ -149,7 +164,8 @@ fun SeriesDetailsScreen(
 @Composable
 fun SeriesDetailsContent(
     state: SeriesDetailsUiState,
-    interaction: SeriesDetailsInteractionListener
+    seriesDetailsInteractionListener: SeriesDetailsInteractionListener,
+    rateDialogInteractionListener: RateDialogInteractionListener
 ) {
     val configuration = LocalConfiguration.current
     val screenWidthDp by remember { mutableStateOf(configuration.screenWidthDp.dp) }
@@ -183,10 +199,20 @@ fun SeriesDetailsContent(
     val pagerState = rememberPagerState { state.postersUrls.size }
     val deviceWidth = configuration.screenWidthDp
 
-    LaunchedEffect(true) {
-        while (true) {
-            delay(4000)
-            pagerState.animateScrollToPage(((pagerState.currentPage + 1) % 10))
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(pagerState.currentPage, state.postersUrls.size) {
+        if (state.postersUrls.size > 1) {
+            coroutineScope.launch {
+                snapshotFlow { pagerState.isScrollInProgress }
+                    .distinctUntilChanged()
+                    .filter { !it }
+                    .collect {
+                        delay(4000)
+                        val nextPage = (pagerState.currentPage + 1) % 10
+                        pagerState.animateScrollToPage(nextPage)
+                    }
+            }
         }
     }
 
@@ -234,7 +260,7 @@ fun SeriesDetailsContent(
                     unneededSpace = headerHeight.dp,
                 ) {
                     NoNetworkContainer(
-                        onClickRetry = interaction::onClickRetryButton,
+                        onClickRetry = seriesDetailsInteractionListener::onClickRetryButton,
                     )
                 }
             }
@@ -246,9 +272,25 @@ fun SeriesDetailsContent(
         ) {
             MustLoginDialog(
                 title = state.dialogType.getMovieAndSeriesDetailsDialogTitle(),
-                onDismiss = interaction::onCancelClicked,
-                onClickLogin = interaction::onNavigateToLoginClicked,
+                onDismiss = seriesDetailsInteractionListener::onCancelClicked,
+                onClickLogin = seriesDetailsInteractionListener::onNavigateToLoginClicked,
             )
+        }
+
+        AnimatedVisibility(
+            visible = state.rateDialogUiState.isVisible,
+            enter = expandIn(),
+            exit = shrinkOut()
+        ) {
+            with(state.rateDialogUiState){
+                RateDialog(
+                    interaction = rateDialogInteractionListener,
+                    isSubmittingEnabled = isSubmittingEnabled,
+                    isLoading = isLoading,
+                    selectedStarIndex = selectedStarIndex,
+
+                    )
+            }
         }
 
         AnimatedVisibility(
@@ -303,7 +345,7 @@ fun SeriesDetailsContent(
                                     .align(Alignment.CenterHorizontally)
                                     .offset(y = (-32).dp),
                                 isActive = state.videoUrl.isNotBlank(),
-                                onClick = interaction::onPlayVideoClicked
+                                onClick = seriesDetailsInteractionListener::onPlayVideoClicked
                             )
                             Column(
                                 modifier = Modifier
@@ -347,12 +389,12 @@ fun SeriesDetailsContent(
                                         .padding(horizontal = 16.dp),
                                     description = state.description,
                                     isExpanded = state.isDescriptionExpanded,
-                                    onToggleExpansion = interaction::onDescriptionExpansionToggled
+                                    onToggleExpansion = seriesDetailsInteractionListener::onDescriptionExpansionToggled
                                 )
                                 CastSection(
                                     modifier = Modifier.padding(top = 24.dp),
                                     actors = state.cast,
-                                    onClickAllCast = interaction::onClickShowAllCast
+                                    onClickAllCast = seriesDetailsInteractionListener::onClickShowAllCast
                                 )
                                 Spacer(
                                     modifier = Modifier
@@ -369,7 +411,7 @@ fun SeriesDetailsContent(
                                                 coordinates.positionOnScreen().y.dp
                                         },
                                     extras = state.extraItem,
-                                    onClickExtras = interaction::onClickSeriesExtraItem
+                                    onClickExtras = seriesDetailsInteractionListener::onClickSeriesExtraItem
                                 )
                             }
 
@@ -383,7 +425,7 @@ fun SeriesDetailsContent(
                                 SeriesExtras.SEASONS -> {
                                     seasonsSection(
                                         seasons = state.seasons,
-                                        interaction = interaction,
+                                        interaction = seriesDetailsInteractionListener
                                     )
                                 }
 
@@ -391,11 +433,11 @@ fun SeriesDetailsContent(
                                     similarMovies = state.similarSeries,
                                     deviceWidth = deviceWidth,
                                     onClick = { movieId ->
-                                        interaction.onClickSimilarMovie(movieId)
+                                        seriesDetailsInteractionListener.onClickSimilarMovie(movieId)
                                     }
                                 )
 
-                                SeriesExtras.REVIEWS -> reviewSection(state.reviews, interaction)
+                                SeriesExtras.REVIEWS -> reviewSection(state.reviews, seriesDetailsInteractionListener)
                                 SeriesExtras.GALLERY -> gallerySection(
                                     gallery = state.gallery,
                                     deviceWidth = deviceWidth
@@ -437,9 +479,9 @@ fun SeriesDetailsContent(
                     .onSizeChanged { headerHeight = it.height },
                 firstOption = painterResource(R.drawable.ic_outlined_star),
                 lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
-                onNavigateBackClicked = interaction::onNavigateBack,
-                onFirstOptionClicked = interaction::onRateClicked,
-                onLastOptionClicked = interaction::onAddToListClicked
+                onNavigateBackClicked = seriesDetailsInteractionListener::onNavigateBack,
+                onFirstOptionClicked = seriesDetailsInteractionListener::onRateClicked,
+                onLastOptionClicked = seriesDetailsInteractionListener::onAddToListClicked
             )
             HorizontalDivider(color = dividerColor)
         }
@@ -609,7 +651,7 @@ private fun SeriesDetailsContentPreview() {
     AflamiTheme {
         SeriesDetailsContent(
             state = SeriesDetailsUiState(),
-            interaction = object : SeriesDetailsInteractionListener {
+            seriesDetailsInteractionListener = object : SeriesDetailsInteractionListener {
                 override fun onClickSeriesExtraItem(seriesExtras: SeriesExtras) {}
                 override fun onNavigateBack() {}
                 override fun onClickRetryButton() {}
@@ -622,7 +664,14 @@ private fun SeriesDetailsContentPreview() {
                 override fun onClickSimilarMovie(movieId: Long) {}
                 override fun onDescriptionExpansionToggled() {}
                 override fun onReviewExpansionToggled(reviewId: String) {}
-                override fun onPlayVideoClicked() {
+                override fun onPlayVideoClicked() {}
+
+                                                                                         },
+            rateDialogInteractionListener = object : RateDialogInteractionListener{
+                override fun onClickCancelRateDialog() {}
+
+                override fun onClickSubmit() {}
+                override fun onChangeRating(newRate: Int) {}
 
                 }
 

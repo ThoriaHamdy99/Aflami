@@ -1,6 +1,7 @@
 package com.amsterdam.ui.components.selection
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,21 +36,25 @@ fun ThemeSelectionItem(
     isSelected: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    val backgroundColor =
-        if (isSelected) AppTheme.color.primaryVariant else AppTheme.color.surface
-    val iconColor =
+    val backgroundColor = animateColorAsState(
+            if (isSelected) AppTheme.color.primaryVariant else AppTheme.color.surface
+        )
+    val iconColor = animateColorAsState(
         if (isSelected) AppTheme.color.primary else AppTheme.color.body
-    val borderColor = if (isSelected) Color.Unspecified else AppTheme.color.stroke
+    )
+    val borderColor = animateColorAsState(
+        if (isSelected) Color.Unspecified else AppTheme.color.stroke
+    )
     val shape = RoundedCornerShape(16.dp)
     Row(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = backgroundColor,
+                color = backgroundColor.value,
                 shape = shape,
             )
             .border(
-                color = borderColor,
+                color = borderColor.value,
                 width = 1.dp,
                 shape = shape,
             )
@@ -61,7 +66,7 @@ fun ThemeSelectionItem(
         Icon(
             painter = painterResource(id = trailingIcon),
             contentDescription = null,
-            tint = iconColor
+            tint = iconColor.value
         )
         Text(
             text = text,

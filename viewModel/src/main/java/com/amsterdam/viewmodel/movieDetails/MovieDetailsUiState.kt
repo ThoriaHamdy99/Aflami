@@ -1,6 +1,7 @@
 package com.amsterdam.viewmodel.movieDetails
 
 import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.viewmodel.shared.RateDialogUiState
 import com.amsterdam.viewmodel.shared.Selectable
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.ActorUiState
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.MovieAndSeriesDetailsDialogType
@@ -31,11 +32,18 @@ data class MovieDetailsUiState(
     val productionCompany: List<ProductionCompanyUiState> = emptyList(),
     val gallery: List<String> = emptyList(),
     val reviews: List<ReviewUiState> = emptyList(),
+    val rateDialogUiState: RateDialogUiState = RateDialogUiState(),
     val isLoading: Boolean = false,
     val networkError: Boolean = false,
     val isLoginDialogVisible: Boolean = false,
     val dialogType: MovieAndSeriesDetailsDialogType? = null,
     val isDescriptionExpanded: Boolean = false,
+    val isAddToListDialogVisible: Boolean = false,
+    val isCreateNewListDialogVisible: Boolean = false,
+    val userLists: List<UserListUiState> = emptyList(),
+    val listName: String = "",
+    val isCreateListLoading: Boolean = false,
+    val selectedList: UserListUiState? = null,
 ) {
 
     enum class MovieExtras {

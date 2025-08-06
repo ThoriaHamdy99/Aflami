@@ -44,10 +44,10 @@ jobs:
         run: ./gradlew clean
 
       - name: Run Unit Tests With Kover Report
-        run: ./gradlew koverVerify --build-cache
+        run: ./gradlew :localDatasource:koverVerify --build-cache
 
       - name: Generate kover coverage report
-        run: ./gradlew :koverXmlReport
+        run: ./gradlew :localDatasource:koverXmlReport
         continue-on-error: true
 
       - name: Upload XML Coverage Report
@@ -63,7 +63,7 @@ jobs:
         uses: mi-kas/kover-report@v1.9
         if: github.event_name == 'pull_request'
         with:
-          path: build/reports/kover/report.xml
+          path: localDatasource/build/reports/kover/report.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "🛡️ Kover Code Coverage Report"
           update-comment: true
