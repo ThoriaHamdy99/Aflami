@@ -104,7 +104,7 @@ class TvShowRepositoryImpl @Inject constructor(
         seasonNumber: Int,
         episodeNumber: Int
     ): String {
-        val videos = remoteTvDataSource.getEpisodeVideosByEpisodeId(
+        val videos = remoteTvDataSource.getEpisodeVideos(
             tvShowId,
             seasonNumber,
             episodeNumber

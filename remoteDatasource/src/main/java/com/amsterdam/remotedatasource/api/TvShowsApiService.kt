@@ -8,7 +8,6 @@ import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
-import com.amsterdam.repository.dto.remote.VideoDto
 import com.amsterdam.repository.dto.remote.VideoResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -49,7 +48,7 @@ interface TvShowsApiService {
         @Path("seasonNumber") seasonNumber: Int
     ): EpisodeResponse
     @GET(TV_SHOW_EPISODES_Videos)
-    suspend fun getEpisodeVideosByEpisodeId(
+    suspend fun getEpisodeVideos(
         @Path("series_id") tvShowId: Long,
         @Path("season_number") seasonNumber: Int,
         @Path("episode_number") episodeNumber: Int,

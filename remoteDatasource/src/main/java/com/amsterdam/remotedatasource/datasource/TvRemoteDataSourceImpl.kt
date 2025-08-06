@@ -72,14 +72,14 @@ class TvRemoteDataSourceImpl @Inject constructor(
         responseCall { tvShowsApiService.deleteTvRating(tvId = tvShowId, sessionId = sessionId) }
     }
 
-    override suspend fun getEpisodeVideosByEpisodeId(
+    override suspend fun getEpisodeVideos(
         tvShowId: Long,
         seasonNumber: Int,
         episodeNumber: Int
     ): VideoResponse {
         val actualSeasonNumber = if (seasonNumber<=0) 1 else seasonNumber
         return  responseCall {
-            tvShowsApiService.getEpisodeVideosByEpisodeId(
+            tvShowsApiService.getEpisodeVideos(
                 tvShowId,
                 actualSeasonNumber,
                 episodeNumber
