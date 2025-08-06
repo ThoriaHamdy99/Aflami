@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,8 +30,8 @@ import com.amsterdam.designsystem.components.divider.HorizontalDivider
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.ui.R
 import com.amsterdam.viewmodel.profile.ProfileInteractionListener
 import com.amsterdam.viewmodel.profile.ProfileUiState
@@ -118,31 +119,43 @@ fun LoggedInContent(
     }
 
     Box {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = lazyListState
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            item { ProfileImageSection(state.userInfo.userAvatarUrl) }
-            item { ProfileInfoSection(state.userInfo.username, state.userInfo.userPoints) }
-            item { HistoryAndRatingSection(onClickHistory = onClickHistory, onClickRating = interactionListener::onClickRating) }
-            item { HorizontalDivider() }
-            item { SettingsSection(
-                state,
-                onSettingsClicked = interactionListener::onClickSettings,
-                onClickLanguage = interactionListener::onClickLanguageSetting,
-                onClickTheme = interactionListener::onClickThemeSetting
-            ) }
-            item {
-                Text(
-                    text = "v ${state.appVersion}",
-                    style = AppTheme.textStyle.label.small,
-                    color = AppTheme.color.hint,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    textAlign = TextAlign.Center
-                )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                state = lazyListState
+            ) {
+                item { ProfileImageSection(state.userInfo.userAvatarUrl) }
+                item { ProfileInfoSection(state.userInfo.username, state.userInfo.userPoints) }
+                item {
+                    HistoryAndRatingSection(
+                        onClickHistory = onClickHistory,
+                        onClickRating = interactionListener::onClickRating
+                    )
+                }
+                item { HorizontalDivider() }
+                item {
+                    SettingsSection(
+                        state,
+                        onSettingsClicked = interactionListener::onClickSettings,
+                        onClickLanguage = interactionListener::onClickLanguageSetting,
+                        onClickTheme = interactionListener::onClickThemeSetting
+                    )
+                }
             }
+            Text(
+                text = "v ${state.appVersion}",
+                style = AppTheme.textStyle.label.small,
+                color = AppTheme.color.hint,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                textAlign = TextAlign.Center
+            )
         }
         TopAppBar(
             title = {
@@ -165,35 +178,37 @@ fun LoggedInContent(
 @Composable
 private fun LoggedInContentPreview() {
     AflamiTheme {
-        LoggedInContent(ProfileUiState(), object : ProfileInteractionListener {
-            override fun onClickLogin() {}
+        LoggedInContent(
+            ProfileUiState(), object : ProfileInteractionListener {
+                override fun onClickLogin() {}
 
-            override fun onClickLanguageSetting() {}
+                override fun onClickLanguageSetting() {}
 
-            override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {}
+                override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {}
 
-            override fun onApplyLanguage() {}
+                override fun onApplyLanguage() {}
 
-            override fun onDismissLanguageDialog() {}
+                override fun onDismissLanguageDialog() {}
 
-            override fun onClickThemeSetting() {}
+                override fun onClickThemeSetting() {}
 
-            override fun onChangeTheme(isDarkTheme: Boolean) {}
+                override fun onChangeTheme(isDarkTheme: Boolean) {}
 
-            override fun onApplyTheme() {}
+                override fun onApplyTheme() {}
 
-            override fun onDismissThemeDialog() {}
-            override fun onClickSettings() {}
-            override fun onDismissSettingsDialog() {}
-            override fun onClickLogout() {}
-            override fun onDismissLogoutDialog() {}
-            override fun onClickForgotPassword() {}
-            override fun onClickContentRestriction() {}
-            override fun onDismissContentRestrictionDialog() {}
-            override fun onClickConfirmLogout() {}
-            override fun onUpdateRestrictionLevel(restrictionLevel: RestrictionLevel) {}
-            override fun onSaveRestrictionLevel() {}
-        override fun onClickRating() {}},
+                override fun onDismissThemeDialog() {}
+                override fun onClickSettings() {}
+                override fun onDismissSettingsDialog() {}
+                override fun onClickLogout() {}
+                override fun onDismissLogoutDialog() {}
+                override fun onClickForgotPassword() {}
+                override fun onClickContentRestriction() {}
+                override fun onDismissContentRestrictionDialog() {}
+                override fun onClickConfirmLogout() {}
+                override fun onUpdateRestrictionLevel(restrictionLevel: RestrictionLevel) {}
+                override fun onSaveRestrictionLevel() {}
+                override fun onClickRating() {}
+            },
             onClickHistory = {})
     }
 }
