@@ -7,7 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -53,6 +53,83 @@ fun LoggedInContent(
         label = "AppBarScrollColor"
     )
 
+    val showVersion by remember {
+        derivedStateOf {
+            !lazyListState.canScrollForward
+        }
+    }
+
+    ScreenDialogs(state, interactionListener)
+
+    Box {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                state = lazyListState,
+                contentPadding = PaddingValues(bottom = 12.dp)
+            ) {
+                item { ProfileImageSection(state.userInfo.userAvatarUrl) }
+                item { ProfileInfoSection(state.userInfo.username, state.userInfo.userPoints) }
+                item {
+                    HistoryAndRatingSection(
+                        onClickHistory = onClickHistory,
+                        onClickRating = interactionListener::onClickRating
+                    )
+                }
+                item { HorizontalDivider() }
+                item {
+                    SettingsSection(
+                        state,
+                        onSettingsClicked = interactionListener::onClickSettings,
+                        onClickLanguage = interactionListener::onClickLanguageSetting,
+                        onClickTheme = interactionListener::onClickThemeSetting
+                    )
+                }
+            }
+            AnimatedVisibility(
+                visible = showVersion,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 12.dp),
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Text(
+                    text = "v ${state.appVersion}",
+                    style = AppTheme.textStyle.label.small,
+                    color = AppTheme.color.hint,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        TopAppBar(
+            title = {
+                Text(
+                    text = stringResource(R.string.profile),
+                    style = AppTheme.textStyle.title.large,
+                    color = AppTheme.color.title,
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .padding(horizontal = 16.dp, vertical = 13.dp)
+                )
+            },
+            modifier = Modifier
+                .background(appBarColor)
+        )
+    }
+}
+
+@Composable
+private fun ScreenDialogs(
+    state: ProfileUiState,
+    interactionListener: ProfileInteractionListener
+) {
     AnimatedVisibility(
         state.settingsState.isSettingsDialogVisible
     ) {
@@ -116,61 +193,6 @@ fun LoggedInContent(
                 }
             )
         }
-    }
-
-    Box {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f),
-                state = lazyListState
-            ) {
-                item { ProfileImageSection(state.userInfo.userAvatarUrl) }
-                item { ProfileInfoSection(state.userInfo.username, state.userInfo.userPoints) }
-                item {
-                    HistoryAndRatingSection(
-                        onClickHistory = onClickHistory,
-                        onClickRating = interactionListener::onClickRating
-                    )
-                }
-                item { HorizontalDivider() }
-                item {
-                    SettingsSection(
-                        state,
-                        onSettingsClicked = interactionListener::onClickSettings,
-                        onClickLanguage = interactionListener::onClickLanguageSetting,
-                        onClickTheme = interactionListener::onClickThemeSetting
-                    )
-                }
-            }
-            Text(
-                text = "v ${state.appVersion}",
-                style = AppTheme.textStyle.label.small,
-                color = AppTheme.color.hint,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                textAlign = TextAlign.Center
-            )
-        }
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(R.string.profile),
-                    style = AppTheme.textStyle.title.large,
-                    color = AppTheme.color.title,
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .padding(horizontal = 16.dp, vertical = 13.dp)
-                )
-            },
-            modifier = Modifier
-                .background(appBarColor)
-        )
     }
 }
 
