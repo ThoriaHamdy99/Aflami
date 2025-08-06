@@ -595,11 +595,11 @@ private fun EpisodesMenu(
         episodeDescription = episode.description,
         modifier = Modifier.padding(vertical = 12.dp),
         onPlayEpisodeClick = {
-            if (episode.hasVideo) {
+            if (episode.videoUrl.isNotBlank()) {
                 onPlayEpisodeClicked(episode.number)
             }
         },
-        isActive = true
+        isActive = episode.videoUrl.isNotBlank()
     )
 }
 
