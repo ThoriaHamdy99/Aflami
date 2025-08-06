@@ -8,7 +8,7 @@ class GetEpisodeVideosByEpisodeId (
     suspend operator fun invoke(
         tvShowId: Long,
         seasonNumber: Int,
-        episodeNumber: Long
-    ) = tvShowRepository.getEpisodeVideoUrl(tvShowId, seasonNumber, episodeNumber.toInt())
+        episodeNumber: Int
+    ) = tvShowRepository.getEpisodeVideoUrl(tvShowId, seasonNumber, episodeNumber)
 
 }

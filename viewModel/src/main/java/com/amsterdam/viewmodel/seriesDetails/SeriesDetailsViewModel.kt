@@ -187,7 +187,7 @@ class SeriesDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             tryToExecute(
                 action = {
-                    getEpisodeVideosByEpisodeId(tvShowId, seasonNumber, episodeId.toLong())
+                    getEpisodeVideosByEpisodeId(tvShowId, seasonNumber, episodeId)
 
                 },
                 onSuccess = { videoUrl ->
