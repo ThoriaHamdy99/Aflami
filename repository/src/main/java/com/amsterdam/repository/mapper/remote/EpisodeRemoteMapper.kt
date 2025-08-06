@@ -20,4 +20,4 @@ fun EpisodeDto.toEntity(videoUrl:String): Episode {
     )
 }
 
-fun List<EpisodeDto>.toEntityList(): List<Episode> = map { it.toEntity(videoUrl = "") }
+fun List<EpisodeDto>.toEntityList(videoUrl:String): List<Episode> = map { it.toEntity(videoUrl =videoUrl) }
