@@ -31,7 +31,6 @@ class SeriesDetailsViewModel @Inject constructor(
     args: SeriesDetailsArgs,
     private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase,
     private val getEpisodesBySeasonNumberUseCase: GetEpisodesBySeasonNumberUseCase,
-    private val seriesDetailsStateMapper: SeriesDetailsStateMapper,
     private val getsSessionType: GetsSessionType,
     private val getUserRatedTvShowsUseCase: GetUserRatedTvShowsUseCase,
     private val setUserTvShowRatingUseCase: SetUserTvShowRatingUseCase,
@@ -67,9 +66,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     private fun onGetTvShowDetailsSuccess(tvShowDetails: TvShowDetails) {
-        updateState {
-            seriesDetailsStateMapper.toUiState(tvShowDetails)
-        }
+        updateState { tvShowDetails.toUiState() }
     }
 
     override fun onClickSeriesExtraItem(seriesExtras: SeriesExtras) {
@@ -220,10 +217,7 @@ class SeriesDetailsViewModel @Inject constructor(
         }
         val updatedSeasons = state.value.seasons.map {
             if (it.seasonNumber == seasonNumber) {
-                it.copy(
-                    episodes = seriesDetailsStateMapper.mapToEpisodeUiState(episodes),
-                    isExpanded = true
-                )
+                it.copy(episodes = episodes.toUiState(), isExpanded = true)
             } else {
                 it
             }

@@ -67,6 +67,8 @@ private fun Season.toUiState(episodes: List<Episode>): SeasonUiState {
     )
 }
 
+fun List<Episode>.toUiState() = map(Episode::toUiState)
+
 private fun Episode.toUiState(): EpisodeUiState{
     return EpisodeUiState(
         id = id,
