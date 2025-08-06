@@ -32,7 +32,6 @@ class MovieDetailsViewModel @Inject constructor(
     args: MovieDetailsArgs,
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val addMovieToListUseCase: AddMovieToListUseCase,
-    private val movieDetailsUiStateMapper: MovieDetailsUiStateMapper,
     private val getUserListsUseCase: GetUserListsUseCase,
     private val createListUseCase: CreateNewListUseCase,
     private val getsSessionType: GetsSessionType,
@@ -71,7 +70,7 @@ class MovieDetailsViewModel @Inject constructor(
         getMovieDetailsUseCase(state.value.movieId)
 
     private fun onGetMovieDetailsSuccess(movieDetails: MovieDetails) =
-        updateState { movieDetailsUiStateMapper.toUiState(movieDetails) }
+        updateState { movieDetails.toUiState() }
 
 
     override fun onClickMovieExtras(movieExtras: MovieExtras) {

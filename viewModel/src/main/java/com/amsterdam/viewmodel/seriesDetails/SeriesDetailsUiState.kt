@@ -23,13 +23,7 @@ data class SeriesDetailsUiState(
     val cast: List<ActorUiState> = emptyList(),
     val isRateDialogVisible: Boolean = false,
     val isAddToListDialogVisible: Boolean = false,
-    val extraItem: List<Selectable<SeriesExtras>> = listOf(
-        Selectable(isSelected = true, SeriesExtras.SEASONS),
-        Selectable(isSelected = false, SeriesExtras.MORE_LIKE_THIS),
-        Selectable(isSelected = false, SeriesExtras.REVIEWS),
-        Selectable(isSelected = false, SeriesExtras.GALLERY),
-        Selectable(isSelected = false, SeriesExtras.COMPANY_PRODUCTION)
-    ),
+    val extraItem: List<Selectable<SeriesExtras>> = defaultSeriesExtrasItems,
     val seasons: List<SeasonUiState> = emptyList(),
     val similarSeries: List<SimilarMovieUiState> = emptyList(),
     val reviews: List<ReviewUiState> = emptyList(),
@@ -71,6 +65,16 @@ data class SeriesDetailsUiState(
             val description: String = "",
             val duration: String = "",
             val airDate: String = "",
+        )
+    }
+
+    companion object {
+        val defaultSeriesExtrasItems = listOf(
+            Selectable(isSelected = true, SeriesExtras.SEASONS),
+            Selectable(isSelected = false, SeriesExtras.MORE_LIKE_THIS),
+            Selectable(isSelected = false, SeriesExtras.REVIEWS),
+            Selectable(isSelected = false, SeriesExtras.GALLERY),
+            Selectable(isSelected = false, SeriesExtras.COMPANY_PRODUCTION)
         )
     }
 }
