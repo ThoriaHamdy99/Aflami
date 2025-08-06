@@ -16,7 +16,6 @@ import com.amsterdam.viewmodel.utils.formatDuration
 import com.amsterdam.viewmodel.shared.mappers.ratingToRatingString
 import kotlin.collections.map
 
-
 fun TvShowDetails.toUiState(): SeriesDetailsUiState {
     return SeriesDetailsUiState(
         videoUrl = tvShow.videoUrl,
@@ -33,7 +32,7 @@ fun TvShowDetails.toUiState(): SeriesDetailsUiState {
         isRateDialogVisible = false,
         isAddToListDialogVisible = false,
         extraItem = SeriesDetailsUiState.defaultSeriesExtrasItems,
-        seasons = mapToSeasonUiState(seasons),
+        seasons = seasons.toSeasonUiState(),
         similarSeries = similarTvShows.map(TvShow::toSimilarTvShowUiState),
         reviews = reviews.map(Review::toUiState),
         gallery = gallery,
@@ -51,15 +50,11 @@ private fun TvShow.toSimilarTvShowUiState(): SimilarMovieUiState{
         posterUrl = posterUrl
     )
 }
-//mapToSeasonUiState(seasons)
-private fun mapToSeasonUiState(
-    seasons: List<Season>,
+
+private fun List<Season>.toSeasonUiState(
     episodesBySeason: Map<Int, List<Episode>> = emptyMap()
 ): List<SeasonUiState> {
-    return seasons.map { season ->
-        val episodes = episodesBySeason[season.seasonNumber] ?: emptyList()
-        season.toUiState(episodes)
-    }
+    return map { it.toUiState(episodesBySeason[it.seasonNumber].orEmpty()) }
 }
 
 private fun Season.toUiState(episodes: List<Episode>): SeasonUiState {
