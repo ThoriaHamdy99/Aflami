@@ -14,12 +14,6 @@ import kotlin.math.roundToInt
         return "$day-$month-$year"
     }
 
-    fun ratingToRatingString(rating: Float): String {
-        val clamped = rating.coerceIn(0f, 10f)
-        val rounded = (clamped * 10).roundToInt() / 10f
-        return String.format(Locale.US, "%.1f", rounded)
-    }
-
     fun movieLengthToHourMinuteString(movieLength: Int): String {
         val hours = movieLength / 60
         val minutes = movieLength % 60
