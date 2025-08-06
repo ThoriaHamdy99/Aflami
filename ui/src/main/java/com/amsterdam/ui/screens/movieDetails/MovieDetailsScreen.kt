@@ -1,6 +1,7 @@
 package com.amsterdam.ui.screens.movieDetails
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -88,6 +89,8 @@ import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
 import com.amsterdam.ui.screens.movieDetails.components.reviewSection
 import com.amsterdam.ui.screens.openYouTubeVideo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
+import com.amsterdam.ui.utils.SavedStateKeys.REFRESH_AFTER_RATING
+import com.amsterdam.ui.utils.navigateUpWithFlag
 import com.amsterdam.viewmodel.cast.MediaType
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsEffect
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsInteractionListener
@@ -112,10 +115,14 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
 
     val context = LocalContext.current
 
+    BackHandler { navController.navigateUpWithFlag(flagName = REFRESH_AFTER_RATING, value = true) }
+
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                MovieDetailsEffect.NavigateBackEffect -> navController.navigateUp()
+                MovieDetailsEffect.NavigateBackEffect -> {
+                    navController.navigateUpWithFlag(flagName = REFRESH_AFTER_RATING, value = true)
+                }
                 MovieDetailsEffect.NavigateToCastsScreenEffect -> {
                     navController.navigate(
                         Cast(

@@ -1,6 +1,7 @@
 package com.amsterdam.ui.screens.seriesDetails
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -98,6 +99,8 @@ import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.openYouTubeVideo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
 import com.amsterdam.ui.screens.seriesDetails.component.reviewSection
+import com.amsterdam.ui.utils.SavedStateKeys.REFRESH_AFTER_RATING
+import com.amsterdam.ui.utils.navigateUpWithFlag
 import com.amsterdam.viewmodel.cast.MediaType
 import com.amsterdam.viewmodel.myRating.RateDialogInteractionListener
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsEffect
@@ -124,6 +127,8 @@ fun SeriesDetailsScreen(
     val successRateMessage = stringResource(R.string.your_rating_has_been_saved)
     val failedRateMessage = stringResource(R.string.failed_to_save_your_rating)
 
+    BackHandler { navController.navigateUpWithFlag(flagName = REFRESH_AFTER_RATING, value = true) }
+
     SeriesDetailsContent(
         state = state,
         seriesDetailsInteractionListener = viewModel,
@@ -132,7 +137,9 @@ fun SeriesDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                SeriesDetailsEffect.NavigateBack -> navController.navigateUp()
+                SeriesDetailsEffect.NavigateBack -> {
+                    navController.navigateUpWithFlag(flagName = REFRESH_AFTER_RATING, value = true)
+                }
                 SeriesDetailsEffect.NavigateToCastScreen -> {
                     navController.navigate(
                         Cast(
