@@ -11,7 +11,7 @@ import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetail
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
-import com.amsterdam.domain.useCase.home.GetEpisodeVideosByEpisodeId
+import com.amsterdam.domain.useCase.home.GetEpisodeVideosUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.entity.Episode
@@ -35,7 +35,7 @@ class SeriesDetailsViewModel @Inject constructor(
     private val getsSessionType: GetsSessionType,
     private val getUserRatedTvShowsUseCase: GetUserRatedTvShowsUseCase,
     private val setUserTvShowRatingUseCase: SetUserTvShowRatingUseCase,
-    private val getEpisodeVideosByEpisodeId: GetEpisodeVideosByEpisodeId,
+    private val getEpisodeVideosByEpisodeId: GetEpisodeVideosUseCase,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<SeriesDetailsUiState, SeriesDetailsEffect>(

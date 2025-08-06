@@ -2,7 +2,7 @@ package com.amsterdam.domain.useCase.home
 
 import com.amsterdam.domain.repository.TvShowRepository
 
-class GetEpisodeVideosByEpisodeId (
+class GetEpisodeVideosUseCase (
     private val tvShowRepository: TvShowRepository
 ) {
     suspend operator fun invoke(
