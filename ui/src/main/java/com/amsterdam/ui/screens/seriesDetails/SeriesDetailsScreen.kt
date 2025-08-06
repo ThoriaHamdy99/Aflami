@@ -99,6 +99,7 @@ import com.amsterdam.ui.screens.openYouTubeVideo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
 import com.amsterdam.ui.screens.seriesDetails.component.reviewSection
 import com.amsterdam.viewmodel.cast.MediaType
+import com.amsterdam.viewmodel.myRating.RateDialogInteractionListener
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsEffect
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsInteractionListener
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState
@@ -665,19 +666,17 @@ private fun SeriesDetailsContentPreview() {
                 override fun onDescriptionExpansionToggled() {}
                 override fun onReviewExpansionToggled(reviewId: String) {}
                 override fun onPlayVideoClicked() {}
+                override fun onPlayEpisodeClicked(episodeId: Int) {
 
-                                                                                         },
+                }
+
+            },
             rateDialogInteractionListener = object : RateDialogInteractionListener{
                 override fun onClickCancelRateDialog() {}
 
                 override fun onClickSubmit() {}
                 override fun onChangeRating(newRate: Int) {}
 
-                }
-
-                override fun onPlayEpisodeClicked(episodeId: Int) {
-
-                }
             }
         )
     }
