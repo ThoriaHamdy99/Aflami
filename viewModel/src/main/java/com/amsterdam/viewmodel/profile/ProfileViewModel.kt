@@ -149,6 +149,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun onApplyLanguage() {
+        onDismissLanguageDialog()
         tryToExecute(
             action = { manageLocaleLanguageUseCase.setAppLanguage(state.value.language) },
             onSuccess = ::onApplyLanguageSuccess,
@@ -163,7 +164,6 @@ class ProfileViewModel @Inject constructor(
 
     private fun onApplyLanguageSuccess(unit: Unit) {
         updateState { state -> state.copy(updatedLanguage = state.language) }
-        onDismissLanguageDialog()
         sendNewEffect(ProfileEffect.LanguageChanged)
     }
 
@@ -180,12 +180,12 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun onApplyTheme() {
+        onDismissThemeDialog()
         tryToExecute(
             action = { manageAppThemeUseCase.setAppTheme(state.value.isDarkTheme) },
             onSuccess = ::onApplyThemeSuccess,
             onError = ::onApplyThemeFailure
         )
-        onApplyThemeSuccess(Unit)
     }
 
     private fun onApplyThemeFailure(aflamiException: AflamiException) {
@@ -195,7 +195,6 @@ class ProfileViewModel @Inject constructor(
 
     private fun onApplyThemeSuccess(unit: Unit) {
         updateState { state -> state.copy(updatedIsDarkTheme = state.isDarkTheme) }
-        onDismissThemeDialog()
         sendNewEffect(ProfileEffect.ThemeChanged)
     }
 
