@@ -1,15 +1,15 @@
 package com.amsterdam.repository.repository
 
 import com.amsterdam.domain.repository.CountryRepository
-import com.amsterdam.entity.Country
 import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.CountryLocalSource
 import com.amsterdam.repository.datasource.remote.CountryRemoteSource
-import com.amsterdam.repository.dto.local.LocalCountryDto
-import com.amsterdam.repository.dto.remote.RemoteCountryDto
 import com.amsterdam.repository.mapper.local.toEntityList
 import com.amsterdam.repository.mapper.remote.toEntityList
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalDtoList
+import com.amsterdam.repository.repository.testFactory.testLanguage
+import com.amsterdam.repository.repository.testFactory.testLocalCountryDto
+import com.amsterdam.repository.repository.testFactory.testRemoteCountryDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -29,19 +29,6 @@ class CountryRepositoryImplTest {
     private val localDataSource: CountryLocalSource = mockk()
     private val remoteDataSource: CountryRemoteSource = mockk()
     private val preferences: AppPreferences = mockk()
-
-    private val testLanguage = "en"
-    private val testRemoteCountryDto = RemoteCountryDto(
-        englishName = "United States",
-        isoCode = "US",
-        nativeName = "الولايات المتحدة"
-    )
-    private val testLocalCountryDto = LocalCountryDto(
-        isoCode = "US",
-        name = "United States",
-        storedLanguage = testLanguage
-    )
-    private val expectedCountry = Country(countryName = "United States", countryIsoCode = "US")
 
     @BeforeEach
     fun setup() {
