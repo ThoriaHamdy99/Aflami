@@ -7,11 +7,13 @@ import com.amsterdam.repository.datasource.local.CountryLocalSource
 import com.amsterdam.repository.datasource.remote.CountryRemoteSource
 import com.amsterdam.repository.dto.local.LocalCountryDto
 import com.amsterdam.repository.dto.remote.RemoteCountryDto
+import com.amsterdam.repository.mapper.local.toEntityList
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -24,28 +26,31 @@ class CountryRepositoryImplTest {
     private val localDataSource: CountryLocalSource = mockk()
     private val remoteDataSource: CountryRemoteSource = mockk()
     private val preferences: AppPreferences = mockk()
-
     private val testLanguage = "en"
-
     @BeforeEach
     fun setup() {
         repository = CountryRepositoryImpl(
             localDataSource = localDataSource,
             remoteDataSource = remoteDataSource,
-            preferences
+            preferences = preferences
         )
+        coEvery { preferences.getAppLanguage() } returns flowOf(testLanguage)
     }
 
     @Test
-    fun `getCountries should return countries from local when not empty`() = runTest {
+    fun `Given local countries not empty, When getCountries is called, Then return local countries without calling remote`() = runTest {
         // Given
-        val localDto1 =
-            LocalCountryDto(isoCode = "EG", name = "Egypt", storedLanguage = testLanguage)
-        val localCountriesDto = listOf(localDto1)
-        val expectedCountry1 = Country(countryName = "Egypt", countryIsoCode = "EG")
-        val expectedCountries = listOf(expectedCountry1)
+        val localDto1 = LocalCountryDto(isoCode = "US", name = "United States", storedLanguage = testLanguage)
+        val localDto2 = LocalCountryDto(isoCode = "CA", name = "Canada", storedLanguage = testLanguage)
+        val localDtos = listOf(localDto1, localDto2)
+        coEvery { localDataSource.getCountries(testLanguage) } returns localDtos
 
-        coEvery { localDataSource.getCountries(testLanguage) } returns localCountriesDto
+
+        val expectedCountries = listOf(
+            Country(countryName = "United States", countryIsoCode = "US"),
+            Country(countryName = "Canada", countryIsoCode = "CA")
+        )
+
         // When
         val result = repository.getCountries()
 
@@ -55,6 +60,7 @@ class CountryRepositoryImplTest {
         coVerify(exactly = 0) { remoteDataSource.getCountries() }
         coVerify(exactly = 0) { localDataSource.addCountries(any()) }
     }
+
 
     @Test
     fun `getCountries should fetch countries from remote and cache them when local is empty`() =
