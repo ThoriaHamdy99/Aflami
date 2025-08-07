@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,6 +64,10 @@ fun ListsScreen(
     val navController = LocalNavController.current
     val uiState = viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.loadCustomLists(startLoading = false)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -202,16 +205,14 @@ private fun ListsScreenContent(
                             ) {
                                 items(lists) { userList ->
                                     ListItem(
-                                        title = userList.name,
-                                        count = userList.itemCount,
-                                        modifier =
-                                            Modifier
-                                                .size(156.dp, 147.dp)
-                                                .clickable(
-                                                    onClick = {
-                                                        interaction.onListClick(userList.id.toLong(), userList.name)
-                                                    },
-                                                ),
+                                        modifier = Modifier.size(156.dp, 147.dp),
+                                        list = userList,
+                                        onClick = {
+                                            interaction.onListClick(
+                                                listId = userList.id.toLong(),
+                                                listName = userList.name,
+                                            )
+                                        }
                                     )
                                 }
                             }

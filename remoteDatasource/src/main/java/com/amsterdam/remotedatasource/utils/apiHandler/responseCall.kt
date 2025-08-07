@@ -14,6 +14,8 @@ import com.amsterdam.domain.exceptions.VerificationRequiredException
 import kotlinx.serialization.SerializationException
 import retrofit2.HttpException
 import java.net.ConnectException
+import java.net.UnknownHostException
+import java.nio.channels.UnresolvedAddressException
 
 suspend inline fun <reified T> responseCall(crossinline execute: suspend () -> T): T =
     try {
@@ -21,6 +23,10 @@ suspend inline fun <reified T> responseCall(crossinline execute: suspend () -> T
     } catch (e: HttpException) {
         throw ServerErrorException()
     } catch (e: ConnectException) {
+        throw NoInternetException()
+    } catch (e: UnresolvedAddressException) {
+        throw NoInternetException()
+    } catch (e: UnknownHostException) {
         throw NoInternetException()
     } catch (e: SerializationException) {
         throw ServerErrorException()

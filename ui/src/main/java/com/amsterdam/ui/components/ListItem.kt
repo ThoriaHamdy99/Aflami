@@ -1,6 +1,7 @@
 package com.amsterdam.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -19,22 +20,22 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.theme.shapes.FolderShape
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.viewmodel.shared.uiStates.UserListItemUiState
 
 @Composable
 fun ListItem(
-    title: String,
-    count: Int,
+    list: UserListItemUiState,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
 ) {
     val folderShape = FolderShape()
     BoxWithConstraints(
         modifier =
             modifier
-                .clip(
-                    folderShape,
-                )
+                .clip(folderShape,)
                 .background(AppTheme.color.surfaceHigh)
-                .clipToBounds(),
+                .clipToBounds()
+                .clickable { onClick() },
         contentAlignment = Alignment.BottomStart,
     ) {
         val size = Size(this.maxWidth.value, this.maxHeight.value)
@@ -47,12 +48,12 @@ fun ListItem(
                     .padding(horizontal = 8.dp),
         ) {
             Text(
-                text = title,
+                text = list.name,
                 style = AppTheme.textStyle.title.medium,
                 color = AppTheme.color.title,
             )
             Text(
-                text = stringResource(R.string.list_items, count),
+                text = stringResource(R.string.list_items, list.itemCount),
                 style = AppTheme.textStyle.label.large,
                 color = AppTheme.color.hint,
             )
@@ -65,9 +66,9 @@ fun ListItem(
 private fun ListItemPreview() {
     AflamiTheme {
         ListItem(
-            title = "My Favourites",
-            count = 12,
             modifier = Modifier.size(160.dp, 147.dp),
+            list = UserListItemUiState(1, "list", "description", 10),
+            onClick = {}
         )
     }
 }

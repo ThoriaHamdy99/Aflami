@@ -47,7 +47,7 @@ class UserListsViewModel @Inject constructor(
         }
     }
 
-    private fun loadCustomLists(startLoading: Boolean = true) {
+    fun loadCustomLists(startLoading: Boolean = true) {
         startLoading(startLoading)
         tryToExecute(
             action = { getUserListsUseCase() },
