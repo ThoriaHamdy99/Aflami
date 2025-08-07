@@ -11,9 +11,9 @@ import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.paging.PagingSource
-import com.amsterdam.viewmodel.search.mapper.toMediaItemUiState
+import com.amsterdam.viewmodel.listDetails.ListDetailsUiState.ListDetailsError
+import com.amsterdam.viewmodel.listDetails.ListDetailsUiState.ListDetailsItemsUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
-import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -48,7 +48,7 @@ class ListDetailsViewModel @Inject constructor(
         loadListDetails()
     }
 
-    private var currentPagingSource: PagingSource<MovieItemUiState>?  = null
+    private var currentPagingSource: PagingSource<ListDetailsItemsUiState>?  = null
 
     private fun loadListDetails() {
         updateState { it.copy(isLoading = true) }
@@ -57,11 +57,10 @@ class ListDetailsViewModel @Inject constructor(
                 Pager(
                     config = PagingConfig(pageSize = 10),
                     pagingSourceFactory = {
-                        currentPagingSource = PagingSource { page ->
+                        PagingSource { page ->
                             getMoviesFromListUseCase(state.value.listId, page)
-                                .map { it.toMediaItemUiState () }
+                                .toListDetailsItemUiState()
                         }
-                        currentPagingSource!!
                     }
                 ).flow.cachedIn(viewModelScope)
             },
@@ -71,7 +70,7 @@ class ListDetailsViewModel @Inject constructor(
         )
     }
 
-    private fun onGetListDetailsSuccess(moviesPagingFlow: Flow<PagingData<MovieItemUiState>>) {
+    private fun onGetListDetailsSuccess(moviesPagingFlow: Flow<PagingData<ListDetailsItemsUiState>>) {
         updateState { it.copy(listItems = moviesPagingFlow) }
     }
 

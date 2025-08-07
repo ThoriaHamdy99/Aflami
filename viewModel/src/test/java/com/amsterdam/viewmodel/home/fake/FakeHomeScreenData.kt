@@ -3,7 +3,6 @@ package com.amsterdam.viewmodel.home.fake
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase.ContinueWatchingScreenData
 import com.amsterdam.entity.MovieWatchHistory
 import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.viewmodel.utils.entityHelper.createMovie
 import kotlinx.datetime.Clock
 

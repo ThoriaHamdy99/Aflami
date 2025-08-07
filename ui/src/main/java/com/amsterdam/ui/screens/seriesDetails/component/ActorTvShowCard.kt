@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.movieDetails.components
+package com.amsterdam.ui.screens.seriesDetails.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,11 +20,11 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.utils.toSafetyLevel
-import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.ActorMovieUiState
+import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ActorTvShowUiState
 
 
 @Composable
-fun ActorCard(modifier: Modifier = Modifier, actor: ActorMovieUiState) {
+fun ActorTvShowCard(modifier: Modifier = Modifier, actor: ActorTvShowUiState) {
     val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     Column(modifier = modifier.width(78.dp)) {
         SafeImageView(
@@ -52,8 +52,8 @@ fun ActorCard(modifier: Modifier = Modifier, actor: ActorMovieUiState) {
 @Composable
 private fun ActorCardPreview() {
     AflamiTheme {
-        ActorCard(
-            actor = ActorMovieUiState(
+        ActorTvShowCard(
+            actor = ActorTvShowUiState(
                 name = "Emma Watson",
                 photo = "https://example.com/emma_watson.jpg"
             )

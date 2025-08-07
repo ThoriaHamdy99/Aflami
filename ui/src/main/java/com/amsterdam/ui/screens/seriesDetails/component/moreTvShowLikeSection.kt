@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.movieDetails.components
+package com.amsterdam.ui.screens.seriesDetails.component
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,11 +14,12 @@ import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.UpcomingCard
 import com.amsterdam.ui.components.adaptiveGrid
+import com.amsterdam.ui.screens.movieDetails.components.EmptyStateText
 import com.amsterdam.ui.utils.toSafetyLevel
-import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.SimilarMovieUiState
+import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SimilarTvShowUiState
 
-fun LazyListScope.moreLikeSection(
-    similarMovies: List<SimilarMovieUiState>,
+fun LazyListScope.moreTvShowLikeSection(
+    similarMovies: List<SimilarTvShowUiState>,
     deviceWidth: Int,
     onClick: (movieId: Long) -> Unit,
 ) {

@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.movieDetails.components
+package com.amsterdam.ui.screens.seriesDetails.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -25,11 +25,11 @@ import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.imageviewer.classification.SafetyLevel
 import com.amsterdam.imageviewer.ui.SafeImageView
-import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.ProductionMovieCompanyUiState
+import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ProductionTvShowCompanyUiState
 
 
 @Composable
-fun CompanyCard(productionCompany: ProductionMovieCompanyUiState, modifier: Modifier = Modifier) {
+fun CompanyTvShowCard(productionCompany: ProductionTvShowCompanyUiState, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .height(145.dp)

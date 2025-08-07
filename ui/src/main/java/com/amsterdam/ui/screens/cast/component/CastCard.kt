@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.movieDetails.components
+package com.amsterdam.ui.screens.cast.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,26 +20,26 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.utils.toSafetyLevel
-import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.ActorMovieUiState
+import com.amsterdam.viewmodel.cast.CastUiState.ActorUiState
 
 
 @Composable
-fun ActorCard(modifier: Modifier = Modifier, actor: ActorMovieUiState) {
+fun CastCard(modifier: Modifier = Modifier, actor: ActorUiState) {
     val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     Column(modifier = modifier.width(78.dp)) {
         SafeImageView(
             modifier = Modifier
                 .size(78.dp)
                 .clip(RoundedCornerShape(16.dp)),
-            model = actor.photo,
-            contentDescription = actor.name,
+            model = actor.actorImage,
+            contentDescription = actor.actorName,
             safetyLevel = safetyLevel,
             onLoading = { ImageLoadingIndicator() },
             onError = { ImageErrorIndicator() },
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = actor.name,
+            text = actor.actorName,
             style = AppTheme.textStyle.label.small,
             color = AppTheme.color.body,
             maxLines = 1,
@@ -52,10 +52,10 @@ fun ActorCard(modifier: Modifier = Modifier, actor: ActorMovieUiState) {
 @Composable
 private fun ActorCardPreview() {
     AflamiTheme {
-        ActorCard(
-            actor = ActorMovieUiState(
-                name = "Emma Watson",
-                photo = "https://example.com/emma_watson.jpg"
+        CastCard(
+            actor = ActorUiState(
+                actorName = "Emma Watson",
+                actorImage = "https://example.com/emma_watson.jpg"
             )
         )
     }

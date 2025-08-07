@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.movieDetails.components
+package com.amsterdam.ui.screens.seriesDetails.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -35,10 +35,11 @@ import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.ReviewMovieUiState
+import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ReviewTvShowUiState
 
 @Composable
-fun ReviewCard(
-    review: ReviewMovieUiState,
+fun ReviewTvShowCard(
+    review: ReviewTvShowUiState,
     modifier: Modifier = Modifier,
     onToggleExpansion: () -> Unit = {}
 ) {
@@ -127,9 +128,9 @@ fun ReviewCard(
 @Composable
 private fun ReviewCardPreview() {
     AflamiTheme {
-        ReviewCard(
+        ReviewTvShowCard(
             review =
-                ReviewMovieUiState(
+                ReviewTvShowUiState(
                     author = "Mohamed Ahmed",
                     username = "HamadaGanzabil",
                     rating = "5",
