@@ -1,6 +1,5 @@
 package com.amsterdam.localdatasource.roomDataBase.datasource
 
-import androidx.room.Transaction
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieDao
 import com.amsterdam.localdatasource.utils.createMovie
@@ -19,13 +18,13 @@ class MovieLocalDataSourceImplTest {
 
     private lateinit var movieDao: MovieDao
     private lateinit var interestDao: MovieCategoryInterestDao
-    private lateinit var dataSource: MovieLocalDataSourceImpl
+    private lateinit var dataSource: MovieLocalDataDataSourceImpl
 
     @BeforeEach
     fun setUp() {
         movieDao = mockk(relaxed = true)
         interestDao = mockk(relaxed = true)
-        dataSource = MovieLocalDataSourceImpl(movieDao, interestDao)
+        dataSource = MovieLocalDataDataSourceImpl(movieDao, interestDao)
     }
 
     @Test
@@ -66,11 +65,11 @@ class MovieLocalDataSourceImplTest {
             )
 
             // When
-            dataSource.addMovieWithCategories(movie, categories, "en")
+            dataSource.upsertMovieWithCategories(movie, categories, "en")
 
             // Then
-            coVerify(exactly = 1) { movieDao.insertMovie(movie) }
-            coVerify(exactly = 1) { movieDao.insertMovieCategoryCrossRefs(expectedCrossRefs) }
+            coVerify(exactly = 1) { movieDao.upsertMovie(movie) }
+            coVerify(exactly = 1) { movieDao.upsertMovieCategoryCrossRefs(expectedCrossRefs) }
         }
 
     @Test
@@ -79,9 +78,9 @@ class MovieLocalDataSourceImplTest {
         val storedLanguage = "en"
         val movie = createMovie(movieId = 42, storedLanguage = storedLanguage)
         //When
-        dataSource.insertMovie(movie)
-        //Then
-        coVerify(exactly = 1) { movieDao.insertMovie(movie) }
+        dataSource.upsertMovie(movie)
+        // Then
+        coVerify(exactly = 1) { movieDao.upsertMovie(movie) }
     }
 
     @Test
@@ -123,14 +122,16 @@ class MovieLocalDataSourceImplTest {
         //Given
         val localMovies = listOf(createMovie(movieId = 42, storedLanguage = "en"))
         //When
-        dataSource.addPopularMovies(localMovies)
-        //Then
+        dataSource.upsertPopularMovies(localMovies)
+        // Then
         coVerify(exactly = 1) {
-            movieDao.insertPopularMovies(match { list ->
-                list.size == 1 &&
+            movieDao.upsertPopularMovies(
+                match { list ->
+                    list.size == 1 &&
                         list[0].movieId == 42L &&
                         list[0].storedLanguage == "en"
-            })
+            }
+                    )
         }
     }
 
@@ -139,10 +140,10 @@ class MovieLocalDataSourceImplTest {
         //Given
         val localMovies = listOf(createMovie(movieId = 42, storedLanguage = "en"))
         //When
-        dataSource.addTopRatedMovies(localMovies)
-        //Then
+        dataSource.upsertTopRatedMovies(localMovies)
+        // Then
         coVerify(exactly = 1) {
-            movieDao.insertTopRatedMovies(match { list ->
+            movieDao.upsertTopRatedMovies(match { list ->
                 list.size == 1 &&
                         list[0].movieId == 42L &&
                         list[0].storedLanguage == "en"
@@ -155,10 +156,10 @@ class MovieLocalDataSourceImplTest {
         //Given
         val localMovies = listOf(createMovie(movieId = 42, storedLanguage = "en"))
         //When
-        dataSource.addUpcomingMovies(localMovies)
-        //Then
+        dataSource.upsertUpcomingMovies(localMovies)
+        // Then
         coVerify(exactly = 1) {
-            movieDao.insertUpcomingMovies(match { list ->
+            movieDao.upsertUpcomingMovies(match { list ->
                 list.size == 1 &&
                         list[0].movieId == 42L &&
                         list[0].storedLanguage == "en"

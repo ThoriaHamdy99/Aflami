@@ -34,7 +34,7 @@ class ProfileRepositoryImpl @Inject constructor(
     private suspend fun getAccountDetailsFromRemote(sessionId: String): AccountDetailsRemoteDto {
         return profileRemoteDataSource.getAccountDetails(sessionId = sessionId)
             .let { accountDetails ->
-                profileLocalDataSource.addAccountDetails(accountDetails.toLocal())
+                profileLocalDataSource.upsertAccountDetails(accountDetails.toLocal())
                 accountDetails
             }
     }

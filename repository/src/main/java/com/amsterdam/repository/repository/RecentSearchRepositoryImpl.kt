@@ -1,29 +1,29 @@
 package com.amsterdam.repository.repository
 
 import com.amsterdam.domain.repository.RecentSearchRepository
-import com.amsterdam.repository.datasource.local.RecentSearchLocalSource
+import com.amsterdam.repository.datasource.local.RecentSearchLocalDataSource
 import com.amsterdam.repository.dto.local.LocalSearchDto
 import com.amsterdam.repository.mapper.local.toEntityList
 import javax.inject.Inject
 
 class RecentSearchRepositoryImpl @Inject constructor(
-    private val recentSearchLocalSource: RecentSearchLocalSource
+    private val recentSearchLocalDataSource: RecentSearchLocalDataSource
 ) : RecentSearchRepository {
 
     override suspend fun getAllRecentSearches(): List<String> {
-        return recentSearchLocalSource.getRecentSearches().toEntityList()
+        return recentSearchLocalDataSource.getRecentSearches().toEntityList()
     }
 
     override suspend fun deleteAllRecentSearches() {
-        recentSearchLocalSource.deleteRecentSearches()
+        recentSearchLocalDataSource.deleteRecentSearches()
     }
 
     override suspend fun deleteRecentSearch(searchKeyword: String) {
-        recentSearchLocalSource.deleteRecentSearchByKeyword(searchKeyword)
+        recentSearchLocalDataSource.deleteRecentSearchByKeyword(searchKeyword)
     }
 
     override suspend fun addRecentSearch(searchKeyword: String) {
-        recentSearchLocalSource.upsertRecentSearch(LocalSearchDto(searchKeyword))
+        recentSearchLocalDataSource.upsertRecentSearch(LocalSearchDto(searchKeyword))
     }
 
 }

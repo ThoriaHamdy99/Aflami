@@ -347,7 +347,7 @@ class HomeViewModelTest {
         val selectedMood = Mood.ROMANTIC
 
         // When
-        viewModel.onClickMood(selectedMood)
+        viewModel.onChangeMood(selectedMood)
         advanceUntilIdle()
 
         // Then
@@ -384,7 +384,7 @@ class HomeViewModelTest {
         every { homeUiStateMapper.moviesToMoviesItemsUiState(expectedMovies) } returns expectedUiState
 
         // When
-        viewModel.onClickMood(selectedMood)
+        viewModel.onChangeMood(selectedMood)
         advanceUntilIdle()
 
         viewModel.onClickGetNow()
@@ -403,7 +403,7 @@ class HomeViewModelTest {
             every { homeUiStateMapper.moviesToMoviesItemsUiState(expectedMovies) } returns expectedUiState
 
             // When and Then
-            viewModel.onClickMood(selectedMood)
+            viewModel.onChangeMood(selectedMood)
             advanceUntilIdle()
 
             viewModel.onClickGetNow()
@@ -427,7 +427,7 @@ class HomeViewModelTest {
             every { homeUiStateMapper.moviesToMoviesItemsUiState(expectedMovies) } returns emptyList()
 
             // When
-            viewModel.onClickMood(selectedMood)
+            viewModel.onChangeMood(selectedMood)
             advanceUntilIdle()
 
             viewModel.onClickGetNow()

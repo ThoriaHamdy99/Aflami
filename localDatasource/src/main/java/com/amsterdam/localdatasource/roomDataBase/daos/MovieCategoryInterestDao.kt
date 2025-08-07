@@ -14,11 +14,11 @@ interface MovieCategoryInterestDao {
     suspend fun getInterestCount(categoryId: Long): Int?
 
     @Upsert
-    suspend fun insertInterest(entity: LocalMovieCategoryInterestDto)
+    suspend fun upsertInterest(entity: LocalMovieCategoryInterestDto)
 
     @Transaction
     suspend fun incrementInterest(categoryId: Long) {
         val current = getInterestCount(categoryId) ?: 0
-        insertInterest(LocalMovieCategoryInterestDto(categoryId, current + 1))
+        upsertInterest(LocalMovieCategoryInterestDto(categoryId, current + 1))
     }
 }

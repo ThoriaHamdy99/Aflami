@@ -30,26 +30,28 @@ class MovieDaoTest {
     }
 
     @Test
-    fun insertMovies_shouldInsertMovies() = runTest {
-        // Given
+    fun upsertMovies_shouldUpsertMovies() =
+        runTest {
+            // Given
         val movie = createMovie(movieId = 1L, storedLanguage = "en")
 
         // Act
-        dao.insertMovies(listOf(movie))
+            dao.upsertMovies(listOf(movie))
         // Then
         val result = dao.getMovieById(1L)
         assertThat(result).isEqualTo(movie)
-    }
+        }
 
     @Test
-    fun insertMovies_shouldUpdateMovieWithoutDuplication_WhenMovieAlreadyStored() = runTest {
+    fun upsertMovies_shouldUpdateMovieWithoutDuplication_WhenMovieAlreadyStored() =
+        runTest {
         // Given
         val originalMovie = createMovie(movieId = 1L, storedLanguage = "en", name = "Original")
-        dao.insertMovies(listOf(originalMovie))
+            dao.upsertMovies(listOf(originalMovie))
 
         // Act
         val updatedMovie = originalMovie.copy(name = "Updated")
-        dao.insertMovies(listOf(updatedMovie))
+            dao.upsertMovies(listOf(updatedMovie))
 
         // Then
         val result = dao.getMovieById(1L)
@@ -65,9 +67,9 @@ class MovieDaoTest {
             searchKeyword = "superman",
             searchType = SearchType.BY_KEYWORD,
             movieId = movie.movieId,
-            storedLanguage = movie.storedLanguage
+            storedLanguage = movie.storedLanguage,
         )
-        dao.insertMovies(listOf(movie))
+        dao.upsertMovies(listOf(movie))
 
         // Act
         dao.insertSearchEntries(listOf(crossRef))
@@ -92,9 +94,9 @@ class MovieDaoTest {
             searchKeyword = "batman",
             searchType = SearchType.BY_KEYWORD,
             movieId = movie.movieId,
-            storedLanguage = movie.storedLanguage
+            storedLanguage = movie.storedLanguage,
         )
-        dao.insertMovies(listOf(movie))
+        dao.upsertMovies(listOf(movie))
         dao.insertSearchEntries(listOf(crossRef))
 
         // When
@@ -119,7 +121,7 @@ class MovieDaoTest {
         val keyword = "test"
         val searchType = SearchType.BY_KEYWORD
 
-        dao.insertMovies(listOf(movie1, movie2, movie3))
+        dao.upsertMovies(listOf(movie1, movie2, movie3))
         dao.insertSearchEntries(
             listOf(
                 SearchMovieCrossRefDto(keyword, searchType, movie1.movieId, movie1.storedLanguage),

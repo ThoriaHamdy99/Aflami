@@ -31,20 +31,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.domain.models.Mood
 import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.HomeAppBar
 import com.amsterdam.ui.navigation.Route
+import com.amsterdam.ui.navigation.Route.*
 import com.amsterdam.ui.navigation.Route.MovieDetails
 import com.amsterdam.ui.screens.home.component.MovieMoodPickerDialog
 import com.amsterdam.ui.screens.home.sections.AnimatedSectionVisibility
@@ -67,26 +71,31 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hil
     val navController = LocalNavController.current
     val state by homeViewModel.state.collectAsStateWithLifecycle()
 
+    val errorGetMoviesByMoodMessage = stringResource(R.string.error_mood_movies_loading)
     LaunchedEffect(Unit) {
         homeViewModel.effect.collectLatest { effect ->
             when (effect) {
-                is NavigateToSearchScreenEffect -> navController.navigate(Route.Search)
+                is NavigateToSearchScreenEffect -> navController.navigate(Search)
 
                 is NavigateToMovieDetailsEffect -> {
                     navController.navigate(MovieDetails(movieId = effect.movieId))
                 }
 
                 is HomeEffect.NavigateToTvShowDetailsEffect -> {
-                    navController.navigate(Route.SeriesDetails(tvShowId = effect.tvShowId))
+                    navController.navigate(SeriesDetails(tvShowId = effect.tvShowId))
                 }
 
                 is HomeEffect.NavigateToTopRatedMoviesEffect -> {
-                    navController.navigate(Route.TopRated)
+                    navController.navigate(TopRated)
                 }
 
                 is HomeEffect.NavigateToContinueWatchingMoviesScreen -> {
-                    navController.navigate(Route.ContinueWatching)
+                    navController.navigate(ContinueWatching)
                 }
+
+                HomeEffect.ShowGetMoviesByMoodErrorSnackBar -> SnackBarManager.showError(
+                    message = errorGetMoviesByMoodMessage
+                )
             }
         }
     }
@@ -178,7 +187,7 @@ private fun HomeScreenContent(
                 item {
                     AnimatedSectionVisibility(visible = !state.isLoading && state.error == null) {
                         MoodPickerSection(
-                            state = state,
+                            state = state.moodPickerUiState,
                             interactionListener = interactionListener
                         )
                     }
@@ -254,7 +263,7 @@ private fun HomeScreenPreview() {
                 override fun onClickShowAllToRatedMovies() {}
                 override fun onClickShowAllContinueWatchingMovies() {}
 
-                override fun onClickMood(mood: Mood) {}
+                override fun onChangeMood(mood: Mood) {}
                 override fun onClickGetNow() {}
                 override fun onDismissMoodPickerDialog() {}
                 override fun onClickViewDetails() {}
