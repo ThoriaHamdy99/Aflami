@@ -46,7 +46,7 @@ class MovieRepositoryImpl @Inject constructor(
     private val authenticationLocalSource: AuthenticationLocalSource,
     private val preferences: AppPreferences,
     val cryptoData: CryptoData,
-) : MovieRepository {
+    ) : MovieRepository {
 
     override suspend fun getMoviesByKeyword(
         keyword: String,
@@ -132,11 +132,11 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>, page: Int): List<Movie> {
         return movieGenres.toDtoList().let { genresIds ->
-            movieRemoteDataSource.getMoviesByGenreIds(
-                genresIds,
-                page
-            ).results
-                .toMovieEntityList()
+                movieRemoteDataSource.getMoviesByGenreIds(
+                    genresIds,
+                    page
+                ).results
+            .toMovieEntityList()
         }
     }
 
@@ -261,17 +261,17 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     private suspend fun onSaveMovieWithCategories(remoteMovie: RemoteMovieItemDto) {
-        movieLocalSource.addMovieWithCategories(
-            movie =
-                remoteMovie.toLocalDto(storedLanguage = preferences.getAppLanguage().first()),
-            categoryIds = remoteMovie.genreIds.map(Int::toLong),
-            storedLanguage = preferences.getAppLanguage().first()
-        )
+            movieLocalSource.addMovieWithCategories(
+                movie =
+                    remoteMovie.toLocalDto(storedLanguage = preferences.getAppLanguage().first()),
+                categoryIds = remoteMovie.genreIds.map(Int::toLong),
+                storedLanguage = preferences.getAppLanguage().first()
+            )
     }
 
     override suspend fun setMovieRate(rate: Int, movieId: Long) {
         val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
-        movieRemoteDataSource.setMovieRate(rate = rate.toFloat(), movieId = movieId, sessionId = sessionId)
+         movieRemoteDataSource.setMovieRate(rate = rate.toFloat(), movieId = movieId, sessionId = sessionId)
     }
 
     override suspend fun getUserRatedMovies(): List<UserRatedMovie> {
@@ -290,7 +290,7 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     suspend fun cacheMovieCategoriesIfNotCached(){
-        getMovieCategoriesFromLocal().takeIf { it.isNotEmpty() }
+         getMovieCategoriesFromLocal().takeIf { it.isNotEmpty() }
             ?: saveMovieCategoriesToDatabase(categoryRemoteSource.getMovieCategories())
     }
 

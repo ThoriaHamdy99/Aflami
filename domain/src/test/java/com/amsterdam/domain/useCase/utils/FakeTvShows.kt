@@ -16,7 +16,6 @@ val specificTvShowList = listOf(
         popularity = 5.0,
         seasonCount = 3,
         originCountry = "US",
-        productionCompanies = emptyList()
     ),
     TvShow(
         id = 2,
@@ -31,7 +30,6 @@ val specificTvShowList = listOf(
         popularity = 5.0,
         seasonCount = 4,
         originCountry = "US",
-        productionCompanies = emptyList()
     )
 )
 
@@ -48,7 +46,6 @@ val fakeTvShowList =
             popularity = 10.2,
             seasonCount = 4,
             originCountry = "US",
-            productionCompanies = emptyList()
         ),
         TvShow(
             id = 2,
@@ -61,7 +58,6 @@ val fakeTvShowList =
             popularity = 11.2,
             seasonCount = 4,
             originCountry = "US",
-            productionCompanies = emptyList()
         ),
         TvShow(
             id = 3,
@@ -74,7 +70,6 @@ val fakeTvShowList =
             popularity = 0.2,
             seasonCount = 4,
             originCountry = "US",
-            productionCompanies = emptyList()
         ),
     )
 val fakeTvShowListWithRatings =
@@ -90,7 +85,7 @@ val fakeTvShowListWithRatings =
             popularity = 10.0,
             seasonCount = 4,
             originCountry = "US",
-            productionCompanies = emptyList()
+           
         ),
         TvShow(
             id = 2,
@@ -103,7 +98,7 @@ val fakeTvShowListWithRatings =
             popularity = 9.0,
             seasonCount = 4,
             originCountry = "US",
-            productionCompanies = emptyList()
+           
         ),
         TvShow(
             id = 3,
@@ -116,7 +111,6 @@ val fakeTvShowListWithRatings =
             popularity = 8.0,
             seasonCount = 4,
             originCountry = "US",
-            productionCompanies = emptyList()
         ),
     )
 val fakeTvShowListWithCategories =
@@ -132,7 +126,6 @@ val fakeTvShowListWithCategories =
             popularity = 10.0,
             seasonCount = 4,
             originCountry = "US",
-            productionCompanies = emptyList()
         ),
         TvShow(
             id = 2,
@@ -145,7 +138,6 @@ val fakeTvShowListWithCategories =
             popularity = 9.0,
             seasonCount = 4,
             originCountry = "US",
-            productionCompanies = emptyList()
         ),
         TvShow(
             id = 3,
@@ -161,7 +153,6 @@ val fakeTvShowListWithCategories =
             popularity = 11.0,
             seasonCount = 4,
             originCountry = "US",
-            productionCompanies = emptyList()
         ),
         TvShow(
             id = 4,
@@ -174,6 +165,17 @@ val fakeTvShowListWithCategories =
             popularity = 8.0,
             seasonCount = 4,
             originCountry = "US",
-            productionCompanies = emptyList()
         )
     )
+val tvShow1=TvShow(
+    id = 1,
+    name = "hij",
+    description = "",
+    posterUrl = "",
+    airDate = LocalDate(2023, 1, 1),
+    categories = emptyList(),
+    rating = 2.5f,
+    popularity = 0.2,
+    seasonCount = 4,
+    originCountry = "US",
+)

@@ -209,13 +209,13 @@ fun SeriesDetailsContent(
 
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(pagerState.currentPage, state.postersUrls.size) {
+    LaunchedEffect(state.postersUrls.size) {
         if (state.postersUrls.size > 1) {
             coroutineScope.launch {
                 snapshotFlow { pagerState.isScrollInProgress }
                     .distinctUntilChanged()
                     .filter { !it }
-                    .collect {
+                    .collectLatest {
                         delay(4000)
                         val nextPage = (pagerState.currentPage + 1) % 10
                         pagerState.animateScrollToPage(nextPage)

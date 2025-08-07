@@ -230,13 +230,13 @@ fun MovieContent(
 
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(pagerState.currentPage, state.moviePostersUrl.size) {
+    LaunchedEffect(state.moviePostersUrl.size) {
         if (state.moviePostersUrl.size > 1) {
             coroutineScope.launch {
                 snapshotFlow { pagerState.isScrollInProgress }
                     .distinctUntilChanged()
                     .filter { !it }
-                    .collect {
+                    .collectLatest {
                         delay(4000)
                         val nextPage = (pagerState.currentPage + 1) % 10
                         pagerState.animateScrollToPage(nextPage)

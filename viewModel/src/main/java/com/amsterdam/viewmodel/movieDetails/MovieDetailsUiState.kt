@@ -22,12 +22,7 @@ data class MovieDetailsUiState(
     val isVideoLauncherFailed : Boolean = false,
     val moviePostersUrl: List<String> = emptyList(),
     val actors: List<ActorUiState> = emptyList(),
-    val extraItem: List<Selectable<MovieExtras>> = listOf(
-        Selectable(isSelected = true, MovieExtras.MORE_LIKE_THIS),
-        Selectable(isSelected = false, MovieExtras.REVIEWS),
-        Selectable(isSelected = false, MovieExtras.GALLERY),
-        Selectable(isSelected = false, MovieExtras.COMPANY_PRODUCTION)
-    ),
+    val extraItem: List<Selectable<MovieExtras>> = defaultMovieExtras,
     val similarMovies: List<SimilarMovieUiState> = emptyList(),
     val productionCompany: List<ProductionCompanyUiState> = emptyList(),
     val gallery: List<String> = emptyList(),
@@ -51,5 +46,14 @@ data class MovieDetailsUiState(
         REVIEWS,
         GALLERY,
         COMPANY_PRODUCTION
+    }
+
+    companion object {
+        val defaultMovieExtras = listOf(
+            Selectable(isSelected = true, MovieExtras.MORE_LIKE_THIS),
+            Selectable(isSelected = false, MovieExtras.REVIEWS),
+            Selectable(isSelected = false, MovieExtras.GALLERY),
+            Selectable(isSelected = false, MovieExtras.COMPANY_PRODUCTION)
+        )
     }
 }
