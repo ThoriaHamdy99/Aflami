@@ -18,16 +18,12 @@ suspend inline fun <reified T> responseCall(crossinline execute: suspend () -> T
     try {
         execute()
     } catch (e: HttpException) {
-        e.printStackTrace()
         throw ServerErrorException()
     } catch (e: ConnectException) {
-        e.printStackTrace()
         throw NoInternetException()
     } catch (e: SerializationException) {
-        e.printStackTrace()
         throw ServerErrorException()
     } catch (e: Exception) {
-        e.printStackTrace()
         throw NetworkException()
     }
 
