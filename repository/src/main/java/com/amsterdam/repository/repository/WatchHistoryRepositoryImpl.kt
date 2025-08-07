@@ -33,7 +33,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
 ) : WatchHistoryRepository {
 
     override suspend fun addMovieToWatchHistory(movieId: Long) {
-        watchHistoryLocalDataSource.addMovieToWatchHistory(MovieWatchHistoryDto(movieId))
+        watchHistoryLocalDataSource.upsertMovieToWatchHistory(MovieWatchHistoryDto(movieId))
     }
 
     override fun getContinueWatchingMovies(
@@ -64,13 +64,13 @@ class WatchHistoryRepositoryImpl @Inject constructor(
     }
 
     private suspend fun cacheWatchedMovie(remoteMovieDetailsResponse: RemoteMovieDetailsResponse) {
-        movieLocalSource.insertMovie(
+        movieLocalSource.upsertMovie(
             remoteMovieDetailsResponse.toLocalDto(preferences.getAppLanguage().first())
         )
     }
 
     override suspend fun addTvShowToWatchHistory(tvShowId: Long) {
-        watchHistoryLocalDataSource.addTvShowToWatchHistory(TvShowWatchHistoryDto(tvShowId))
+        watchHistoryLocalDataSource.upsertTvShowToWatchHistory(TvShowWatchHistoryDto(tvShowId))
     }
 
     override fun getContinueWatchingTvShows(
@@ -102,7 +102,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
     }
 
     private suspend fun cacheWatchedTvShow(remoteTvShowItemDto: TvShowDetailsRemoteResponse) {
-        localTvDataSource.insertTvShow(
+        localTvDataSource.upsertTvShow(
             tvShow = remoteTvShowItemDto.toLocalDto(
                 preferences.getAppLanguage().first()
             )

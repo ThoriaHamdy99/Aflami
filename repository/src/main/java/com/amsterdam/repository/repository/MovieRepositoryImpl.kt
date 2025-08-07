@@ -22,9 +22,9 @@ import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import com.amsterdam.repository.mapper.local.toDtoList
 import com.amsterdam.repository.mapper.local.toEntity
+import com.amsterdam.repository.mapper.remote.toEntity
 import com.amsterdam.repository.mapper.remote.toEntityList
 import com.amsterdam.repository.mapper.remote.toMovieDetailsEntity
-import com.amsterdam.repository.mapper.remote.toEntity
 import com.amsterdam.repository.mapper.remote.toMovieEntityList
 import com.amsterdam.repository.mapper.remote.toMovieItemDto
 import com.amsterdam.repository.mapper.remote.toMovieUserRateEntityList
@@ -141,7 +141,7 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     private suspend fun cacheWatchedMovie(remoteMovieItemDto: RemoteMovieItemDto) {
-        movieLocalSource.insertMovie(
+        movieLocalSource.upsertMovie(
             remoteMovieItemDto.toLocalDto(storedLanguage = preferences.getAppLanguage().first())
         )
     }
@@ -165,7 +165,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     private suspend fun saveUpcomingMovies(remoteMovies: List<RemoteMovieItemDto>) {
         saveMovieWithCategories(remoteMovies).also {
-            movieLocalSource.addUpcomingMovies(
+            movieLocalSource.upsertUpcomingMovies(
                 remoteMovies.toLocalMovieDtoList(isPoster = false,preferences.getAppLanguage().first())
             )
         }
@@ -190,7 +190,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     private suspend fun savePopularMovies(remoteMovies: List<RemoteMovieItemDto>) {
         saveMovieWithCategories(remoteMovies).also {
-            movieLocalSource.addPopularMovies(
+            movieLocalSource.upsertPopularMovies(
                 remoteMovies.toLocalMovieDtoList(storedLanguage =preferences.getAppLanguage().first()),
             )
         }
@@ -215,7 +215,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     private suspend fun saveTopRatedMovies(remoteMovies: List<RemoteMovieItemDto>) {
         saveMovieWithCategories(remoteMovies).also {
-            movieLocalSource.addTopRatedMovies(
+            movieLocalSource.upsertTopRatedMovies(
                 remoteMovies.toLocalMovieDtoList(storedLanguage = preferences.getAppLanguage().first()),
             )
         }
@@ -261,8 +261,8 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     private suspend fun onSaveMovieWithCategories(remoteMovie: RemoteMovieItemDto) {
-            movieLocalSource.addMovieWithCategories(
-                movie =
+        movieLocalSource.upsertMovieWithCategories(
+            movie =
                     remoteMovie.toLocalDto(storedLanguage = preferences.getAppLanguage().first()),
                 categoryIds = remoteMovie.genreIds.map(Int::toLong),
                 storedLanguage = preferences.getAppLanguage().first()

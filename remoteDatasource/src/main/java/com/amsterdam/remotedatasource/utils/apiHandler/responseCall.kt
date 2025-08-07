@@ -1,6 +1,5 @@
 package com.amsterdam.remotedatasource.utils.apiHandler
 
-import android.util.Log
 import com.amsterdam.domain.exceptions.AccessDeniedException
 import com.amsterdam.domain.exceptions.AccessRestrictedException
 import com.amsterdam.domain.exceptions.AccountDisabledException
@@ -14,19 +13,21 @@ import com.amsterdam.domain.exceptions.VerificationRequiredException
 import kotlinx.serialization.SerializationException
 import retrofit2.HttpException
 import java.net.ConnectException
-import java.net.UnknownHostException
-import java.nio.channels.UnresolvedAddressException
 
 suspend inline fun <reified T> responseCall(crossinline execute: suspend () -> T): T =
     try {
         execute()
     } catch (e: HttpException) {
+        e.printStackTrace()
         throw ServerErrorException()
     } catch (e: ConnectException) {
+        e.printStackTrace()
         throw NoInternetException()
     } catch (e: SerializationException) {
+        e.printStackTrace()
         throw ServerErrorException()
     } catch (e: Exception) {
+        e.printStackTrace()
         throw NetworkException()
     }
 

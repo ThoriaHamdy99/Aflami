@@ -5,7 +5,7 @@ import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
 import kotlinx.datetime.Instant
 
 interface TvShowLocalSource {
-    suspend fun addTvShowWithCategories(
+    suspend fun upsertTvShowWithCategories(
         tvShow: LocalTvShowDto,
         categoryIds: List<Long>,
         storedLanguage: String
@@ -13,7 +13,7 @@ interface TvShowLocalSource {
 
     suspend fun incrementGenreInterest(categoryId: Long)
 
-    suspend fun insertTvShow(tvShow : LocalTvShowDto)
+    suspend fun upsertTvShow(tvShow: LocalTvShowDto)
 
     suspend fun getTvShowById(tvShowId: Long, storedLanguage: String): LocalTvShowDto?
 
@@ -21,11 +21,11 @@ interface TvShowLocalSource {
 
     suspend fun getTopRatedTvShows(storedLanguage: String): List<LocalTvShowDto>
 
-    suspend fun addPopularTvShows(tvShows: List<LocalTvShowDto>)
+    suspend fun upsertPopularTvShows(tvShows: List<LocalTvShowDto>)
 
     suspend fun deleteExpiredPopularTvShows(expirationTime: Instant, storedLanguage: String)
 
-    suspend fun addTopRatedTvShows(tvShows: List<LocalTvShowDto>)
+    suspend fun upsertTopRatedTvShows(tvShows: List<LocalTvShowDto>)
 
     suspend fun deleteExpiredTopRatedTvShows(expirationTime: Instant, storedLanguage: String)
 }

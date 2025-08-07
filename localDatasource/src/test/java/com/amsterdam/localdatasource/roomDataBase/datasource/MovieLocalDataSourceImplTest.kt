@@ -1,6 +1,5 @@
 package com.amsterdam.localdatasource.roomDataBase.datasource
 
-import androidx.room.Transaction
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieDao
 import com.amsterdam.localdatasource.utils.createMovie
@@ -66,7 +65,7 @@ class MovieLocalDataSourceImplTest {
             )
 
             // When
-            dataSource.addMovieWithCategories(movie, categories, "en")
+            dataSource.upsertMovieWithCategories(movie, categories, "en")
 
             // Then
             coVerify(exactly = 1) { movieDao.insertMovie(movie) }
@@ -79,8 +78,8 @@ class MovieLocalDataSourceImplTest {
         val storedLanguage = "en"
         val movie = createMovie(movieId = 42, storedLanguage = storedLanguage)
         //When
-        dataSource.insertMovie(movie)
-        //Then
+        dataSource.upsertMovie(movie)
+        // Then
         coVerify(exactly = 1) { movieDao.insertMovie(movie) }
     }
 
@@ -123,8 +122,8 @@ class MovieLocalDataSourceImplTest {
         //Given
         val localMovies = listOf(createMovie(movieId = 42, storedLanguage = "en"))
         //When
-        dataSource.addPopularMovies(localMovies)
-        //Then
+        dataSource.upsertPopularMovies(localMovies)
+        // Then
         coVerify(exactly = 1) {
             movieDao.insertPopularMovies(match { list ->
                 list.size == 1 &&
@@ -139,7 +138,7 @@ class MovieLocalDataSourceImplTest {
         //Given
         val localMovies = listOf(createMovie(movieId = 42, storedLanguage = "en"))
         //When
-        dataSource.addTopRatedMovies(localMovies)
+        dataSource.upsertTopRatedMovies(localMovies)
         //Then
         coVerify(exactly = 1) {
             movieDao.insertTopRatedMovies(match { list ->
@@ -155,7 +154,7 @@ class MovieLocalDataSourceImplTest {
         //Given
         val localMovies = listOf(createMovie(movieId = 42, storedLanguage = "en"))
         //When
-        dataSource.addUpcomingMovies(localMovies)
+        dataSource.upsertUpcomingMovies(localMovies)
         //Then
         coVerify(exactly = 1) {
             movieDao.insertUpcomingMovies(match { list ->

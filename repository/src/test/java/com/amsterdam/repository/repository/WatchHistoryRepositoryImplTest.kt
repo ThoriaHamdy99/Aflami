@@ -8,12 +8,8 @@ import com.amsterdam.repository.datasource.local.TvShowLocalSource
 import com.amsterdam.repository.datasource.local.WatchHistoryLocalDataSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
-import com.amsterdam.repository.dto.local.LocalMovieDto
 import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
 import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
-import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
-import com.amsterdam.repository.mapper.local.toWatchHistoryEntity
-import com.amsterdam.repository.utils.movie1
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.clearAllMocks
@@ -22,14 +18,10 @@ import io.mockk.coVerify
 import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import kotlin.collections.listOf
 
 class WatchHistoryRepositoryImplTest {
 
@@ -64,7 +56,7 @@ class WatchHistoryRepositoryImplTest {
     fun `addMovieToWatchHistory should add movie to watch history`() = runTest {
         val movieId = 35L
         coEvery {
-            watchHistoryLocalDataSource.addMovieToWatchHistory(
+            watchHistoryLocalDataSource.upsertMovieToWatchHistory(
                 any()
             )
         } just Runs
@@ -74,7 +66,7 @@ class WatchHistoryRepositoryImplTest {
         assertThat(result).isEqualTo(Unit)
 
         coVerify(exactly = 1) {
-            watchHistoryLocalDataSource.addMovieToWatchHistory(
+            watchHistoryLocalDataSource.upsertMovieToWatchHistory(
                 withArg {
                     assertThat(it.movieId).isEqualTo(movieId)
                 }
@@ -110,7 +102,7 @@ class WatchHistoryRepositoryImplTest {
     fun `addTvShowToWatchHistory should add tvShow to watch history`() = runTest {
         val tvShow = 35L
         coEvery {
-            watchHistoryLocalDataSource.addTvShowToWatchHistory(
+            watchHistoryLocalDataSource.upsertTvShowToWatchHistory(
                 any()
             )
 
@@ -121,7 +113,7 @@ class WatchHistoryRepositoryImplTest {
         assertThat(result).isEqualTo(Unit)
 
         coVerify(exactly = 1) {
-            watchHistoryLocalDataSource.addTvShowToWatchHistory(
+            watchHistoryLocalDataSource.upsertTvShowToWatchHistory(
                 withArg {
                     assertThat(it.tvShowId).isEqualTo(tvShow)
                 }

@@ -12,7 +12,7 @@ class ProfileLocalDataSourceImpl @Inject constructor(
         return accountDetailsDao.getAccountDetails()
     }
 
-    override suspend fun addAccountDetails(accountDetails: AccountDetailsLocalDto) {
+    override suspend fun upsertAccountDetails(accountDetails: AccountDetailsLocalDto) {
         accountDetailsDao.upsertAccountDetails(accountDetails)
     }
 

@@ -41,7 +41,7 @@ class CountryRepositoryImpl @Inject constructor(
     }
 
     private suspend fun saveCountries(remoteCountries: List<RemoteCountryDto>) {
-        localDataSource.addCountries(
+        localDataSource.upsertCountries(
             remoteCountries.toLocalDtoList(preferences.getAppLanguage().first())
         )
     }

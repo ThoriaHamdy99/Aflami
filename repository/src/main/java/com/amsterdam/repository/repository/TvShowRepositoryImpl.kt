@@ -123,7 +123,7 @@ class TvShowRepositoryImpl @Inject constructor(
 
 
     private suspend fun cacheWatchedTvShow(remoteTvShowItemDto: TvShowDetailsRemoteResponse) {
-        localTvDataSource.insertTvShow(
+        localTvDataSource.upsertTvShow(
             remoteTvShowItemDto.toLocalDto(preferences.getAppLanguage().first())
         )
     }
@@ -168,8 +168,8 @@ class TvShowRepositoryImpl @Inject constructor(
 
         private suspend fun savePopularTvShows(remoteTvShows: List<RemoteTvShowItemDto>) {
             saveTvShowWithCategories(remoteTvShows).also {
-                localTvDataSource.addPopularTvShows(
-                    remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
+            localTvDataSource.upsertPopularTvShows(
+                remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
                 )
             }
         }
@@ -193,8 +193,8 @@ class TvShowRepositoryImpl @Inject constructor(
 
         private suspend fun saveTopRatedTvShows(remoteTvShows: List<RemoteTvShowItemDto>) {
             saveTvShowWithCategories(remoteTvShows).also {
-                localTvDataSource.addTopRatedTvShows(
-                    remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
+                localTvDataSource.upsertTopRatedTvShows(
+                remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
                 )
             }
         }
@@ -209,8 +209,8 @@ class TvShowRepositoryImpl @Inject constructor(
 
         private suspend fun onSaveTvShowWithCategories(remoteTvShow: RemoteTvShowItemDto) {
             cacheTvShowCategoriesIfNotCached()
-                localTvDataSource.addTvShowWithCategories(
-                    tvShow = remoteTvShow.toLocalDto(preferences.getAppLanguage().first()),
+            localTvDataSource.upsertTvShowWithCategories(
+            tvShow = remoteTvShow.toLocalDto(preferences.getAppLanguage().first()),
                     categoryIds = remoteTvShow.genreIds.map(Int::toLong),
                     storedLanguage = preferences.getAppLanguage().first()
                 )

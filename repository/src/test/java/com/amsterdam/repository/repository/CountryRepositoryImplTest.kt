@@ -7,7 +7,6 @@ import com.amsterdam.repository.datasource.local.CountryLocalSource
 import com.amsterdam.repository.datasource.remote.CountryRemoteSource
 import com.amsterdam.repository.dto.local.LocalCountryDto
 import com.amsterdam.repository.dto.remote.RemoteCountryDto
-import com.amsterdam.repository.mapper.local.toEntityList
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coJustRun
@@ -58,7 +57,7 @@ class CountryRepositoryImplTest {
         assertThat(result).isEqualTo(expectedCountries)
         coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
         coVerify(exactly = 0) { remoteDataSource.getCountries() }
-        coVerify(exactly = 0) { localDataSource.addCountries(any()) }
+        coVerify(exactly = 0) { localDataSource.upsertCountries(any()) }
     }
 
 
@@ -82,8 +81,7 @@ class CountryRepositoryImplTest {
             )
             val localSavedCountriesDto = listOf(localSavedDto1)
 
-
-            coJustRun { localDataSource.addCountries(localSavedCountriesDto) }
+            coJustRun { localDataSource.upsertCountries(localSavedCountriesDto) }
 
             val expectedCountry1 = Country(countryName = "United States", countryIsoCode = "US")
             val expectedCountries = listOf(expectedCountry1)
@@ -98,7 +96,7 @@ class CountryRepositoryImplTest {
             coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
             coVerify(exactly = 1) { remoteDataSource.getCountries() }
 
-            coVerify(exactly = 1) { localDataSource.addCountries(localSavedCountriesDto) }
+            coVerify(exactly = 1) { localDataSource.upsertCountries(localSavedCountriesDto) }
         }
 
     @Test
@@ -117,7 +115,7 @@ class CountryRepositoryImplTest {
                 LocalCountryDto(isoCode = "CA", name = "Canada", storedLanguage = testLanguage)
             val localSavedCountriesDto = listOf(localSavedDto1)
 
-            coJustRun { localDataSource.addCountries(localSavedCountriesDto) }
+            coJustRun { localDataSource.upsertCountries(localSavedCountriesDto) }
 
             val expectedCountry1 = Country(countryName = "Canada", countryIsoCode = "CA")
             val expectedCountries = listOf(expectedCountry1)
@@ -131,7 +129,7 @@ class CountryRepositoryImplTest {
             coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
             coVerify(exactly = 1) { remoteDataSource.getCountries() }
 
-            coVerify(exactly = 1) { localDataSource.addCountries(localSavedCountriesDto) }
+            coVerify(exactly = 1) { localDataSource.upsertCountries(localSavedCountriesDto) }
         }
 
     @Test
@@ -152,7 +150,7 @@ class CountryRepositoryImplTest {
 
             coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
             coVerify(exactly = 1) { remoteDataSource.getCountries() }
-            coVerify(exactly = 0) { localDataSource.addCountries(any()) }
+            coVerify(exactly = 0) { localDataSource.upsertCountries(any()) }
         }
 
     @Test
@@ -174,6 +172,6 @@ class CountryRepositoryImplTest {
 
             coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
             coVerify(exactly = 1) { remoteDataSource.getCountries() }
-            coVerify(exactly = 0) { localDataSource.addCountries(any()) }
+            coVerify(exactly = 0) { localDataSource.upsertCountries(any()) }
         }
 }

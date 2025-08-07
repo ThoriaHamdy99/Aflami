@@ -17,7 +17,7 @@ class TvShowLocalDataSourceImpl @Inject constructor(
     private val tvShowCategoryInterestDao: TvShowCategoryInterestDao
 ) : TvShowLocalSource {
     @Transaction
-    override suspend fun addTvShowWithCategories(
+    override suspend fun upsertTvShowWithCategories(
         tvShow: LocalTvShowDto,
         categoryIds: List<Long>,
         storedLanguage: String
@@ -37,7 +37,7 @@ class TvShowLocalDataSourceImpl @Inject constructor(
         tvShowCategoryInterestDao.incrementInterest(categoryId)
     }
 
-    override suspend fun insertTvShow(tvShow: LocalTvShowDto) {
+    override suspend fun upsertTvShow(tvShow: LocalTvShowDto) {
         tvShowDao.insertTvShow(tvShow)
     }
 
@@ -57,7 +57,7 @@ class TvShowLocalDataSourceImpl @Inject constructor(
     }
 
     @Transaction
-    override suspend fun addPopularTvShows(tvShows: List<LocalTvShowDto>) {
+    override suspend fun upsertPopularTvShows(tvShows: List<LocalTvShowDto>) {
         tvShowDao.insertTvShows(tvShows)
         val entries = tvShows.map { tvShow ->
             PopularTvShowDto(
@@ -75,7 +75,7 @@ class TvShowLocalDataSourceImpl @Inject constructor(
         tvShowDao.deleteExpiredPopularTvShows(expirationTime, storedLanguage)
     }
 
-    override suspend fun addTopRatedTvShows(tvShows: List<LocalTvShowDto>) {
+    override suspend fun upsertTopRatedTvShows(tvShows: List<LocalTvShowDto>) {
         tvShowDao.insertTvShows(tvShows)
         val entries = tvShows.map { tvShow ->
             TopRatedTvShowDto(

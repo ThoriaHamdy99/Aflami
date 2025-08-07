@@ -12,7 +12,7 @@ class CountryLocalDataSourceImpl @Inject constructor(
         return dao.getAllCountries(storedLanguage)
     }
 
-    override suspend fun addCountries(countries: List<LocalCountryDto>) {
+    override suspend fun upsertCountries(countries: List<LocalCountryDto>) {
         dao.upsertAllCountries(countries)
     }
 }

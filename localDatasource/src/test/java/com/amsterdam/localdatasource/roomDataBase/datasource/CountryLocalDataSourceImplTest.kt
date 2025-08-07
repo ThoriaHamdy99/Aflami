@@ -47,8 +47,8 @@ class CountryLocalDataSourceImplTest {
         //Given
         val countries = listOf(LocalCountryDto("1", "Egypt","en"), LocalCountryDto("2", "Palestine","en"))
         //When
-        countryLocalDataSourceImpl.addCountries(countries)
-        //Then
+        countryLocalDataSourceImpl.upsertCountries(countries)
+        // Then
         coVerify (exactly = 1) { dao.upsertAllCountries(countries) }
 
     }
