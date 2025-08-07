@@ -26,6 +26,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -110,9 +113,12 @@ private fun ListsScreenContent(
     state: ListsUiState,
     interaction: ListsInteractionListener,
 ) {
+    val animationDuration by remember { mutableIntStateOf(1000) }
     Box(
         modifier =
             modifier
+                .fillMaxSize()
+                .background(AppTheme.color.surface)
                 .navigationBarsPadding()
                 .windowInsetsPadding(WindowInsets(bottom = LocalScaffoldBottomPadding.current)),
     ) {
@@ -131,6 +137,8 @@ private fun ListsScreenContent(
 
         AnimatedVisibility(
             visible = !state.isUserLoggedIn && !state.isLoading,
+            enter = fadeIn(tween(animationDuration)),
+            exit = fadeOut(tween(animationDuration)),
         ) {
             NotLoggedInContent(
                 stringResource(com.amsterdam.ui.R.string.lists),

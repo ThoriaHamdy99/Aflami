@@ -4,6 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +28,7 @@ import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.designsystem.utils.ripple
 import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.ui.R
 import com.amsterdam.ui.components.DialogTitleRow
@@ -38,7 +41,7 @@ fun ContentRestrictionDialog(
     onSaveClick: () -> Unit,
     onSelectRestriction: (RestrictionLevel) -> Unit,
     onDismissClick: () -> Unit
-){
+) {
     Dialog(
         onDismiss = onDismissClick
     ) {
@@ -56,7 +59,7 @@ fun ContentRestrictionDialog(
                 description = stringResource(R.string.restriction_strict_description),
                 isSelected = selectedRestriction == RestrictionLevel.STRICT,
                 modifier = Modifier.padding(bottom = 12.dp)
-            ){
+            ) {
                 onSelectRestriction(RestrictionLevel.STRICT)
             }
 
@@ -65,7 +68,7 @@ fun ContentRestrictionDialog(
                 description = stringResource(R.string.restriction_moderate_description),
                 isSelected = selectedRestriction == RestrictionLevel.MODERATE,
                 modifier = Modifier.padding(bottom = 12.dp)
-            ){
+            ) {
                 onSelectRestriction(RestrictionLevel.MODERATE)
             }
 
@@ -74,7 +77,7 @@ fun ContentRestrictionDialog(
                 description = stringResource(R.string.restriction_off_description),
                 isSelected = selectedRestriction == RestrictionLevel.OFF,
                 modifier = Modifier.padding(bottom = 24.dp)
-            ){
+            ) {
                 onSelectRestriction(RestrictionLevel.OFF)
             }
 
@@ -96,7 +99,7 @@ private fun RestrictionSelection(
     isSelected: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
-){
+) {
     val bodyColor by animateColorAsState(
         targetValue = if (isSelected) AppTheme.color.primaryVariant else AppTheme.color.surface
     )
@@ -114,6 +117,8 @@ private fun RestrictionSelection(
                 else Modifier
             )
             .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(),
                 onClick = onClick,
             )
             .padding(12.dp)
@@ -136,7 +141,8 @@ private fun RestrictionSelection(
                 )
             }
             RadioButton(
-                state = if (isSelected) RadioState.Selected else RadioState.Default
+                state = if (isSelected) RadioState.Selected else RadioState.Default,
+                onClick = onClick
             )
         }
     }
@@ -144,13 +150,13 @@ private fun RestrictionSelection(
 
 @ThemeAndLocalePreviews
 @Composable
-private fun ContentRestrictionDialogPreview(){
+private fun ContentRestrictionDialogPreview() {
     AflamiTheme {
         ContentRestrictionDialog(
             onDismissClick = {},
             isSaveButtonLoading = false,
             selectedRestriction = RestrictionLevel.STRICT,
-            onSaveClick = {  },
+            onSaveClick = { },
             onSelectRestriction = {}
         )
     }

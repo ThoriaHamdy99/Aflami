@@ -5,6 +5,4 @@ interface AuthenticationRemoteSource {
         username: String,
         password: String,
     ): String
-
-    suspend fun deleteSession(sessionId: String): Boolean
 }
