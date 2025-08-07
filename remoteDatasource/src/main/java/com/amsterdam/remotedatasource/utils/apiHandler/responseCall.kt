@@ -24,10 +24,6 @@ suspend inline fun <reified T> responseCall(crossinline execute: suspend () -> T
         throw ServerErrorException()
     } catch (e: ConnectException) {
         throw NoInternetException()
-    } catch (e: UnresolvedAddressException) {
-        throw NoInternetException()
-    } catch (e: UnknownHostException) {
-        throw NoInternetException()
     } catch (e: SerializationException) {
         throw ServerErrorException()
     } catch (e: Exception) {
