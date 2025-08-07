@@ -1,6 +1,5 @@
 package com.amsterdam.repository.repository
 
-import com.amsterdam.domain.repository.CategoryRepository
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
@@ -10,11 +9,15 @@ import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
 import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
+import com.amsterdam.repository.datasource.local.CategoryLocalSource
 import com.amsterdam.repository.datasource.local.TvShowLocalSource
+import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
+import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
 import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
 import com.amsterdam.repository.dto.remote.RemoteCategoryDto
+import com.amsterdam.repository.dto.remote.RemoteCategoryResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowItemDto
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
@@ -24,6 +27,7 @@ import com.amsterdam.repository.mapper.remote.toEntityList
 import com.amsterdam.repository.mapper.remote.toTvShowUserRateEntityList
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalDto
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalDtoList
+import com.amsterdam.repository.mapper.remoteToLocal.toLocalTvShowCategoryDtoList
 import com.amsterdam.repository.security.CryptoData
 import com.amsterdam.repository.utils.getCachedOrRemoteData
 import kotlinx.coroutines.flow.first
@@ -32,13 +36,15 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.days
 
 class TvShowRepositoryImpl @Inject constructor(
-    private val categoryRepository: CategoryRepository,
     private val localTvDataSource: TvShowLocalSource,
     private val remoteTvDataSource: TvShowsRemoteSource,
     private val authenticationLocalSource: AuthenticationLocalSource,
     private val preferences: AppPreferences,
-    private val cryptoData: CryptoData
-) : TvShowRepository {
+    private val cryptoData: CryptoData,
+    private val categoryLocalSource: CategoryLocalSource,
+    private val categoryRemoteSource: CategoryRemoteSource
+    ) : TvShowRepository {
+
     override suspend fun getTvShowByKeyword(
         keyword: String,
         page: Int,
@@ -202,13 +208,13 @@ class TvShowRepositoryImpl @Inject constructor(
         }
 
         private suspend fun onSaveTvShowWithCategories(remoteTvShow: RemoteTvShowItemDto) {
-            categoryRepository.getTvShowCategories().also {
+            cacheTvShowCategoriesIfNotCached()
                 localTvDataSource.addTvShowWithCategories(
                     tvShow = remoteTvShow.toLocalDto(preferences.getAppLanguage().first()),
                     categoryIds = remoteTvShow.genreIds.map(Int::toLong),
                     storedLanguage = preferences.getAppLanguage().first()
                 )
-            }
+
         }
 
         private suspend fun incrementUserInterestByTvShow(remoteCategories: List<RemoteCategoryDto>) {
@@ -217,5 +223,22 @@ class TvShowRepositoryImpl @Inject constructor(
                     localTvDataSource.incrementGenreInterest(it.toLong())
                 }
         }
+    suspend fun cacheTvShowCategoriesIfNotCached(){
+        getTvShowCategoriesFromLocal().takeIf { it.isNotEmpty() }
+            ?: saveTvShowCategoriesToDatabase(categoryRemoteSource.getTvShowCategories())
+    }
+
+    private suspend fun getTvShowCategoriesFromLocal(): List<LocalTvShowCategoryDto> {
+        return categoryLocalSource.getTvShowCategories()
+    }
+
+
+    private suspend fun saveTvShowCategoriesToDatabase(
+        tvShowCategories: RemoteCategoryResponse
+    ) {
+        categoryLocalSource.upsertTvShowCategories(
+            tvShowCategories.genres.toLocalTvShowCategoryDtoList(preferences.getAppLanguage().first())
+        )
+    }
 
 }

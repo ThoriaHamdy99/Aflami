@@ -28,7 +28,8 @@ class AuthenticationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getSessionId(): String =
-        cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: throw UnknownException()
+        cryptoData.decryptString(authenticationLocalSource.getCachedSessionId())
+            ?: throw UnknownException()
 
     override suspend fun setSessionType(sessionType: SessionType) {
         authenticationLocalSource.setSessionType(sessionType.toLocalDto())
@@ -38,11 +39,8 @@ class AuthenticationRepositoryImpl @Inject constructor(
         stringToSessionTypeEntity(authenticationLocalSource.getSessionType())
 
     override suspend fun logout() {
-        val sessionId = getSessionId()
-        if (authenticationRemoteSource.deleteSession(sessionId)){
-            authenticationLocalSource.clearCachedSessionId()
-            authenticationLocalSource.setSessionType(SessionType.NOT_LOGGED_IN.toLocalDto())
-            profileLocalDataSource.deleteAccountDetails()
-        }
+        authenticationLocalSource.clearCachedSessionId()
+        authenticationLocalSource.setSessionType(SessionType.NOT_LOGGED_IN.toLocalDto())
+        profileLocalDataSource.deleteAccountDetails()
     }
 }
