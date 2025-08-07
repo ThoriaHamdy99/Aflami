@@ -9,7 +9,7 @@ import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
-import com.amsterdam.domain.useCase.home.GetEpisodeVideosUseCase
+import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.entity.Episode
@@ -30,7 +30,6 @@ class SeriesDetailsViewModel @Inject constructor(
     args: SeriesDetailsArgs,
     private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase,
     private val getEpisodesBySeasonNumberUseCase: GetEpisodesBySeasonNumberUseCase,
-    private val seriesDetailsStateMapper: SeriesDetailsStateMapper,
     private val getsSessionType: GetsSessionType,
     private val setUserTvShowRatingUseCase: SetUserTvShowRatingUseCase,
     private val getEpisodeVideosByEpisodeId: GetEpisodeVideosUseCase,
@@ -65,9 +64,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     private fun onGetTvShowDetailsSuccess(tvShowDetails: TvShowDetails) {
-        updateState {
-            seriesDetailsStateMapper.toUiState(tvShowDetails)
-        }
+        updateState { tvShowDetails.toUiState() }
     }
 
     override fun onClickSeriesExtraItem(seriesExtras: SeriesExtras) {
@@ -204,10 +201,7 @@ class SeriesDetailsViewModel @Inject constructor(
         }
         val updatedSeasons = state.value.seasons.map {
             if (it.seasonNumber == seasonNumber) {
-                it.copy(
-                    episodes = seriesDetailsStateMapper.mapToEpisodeUiState(episodes),
-                    isExpanded = true
-                )
+                it.copy(episodes = episodes.toUiState(), isExpanded = true)
             } else {
                 it
             }
