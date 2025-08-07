@@ -5,9 +5,12 @@ import com.amsterdam.domain.exceptions.UnknownException
 import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.repository.UserListRepository
+import com.amsterdam.entity.UserList
 import com.amsterdam.repository.datasource.remote.UserListRemoteSource
 import com.amsterdam.repository.dto.remote.AddItemToListResponse
 import com.amsterdam.repository.dto.remote.CreateUserListResponse
+import com.amsterdam.repository.dto.remote.RemoteUserListDto
+import com.amsterdam.repository.dto.remote.RemoteUserListResponse
 import com.amsterdam.repository.mapper.remote.toMovie
 import com.amsterdam.repository.utils.listItems
 import com.amsterdam.repository.utils.remoteListResponse
@@ -129,42 +132,44 @@ class UserListRepositoryImplTest {
         }
 
     @Test
-    fun `should call getSessionId from authentication repository when deleteList is called`() = runTest{
-        // Given
-        val listId = 1L
-        val sessionId = "123"
-        coEvery { authenticationRepository.getSessionId() } returns sessionId
-        coEvery { userListRemoteSource.deleteList(listId, sessionId) } returns Unit
-        // When
-        userListRepository.deleteList(listId)
+    fun `should call getSessionId from authentication repository when deleteList is called`() =
+        runTest {
+            // Given
+            val listId = 1L
+            val sessionId = "123"
+            coEvery { authenticationRepository.getSessionId() } returns sessionId
+            coEvery { userListRemoteSource.deleteList(listId, sessionId) } returns Unit
+            // When
+            userListRepository.deleteList(listId)
 
-        // Then
-        coVerify { authenticationRepository.getSessionId() }
-        coVerify { userListRemoteSource.deleteList(listId, sessionId) }
-    }
+            // Then
+            coVerify { authenticationRepository.getSessionId() }
+            coVerify { userListRemoteSource.deleteList(listId, sessionId) }
+        }
 
     @Test
-    fun `should throw UnknownException when getSessionId returns empty string`() = runTest{
+    fun `should throw UnknownException when getSessionId returns empty string`() = runTest {
         val listId = 1L
-        coEvery { authenticationRepository.getSessionId() } throws  UnknownException()
+        coEvery { authenticationRepository.getSessionId() } throws UnknownException()
 
         assertThrows<UnknownException> { userListRepository.deleteList(listId) }
     }
 
     @Test
-    fun `should call deleteList from userListRemoteSource when session id is not empty`() = runTest{
-        // Given
-        val listId = 1L
-        val sessionId = "123"
-        coEvery { authenticationRepository.getSessionId() } returns sessionId
-        coEvery { userListRemoteSource.deleteList(listId, sessionId) } returns Unit
+    fun `should call deleteList from userListRemoteSource when session id is not empty`() =
+        runTest {
+            // Given
+            val listId = 1L
+            val sessionId = "123"
+            coEvery { authenticationRepository.getSessionId() } returns sessionId
+            coEvery { userListRemoteSource.deleteList(listId, sessionId) } returns Unit
 
-        // When
-        userListRepository.deleteList(listId)
+            // When
+            userListRepository.deleteList(listId)
 
-        // Then
-        coVerify { userListRemoteSource.deleteList(listId, sessionId) }
-    }
+            // Then
+            coVerify { userListRemoteSource.deleteList(listId, sessionId) }
+        }
 
     @Test
     fun `should throw NoInternetException when deleteList failed`() = runTest {
@@ -177,45 +182,53 @@ class UserListRepositoryImplTest {
     }
 
     @Test
-    fun `should call getSessionId from authentication repository when removeFromList called is called`() = runTest{
-        // Given
-        val listId = 1L
-        val movieId = 1L
-        val sessionId = "123"
-        coEvery { authenticationRepository.getSessionId() } returns sessionId
-        coEvery { userListRemoteSource.removeMovieFromList(listId, sessionId, movieId) } returns Unit
+    fun `should call getSessionId from authentication repository when removeFromList called is called`() =
+        runTest {
+            // Given
+            val listId = 1L
+            val movieId = 1L
+            val sessionId = "123"
+            coEvery { authenticationRepository.getSessionId() } returns sessionId
+            coEvery {
+                userListRemoteSource.removeMovieFromList(
+                    listId,
+                    sessionId,
+                    movieId
+                )
+            } returns Unit
 
-        // When
-        userListRepository.removeMovieFromList(listId, movieId)
+            // When
+            userListRepository.removeMovieFromList(listId, movieId)
 
-        // Then
-        coVerify { authenticationRepository.getSessionId() }
-        coVerify { userListRemoteSource.removeMovieFromList(listId, sessionId, movieId) }
-    }
+            // Then
+            coVerify { authenticationRepository.getSessionId() }
+            coVerify { userListRemoteSource.removeMovieFromList(listId, sessionId, movieId) }
+        }
 
     @Test
-    fun `should throw UnknownException when tru to remove movie with no session`() = runTest{
+    fun `should throw UnknownException when tru to remove movie with no session`() = runTest {
         val listId = 1L
         val movieId = 1L
-        coEvery { authenticationRepository.getSessionId() } throws  UnknownException()
+        coEvery { authenticationRepository.getSessionId() } throws UnknownException()
 
         assertThrows<UnknownException> { userListRepository.removeMovieFromList(listId, movieId) }
     }
 
     @Test
-    fun `should call removeMovieFromList from listRemoteSource when session id is not empty`() = runTest{
-        // Given
-        val listId = 1L
-        val sessionId = "123"
-        coEvery { authenticationRepository.getSessionId() } returns sessionId
-        coEvery { userListRemoteSource.deleteList(listId, sessionId) } returns Unit
+    fun `should call removeMovieFromList from listRemoteSource when session id is not empty`() =
+        runTest {
+            // Given
+            val listId = 1L
+            val sessionId = "123"
+            coEvery { authenticationRepository.getSessionId() } returns sessionId
+            coEvery { userListRemoteSource.deleteList(listId, sessionId) } returns Unit
 
-        // When
-        userListRepository.deleteList(listId)
+            // When
+            userListRepository.deleteList(listId)
 
-        // Then
-        coVerify { userListRemoteSource.deleteList(listId, sessionId) }
-    }
+            // Then
+            coVerify { userListRemoteSource.deleteList(listId, sessionId) }
+        }
 
     @Test
     fun `should return list of movies when response return with results`() = runTest {
@@ -243,5 +256,48 @@ class UserListRepositoryImplTest {
 
         // Then
         assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `getUserList should return list of users when response return with results`() = runTest {
+        // Given
+        val accountId = 1
+        val page = 1
+        val sessionId = "123"
+        val expectedUserList = listOf(
+            UserList(
+                id = 1,
+                name = "List 1",
+                description = "Description 1",
+                itemCount = 2
+            )
+        )
+        val expectedResult = RemoteUserListResponse(
+            page = 1,
+            results = listOf(
+                RemoteUserListDto(
+                    id = 1,
+                    name = "List 1",
+                    description = "Description 1",
+                    itemCount = 2
+                )
+            ),
+            totalPages = 1,
+            totalResults = 1
+        )
+        coEvery { authenticationRepository.getSessionId() } returns sessionId
+
+        coEvery {
+            userListRemoteSource.getUserLists(
+                accountId,
+                page,
+                sessionId
+            )
+        } returns expectedResult
+        // When
+        val result = userListRepository.getUserLists(accountId, page)
+        // Then
+        assertThat(result).isEqualTo(expectedUserList)
+        coVerify { userListRemoteSource.getUserLists(accountId, page, sessionId) }
     }
 }

@@ -17,13 +17,9 @@ class AuthenticationRepositoryImpl @Inject constructor(
     private val profileLocalDataSource: ProfileLocalDataSource,
     val cryptoData: CryptoData,
 ) : AuthenticationRepository {
-    override suspend fun loginWithPassword(
-        username: String,
-        password: String,
-    ) {
+    override suspend fun loginWithPassword(username: String, password: String, ) {
         authenticationRemoteSource.loginWithPassword(username, password).let { sessionId ->
-            authenticationLocalSource.cacheSessionId(cryptoData.encryptString(sessionId))
-        }
+        authenticationLocalSource.cacheSessionId(cryptoData.encryptString(sessionId)) }
         authenticationLocalSource.setSessionType(SessionType.LOGGED_IN.toLocalDto())
     }
 

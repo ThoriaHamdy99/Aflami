@@ -1,12 +1,24 @@
 package com.amsterdam.repository.repository
 
-import com.amsterdam.domain.repository.CategoryRepository
+import com.amsterdam.entity.Season
 import com.amsterdam.repository.datasource.local.AppPreferences
+import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
+import com.amsterdam.repository.datasource.local.CategoryLocalSource
 import com.amsterdam.repository.datasource.local.TvShowLocalSource
+import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
+import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
+import com.amsterdam.repository.dto.remote.VideoResponse
+import com.amsterdam.repository.mapper.remote.toEntity
 import com.amsterdam.repository.mapper.remote.toEntityList
+import com.amsterdam.repository.security.CryptoData
+import com.amsterdam.repository.utils.episodeResponse
+import com.amsterdam.repository.utils.remoteCastDto
+import com.amsterdam.repository.utils.remoteEpisodeDto
 import com.amsterdam.repository.utils.remoteTvShowItemDto
+import com.amsterdam.repository.utils.tvShowDetailsRemoteResponse
+import com.amsterdam.repository.utils.videoDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -17,18 +29,25 @@ import kotlin.test.Test
 
 class TvShowRepositoryImplTest {
     private lateinit var tvShowRepository: TvShowRepositoryImpl
-    private val categoryRepository: CategoryRepository = mockk()
     private val localTvDataSource: TvShowLocalSource = mockk()
     private val remoteTvDataSource: TvShowsRemoteSource = mockk()
+    private val authenticationLocalSource: AuthenticationLocalSource = mockk()
+    private val cryptoData: CryptoData = mockk()
+    private val categoryLocalSource: CategoryLocalSource = mockk()
+    private val categoryRemoteSource: CategoryRemoteSource = mockk()
     private val preferences: AppPreferences = mockk()
 
     @BeforeEach
     fun setUp() {
         tvShowRepository = TvShowRepositoryImpl(
-            categoryRepository,
             localTvDataSource,
             remoteTvDataSource,
-            preferences
+            authenticationLocalSource,
+            preferences,
+            cryptoData,
+            categoryLocalSource,
+            categoryRemoteSource
+
         )
     }
 
@@ -59,5 +78,105 @@ class TvShowRepositoryImplTest {
 
 
     }
+
+    @Test
+    fun `getEpisodeVideosUrl should return episode videos url`() = runTest {
+        //Given
+        val tvShowId = 1L
+        val seasonNumber = 1
+        val episodeNumber = 1
+        val expectedResult = VideoResponse(results = listOf(videoDto))
+        val episodeVideosUrl = "https://www.youtube.com/watch?v=someKey"
+        coEvery {
+            remoteTvDataSource.getEpisodeVideos(tvShowId, seasonNumber, episodeNumber)
+        } returns expectedResult
+        //When
+        val result = tvShowRepository.getEpisodeVideoUrl(tvShowId, seasonNumber, episodeNumber)
+        //Then
+        assertThat(result).isEqualTo(episodeVideosUrl)
+        coVerify { remoteTvDataSource.getEpisodeVideos(tvShowId, seasonNumber, episodeNumber) }
+
+    }
+
+    @Test
+    fun `getTvShowCast should return list of Actor`() = runTest {
+        // Given
+        val tvShowId = 123L
+        val remoteCastList = listOf(
+            remoteCastDto
+        )
+        val response = RemoteCastAndCrewResponse(cast = remoteCastList)
+        val expectedActors = remoteCastList.toEntityList()
+
+        coEvery { remoteTvDataSource.getTvShowCast(tvShowId) } returns response
+
+        // When
+        val result = tvShowRepository.getTvShowCast(tvShowId)
+
+        // Then
+        assertThat(result).isEqualTo(expectedActors)
+        coVerify(exactly = 1) { remoteTvDataSource.getTvShowCast(tvShowId) }
+    }
+
+    @Test
+    fun `getTvShowSeasons should return mapped season list`() = runTest {
+        // Given
+        val tvShowId = 1L
+        val expectedSeasons = listOf(
+            Season(
+                id = 1,
+                title = "Season 1",
+                episodeCount = 10,
+                seasonNumber = 1
+            ),
+            Season(
+                id = 2,
+                title = "Season 2",
+                episodeCount = 12,
+                seasonNumber = 2
+            )
+        )
+        val remoteTvShowDetailsDto = tvShowDetailsRemoteResponse
+
+        coEvery { remoteTvDataSource.getTvShowDetailsById(tvShowId) } returns remoteTvShowDetailsDto
+
+        // When
+        val result = tvShowRepository.getTvShowSeasons(tvShowId)
+
+        // Then
+        assertThat(result).hasSize(expectedSeasons.size)
+        assertThat(result[0].title).isEqualTo(expectedSeasons[0].title)
+        assertThat(result[1].episodeCount).isEqualTo(expectedSeasons[1].episodeCount)
+        coVerify(exactly = 1) { remoteTvDataSource.getTvShowDetailsById(tvShowId) }
+    }
+    @Test
+    fun `getEpisodesBySeasonNumber returns list of Episode with video urls`() = runTest {
+        // Given
+        val tvShowId = 1L
+        val seasonNumber = 1
+        val episodeDtos = listOf(
+            remoteEpisodeDto,
+        )
+        val remoteResponse = episodeResponse
+
+        coEvery {
+            remoteTvDataSource.getEpisodesBySeasonNumber(tvShowId, seasonNumber)
+        } returns remoteResponse
+        coEvery {
+            remoteTvDataSource.getEpisodeVideos(tvShowId, seasonNumber, any())
+        } returns VideoResponse(results = listOf(videoDto))
+
+        val expected = listOf(
+            episodeDtos[0].toEntity("https://www.youtube.com/watch?v=someKey"),
+        )
+
+        // When
+        val result = tvShowRepository.getEpisodesBySeasonNumber(tvShowId, seasonNumber)
+
+        // Then
+        assertThat(result).isEqualTo(expected)
+    }
+
+
 
 }

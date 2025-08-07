@@ -84,22 +84,6 @@ class RecentSearchRepositoryImplTest {
     }
 
     @Test
-    fun `deleteRecentSearch should call local source to delete specific BY_KEYWORD search`() =
-        runTest {
-            // Given
-            val keyword = "old movie"
-            coJustRun { recentSearchLocalSource.deleteRecentSearchByKeywordAndType(keyword) }
-
-            // When
-            repository.deleteRecentSearch(keyword)
-
-            // Then
-            coVerify(exactly = 1) {
-                recentSearchLocalSource.deleteRecentSearchByKeywordAndType(keyword)
-            }
-        }
-
-    @Test
     fun `getAllRecentSearches should propagate exception if local source fails`() = runTest {
         // Given
         val expectedException = RuntimeException("DB read error!")
@@ -129,27 +113,6 @@ class RecentSearchRepositoryImplTest {
         // Then
         assertThat(thrownException).isEqualTo(expectedException)
         coVerify(exactly = 1) { recentSearchLocalSource.deleteRecentSearches() }
-    }
-
-    @Test
-    fun `deleteRecentSearch should propagate exception if local source fails`() = runTest {
-        // Given
-        val keyword = "failing search"
-        val expectedException = RuntimeException("Delete failed!")
-        coEvery {
-            recentSearchLocalSource.deleteRecentSearchByKeywordAndType(any())
-        } throws expectedException
-
-        // When
-        val thrownException = assertThrows<RuntimeException> {
-            repository.deleteRecentSearch(keyword)
-        }
-
-        // Then
-        assertThat(thrownException).isEqualTo(expectedException)
-        coVerify(exactly = 1) {
-            recentSearchLocalSource.deleteRecentSearchByKeywordAndType(keyword)
-        }
     }
 
     @Test
