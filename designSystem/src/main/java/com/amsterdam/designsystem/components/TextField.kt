@@ -48,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.LayoutDirection
@@ -79,6 +80,7 @@ fun TextField(
     borderFocusedColor: Color = AppTheme.color.primary,
     onValueChange: (String) -> Unit = {},
     imeAction: ImeAction = ImeAction.Default,
+    keyboardType: KeyboardType = KeyboardType.Unspecified,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     var isFocused by remember { mutableStateOf(false) }
@@ -103,13 +105,15 @@ fun TextField(
                         width = 1.dp,
                         color = currentBorderColor,
                         shape = RoundedCornerShape(16.dp),
-                    ).clip(shape = RoundedCornerShape(16.dp))
+                    )
+                    .clip(shape = RoundedCornerShape(16.dp))
                     .clipToBounds()
                     .background(AppTheme.color.surfaceHigh, shape = RoundedCornerShape(16.dp))
                     .defaultMinSize(minHeight = 56.dp)
                     .then(
                         if (leadingIcon == null) Modifier.padding(start = 4.dp) else Modifier,
-                    ).then(
+                    )
+                    .then(
                         if (trailingIcon == null) Modifier.padding(end = 4.dp) else Modifier,
                     ),
             verticalAlignment = Alignment.Top,
@@ -148,6 +152,7 @@ fun TextField(
                 keyboardActions = keyboardActions,
                 keyboardOptions =
                     KeyboardOptions(
+                        keyboardType = keyboardType,
                         imeAction = imeAction,
                     ),
             )
@@ -250,7 +255,8 @@ private fun TrailingIcon(
                         } else {
                             Modifier
                         },
-                    ).padding(vertical = 16.dp)
+                    )
+                    .padding(vertical = 16.dp)
                     .padding(start = 12.dp, end = 16.dp)
                     .size(24.dp),
         )
@@ -279,7 +285,8 @@ private fun ColumnScope.AnimatedErrorBox(
                                 tailOffsetDp = 8.dp,
                                 isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl,
                             ),
-                    ).padding(bottom = 4.dp),
+                    )
+                    .padding(bottom = 4.dp),
         ) {
             Text(
                 text = message,
