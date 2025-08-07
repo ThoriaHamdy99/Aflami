@@ -15,16 +15,16 @@ import kotlinx.datetime.Instant
 @Dao
 interface MovieDao {
     @Upsert
-    suspend fun insertMovies(movies: List<LocalMovieDto>)
+    suspend fun upsertMovies(movies: List<LocalMovieDto>)
 
     @Upsert
-    suspend fun insertMovie(movies: LocalMovieDto)
+    suspend fun upsertMovie(movies: LocalMovieDto)
 
     @Query(" SELECT * FROM ${DatabaseConstants.MOVIE_TABLE} WHERE movieId = :movieId and storedLanguage = :storedLanguage")
     suspend fun getMovieById(movieId: Long, storedLanguage: String): LocalMovieDto?
 
     @Upsert
-    suspend fun insertMovieCategoryCrossRefs(crossRefs: List<MovieCategoryCrossRefDto>)
+    suspend fun upsertMovieCategoryCrossRefs(crossRefs: List<MovieCategoryCrossRefDto>)
 
     @Query(
         """
@@ -43,7 +43,7 @@ interface MovieDao {
         """
         SELECT * FROM ${DatabaseConstants.MOVIE_TABLE} AS movie
         INNER JOIN ${DatabaseConstants.TOP_RATED_MOVIE_TABLE} As topRatedMovie
-        ON movie.movieId = topRatedMovie.movieId 
+        ON movie.movieId = topRatedMovie.movieId
         WHERE movie.storedLanguage = topRatedMovie.storedLanguage
         AND movie.storedLanguage = :storedLanguage
     """
@@ -65,7 +65,7 @@ interface MovieDao {
     suspend fun getUpcomingMovies(storedLanguage: String): List<MovieWithCategories>
 
     @Upsert
-    suspend fun insertPopularMovies(movies: List<PopularMovieDto>)
+    suspend fun upsertPopularMovies(movies: List<PopularMovieDto>)
 
     @Query(
         """
@@ -76,18 +76,18 @@ interface MovieDao {
     suspend fun deleteExpiredPopularMovies(expirationTime: Instant, storedLanguage: String)
 
     @Upsert
-    suspend fun insertTopRatedMovies(movies: List<TopRatedMovieDto>)
+    suspend fun upsertTopRatedMovies(movies: List<TopRatedMovieDto>)
 
     @Query(
         """
-            DELETE FROM ${DatabaseConstants.TOP_RATED_MOVIE_TABLE} 
+            DELETE FROM ${DatabaseConstants.TOP_RATED_MOVIE_TABLE}
             WHERE dateAdded < :expirationTime AND storedLanguage = :storedLanguage
     """
     )
     suspend fun deleteAllExpiredTopRatedMovies(expirationTime: Instant, storedLanguage: String)
 
     @Upsert
-    suspend fun insertUpcomingMovies(movies: List<UpcomingMovieDto>)
+    suspend fun upsertUpcomingMovies(movies: List<UpcomingMovieDto>)
 
     @Query(
         """

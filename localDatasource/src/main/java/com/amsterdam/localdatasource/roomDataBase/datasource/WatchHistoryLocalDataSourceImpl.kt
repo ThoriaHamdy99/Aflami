@@ -10,17 +10,14 @@ import javax.inject.Inject
 class WatchHistoryLocalDataSourceImpl @Inject constructor(
     private val dao: WatchHistoryDao
 ) : WatchHistoryLocalDataSource {
-
-    override suspend fun addMovieToWatchHistory(item: MovieWatchHistoryDto) =
-        dao.addMovieToWatchHistory(item)
+    override suspend fun upsertMovieToWatchHistory(item: MovieWatchHistoryDto) = dao.upsertMovieToWatchHistory(item)
 
     override fun getMoviesWatchHistory(page: Int, pageSize: Int) : Flow<List<MovieWatchHistoryDto>> {
         val offset = (page -1) * pageSize
        return dao.getMoviesWatchHistory(offset,pageSize)
     }
 
-    override suspend fun addTvShowToWatchHistory(item: TvShowWatchHistoryDto) =
-        dao.addTvShowToWatchHistory(item)
+    override suspend fun upsertTvShowToWatchHistory(item: TvShowWatchHistoryDto) = dao.upsertTvShowToWatchHistory(item)
 
     override fun getTvShowsWatchHistory(page: Int, pageSize: Int): Flow<List<TvShowWatchHistoryDto>> {
         val offset = (page -1) * pageSize

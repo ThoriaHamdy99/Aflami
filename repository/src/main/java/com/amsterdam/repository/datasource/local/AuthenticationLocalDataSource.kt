@@ -1,6 +1,6 @@
 package com.amsterdam.repository.datasource.local
 
-interface AuthenticationLocalSource {
+interface AuthenticationLocalDataSource {
     suspend fun setSessionType(sessionType: String)
     suspend fun getSessionType(): String
 

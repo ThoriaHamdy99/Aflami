@@ -5,9 +5,9 @@ import com.amsterdam.entity.Country
 import com.amsterdam.entity.Gender
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.datasource.local.AppPreferences
-import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
-import com.amsterdam.repository.datasource.local.CategoryLocalSource
-import com.amsterdam.repository.datasource.local.MovieLocalSource
+import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
+import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
+import com.amsterdam.repository.datasource.local.MovieLocalDataSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
 import com.amsterdam.repository.dto.remote.RatingResponse
@@ -33,22 +33,22 @@ class MovieRepositoryImplTest {
 
     private lateinit var movieRepository: MovieRepositoryImpl
 
-    private val categoryLocalSource: CategoryLocalSource = mockk()
-    private val movieLocalSource: MovieLocalSource = mockk()
+    private val categoryLocalDataSource: CategoryLocalDataSource = mockk()
+    private val movieLocalDataSource: MovieLocalDataSource = mockk()
     private val categoryRemoteSource: CategoryRemoteSource = mockk()
     private val movieRemoteDataSource: MovieRemoteSource = mockk()
-    private val authenticationLocalSource: AuthenticationLocalSource = mockk()
+    private val authenticationLocalDataSource: AuthenticationLocalDataSource = mockk()
     private val preferences: AppPreferences = mockk()
     private val cryptoData: CryptoData = mockk()
 
     @BeforeEach
     fun setUp() {
         movieRepository = MovieRepositoryImpl(
-            categoryLocalSource,
-            movieLocalSource,
+            categoryLocalDataSource,
+            movieLocalDataSource,
             categoryRemoteSource,
             movieRemoteDataSource,
-            authenticationLocalSource,
+            authenticationLocalDataSource,
             preferences,
             cryptoData
         )
@@ -164,7 +164,7 @@ class MovieRepositoryImplTest {
             statusMessage = "Success"
         )
 
-        coEvery { authenticationLocalSource.getCachedSessionId() } returns encryptedSession
+        coEvery { authenticationLocalDataSource.getCachedSessionId() } returns encryptedSession
         coEvery { cryptoData.decryptString(encryptedSession) } returns decryptedSession
         coEvery { movieRemoteDataSource.setMovieRate(rate.toFloat(), movieId, decryptedSession) } returns expectedResult
 
@@ -185,7 +185,7 @@ class MovieRepositoryImplTest {
             remoteUserRatedMovie
         )
 
-        coEvery { authenticationLocalSource.getCachedSessionId() } returns encryptedSession
+        coEvery { authenticationLocalDataSource.getCachedSessionId() } returns encryptedSession
         coEvery { cryptoData.decryptString(encryptedSession) } returns decryptedSession
         coEvery { movieRemoteDataSource.getRatedMovies(decryptedSession) } returns remoteMovieResponse
 
@@ -205,7 +205,7 @@ class MovieRepositoryImplTest {
         val encryptedSession = "encrypted-session"
         val decryptedSession = "decrypted-session"
 
-       coEvery { authenticationLocalSource.getCachedSessionId() } returns encryptedSession
+       coEvery { authenticationLocalDataSource.getCachedSessionId() } returns encryptedSession
        coEvery { cryptoData.decryptString(encryptedSession) } returns decryptedSession
         coEvery { movieRemoteDataSource.deleteMovieRate(movieId, decryptedSession) } just Runs
 

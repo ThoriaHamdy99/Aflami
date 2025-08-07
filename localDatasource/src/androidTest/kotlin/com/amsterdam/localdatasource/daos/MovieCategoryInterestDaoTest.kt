@@ -30,28 +30,30 @@ class MovieCategoryInterestDaoTest {
     }
 
     @Test
-    fun insertInterest_shouldAddNewInterest() = runTest {
-        // Given
+    fun upsertInterest_shouldAddNewInterest() =
+        runTest {
+            // Given
         val dto = LocalMovieCategoryInterestDto(genre = MovieGenre.ACTION, interestCount = 1)
 
         // When
-        interestDao.insertInterest(dto)
+            interestDao.upsertInterest(dto)
 
         // Then
         val stored = interestDao.getAllInterests()
         assertThat(stored).containsExactly(dto)
-    }
+        }
 
     @Test
-    fun insertInterest_shouldUpdateExistingInterest() = runTest {
+    fun upsertInterest_shouldUpdateExistingInterest() =
+        runTest {
         // Given
         val initial = LocalMovieCategoryInterestDto(genre = MovieGenre.ACTION, interestCount = 1)
-        interestDao.insertInterest(initial)
+            interestDao.upsertInterest(initial)
 
         val updated = LocalMovieCategoryInterestDto(genre = MovieGenre.ACTION, interestCount = 5)
 
-        // When
-        interestDao.insertInterest(updated)
+            // When
+            interestDao.upsertInterest(updated)
 
         // Then
         val stored = interestDao.getAllInterests()
@@ -59,9 +61,10 @@ class MovieCategoryInterestDaoTest {
     }
 
     @Test
-    fun getInterestCount_shouldReturnCorrectCount() = runTest {
-        // Given
-        interestDao.insertInterest(LocalMovieCategoryInterestDto(genre = MovieGenre.COMEDY, interestCount = 4))
+    fun getInterestCount_shouldReturnCorrectCount() =
+        runTest {
+            // Given
+            interestDao.upsertInterest(LocalMovieCategoryInterestDto(genre = MovieGenre.COMEDY, interestCount = 4))
 
         // When
         val count = interestDao.getInterestCount(MovieGenre.COMEDY)
@@ -92,9 +95,10 @@ class MovieCategoryInterestDaoTest {
     }
 
     @Test
-    fun incrementInterest_shouldIncrementExistingRecord() = runTest {
-        // Given
-        interestDao.insertInterest(LocalMovieCategoryInterestDto(MovieGenre.WAR, 2))
+    fun incrementInterest_shouldIncrementExistingRecord() =
+        runTest {
+            // Given
+            interestDao.upsertInterest(LocalMovieCategoryInterestDto(MovieGenre.WAR, 2))
 
         // When
         interestDao.incrementInterest(MovieGenre.WAR)
@@ -109,9 +113,9 @@ class MovieCategoryInterestDaoTest {
         // Given
         val list = listOf(
             LocalMovieCategoryInterestDto(MovieGenre.ACTION, 1),
-            LocalMovieCategoryInterestDto(MovieGenre.HORROR, 3)
+            LocalMovieCategoryInterestDto(MovieGenre.HORROR, 3),
         )
-        list.forEach { interestDao.insertInterest(it) }
+        list.forEach { interestDao.upsertInterest(it) }
 
         // When
         val stored = interestDao.getAllInterests()

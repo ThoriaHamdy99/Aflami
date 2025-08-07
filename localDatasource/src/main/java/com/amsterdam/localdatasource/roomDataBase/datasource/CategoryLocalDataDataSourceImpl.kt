@@ -1,14 +1,14 @@
 package com.amsterdam.localdatasource.roomDataBase.datasource
 
 import com.amsterdam.localdatasource.roomDataBase.daos.CategoryDao
-import com.amsterdam.repository.datasource.local.CategoryLocalSource
+import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
 import com.amsterdam.repository.dto.local.LocalMovieCategoryDto
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
 import javax.inject.Inject
 
-class CategoryLocalDataSourceImpl @Inject constructor(
+class CategoryLocalDataDataSourceImpl @Inject constructor(
     private val dao: CategoryDao
-) : CategoryLocalSource {
+) : CategoryLocalDataSource {
     override suspend fun upsertMovieCategories(categories: List<LocalMovieCategoryDto>) {
         dao.upsertAllMovieCategories(categories)
     }
