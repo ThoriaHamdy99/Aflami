@@ -22,7 +22,7 @@ sealed interface ListDetailsError {
     data object UnknownError : ListDetailsError
 
     companion object {
-        fun toListDetailsError(exception: AflamiException): ListDetailsError {
+        fun toListDetailsError(exception: Throwable): ListDetailsError {
             return when (exception) {
                 is NetworkException -> NoNetwork
                 else -> UnknownError

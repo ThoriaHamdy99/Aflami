@@ -170,7 +170,9 @@ class ListDetailsViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         isLoading = false,
-                        error = ListDetailsError.toListDetailsError(NoInternetException()),
+                        error = ListDetailsError.toListDetailsError(
+                            (loadStates.refresh as LoadState.Error).error
+                        )
                     )
                 }
             }
