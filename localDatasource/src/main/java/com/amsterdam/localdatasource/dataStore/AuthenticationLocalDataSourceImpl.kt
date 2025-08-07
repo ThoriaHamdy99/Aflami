@@ -42,9 +42,9 @@ class AuthenticationLocalDataSourceImpl @Inject constructor(
     override suspend fun getCachedSessionId(): String {
         return datastore.data
             .map { setting ->
-                setting[SESSION_ID] ?: throw UnauthorizedException()
-            }.firstOrNull()
-            ?: throw UnauthorizedException()
+                setting[SESSION_ID] ?:""
+            }.first()
+
     }
 
     override suspend fun clearCachedSessionId() {

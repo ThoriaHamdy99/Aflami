@@ -38,6 +38,7 @@ interface TvShowsApiService {
     @GET(TV_SHOW_DETAILS_ENDPOINT)
     suspend fun getTvShowDetailsById(
         @Path("tvShowId") tvShowId: Long,
+        @Query("session_id") sessionId: String = "",
         @Query("append_to_response") appendToResponse: String = TV_SHOW_DETAILS_APPEND_PARAMETERS,
         @Query("include_video_language") videoLang: String = INCLUDED_VIDEO_LANGUAGE
     ): TvShowDetailsRemoteResponse
