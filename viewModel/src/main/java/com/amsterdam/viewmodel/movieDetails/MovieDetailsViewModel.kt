@@ -130,6 +130,7 @@ class MovieDetailsViewModel @Inject constructor(
                 isAddToListDialogVisible = false,
                 isCreateNewListDialogVisible = false,
                 selectedList = null,
+                listName = "",
             )
         }
     }
