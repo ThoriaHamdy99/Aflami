@@ -3,7 +3,7 @@ package com.amsterdam.repository.repository
 import com.amsterdam.domain.repository.CountryRepository
 import com.amsterdam.entity.Country
 import com.amsterdam.repository.datasource.local.AppPreferences
-import com.amsterdam.repository.datasource.local.CountryLocalSource
+import com.amsterdam.repository.datasource.local.CountryLocalDataSource
 import com.amsterdam.repository.datasource.remote.CountryRemoteSource
 import com.amsterdam.repository.dto.local.LocalCountryDto
 import com.amsterdam.repository.dto.remote.RemoteCountryDto
@@ -22,7 +22,7 @@ class CountryRepositoryImplTest {
 
     private lateinit var repository: CountryRepository
 
-    private val localDataSource: CountryLocalSource = mockk()
+    private val localDataSource: CountryLocalDataSource = mockk()
     private val remoteDataSource: CountryRemoteSource = mockk()
     private val preferences: AppPreferences = mockk()
     private val testLanguage = "en"

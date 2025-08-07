@@ -4,7 +4,7 @@ import com.amsterdam.repository.dto.local.LocalMovieDto
 import com.amsterdam.repository.dto.local.relation.MovieWithCategories
 import kotlinx.datetime.Instant
 
-interface MovieLocalSource {
+interface MovieLocalDataSource {
     suspend fun getMovieById(movieId: Long, storedLanguage: String): LocalMovieDto?
 
     suspend fun incrementGenreInterest(categoryId: Long)

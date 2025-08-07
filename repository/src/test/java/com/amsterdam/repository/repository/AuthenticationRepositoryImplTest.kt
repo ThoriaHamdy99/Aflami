@@ -1,7 +1,7 @@
 import com.amsterdam.domain.exceptions.UnknownException
 import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.utils.SessionType
-import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
+import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
 import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
 import com.amsterdam.repository.mapper.local.toLocalDto
 import com.amsterdam.repository.repository.AuthenticationRepositoryImpl
@@ -24,7 +24,7 @@ class AuthenticationRepositoryImplTest {
     private lateinit var repository: AuthenticationRepository
 
     private val authenticationRemoteSource: AuthenticationRemoteSource = mockk()
-    private val authenticationLocalSource: AuthenticationLocalSource = mockk()
+    private val authenticationLocalDataSource: AuthenticationLocalDataSource = mockk()
     private val cryptoData: CryptoData = mockk()
 
     private val testUsername = "testUser"
@@ -37,7 +37,7 @@ class AuthenticationRepositoryImplTest {
         clearAllMocks()
         repository = AuthenticationRepositoryImpl(
             authenticationRemoteSource = authenticationRemoteSource,
-            authenticationLocalSource = authenticationLocalSource,
+            authenticationLocalDataSource = authenticationLocalDataSource,
             cryptoData = cryptoData
         )
     }
@@ -53,8 +53,8 @@ class AuthenticationRepositoryImplTest {
                 )
             } returns testSessionId
             every { cryptoData.encryptString(testSessionId) } returns encryptedSessionId
-            coJustRun { authenticationLocalSource.cacheSessionId(encryptedSessionId) }
-            coJustRun { authenticationLocalSource.setSessionType(SessionType.LOGGED_IN.toLocalDto()) }
+            coJustRun { authenticationLocalDataSource.cacheSessionId(encryptedSessionId) }
+            coJustRun { authenticationLocalDataSource.setSessionType(SessionType.LOGGED_IN.toLocalDto()) }
 
             // When
             val result = repository.loginWithPassword(testUsername, testPassword)
@@ -67,8 +67,8 @@ class AuthenticationRepositoryImplTest {
                     testPassword
                 )
             }
-            coVerify(exactly = 1) { authenticationLocalSource.cacheSessionId(encryptedSessionId) }
-            coVerify(exactly = 1) { authenticationLocalSource.setSessionType(SessionType.LOGGED_IN.toLocalDto()) }
+            coVerify(exactly = 1) { authenticationLocalDataSource.cacheSessionId(encryptedSessionId) }
+            coVerify(exactly = 1) { authenticationLocalDataSource.setSessionType(SessionType.LOGGED_IN.toLocalDto()) }
         }
 
     @Test
@@ -97,14 +97,14 @@ class AuthenticationRepositoryImplTest {
                 )
             }
             verify(exactly = 0) { cryptoData.encryptString(any()) }
-            coVerify(exactly = 0) { authenticationLocalSource.cacheSessionId(any()) }
-            coVerify(exactly = 0) { authenticationLocalSource.setSessionType(any()) }
+            coVerify(exactly = 0) { authenticationLocalDataSource.cacheSessionId(any()) }
+            coVerify(exactly = 0) { authenticationLocalDataSource.setSessionType(any()) }
         }
 
     @Test
     fun `getSessionId should return decrypted session ID when available`() = runTest {
         // Given
-        coEvery { authenticationLocalSource.getCachedSessionId() } returns encryptedSessionId
+        coEvery { authenticationLocalDataSource.getCachedSessionId() } returns encryptedSessionId
         every { cryptoData.decryptString(encryptedSessionId) } returns testSessionId
 
         // When
@@ -112,20 +112,20 @@ class AuthenticationRepositoryImplTest {
 
         // Then
         assertThat(result).isEqualTo(testSessionId)
-        coVerify(exactly = 1) { authenticationLocalSource.getCachedSessionId() }
+        coVerify(exactly = 1) { authenticationLocalDataSource.getCachedSessionId() }
         verify(exactly = 1) { cryptoData.decryptString(encryptedSessionId) }
     }
 
     @Test
     fun `getSessionId should throw UnknownException if decrypted result is null`() = runTest {
         // Given
-        coEvery { authenticationLocalSource.getCachedSessionId() } returns "invalid_data"
+        coEvery { authenticationLocalDataSource.getCachedSessionId() } returns "invalid_data"
         every { cryptoData.decryptString("invalid_data") } returns null
 
         // When / Then
         assertThrows<UnknownException> { repository.getSessionId() }
 
-        coVerify(exactly = 1) { authenticationLocalSource.getCachedSessionId() }
+        coVerify(exactly = 1) { authenticationLocalDataSource.getCachedSessionId() }
         verify(exactly = 1) { cryptoData.decryptString("invalid_data") }
     }
 
@@ -134,44 +134,44 @@ class AuthenticationRepositoryImplTest {
         runTest {
             // Given
             val sessionType = SessionType.GUEST
-            coJustRun { authenticationLocalSource.setSessionType(sessionType.toLocalDto()) }
+            coJustRun { authenticationLocalDataSource.setSessionType(sessionType.toLocalDto()) }
 
             // When
             repository.setSessionType(sessionType)
 
             // Then
-            coVerify(exactly = 1) { authenticationLocalSource.setSessionType(sessionType.toLocalDto()) }
+            coVerify(exactly = 1) { authenticationLocalDataSource.setSessionType(sessionType.toLocalDto()) }
         }
 
     @Test
     fun `getSessionType should return the correct domain session type from local source`() =
         runTest {
             // Given
-            coEvery { authenticationLocalSource.getSessionType() } returns "GUEST"
+            coEvery { authenticationLocalDataSource.getSessionType() } returns "GUEST"
 
             // When
             val result = repository.getSessionType()
 
             // Then
             assertThat(result).isEqualTo(SessionType.GUEST)
-            coVerify(exactly = 1) { authenticationLocalSource.getSessionType() }
+            coVerify(exactly = 1) { authenticationLocalDataSource.getSessionType() }
         }
 
     @Test
     fun `logout should delete remote session and then clear local data on success`() = runTest {
         // Given
-        coEvery { authenticationLocalSource.getCachedSessionId() } returns encryptedSessionId
+        coEvery { authenticationLocalDataSource.getCachedSessionId() } returns encryptedSessionId
         every { cryptoData.decryptString(encryptedSessionId) } returns testSessionId
-        coJustRun { authenticationLocalSource.clearCachedSessionId() }
-        coJustRun { authenticationLocalSource.setSessionType(SessionType.NOT_LOGGED_IN.toLocalDto()) }
+        coJustRun { authenticationLocalDataSource.clearCachedSessionId() }
+        coJustRun { authenticationLocalDataSource.setSessionType(SessionType.NOT_LOGGED_IN.toLocalDto()) }
 
         // When
         val result = repository.logout()
 
         // Then
         assertThat(result).isEqualTo(Unit)
-        coVerify(exactly = 1) { authenticationLocalSource.clearCachedSessionId() }
-        coVerify(exactly = 1) { authenticationLocalSource.setSessionType(SessionType.NOT_LOGGED_IN.toLocalDto()) }
+        coVerify(exactly = 1) { authenticationLocalDataSource.clearCachedSessionId() }
+        coVerify(exactly = 1) { authenticationLocalDataSource.setSessionType(SessionType.NOT_LOGGED_IN.toLocalDto()) }
     }
 
 

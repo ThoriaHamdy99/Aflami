@@ -3,7 +3,7 @@ package com.amsterdam.localdatasource.roomDataBase.datasource
 import androidx.room.Transaction
 import com.amsterdam.localdatasource.roomDataBase.daos.TvShowCategoryInterestDao
 import com.amsterdam.localdatasource.roomDataBase.daos.TvShowDao
-import com.amsterdam.repository.datasource.local.TvShowLocalSource
+import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
 import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.dto.local.PopularTvShowDto
 import com.amsterdam.repository.dto.local.TopRatedTvShowDto
@@ -12,10 +12,10 @@ import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
 import kotlinx.datetime.Instant
 import javax.inject.Inject
 
-class TvShowLocalDataSourceImpl @Inject constructor(
+class TvShowLocalDataDataSourceImpl @Inject constructor(
     private val tvShowDao: TvShowDao,
     private val tvShowCategoryInterestDao: TvShowCategoryInterestDao
-) : TvShowLocalSource {
+) : TvShowLocalDataSource {
     @Transaction
     override suspend fun upsertTvShowWithCategories(
         tvShow: LocalTvShowDto,

@@ -4,7 +4,7 @@ import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
 import kotlinx.datetime.Instant
 
-interface TvShowLocalSource {
+interface TvShowLocalDataSource {
     suspend fun upsertTvShowWithCategories(
         tvShow: LocalTvShowDto,
         categoryIds: List<Long>,

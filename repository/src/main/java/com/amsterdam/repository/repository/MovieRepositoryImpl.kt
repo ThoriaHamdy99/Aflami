@@ -8,9 +8,9 @@ import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.datasource.local.AppPreferences
-import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
-import com.amsterdam.repository.datasource.local.CategoryLocalSource
-import com.amsterdam.repository.datasource.local.MovieLocalSource
+import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
+import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
+import com.amsterdam.repository.datasource.local.MovieLocalDataSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
 import com.amsterdam.repository.dto.local.LocalMovieCategoryDto
@@ -39,11 +39,11 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.days
 
 class MovieRepositoryImpl @Inject constructor(
-    private val categoryLocalSource: CategoryLocalSource,
-    private val movieLocalSource: MovieLocalSource,
+    private val categoryLocalDataSource: CategoryLocalDataSource,
+    private val movieLocalDataSource: MovieLocalDataSource,
     private val categoryRemoteSource: CategoryRemoteSource,
     private val movieRemoteDataSource: MovieRemoteSource,
-    private val authenticationLocalSource: AuthenticationLocalSource,
+    private val authenticationLocalDataSource: AuthenticationLocalDataSource,
     private val preferences: AppPreferences,
     val cryptoData: CryptoData,
     ) : MovieRepository {
@@ -86,7 +86,7 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMovieDetailsById(movieId: Long): GetMovieDetailsUseCase.MovieDetails {
-        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        val sessionId = cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
 
         return movieRemoteDataSource.getMovieDetailsById(movieId, sessionId)
             .also {
@@ -141,20 +141,20 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     private suspend fun cacheWatchedMovie(remoteMovieItemDto: RemoteMovieItemDto) {
-        movieLocalSource.upsertMovie(
+        movieLocalDataSource.upsertMovie(
             remoteMovieItemDto.toLocalDto(storedLanguage = preferences.getAppLanguage().first())
         )
     }
 
     private suspend fun deleteExpiredUpcomingMovies() {
-        movieLocalSource.deleteExpiredUpcomingMovies(
+        movieLocalDataSource.deleteExpiredUpcomingMovies(
             expirationTime = Clock.System.now().minus(1.days),
             storedLanguage = preferences.getAppLanguage().first()
         )
     }
 
     private suspend fun getUpcomingMoviesFromLocal(): List<MovieWithCategories> {
-        return movieLocalSource.getUpcomingMovies(
+        return movieLocalDataSource.getUpcomingMovies(
             preferences.getAppLanguage().first()
         )
     }
@@ -165,21 +165,21 @@ class MovieRepositoryImpl @Inject constructor(
 
     private suspend fun saveUpcomingMovies(remoteMovies: List<RemoteMovieItemDto>) {
         saveMovieWithCategories(remoteMovies).also {
-            movieLocalSource.upsertUpcomingMovies(
+            movieLocalDataSource.upsertUpcomingMovies(
                 remoteMovies.toLocalMovieDtoList(isPoster = false,preferences.getAppLanguage().first())
             )
         }
     }
 
     private suspend fun deleteExpiredPopularMovies() {
-        movieLocalSource.deleteExpiredPopularMovies(
+        movieLocalDataSource.deleteExpiredPopularMovies(
             expirationTime = Clock.System.now().minus(1.days),
             storedLanguage = preferences.getAppLanguage().first()
         )
     }
 
     private suspend fun getPopularMoviesFromLocal(): List<MovieWithCategories> {
-        return movieLocalSource.getPopularMovies(
+        return movieLocalDataSource.getPopularMovies(
             preferences.getAppLanguage().first()
         )
     }
@@ -190,21 +190,21 @@ class MovieRepositoryImpl @Inject constructor(
 
     private suspend fun savePopularMovies(remoteMovies: List<RemoteMovieItemDto>) {
         saveMovieWithCategories(remoteMovies).also {
-            movieLocalSource.upsertPopularMovies(
+            movieLocalDataSource.upsertPopularMovies(
                 remoteMovies.toLocalMovieDtoList(storedLanguage =preferences.getAppLanguage().first()),
             )
         }
     }
 
     private suspend fun deleteExpiredTopRatedMovies() {
-        movieLocalSource.deleteAllExpiredTopRatedMovies(
+        movieLocalDataSource.deleteAllExpiredTopRatedMovies(
             expirationTime = Clock.System.now().minus(1.days),
             storedLanguage = preferences.getAppLanguage().first()
         )
     }
 
     private suspend fun getTopRatedMoviesFromLocal(): List<LocalMovieDto> {
-        return movieLocalSource.getTopRatedMovies(
+        return movieLocalDataSource.getTopRatedMovies(
             preferences.getAppLanguage().first()
         )
     }
@@ -215,7 +215,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     private suspend fun saveTopRatedMovies(remoteMovies: List<RemoteMovieItemDto>) {
         saveMovieWithCategories(remoteMovies).also {
-            movieLocalSource.upsertTopRatedMovies(
+            movieLocalDataSource.upsertTopRatedMovies(
                 remoteMovies.toLocalMovieDtoList(storedLanguage = preferences.getAppLanguage().first()),
             )
         }
@@ -261,7 +261,7 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     private suspend fun onSaveMovieWithCategories(remoteMovie: RemoteMovieItemDto) {
-        movieLocalSource.upsertMovieWithCategories(
+        movieLocalDataSource.upsertMovieWithCategories(
             movie =
                     remoteMovie.toLocalDto(storedLanguage = preferences.getAppLanguage().first()),
                 categoryIds = remoteMovie.genreIds.map(Int::toLong),
@@ -270,23 +270,23 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setMovieRate(rate: Int, movieId: Long) {
-        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        val sessionId = cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
          movieRemoteDataSource.setMovieRate(rate = rate.toFloat(), movieId = movieId, sessionId = sessionId)
     }
 
     override suspend fun getUserRatedMovies(): List<UserRatedMovie> {
-        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        val sessionId = cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
         return movieRemoteDataSource.getRatedMovies(sessionId).results.toMovieUserRateEntityList()
     }
 
     override suspend fun deleteMovieRate(movieId: Long) {
-        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        val sessionId = cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
         movieRemoteDataSource.deleteMovieRate(movieId = movieId, sessionId = sessionId)
     }
 
     private suspend fun incrementUserInterestByMovie(remoteCategories: List<RemoteCategoryDto>) {
         remoteCategories.map(RemoteCategoryDto::id)
-            .map { movieLocalSource.incrementGenreInterest(it.toLong()) }
+            .map { movieLocalDataSource.incrementGenreInterest(it.toLong()) }
     }
 
     suspend fun cacheMovieCategoriesIfNotCached(){
@@ -295,13 +295,13 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getMovieCategoriesFromLocal(): List<LocalMovieCategoryDto> {
-        return categoryLocalSource.getMovieCategories()
+        return categoryLocalDataSource.getMovieCategories()
     }
 
     private suspend fun saveMovieCategoriesToDatabase(
         movieCategories: RemoteCategoryResponse
     ) {
-        categoryLocalSource.upsertMovieCategories(
+        categoryLocalDataSource.upsertMovieCategories(
             movieCategories.genres.toLocalDtoList()
         )
     }

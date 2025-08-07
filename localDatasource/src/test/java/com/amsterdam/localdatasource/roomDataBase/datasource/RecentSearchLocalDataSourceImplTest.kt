@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test
 
 class RecentSearchLocalDataSourceImplTest {
     private lateinit var dao: RecentSearchDao
-    private lateinit var recentSearchLocalDataSourceImpl: RecentSearchLocalDataSourceImpl
+    private lateinit var recentSearchLocalDataSourceImpl: RecentSearchLocalDataDataSourceImpl
 
     @BeforeEach
     fun setUp(){
         dao = mockk(relaxed = true)
-        recentSearchLocalDataSourceImpl = RecentSearchLocalDataSourceImpl(dao)
+        recentSearchLocalDataSourceImpl = RecentSearchLocalDataDataSourceImpl(dao)
     }
 
     @Test

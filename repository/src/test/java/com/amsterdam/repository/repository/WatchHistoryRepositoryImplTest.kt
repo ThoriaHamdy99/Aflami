@@ -3,8 +3,8 @@ package com.amsterdam.repository.repository
 import com.amsterdam.entity.MovieWatchHistory
 import com.amsterdam.entity.TvShowWatchHistory
 import com.amsterdam.repository.datasource.local.AppPreferences
-import com.amsterdam.repository.datasource.local.MovieLocalSource
-import com.amsterdam.repository.datasource.local.TvShowLocalSource
+import com.amsterdam.repository.datasource.local.MovieLocalDataSource
+import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
 import com.amsterdam.repository.datasource.local.WatchHistoryLocalDataSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
@@ -28,12 +28,12 @@ class WatchHistoryRepositoryImplTest {
     private lateinit var repository: WatchHistoryRepositoryImpl
 
     private val watchHistoryLocalDataSource: WatchHistoryLocalDataSource = mockk()
-    private val movieLocalSource: MovieLocalSource = mockk()
+    private val movieLocalDataSource: MovieLocalDataSource = mockk()
     private val movieRemoteDataSource: MovieRemoteSource = mockk()
-    private val tvShowLocalDataSource: TvShowLocalSource = mockk()
+    private val tvShowLocalDataSource: TvShowLocalDataSource = mockk()
     private val tvShowRemoteSource: TvShowsRemoteSource = mockk()
     private val preferences: AppPreferences = mockk()
-    private val localTvDataSource: TvShowLocalSource = mockk()
+    private val localTvDataSource: TvShowLocalDataSource = mockk()
 
 
     @BeforeEach
@@ -41,7 +41,7 @@ class WatchHistoryRepositoryImplTest {
         clearAllMocks()
         repository = WatchHistoryRepositoryImpl(
             watchHistoryLocalDataSource = watchHistoryLocalDataSource,
-            movieLocalSource = movieLocalSource,
+            movieLocalDataSource = movieLocalDataSource,
             movieRemoteDataSource = movieRemoteDataSource,
             tvShowLocalDataSource = tvShowLocalDataSource,
             tvShowRemoteSource = tvShowRemoteSource,

@@ -8,9 +8,9 @@ import com.amsterdam.entity.Episode
 import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
 import com.amsterdam.repository.datasource.local.AppPreferences
-import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
-import com.amsterdam.repository.datasource.local.CategoryLocalSource
-import com.amsterdam.repository.datasource.local.TvShowLocalSource
+import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
+import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
+import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
@@ -36,12 +36,12 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.days
 
 class TvShowRepositoryImpl @Inject constructor(
-    private val localTvDataSource: TvShowLocalSource,
+    private val localTvDataSource: TvShowLocalDataSource,
     private val remoteTvDataSource: TvShowsRemoteSource,
-    private val authenticationLocalSource: AuthenticationLocalSource,
+    private val authenticationLocalDataSource: AuthenticationLocalDataSource,
     private val preferences: AppPreferences,
     private val cryptoData: CryptoData,
-    private val categoryLocalSource: CategoryLocalSource,
+    private val categoryLocalDataSource: CategoryLocalDataSource,
     private val categoryRemoteSource: CategoryRemoteSource
     ) : TvShowRepository {
 
@@ -80,7 +80,7 @@ class TvShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getTvShowDetails(tvShowId: Long): GetTvShowDetailsUseCase.TvShowDetails {
-        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        val sessionId = cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
 
         return remoteTvDataSource.getTvShowDetailsById(tvShowId, sessionId)
             .also {
@@ -128,13 +128,13 @@ class TvShowRepositoryImpl @Inject constructor(
         )
     }
         override suspend fun getUserRatedTvShows(): List<UserRatedTvShow> {
-            val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+            val sessionId = cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
             return remoteTvDataSource.getRatedTvShows(sessionId).results.toTvShowUserRateEntityList()
         }
 
         override suspend fun setTvShowRate(rate: Int, tvShowId: Long) {
             val sessionId =
-                cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+                cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
             remoteTvDataSource.setTvShowRate(
                 rate = rate,
                 tvShowId = tvShowId,
@@ -144,7 +144,7 @@ class TvShowRepositoryImpl @Inject constructor(
 
         override suspend fun deleteTvShowRate(tvShowId: Long) {
             val sessionId =
-                cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+                cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
             remoteTvDataSource.deleteTvShowRate(tvShowId = tvShowId, sessionId = sessionId)
 
         }
@@ -229,14 +229,14 @@ class TvShowRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getTvShowCategoriesFromLocal(): List<LocalTvShowCategoryDto> {
-        return categoryLocalSource.getTvShowCategories()
+        return categoryLocalDataSource.getTvShowCategories()
     }
 
 
     private suspend fun saveTvShowCategoriesToDatabase(
         tvShowCategories: RemoteCategoryResponse
     ) {
-        categoryLocalSource.upsertTvShowCategories(
+        categoryLocalDataSource.upsertTvShowCategories(
             tvShowCategories.genres.toLocalTvShowCategoryDtoList(preferences.getAppLanguage().first())
         )
     }

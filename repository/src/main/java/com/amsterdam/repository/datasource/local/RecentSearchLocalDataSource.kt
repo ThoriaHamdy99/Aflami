@@ -2,7 +2,7 @@ package com.amsterdam.repository.datasource.local
 
 import com.amsterdam.repository.dto.local.LocalSearchDto
 
-interface RecentSearchLocalSource {
+interface RecentSearchLocalDataSource {
     suspend fun upsertRecentSearch(recentSearch: LocalSearchDto)
 
     suspend fun getRecentSearches(): List<LocalSearchDto>

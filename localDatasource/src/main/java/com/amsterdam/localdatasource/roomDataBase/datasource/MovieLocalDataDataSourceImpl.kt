@@ -3,7 +3,7 @@ package com.amsterdam.localdatasource.roomDataBase.datasource
 import androidx.room.Transaction
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieDao
-import com.amsterdam.repository.datasource.local.MovieLocalSource
+import com.amsterdam.repository.datasource.local.MovieLocalDataSource
 import com.amsterdam.repository.dto.local.LocalMovieDto
 import com.amsterdam.repository.dto.local.MovieCategoryCrossRefDto
 import com.amsterdam.repository.dto.local.PopularMovieDto
@@ -13,10 +13,10 @@ import com.amsterdam.repository.dto.local.relation.MovieWithCategories
 import kotlinx.datetime.Instant
 import javax.inject.Inject
 
-class MovieLocalDataSourceImpl @Inject constructor(
+class MovieLocalDataDataSourceImpl @Inject constructor(
     private val movieDao: MovieDao,
     private val interestDao: MovieCategoryInterestDao
-) : MovieLocalSource {
+) : MovieLocalDataSource {
     override suspend fun getMovieById(
         movieId: Long,
         storedLanguage: String
