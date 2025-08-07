@@ -113,7 +113,7 @@ private fun SearchByActorContent(
             TextField(
                 text = state.keyword,
                 hintText = stringResource(com.amsterdam.designsystem.R.string.find_by_actor_hint),
-                onValueChange = { interactionListener.onUserSearchChange(it) },
+                onValueChange = { interactionListener.onUserSearchChange(it.trim()) },
                 keyboardActions = KeyboardActions(
                     onSearch = {
                         keyboardController?.hide()
