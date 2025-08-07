@@ -67,8 +67,8 @@ class TvShowLocalDataSourceImplTest {
             // When
             dataSource.upsertTvShowWithCategories(tvShow, categories, "en")
             // Then
-            coVerify(exactly = 1) { tvShowDao.insertTvShow(tvShow) }
-            coVerify(exactly = 1) { tvShowDao.insertTvShowCategoryCrossRefs(expectedCrossRefs) }
+            coVerify(exactly = 1) { tvShowDao.upsertTvShow(tvShow) }
+            coVerify(exactly = 1) { tvShowDao.upsertTvShowCategoryCrossRefs(expectedCrossRefs) }
         }
 
     @Test
@@ -114,11 +114,13 @@ class TvShowLocalDataSourceImplTest {
         dataSource.upsertPopularTvShows(tvShows)
         // Then
         coVerify(exactly = 1) {
-            tvShowDao.insertPopularTvShows(match { list ->
-                list.size == 1 &&
+            tvShowDao.upsertPopularTvShows(
+                match { list ->
+                    list.size == 1 &&
                         list[0].tvShowId == 42L &&
                         list[0].storedLanguage == "en"
-            })
+            }
+                    )
         }
     }
 
@@ -128,9 +130,9 @@ class TvShowLocalDataSourceImplTest {
         val storedLanguage = "en"
         val tvShows = listOf(createTvShow(id = 42, language = storedLanguage))        //When
         dataSource.upsertTopRatedTvShows(tvShows)
-        //Then
+        // Then
         coVerify(exactly = 1) {
-            tvShowDao.insertTopRatedTvShows(match { list ->
+            tvShowDao.upsertTopRatedTvShows(match { list ->
                 list.size == 1 &&
                         list[0].tvShowId == 42L &&
                         list[0].storedLanguage == "en"

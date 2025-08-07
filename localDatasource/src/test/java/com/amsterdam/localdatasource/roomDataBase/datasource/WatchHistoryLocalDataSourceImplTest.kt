@@ -38,7 +38,7 @@ class WatchHistoryLocalDataSourceImplTest {
             dataSource.upsertMovieToWatchHistory(movieWatchHistoryDto)
 
             // Then
-            coVerify(exactly = 1) { watchHistoryDao.addMovieToWatchHistory(movieWatchHistoryDto) }
+            coVerify(exactly = 1) { watchHistoryDao.upsertMovieToWatchHistory(movieWatchHistoryDto) }
         }
 
     @Test
@@ -92,7 +92,7 @@ class WatchHistoryLocalDataSourceImplTest {
 
             // Then
             coVerify(exactly = 1) {
-                watchHistoryDao.addTvShowToWatchHistory(tvShowWatchHistoryDto)
+                watchHistoryDao.upsertTvShowToWatchHistory(tvShowWatchHistoryDto)
             }
         }
 

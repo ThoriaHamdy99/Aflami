@@ -68,8 +68,8 @@ class MovieLocalDataSourceImplTest {
             dataSource.upsertMovieWithCategories(movie, categories, "en")
 
             // Then
-            coVerify(exactly = 1) { movieDao.insertMovie(movie) }
-            coVerify(exactly = 1) { movieDao.insertMovieCategoryCrossRefs(expectedCrossRefs) }
+            coVerify(exactly = 1) { movieDao.upsertMovie(movie) }
+            coVerify(exactly = 1) { movieDao.upsertMovieCategoryCrossRefs(expectedCrossRefs) }
         }
 
     @Test
@@ -80,7 +80,7 @@ class MovieLocalDataSourceImplTest {
         //When
         dataSource.upsertMovie(movie)
         // Then
-        coVerify(exactly = 1) { movieDao.insertMovie(movie) }
+        coVerify(exactly = 1) { movieDao.upsertMovie(movie) }
     }
 
     @Test
@@ -125,11 +125,13 @@ class MovieLocalDataSourceImplTest {
         dataSource.upsertPopularMovies(localMovies)
         // Then
         coVerify(exactly = 1) {
-            movieDao.insertPopularMovies(match { list ->
-                list.size == 1 &&
+            movieDao.upsertPopularMovies(
+                match { list ->
+                    list.size == 1 &&
                         list[0].movieId == 42L &&
                         list[0].storedLanguage == "en"
-            })
+            }
+                    )
         }
     }
 
@@ -139,9 +141,9 @@ class MovieLocalDataSourceImplTest {
         val localMovies = listOf(createMovie(movieId = 42, storedLanguage = "en"))
         //When
         dataSource.upsertTopRatedMovies(localMovies)
-        //Then
+        // Then
         coVerify(exactly = 1) {
-            movieDao.insertTopRatedMovies(match { list ->
+            movieDao.upsertTopRatedMovies(match { list ->
                 list.size == 1 &&
                         list[0].movieId == 42L &&
                         list[0].storedLanguage == "en"
@@ -155,9 +157,9 @@ class MovieLocalDataSourceImplTest {
         val localMovies = listOf(createMovie(movieId = 42, storedLanguage = "en"))
         //When
         dataSource.upsertUpcomingMovies(localMovies)
-        //Then
+        // Then
         coVerify(exactly = 1) {
-            movieDao.insertUpcomingMovies(match { list ->
+            movieDao.upsertUpcomingMovies(match { list ->
                 list.size == 1 &&
                         list[0].movieId == 42L &&
                         list[0].storedLanguage == "en"

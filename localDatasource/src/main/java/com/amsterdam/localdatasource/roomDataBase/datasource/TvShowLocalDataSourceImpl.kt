@@ -22,7 +22,7 @@ class TvShowLocalDataSourceImpl @Inject constructor(
         categoryIds: List<Long>,
         storedLanguage: String
     ) {
-        tvShowDao.insertTvShow(tvShow)
+        tvShowDao.upsertTvShow(tvShow)
         val tvShowCrossRefs = categoryIds.map { categoryId ->
             TvShowCategoryCrossRefDto(
                 tvShowId = tvShow.tvShowId,
@@ -30,7 +30,7 @@ class TvShowLocalDataSourceImpl @Inject constructor(
                 storedLanguage = storedLanguage
             )
         }
-        tvShowDao.insertTvShowCategoryCrossRefs(tvShowCrossRefs)
+        tvShowDao.upsertTvShowCategoryCrossRefs(tvShowCrossRefs)
     }
 
     override suspend fun incrementGenreInterest(categoryId: Long) {
@@ -38,7 +38,7 @@ class TvShowLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun upsertTvShow(tvShow: LocalTvShowDto) {
-        tvShowDao.insertTvShow(tvShow)
+        tvShowDao.upsertTvShow(tvShow)
     }
 
     override suspend fun getTvShowById(
@@ -58,14 +58,14 @@ class TvShowLocalDataSourceImpl @Inject constructor(
 
     @Transaction
     override suspend fun upsertPopularTvShows(tvShows: List<LocalTvShowDto>) {
-        tvShowDao.insertTvShows(tvShows)
+        tvShowDao.upsertTvShows(tvShows)
         val entries = tvShows.map { tvShow ->
             PopularTvShowDto(
                 tvShowId = tvShow.tvShowId,
                 storedLanguage = tvShow.storedLanguage
             )
         }
-        tvShowDao.insertPopularTvShows(entries)
+        tvShowDao.upsertPopularTvShows(entries)
     }
 
     override suspend fun deleteExpiredPopularTvShows(
@@ -76,14 +76,14 @@ class TvShowLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun upsertTopRatedTvShows(tvShows: List<LocalTvShowDto>) {
-        tvShowDao.insertTvShows(tvShows)
+        tvShowDao.upsertTvShows(tvShows)
         val entries = tvShows.map { tvShow ->
             TopRatedTvShowDto(
                 tvShowId = tvShow.tvShowId,
                 storedLanguage = tvShow.storedLanguage
             )
         }
-        tvShowDao.insertTopRatedTvShows(entries)
+        tvShowDao.upsertTopRatedTvShows(entries)
     }
 
     override suspend fun deleteExpiredTopRatedTvShows(
