@@ -2,11 +2,13 @@ package com.amsterdam.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +22,7 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.theme.shapes.FolderShape
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.designsystem.utils.ripple
 import com.amsterdam.viewmodel.shared.uiStates.UserListItemUiState
 
 @Composable
@@ -35,7 +38,11 @@ fun ListItem(
                 .clip(folderShape,)
                 .background(AppTheme.color.surfaceHigh)
                 .clipToBounds()
-                .clickable { onClick() },
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = ripple(),
+                    onClick = onClick
+                ),
         contentAlignment = Alignment.BottomStart,
     ) {
         val size = Size(this.maxWidth.value, this.maxHeight.value)
