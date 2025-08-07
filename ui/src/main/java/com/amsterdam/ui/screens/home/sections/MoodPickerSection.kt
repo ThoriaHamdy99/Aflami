@@ -12,23 +12,24 @@ import com.amsterdam.viewmodel.home.HomeUiState
 
 @Composable
 fun MoodPickerSection(
-    state: HomeUiState,
+    state: HomeUiState.MoodPickerUiState,
     interactionListener: HomeInteractionListener,
     modifier: Modifier=Modifier
 ) {
     MoodPickerCard(
-        cardMoods = state.moodPickerUiState.moods.map {
+        cardMoods = state.moods.map {
             CardMood.getModeByName(
                 it.name
             )
         },
-        isButtonEnabled = state.moodPickerUiState.selectedMood != null,
-        isLoading = state.moodPickerUiState.isLoadingMovies,
+        selectedMood = state.selectedMood?.let { CardMood.getModeByName(it.name) },
+        isButtonEnabled = state.selectedMood != null,
+        isLoading = state.isLoadingMovies,
         modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 26.dp),
         onSelectMood = {
             val mood =
                 Mood.getMoodByName(it.name)
-            interactionListener.onClickMood(mood)
+            interactionListener.onChangeMood(mood)
         },
         onClickGetNow = interactionListener::onClickGetNow
     )
