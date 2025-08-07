@@ -2,6 +2,8 @@ package com.amsterdam.viewmodel.listDetails
 
 import androidx.paging.PagingData
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.exceptions.NetworkException
+import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import kotlinx.coroutines.flow.Flow
@@ -26,16 +28,15 @@ data class ListDetailsUiState(
         val mediaType: MediaType = MediaType.MOVIE
     )
 
-    sealed interface ListDetailsError {
-        data object NoNetwork : ListDetailsError
-        data object UnknownError : ListDetailsError
+sealed interface ListDetailsError {
+    data object NoNetwork : ListDetailsError
+    data object UnknownError : ListDetailsError
 
-        companion object {
-            fun toListDetailsError(exception: AflamiException): ListDetailsError {
-                return when (exception) {
-                    is NoInternetException -> NoNetwork
-                    else -> UnknownError
-                }
+    companion object {
+        fun toListDetailsError(exception: Throwable): ListDetailsError {
+            return when (exception) {
+                is NetworkException -> NoNetwork
+                else -> UnknownError
             }
         }
     }

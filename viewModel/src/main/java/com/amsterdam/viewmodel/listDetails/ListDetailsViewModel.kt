@@ -1,11 +1,14 @@
 package com.amsterdam.viewmodel.listDetails
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.list.DeleteListUseCase
 import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
@@ -21,7 +24,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @HiltViewModel
 class ListDetailsViewModel @Inject constructor(
@@ -61,20 +63,21 @@ class ListDetailsViewModel @Inject constructor(
                             getMoviesFromListUseCase(state.value.listId, page)
                                 .toListDetailsItemUiState()
                         }
+                        currentPagingSource!!
                     }
                 ).flow.cachedIn(viewModelScope)
             },
             onSuccess = ::onGetListDetailsSuccess,
-            onError = {},
-            onCompletion = ::onGetListDetailsCompletion
+            onError = {}
         )
     }
 
     private fun onGetListDetailsSuccess(moviesPagingFlow: Flow<PagingData<ListDetailsItemsUiState>>) {
-        updateState { it.copy(listItems = moviesPagingFlow) }
+        updateState { it.copy(
+            listItems = moviesPagingFlow,
+            error = null
+        ) }
     }
-
-    private fun onGetListDetailsCompletion() = updateState { it.copy(isLoading = false) }
 
     override fun onClickMovie(movieId: Long) {
         sendNewEffect(ListDetailsEffect.NavigateToMovieDetailsScreen(movieId))
@@ -150,6 +153,29 @@ class ListDetailsViewModel @Inject constructor(
                 isDeleteLoading = false
             ) }
             sendNewEffect(ListDetailsEffect.ShowErrorSnackbar(error = state.value.error))
+        }
+    }
+
+    override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
+        when (loadStates.refresh) {
+            is LoadState.Loading -> {
+                updateState { it.copy(isLoading = true, error = null) }
+            }
+
+            is LoadState.NotLoading -> {
+                updateState { it.copy(isLoading = false) }
+            }
+
+            is LoadState.Error -> {
+                updateState {
+                    it.copy(
+                        isLoading = false,
+                        error = ListDetailsError.toListDetailsError(
+                            (loadStates.refresh as LoadState.Error).error
+                        )
+                    )
+                }
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ data class MyRatingUiState(
     val movies: List<RatingMovieUiState> = emptyList(),
     val tvShows: List<RatingTvShowUiState> = emptyList(),
     val isLoading: Boolean = false,
+    val isRetryLoading: Boolean = false,
     val error: MyRatingErrorState? = null,
 ) {
     data class RatingTvShowUiState(
