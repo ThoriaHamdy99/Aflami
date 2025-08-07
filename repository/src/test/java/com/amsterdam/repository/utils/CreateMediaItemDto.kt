@@ -1,10 +1,14 @@
 package com.amsterdam.repository.utils
 
+import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase
+import com.amsterdam.entity.Movie
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.dto.remote.EpisodeDto
 import com.amsterdam.repository.dto.remote.EpisodeResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteCastDto
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
+import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowItemDto
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.SeasonDto
@@ -12,7 +16,9 @@ import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.VideoDto
 import com.amsterdam.repository.dto.remote.VideoResponse
 import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
+import com.amsterdam.repository.dto.remote.profile.AccountDetailsDto
 import com.amsterdam.repository.dto.remote.review.ReviewsResponse
+import kotlinx.datetime.LocalDate
 
 val remoteMovieItemDto = RemoteMovieItemDto(
     id = 1,
@@ -89,15 +95,15 @@ val tvShowDetailsRemoteResponse =
         backdropPath = "/someBackdropPath.jpg",
         adult = false,
         originalTitle = "Breaking Bad",
-        seasons =listOf(
-            SeasonDto  (
+        seasons = listOf(
+            SeasonDto(
                 id = 1,
                 title = "Season 1",
                 episodeCount = 10,
                 seasonNumber = 1,
                 airDate = null
             ),
-           SeasonDto(
+            SeasonDto(
                 id = 2,
                 title = "Season 2",
                 episodeCount = 12,
@@ -138,7 +144,7 @@ val tvShowDetailsRemoteResponse =
         ),
         accountStates = null,
     )
-val remoteEpisodeDto= EpisodeDto(
+val remoteEpisodeDto = EpisodeDto(
     id = 1,
     title = "Breaking Bad",
     overview = "A high school chemistry teacher diagnosed with cancer turns to making meth.",
@@ -149,7 +155,7 @@ val remoteEpisodeDto= EpisodeDto(
     runtime = "50",
     airDate = "2008-01-20",
 )
-val episodeResponse= EpisodeResponse(
+val episodeResponse = EpisodeResponse(
     id = 1,
     overview = "A high school chemistry teacher diagnosed with cancer turns to making meth.",
     voteAverage = 9.5,
@@ -158,4 +164,49 @@ val episodeResponse= EpisodeResponse(
     episodes = listOf(remoteEpisodeDto),
     name = "Breaking Bad",
     posterPath = "/somePath.jpg",
+)
+val remoteMovieResponse = RemoteMovieResponse(
+    page = 1,
+    results = listOf(remoteMovieItemDto),
+    totalPages = 1,
+    totalResults = 1,
+
+    )
+val remoteCastAndCrewResponse = RemoteCastAndCrewResponse(
+    id = 1,
+    cast = listOf(remoteCastDto),
+    crew = emptyList(),
+)
+val remoteUserRatedMovie = GetUserRatedMoviesUseCase.UserRatedMovie(
+    movie = Movie(
+        id = 1,
+        name = "Breaking Bad",
+        description = "A high school chemistry teacher diagnosed with cancer turns to making meth.",
+        posterUrl = "https://image.tmdb.org/t/p/w500/somePath.jpg",
+        releaseDate = LocalDate.parse("2008-01-20"),
+        categories = listOf(MovieGenre.ALL, MovieGenre.ALL, MovieGenre.ALL),
+        rating = 9.5f,
+        popularity = 100.0,
+        originCountry = "",
+        runTimeInMinutes = 0,
+        videoUrl = ""
+    ),
+    userRate = 0
+
+)
+val accountDetails = AccountDetailsDto(
+    accountAvatar = AccountDetailsDto.AccountAvatar(
+        gravatar = AccountDetailsDto.Gravatar(
+            hash = "hash"
+        ),
+        movieDBData = AccountDetailsDto.MovieDBData(
+            avatarPath = "avatarPath"
+        )
+    ),
+    id = 1,
+    includeAdult =true,
+    countryIsoCode = "Eg",
+    languageCode = "en",
+    name = "Mona Ayman",
+    username = "Mona",
 )
