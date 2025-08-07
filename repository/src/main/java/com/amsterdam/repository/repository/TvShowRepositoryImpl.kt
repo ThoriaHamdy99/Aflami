@@ -74,9 +74,7 @@ class TvShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getTvShowDetails(tvShowId: Long): GetTvShowDetailsUseCase.TvShowDetails {
-        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
-
-        return remoteTvDataSource.getTvShowDetailsById(tvShowId, sessionId)
+        return remoteTvDataSource.getTvShowDetailsById(tvShowId)
             .also {
                 incrementUserInterestByTvShow(it.genres)
                 cacheWatchedTvShow(it)
