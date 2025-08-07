@@ -12,7 +12,7 @@ import com.amsterdam.localdatasource.roomDataBase.daos.CategoryDao
 import com.amsterdam.localdatasource.roomDataBase.daos.CountryDao
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieDao
-import com.amsterdam.localdatasource.roomDataBase.daos.ProfileDao
+import com.amsterdam.localdatasource.roomDataBase.daos.AccountDetailsDao
 import com.amsterdam.localdatasource.roomDataBase.daos.RecentSearchDao
 import com.amsterdam.localdatasource.roomDataBase.daos.TvShowCategoryInterestDao
 import com.amsterdam.localdatasource.roomDataBase.daos.TvShowDao
@@ -69,7 +69,7 @@ abstract class AflamiDatabase : RoomDatabase() {
     abstract fun watchHistoryDao(): WatchHistoryDao
     abstract fun movieCategoryInterestDao(): MovieCategoryInterestDao
     abstract fun tvShowCategoryInterestDao(): TvShowCategoryInterestDao
-    abstract fun profileDao(): ProfileDao
+    abstract fun accountDetailsDao(): AccountDetailsDao
 
     companion object {
         private const val DATABASE_NAME = "AflamiDatabase.db"

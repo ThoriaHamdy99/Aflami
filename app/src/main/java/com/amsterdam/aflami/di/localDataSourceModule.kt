@@ -82,7 +82,7 @@ object LocalDataSourceProviderModule {
 
     @Provides
     @Singleton
-    fun provideProfileDao(aflamiDatabase: AflamiDatabase) = aflamiDatabase.profileDao()
+    fun provideAccountDetailsDao(aflamiDatabase: AflamiDatabase) = aflamiDatabase.accountDetailsDao()
 }
 
 @Module

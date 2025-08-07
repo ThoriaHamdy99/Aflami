@@ -7,7 +7,7 @@ import com.amsterdam.repository.dto.local.profile.AccountDetailsLocalDto
 import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 
 @Dao
-interface ProfileDao {
+interface AccountDetailsDao {
     @Upsert
     suspend fun upsertAccountDetails(accountDetails: AccountDetailsLocalDto)
 
@@ -21,6 +21,6 @@ interface ProfileDao {
     suspend fun getAccountDetails(): AccountDetailsLocalDto?
 
     @Query("DELETE FROM ${DatabaseConstants.ACCOUNT_DETAILS_TABLE}")
-    suspend fun deleteAllSearches()
+    suspend fun deleteAccountDetails()
 
 }
