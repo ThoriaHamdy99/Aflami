@@ -4,14 +4,10 @@ import com.amsterdam.repository.dto.remote.RemoteCategoryResponse
 import retrofit2.http.GET
 
 interface CategoryApiService {
-    @GET(MOVIE_GENRE_LIST)
+    @GET("genre/movie/list")
     suspend fun getMovieCategories(): RemoteCategoryResponse
 
-    @GET(TV_SHOW_GENRE_LIST)
+    @GET("genre/tv/list")
     suspend fun getTvShowCategories(): RemoteCategoryResponse
 
-    companion object {
-        private const val MOVIE_GENRE_LIST = "genre/movie/list"
-        private const val TV_SHOW_GENRE_LIST = "genre/tv/list"
-    }
 }

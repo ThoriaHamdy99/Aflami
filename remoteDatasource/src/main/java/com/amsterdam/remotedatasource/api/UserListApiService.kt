@@ -14,64 +14,47 @@ import retrofit2.http.Query
 
 interface UserListApiService {
     @FormUrlEncoded
-    @POST(CREATE_LIST)
+    @POST("list")
     suspend fun createNewList(
-        @Query(SESSION_ID) sessionId: String,
-        @Field(NAME) listName: String,
-        @Field(DESCRIPTION) description: String,
-        @Field(LANGUAGE) language: String,
+        @Query("session_id") sessionId: String,
+        @Field("name") listName: String,
+        @Field("description") description: String,
+        @Field("language") language: String,
     ): CreateUserListResponse
-    @GET(USER_LISTS_ENDPOINT)
+
+    @GET("account/{account_id}/lists")
     suspend fun getUserLists(
-        @Path(ACCOUNT_ID) accountId: Int = 0,
-        @Query(PAGE) page: Int = 1,
-        @Query(SESSION_ID) sessionId: String,
+        @Path("account_id") accountId: Int = 0,
+        @Query("page") page: Int = 1,
+        @Query("session_id") sessionId: String,
     ): RemoteUserListResponse
 
-    @GET(GET_USER_LIST_DETAILS)
+    @GET("list/{list_id}")
     suspend fun getMoviesFromList(
-        @Path(LIST_ID) listId: Long,
-        @Query(PAGE) page: Int,
+        @Path("list_id") listId: Long,
+        @Query("page") page: Int,
     ): UserListDetailsResponse
 
-    @DELETE(DELETE_LIST)
+    @DELETE("list/{list_id}")
     suspend fun deleteList(
-        @Path(LIST_ID) listId: Long,
-        @Query(SESSION_ID) sessionId: String,
+        @Path("list_id") listId: Long,
+        @Query("session_id") sessionId: String,
     )
 
     @FormUrlEncoded
-    @POST(ADD_MOVIE_TO_LIST)
+    @POST("list/{list_id}/add_item")
     suspend fun addMediaItemToList(
-        @Path(LIST_ID) listId: Long,
-        @Query(SESSION_ID) sessionId: String,
-        @Field(MEDIA_ID) movieId: Int,
+        @Path("list_id") listId: Long,
+        @Query("session_id") sessionId: String,
+        @Field("media_id") movieId: Int,
     ): AddItemToListResponse
 
     @FormUrlEncoded
-    @POST(DELETE_MOVIE_FROM_LIST)
+    @POST("list/{list_id}/remove_item")
     suspend fun removeMovieFromList(
-        @Path(LIST_ID) listId: Long,
-        @Query(SESSION_ID) sessionId: String,
-        @Field(MEDIA_ID) movieId: Long,
+        @Path("list_id") listId: Long,
+        @Query("session_id") sessionId: String,
+        @Field("media_id") movieId: Long,
     )
 
-    companion object {
-        private const val ACCOUNT_ID = "account_id"
-        private const val NAME = "name"
-        private const val DESCRIPTION = "description"
-        private const val LANGUAGE = "language"
-        private const val PAGE = "page"
-        private const val LIST_ID = "list_id"
-        private const val SESSION_ID = "session_id"
-        private const val MEDIA_ID = "media_id"
-        private const val CREATE_LIST = "list"
-
-        const val ADD_MOVIE_TO_LIST = "list/{list_id}/add_item"
-        const val USER_LISTS_ENDPOINT = "account/{account_id}/lists"
-
-        private const val GET_USER_LIST_DETAILS = "list/{list_id}"
-        private const val DELETE_LIST = "list/{list_id}"
-        private const val DELETE_MOVIE_FROM_LIST = "list/{list_id}/remove_item"
-    }
 }
