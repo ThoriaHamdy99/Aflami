@@ -92,8 +92,6 @@ private fun OnboardingScreenContent(
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val layoutDirection = LocalLayoutDirection.current
-    val isRtl = layoutDirection == LayoutDirection.Rtl
 
     Box(
         modifier = modifier.fillMaxSize(),
