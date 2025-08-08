@@ -28,7 +28,9 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
+import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.MediaCard
+import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -40,6 +42,7 @@ internal fun MoviesItemsGrid(
     onClickRemoveItem: (Long) -> Unit = {}
 ) {
     val gridState = rememberLazyGridState()
+    val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 160.dp),
         state = gridState,
@@ -61,6 +64,7 @@ internal fun MoviesItemsGrid(
                         modifier = Modifier.fillMaxSize(),
                         contentDescription = movie.name,
                         model = movie.posterImageUrl,
+                        safetyLevel = safetyLevel,
                         onLoading = { ImageLoadingIndicator() },
                         onError = { ImageErrorIndicator() },
                     )
