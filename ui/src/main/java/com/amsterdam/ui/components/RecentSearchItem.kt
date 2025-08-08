@@ -42,10 +42,16 @@ fun RecentSearchItem(
             tint = AppTheme.color.hint,
             contentDescription = title,
         )
+        val maxTitleLength = 50
+        val shortenedTitle = if (title.length > maxTitleLength) {
+            title.take(maxTitleLength) + "…"
+        } else {
+            title
+        }
 
         Text(
             modifier = Modifier.padding(start = 8.dp),
-            text = title.trim().take(50),
+            text = shortenedTitle,
             style = AppTheme.textStyle.body.medium,
             color = AppTheme.color.title,
             maxLines = 1,
