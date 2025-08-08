@@ -11,14 +11,13 @@ import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.MovieWatchHistory
-import com.amsterdam.entity.TvShowWatchHistory
 import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiStateMapper
 import com.amsterdam.viewmodel.home.HomeUiState.HomeError
-import com.amsterdam.viewmodel.home.HomeUiState.MoodPickerItemUiState
 import com.amsterdam.viewmodel.search.mapper.selectByMovieGenre
 import com.amsterdam.viewmodel.shared.BaseViewModel
-import com.amsterdam.viewmodel.shared.uiStates.MediaType
+import com.amsterdam.viewmodel.shared.uiStates.MovieItemUiState
+import com.amsterdam.viewmodel.shared.uiStates.media.MediaType
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import com.amsterdam.viewmodel.utils.getLinearItemsList
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -180,11 +179,12 @@ class HomeViewModel @Inject constructor(
         sendNewNavigationEffect(HomeEffect.NavigateToTopRatedMoviesEffect)
     }
 
-    override fun onClickMood(mood: Mood) {
+    override fun onChangeMood(mood: Mood) {
         updateState {
             it.copy(
                 moodPickerUiState = it.moodPickerUiState.copy(
                     selectedMood = mood,
+                    isLoadingMovies = false,
                     openMovieDialog = false
                 )
             )
@@ -192,20 +192,50 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onClickGetNow() {
-        updateState {
-            it.copy(
-                moodPickerUiState = it.moodPickerUiState.copy(
-                    isLoadingMovies = true,
-                    selectedMovie = MoodPickerItemUiState()
-                )
-            )
-        }
+        updateState { it.copy(moodPickerUiState = it.moodPickerUiState.copy(isLoadingMovies = true)) }
+
         val selectedMood = state.value.moodPickerUiState.selectedMood ?: return
         tryToExecute(
             action = { getMoviesByMoodUseCase(selectedMood) },
             onSuccess = ::onGetMoviesByMoodSuccess,
-            onError = ::onError
+            onError = ::onGetMoviesByMoodError
         )
+    }
+
+    private fun onGetMoviesByMoodSuccess(movies: List<Movie>) {
+        if (movies.isEmpty()) {
+            updateState { it.copy(moodPickerUiState = it.moodPickerUiState.copy(isLoadingMovies = false)) }
+            return
+        }
+        val moviesUiStates = homeUiStateMapper.moviesToMoviesItemsUiState(movies)
+        val selectedMovie = moviesUiStates[(0..moviesUiStates.size - 1).random()]
+        updateState {
+            it.copy(
+                moodPickerUiState = it.moodPickerUiState
+                    .copy(
+                        isLoadingMovies = false,
+                        movies = moviesUiStates,
+                        selectedMovie = selectedMovie,
+                        openMovieDialog = true
+                    )
+            )
+        }
+    }
+
+
+    private fun onGetMoviesByMoodError(exception: AflamiException) {
+        updateState {
+            it.copy(
+                moodPickerUiState = it.moodPickerUiState.copy(
+                    error = HomeError.toHomeErrorUiState(exception),
+                    isLoadingMovies = false,
+                    openMovieDialog = false,
+                    selectedMood = null
+                )
+            )
+        }
+
+        sendNewEffect(HomeEffect.ShowGetMoviesByMoodErrorSnackBar)
     }
 
     override fun onDismissMoodPickerDialog() {
@@ -241,26 +271,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun onGetMoviesByMoodSuccess(movies: List<Movie>) {
-        if (movies.isEmpty()) {
-            updateState { it.copy(moodPickerUiState = it.moodPickerUiState.copy(isLoadingMovies = false)) }
-            return
-        }
-        val moviesUiStates = movies.toMoodPickerItemsUiState()
-        val selectedMovie = moviesUiStates[(0..moviesUiStates.size - 1).random()]
-        updateState {
-            it.copy(
-                moodPickerUiState = it.moodPickerUiState
-                    .copy(
-                        isLoadingMovies = false,
-                        movies = moviesUiStates,
-                        selectedMovie = selectedMovie,
-                        openMovieDialog = true
-                    )
-            )
-        }
-    }
-
     override fun onClickUpcomingMovieCard(id: Long) {
         sendNewNavigationEffect(HomeEffect.NavigateToMovieDetailsEffect(movieId = id))
     }
@@ -269,7 +279,6 @@ class HomeViewModel @Inject constructor(
         updateState {
             it.copy(
                 error = HomeError.NetworkError,
-                moodPickerUiState = it.moodPickerUiState.copy(isLoadingMovies = false)
             )
         }
     }

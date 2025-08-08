@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WatchHistoryDao {
     @Upsert()
-    suspend fun addMovieToWatchHistory(item: MovieWatchHistoryDto)
+    suspend fun upsertMovieToWatchHistory(item: MovieWatchHistoryDto)
 
     @Upsert()
-    suspend fun addTvShowToWatchHistory(item: TvShowWatchHistoryDto)
+    suspend fun upsertTvShowToWatchHistory(item: TvShowWatchHistoryDto)
 
     @Query("SELECT * FROM ${DatabaseConstants.MOVIE_WATCH_HISTORY_TABLE} LIMIT :limit OFFSET :offset")
      fun getMoviesWatchHistory(

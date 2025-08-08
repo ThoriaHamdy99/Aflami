@@ -1,0 +1,15 @@
+package com.amsterdam.repository.datasource.local
+
+import com.amsterdam.repository.dto.local.LocalSearchDto
+
+interface RecentSearchLocalDataSource {
+    suspend fun upsertRecentSearch(recentSearch: LocalSearchDto)
+
+    suspend fun getRecentSearches(): List<LocalSearchDto>
+
+
+    suspend fun deleteRecentSearches()
+
+    suspend fun deleteRecentSearchByKeyword(
+        keyword: String)
+}

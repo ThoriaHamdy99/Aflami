@@ -2,9 +2,9 @@ package com.amsterdam.repository.repository
 
 import com.amsterdam.entity.Season
 import com.amsterdam.repository.datasource.local.AppPreferences
-import com.amsterdam.repository.datasource.local.AuthenticationLocalSource
-import com.amsterdam.repository.datasource.local.CategoryLocalSource
-import com.amsterdam.repository.datasource.local.TvShowLocalSource
+import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
+import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
+import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
@@ -29,11 +29,11 @@ import kotlin.test.Test
 
 class TvShowRepositoryImplTest {
     private lateinit var tvShowRepository: TvShowRepositoryImpl
-    private val localTvDataSource: TvShowLocalSource = mockk()
+    private val localTvDataSource: TvShowLocalDataSource = mockk()
     private val remoteTvDataSource: TvShowsRemoteSource = mockk()
-    private val authenticationLocalSource: AuthenticationLocalSource = mockk()
+    private val authenticationLocalDataSource: AuthenticationLocalDataSource = mockk()
     private val cryptoData: CryptoData = mockk()
-    private val categoryLocalSource: CategoryLocalSource = mockk()
+    private val categoryLocalDataSource: CategoryLocalDataSource = mockk()
     private val categoryRemoteSource: CategoryRemoteSource = mockk()
     private val preferences: AppPreferences = mockk()
 
@@ -42,10 +42,10 @@ class TvShowRepositoryImplTest {
         tvShowRepository = TvShowRepositoryImpl(
             localTvDataSource,
             remoteTvDataSource,
-            authenticationLocalSource,
+            authenticationLocalDataSource,
             preferences,
             cryptoData,
-            categoryLocalSource,
+            categoryLocalDataSource,
             categoryRemoteSource
 
         )

@@ -11,4 +11,6 @@ sealed interface SeriesDetailsEffect : BaseViewModel.BaseUiEffect {
 
     object ShowRatingSuccessSnackBar: SeriesDetailsEffect
     object ShowRatingErrorSnackBar: SeriesDetailsEffect
+
+    object ShowEpisodeTrailerNotFound: SeriesDetailsEffect
 }

@@ -10,7 +10,7 @@ import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 @Dao
 interface TvShowCategoryInterestDao {
     @Upsert
-    suspend fun insertInterest(entity: LocalTvShowCategoryInterestDto)
+    suspend fun upsertInterest(entity: LocalTvShowCategoryInterestDto)
 
     @Query("SELECT interestCount FROM ${DatabaseConstants.TV_SHOW_CATEGORY_INTEREST_TABLE} WHERE categoryId = :categoryId")
     suspend fun getInterestCount(categoryId: Long): Int?
@@ -18,6 +18,6 @@ interface TvShowCategoryInterestDao {
     @Transaction
     suspend fun incrementInterest(categoryId: Long) {
         val current = getInterestCount(categoryId) ?: 0
-        insertInterest(LocalTvShowCategoryInterestDto(categoryId, current + 1))
+        upsertInterest(LocalTvShowCategoryInterestDto(categoryId, current + 1))
     }
 }

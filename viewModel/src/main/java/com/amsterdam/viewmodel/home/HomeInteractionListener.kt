@@ -13,7 +13,7 @@ interface HomeInteractionListener {
     fun onChangeUpcomingMovieGenre(genre: MovieGenre)
     fun onClickShowAllToRatedMovies()
 
-    fun onClickMood(mood: Mood)
+    fun onChangeMood(mood: Mood)
     fun onClickGetNow()
     fun onDismissMoodPickerDialog()
 
