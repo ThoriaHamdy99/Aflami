@@ -34,12 +34,7 @@ fun DefaultAppBar(
     onLastOptionClicked: () -> Unit = {},
     onNavigateBackClicked: () -> Unit = {},
 ) {
-    val maxTitleLength = 25
-    val shortenedTitle = if (title.length > maxTitleLength) {
-        title.take(maxTitleLength) + "…"
-    } else {
-        title
-    }
+
 
     TopAppBar(
         modifier = modifier,
@@ -48,7 +43,7 @@ fun DefaultAppBar(
             title.takeIf { it.isNotBlank() }?.let { text ->
                 {
                     Text(
-                        text = shortenedTitle,
+                        text = title,
                         color = AppTheme.color.title,
                         style = AppTheme.textStyle.title.large,
                         maxLines = 1,
