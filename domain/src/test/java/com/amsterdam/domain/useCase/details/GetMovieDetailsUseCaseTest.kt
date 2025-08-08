@@ -61,6 +61,7 @@ class GetMovieDetailsUseCaseTest {
     )
     private val fakeGallery = listOf("gallery1.jpg", "gallery2.jpg")
     private val fakePosters = (1..15).map { "poster$it.jpg" }
+    private val fakeUserRate = 5
 
 
     @BeforeEach
@@ -78,6 +79,7 @@ class GetMovieDetailsUseCaseTest {
             movieGallery = fakeGallery,
             moviePosters = fakePosters,
             productionCompanies = emptyList(),
+            userRate = fakeUserRate
         )
 
         coJustRun { addWatchHistoryUseCase.invoke(any()) }
@@ -98,6 +100,7 @@ class GetMovieDetailsUseCaseTest {
         assertThat(result.similarMovies).isEqualTo(fakeSimilarMovies)
         assertThat(result.movieGallery).isEqualTo(fakeGallery)
         assertThat(result.moviePosters).isEqualTo(fakePosters)
+        assertThat(result.userRate).isEqualTo(fakeUserRate)
     }
 
     @Test
@@ -128,6 +131,7 @@ class GetMovieDetailsUseCaseTest {
                 movieGallery = emptyList(),
                 moviePosters = emptyList(),
                 productionCompanies = emptyList(),
+                userRate = null
             )
 
             val result = getMovieDetailsUseCase(1L)
@@ -149,6 +153,7 @@ class GetMovieDetailsUseCaseTest {
             movieGallery = emptyList(),
             moviePosters = emptyList(),
             productionCompanies = emptyList(),
+            userRate = null,
         )
         val result = getMovieDetailsUseCase(1L)
 

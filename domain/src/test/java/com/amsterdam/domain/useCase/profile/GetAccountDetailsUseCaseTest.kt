@@ -24,7 +24,7 @@ class GetAccountDetailsUseCaseTest {
     fun `should return account details`() = runTest {
         //Given
         val exceptedAccountDetails = AccountDetails(
-            id = 2,
+            accountId = 2,
             username = "",
             avatarUrl = ""
         )
