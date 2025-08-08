@@ -16,6 +16,7 @@ import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
 import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
+import com.amsterdam.repository.dto.remote.EpisodeDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowItemDto
@@ -43,7 +44,7 @@ class TvShowRepositoryImpl @Inject constructor(
     private val cryptoData: CryptoData,
     private val categoryLocalSource: CategoryLocalSource,
     private val categoryRemoteSource: CategoryRemoteSource
-    ) : TvShowRepository {
+) : TvShowRepository {
 
     override suspend fun getTvShowByKeyword(
         keyword: String,
@@ -80,7 +81,8 @@ class TvShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getTvShowDetails(tvShowId: Long): GetTvShowDetailsUseCase.TvShowDetails {
-        val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        val sessionId =
+            cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
 
         return remoteTvDataSource.getTvShowDetailsById(tvShowId, sessionId)
             .also {
@@ -101,10 +103,7 @@ class TvShowRepositoryImpl @Inject constructor(
         return remoteTvDataSource.getEpisodesBySeasonNumber(
             tvShowId,
             seasonNumber
-        ).episodes.map { episodeDto ->
-            val videoUrl = getEpisodeVideoUrl(tvShowId, seasonNumber, episodeDto.episodeNumber)
-            episodeDto.toEntity(videoUrl)
-        }
+        ).episodes.map(EpisodeDto::toEntity)
     }
 
     override suspend fun getEpisodeVideoUrl(
@@ -116,7 +115,7 @@ class TvShowRepositoryImpl @Inject constructor(
             tvShowId,
             seasonNumber,
             episodeNumber
-        ).results.firstOrNull()?.fullVideoUrl?:""
+        ).results.firstOrNull()?.fullVideoUrl ?: ""
 
 
     }
@@ -127,103 +126,106 @@ class TvShowRepositoryImpl @Inject constructor(
             remoteTvShowItemDto.toLocalDto(preferences.getAppLanguage().first())
         )
     }
-        override suspend fun getUserRatedTvShows(): List<UserRatedTvShow> {
-            val sessionId = cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
-            return remoteTvDataSource.getRatedTvShows(sessionId).results.toTvShowUserRateEntityList()
-        }
 
-        override suspend fun setTvShowRate(rate: Int, tvShowId: Long) {
-            val sessionId =
-                cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
-            remoteTvDataSource.setTvShowRate(
-                rate = rate,
-                tvShowId = tvShowId,
-                sessionId = sessionId
+    override suspend fun getUserRatedTvShows(): List<UserRatedTvShow> {
+        val sessionId =
+            cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        return remoteTvDataSource.getRatedTvShows(sessionId).results.toTvShowUserRateEntityList()
+    }
+
+    override suspend fun setTvShowRate(rate: Int, tvShowId: Long) {
+        val sessionId =
+            cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        remoteTvDataSource.setTvShowRate(
+            rate = rate,
+            tvShowId = tvShowId,
+            sessionId = sessionId
+        )
+    }
+
+    override suspend fun deleteTvShowRate(tvShowId: Long) {
+        val sessionId =
+            cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
+        remoteTvDataSource.deleteTvShowRate(tvShowId = tvShowId, sessionId = sessionId)
+
+    }
+
+    private suspend fun deleteExpiredPopularTvShows() {
+        localTvDataSource.deleteExpiredPopularTvShows(
+            expirationTime = Clock.System.now().minus(1.days),
+            storedLanguage = preferences.getAppLanguage().first()
+        )
+    }
+
+    private suspend fun getPopularTvShowsFromLocal(): List<TvShowWithCategory> {
+        return localTvDataSource.getPopularTvShows(
+            preferences.getAppLanguage().first()
+        )
+    }
+
+    private suspend fun getPopularTvShowsFromRemote(): List<RemoteTvShowItemDto> {
+        return remoteTvDataSource.getPopularTvShows().results
+    }
+
+    private suspend fun savePopularTvShows(remoteTvShows: List<RemoteTvShowItemDto>) {
+        saveTvShowWithCategories(remoteTvShows).also {
+            localTvDataSource.addPopularTvShows(
+                remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
             )
         }
+    }
 
-        override suspend fun deleteTvShowRate(tvShowId: Long) {
-            val sessionId =
-                cryptoData.decryptString(authenticationLocalSource.getCachedSessionId()) ?: ""
-            remoteTvDataSource.deleteTvShowRate(tvShowId = tvShowId, sessionId = sessionId)
+    private suspend fun deleteExpiredTopRatedTvShows() {
+        localTvDataSource.deleteExpiredTopRatedTvShows(
+            expirationTime = Clock.System.now().minus(1.days),
+            storedLanguage = preferences.getAppLanguage().first()
+        )
+    }
 
-        }
+    private suspend fun getTopRatedTvShowsFromLocal(): List<LocalTvShowDto> {
+        return localTvDataSource.getTopRatedTvShows(
+            preferences.getAppLanguage().first()
+        )
+    }
 
-        private suspend fun deleteExpiredPopularTvShows() {
-            localTvDataSource.deleteExpiredPopularTvShows(
-                expirationTime = Clock.System.now().minus(1.days),
-                storedLanguage = preferences.getAppLanguage().first()
+    private suspend fun getTopRatedTvShowsFromRemote(page: Int): List<RemoteTvShowItemDto> {
+        return remoteTvDataSource.getTopRatedTvShows(page).results
+    }
+
+    private suspend fun saveTopRatedTvShows(remoteTvShows: List<RemoteTvShowItemDto>) {
+        saveTvShowWithCategories(remoteTvShows).also {
+            localTvDataSource.addTopRatedTvShows(
+                remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
             )
         }
+    }
 
-        private suspend fun getPopularTvShowsFromLocal(): List<TvShowWithCategory> {
-            return localTvDataSource.getPopularTvShows(
-                preferences.getAppLanguage().first()
-            )
-        }
+    private suspend fun getTvShows(keyword: String, page: Int): RemoteTvShowResponse {
+        return remoteTvDataSource.getTvShowsByKeyword(keyword, page)
+    }
 
-        private suspend fun getPopularTvShowsFromRemote(): List<RemoteTvShowItemDto> {
-            return remoteTvDataSource.getPopularTvShows().results
-        }
+    private suspend fun saveTvShowWithCategories(remoteTvShows: List<RemoteTvShowItemDto>) {
+        remoteTvShows.forEach { onSaveTvShowWithCategories(it) }
+    }
 
-        private suspend fun savePopularTvShows(remoteTvShows: List<RemoteTvShowItemDto>) {
-            saveTvShowWithCategories(remoteTvShows).also {
-                localTvDataSource.addPopularTvShows(
-                    remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
-                )
+    private suspend fun onSaveTvShowWithCategories(remoteTvShow: RemoteTvShowItemDto) {
+        cacheTvShowCategoriesIfNotCached()
+        localTvDataSource.addTvShowWithCategories(
+            tvShow = remoteTvShow.toLocalDto(preferences.getAppLanguage().first()),
+            categoryIds = remoteTvShow.genreIds.map(Int::toLong),
+            storedLanguage = preferences.getAppLanguage().first()
+        )
+
+    }
+
+    private suspend fun incrementUserInterestByTvShow(remoteCategories: List<RemoteCategoryDto>) {
+        remoteCategories.map(RemoteCategoryDto::id)
+            .map {
+                localTvDataSource.incrementGenreInterest(it.toLong())
             }
-        }
+    }
 
-        private suspend fun deleteExpiredTopRatedTvShows() {
-            localTvDataSource.deleteExpiredTopRatedTvShows(
-                expirationTime = Clock.System.now().minus(1.days),
-                storedLanguage = preferences.getAppLanguage().first()
-            )
-        }
-
-        private suspend fun getTopRatedTvShowsFromLocal(): List<LocalTvShowDto> {
-            return localTvDataSource.getTopRatedTvShows(
-                preferences.getAppLanguage().first()
-            )
-        }
-
-        private suspend fun getTopRatedTvShowsFromRemote(page: Int): List<RemoteTvShowItemDto> {
-            return remoteTvDataSource.getTopRatedTvShows(page).results
-        }
-
-        private suspend fun saveTopRatedTvShows(remoteTvShows: List<RemoteTvShowItemDto>) {
-            saveTvShowWithCategories(remoteTvShows).also {
-                localTvDataSource.addTopRatedTvShows(
-                    remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
-                )
-            }
-        }
-
-        private suspend fun getTvShows(keyword: String, page: Int): RemoteTvShowResponse {
-            return remoteTvDataSource.getTvShowsByKeyword(keyword, page)
-        }
-
-        private suspend fun saveTvShowWithCategories(remoteTvShows: List<RemoteTvShowItemDto>) {
-            remoteTvShows.forEach { onSaveTvShowWithCategories(it) }
-        }
-
-        private suspend fun onSaveTvShowWithCategories(remoteTvShow: RemoteTvShowItemDto) {
-            cacheTvShowCategoriesIfNotCached()
-                localTvDataSource.addTvShowWithCategories(
-                    tvShow = remoteTvShow.toLocalDto(preferences.getAppLanguage().first()),
-                    categoryIds = remoteTvShow.genreIds.map(Int::toLong),
-                    storedLanguage = preferences.getAppLanguage().first()
-                )
-
-        }
-
-        private suspend fun incrementUserInterestByTvShow(remoteCategories: List<RemoteCategoryDto>) {
-            remoteCategories.map(RemoteCategoryDto::id)
-                .map {
-                    localTvDataSource.incrementGenreInterest(it.toLong())
-                }
-        }
-    suspend fun cacheTvShowCategoriesIfNotCached(){
+    suspend fun cacheTvShowCategoriesIfNotCached() {
         getTvShowCategoriesFromLocal().takeIf { it.isNotEmpty() }
             ?: saveTvShowCategoriesToDatabase(categoryRemoteSource.getTvShowCategories())
     }
@@ -237,7 +239,9 @@ class TvShowRepositoryImpl @Inject constructor(
         tvShowCategories: RemoteCategoryResponse
     ) {
         categoryLocalSource.upsertTvShowCategories(
-            tvShowCategories.genres.toLocalTvShowCategoryDtoList(preferences.getAppLanguage().first())
+            tvShowCategories.genres.toLocalTvShowCategoryDtoList(
+                preferences.getAppLanguage().first()
+            )
         )
     }
 
