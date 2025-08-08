@@ -43,7 +43,7 @@ fun DefaultAppBar(
             title.takeIf { it.isNotBlank() }?.let { text ->
                 {
                     Text(
-                        text = title,
+                        text = text,
                         color = AppTheme.color.title,
                         style = AppTheme.textStyle.title.large,
                         maxLines = 1,
@@ -83,7 +83,6 @@ fun DefaultAppBar(
                         painter = painter,
                         contentDescription = lastOptionContentDescription,
                         tint = lastOptionIconTint,
-                        modifier = Modifier.padding(start = 8.dp),
                         paddingValues = PaddingValues(8.dp),
                         onClick = onLastOptionClicked,
                     )
