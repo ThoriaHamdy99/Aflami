@@ -56,7 +56,7 @@ fun ListItem(
                     .padding(horizontal = 8.dp),
         ) {
             Text(
-                text = list.name.take(15),
+                text = list.name,
                 style = AppTheme.textStyle.title.medium,
                 color = AppTheme.color.title,
                 maxLines = 1,
