@@ -17,7 +17,10 @@ dependencies {
 }
 
 private fun DependencyHandlerScope.tensorFlowDependencies() {
-    implementation(libs.tensorflow.lite.task.vision)
+    implementation(files("libs/tensorflow-lite.aar"))
+    implementation(files("libs/tensorflowlite_support_java.aar"))
+    implementation(files("libs/tensorflow-lite-task-vision-0.4.4.aar"))
+    implementation(files("libs/tensorflow-lite-task-base-0.4.4.aar"))
 }
 
 private fun DependencyHandlerScope.coilDependencies() {
