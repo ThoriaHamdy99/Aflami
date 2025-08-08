@@ -32,7 +32,7 @@ class SeriesDetailsViewModel @Inject constructor(
     private val getEpisodesBySeasonNumberUseCase: GetEpisodesBySeasonNumberUseCase,
     private val getsSessionType: GetsSessionType,
     private val setUserTvShowRatingUseCase: SetUserTvShowRatingUseCase,
-    private val getEpisodeVideosByEpisodeIdUseCase: GetEpisodeVideosUseCase,
+    private val getEpisodeVideosByEpisodeUseCase: GetEpisodeVideosUseCase,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<SeriesDetailsUiState, SeriesDetailsEffect>(
@@ -162,7 +162,7 @@ class SeriesDetailsViewModel @Inject constructor(
 
     override fun onPlayEpisodeClicked(seasonNumber: Int, episodeNumber: Int) {
         viewModelScope.launch {
-            getEpisodeVideosByEpisodeIdUseCase(
+            getEpisodeVideosByEpisodeUseCase(
                 state.value.tvShowId,
                 seasonNumber,
                 episodeNumber
