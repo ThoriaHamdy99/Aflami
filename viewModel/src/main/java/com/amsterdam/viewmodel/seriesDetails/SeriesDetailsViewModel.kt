@@ -5,11 +5,11 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
+import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
-import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.entity.Episode
@@ -32,7 +32,7 @@ class SeriesDetailsViewModel @Inject constructor(
     private val getEpisodesBySeasonNumberUseCase: GetEpisodesBySeasonNumberUseCase,
     private val getsSessionType: GetsSessionType,
     private val setUserTvShowRatingUseCase: SetUserTvShowRatingUseCase,
-    private val getEpisodeVideosByEpisodeId: GetEpisodeVideosUseCase,
+    private val getEpisodeVideosUseCase: GetEpisodeVideosUseCase,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<SeriesDetailsUiState, SeriesDetailsEffect>(
@@ -160,22 +160,16 @@ class SeriesDetailsViewModel @Inject constructor(
         sendNewNavigationEffect(SeriesDetailsEffect.LaunchSeriesVideoEffect(state.value.videoUrl))
     }
 
-    override fun onPlayEpisodeClicked(episodeId:Int) {
-
-        val tvShowId = state.value.tvShowId
-        val seasonNumber = state.value.seasons.firstOrNull()?.seasonNumber ?: return
-
+    override fun onPlayEpisodeClicked(seasonNumber: Int, episodeNumber: Int) {
         viewModelScope.launch {
-            tryToExecute(
-                action = {
-                    getEpisodeVideosByEpisodeId(tvShowId, seasonNumber, episodeId)
-
-                },
-                onSuccess = { videoUrl ->
-                    sendNewNavigationEffect(SeriesDetailsEffect.LaunchSeriesVideoEffect(videoUrl))
-                },
-                onError = ::onError
-            )
+            getEpisodeVideosUseCase(
+                state.value.tvShowId,
+                seasonNumber,
+                episodeNumber
+            ).takeIf { it.isNotEmpty() }?.let {
+                sendNewNavigationEffect(SeriesDetailsEffect.LaunchSeriesVideoEffect(it))
+            }
+                ?:  sendNewNavigationEffect(SeriesDetailsEffect.ShowEpisodeTrailerNotFound)
         }
     }
 
@@ -234,6 +228,7 @@ class SeriesDetailsViewModel @Inject constructor(
                     networkError = true
                 )
             }
+
             is NetworkException -> updateState {
                 it.copy(
                     isLoading = false,
@@ -246,7 +241,14 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     override fun onClickCancelRateDialog() {
-        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isVisible = false, selectedStarIndex = state.value.rateDialogUiState.previousStarIndex)) }
+        updateState {
+            it.copy(
+                rateDialogUiState = it.rateDialogUiState.copy(
+                    isVisible = false,
+                    selectedStarIndex = state.value.rateDialogUiState.previousStarIndex
+                )
+            )
+        }
     }
 
     override fun onClickSubmit() {
@@ -264,12 +266,27 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     private fun onSubmitRateSuccess(unit: Unit) {
-        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isVisible = false, isLoading = false)) }
+        updateState {
+            it.copy(
+                rateDialogUiState = it.rateDialogUiState.copy(
+                    isVisible = false,
+                    isLoading = false
+                )
+            )
+        }
         sendNewEffect(SeriesDetailsEffect.ShowRatingSuccessSnackBar)
     }
 
     private fun onSubmitRateError(exception: AflamiException) {
-        updateState { it.copy(rateDialogUiState = it.rateDialogUiState.copy(isVisible = false, isLoading = false, selectedStarIndex = it.rateDialogUiState.previousStarIndex)) }
+        updateState {
+            it.copy(
+                rateDialogUiState = it.rateDialogUiState.copy(
+                    isVisible = false,
+                    isLoading = false,
+                    selectedStarIndex = it.rateDialogUiState.previousStarIndex
+                )
+            )
+        }
         sendNewNavigationEffect(SeriesDetailsEffect.ShowRatingErrorSnackBar)
     }
 

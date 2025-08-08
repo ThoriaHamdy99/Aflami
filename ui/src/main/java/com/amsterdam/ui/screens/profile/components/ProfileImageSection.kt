@@ -27,9 +27,13 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.modifierExtensions.dropShadow
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
+import com.amsterdam.ui.application.LocalRestrictionLevel
+import com.amsterdam.ui.components.ProfileImagePlaceholder
+import com.amsterdam.ui.utils.toSafetyLevel
 
 @Composable
 fun ProfileImageSection(userAvatarUrl: String) {
+    val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     Box {
         Image(
             painter = getProfileBackgroundImageResourceId(),
@@ -68,6 +72,7 @@ fun ProfileImageSection(userAvatarUrl: String) {
                     width = 1.dp, AppTheme.color.stroke,
                     shape = RoundedCornerShape(24.dp)
                 ),
+            safetyLevel = safetyLevel,
             onLoading = { ImageLoadingIndicator() },
             onError = { ProfileImagePlaceholder() }
         )
@@ -106,14 +111,6 @@ private fun getProfileBackgroundImageResourceId(): Painter {
         return painterResource(R.drawable.profile_background_image_dark)
     }
     return painterResource(R.drawable.profile_background_image)
-}
-
-@Composable
-private fun ProfileImagePlaceholder() {
-    Image(
-        painter = painterResource(R.drawable.img_empty_user_pic),
-        contentDescription = stringResource(R.string.profile),
-    )
 }
 
 @ThemeAndLocalePreviews
