@@ -36,7 +36,7 @@ fun CreateNewListDialog(
             )
             TextField(
                 text = listName,
-                onValueChange = { onListNameChange(it.trim()) },
+                onValueChange =  onListNameChange ,
                 hintText = stringResource(R.string.my_favorite),
                 leadingIcon = com.amsterdam.designsystem.R.drawable.ic_nav_lists,
             )
