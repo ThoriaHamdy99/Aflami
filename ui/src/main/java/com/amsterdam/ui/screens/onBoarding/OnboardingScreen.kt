@@ -145,10 +145,7 @@ private fun OnboardingScreenContent(
             ) {
                 if (currentPageIndex > 0) {
                     NavigationButton(
-                        icon = painterResource(id = R.drawable.ic_arrow_right),
-                        modifier = Modifier.graphicsLayer(
-                            scaleX = if (isRtl) 1f else -1f
-                        ),
+                        icon = painterResource(id = R.drawable.ic__back_arrow),
                         onClick = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(currentPageIndex - 1)
@@ -161,9 +158,6 @@ private fun OnboardingScreenContent(
 
                 NavigationButton(
                     icon = painterResource(id = R.drawable.ic_arrow_right),
-                    modifier = Modifier.graphicsLayer(
-                        scaleX = if (isRtl) -1f else 1f
-                    ),
                     onClick = {
                         if (currentPageIndex == totalPages - 1) {
                             onboardingViewModel.onGetStartedClicked()
