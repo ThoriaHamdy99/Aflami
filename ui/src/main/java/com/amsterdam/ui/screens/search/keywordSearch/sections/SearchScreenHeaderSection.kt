@@ -46,7 +46,7 @@ fun SearchScreenHeaderSection(
                     .background(color = AppTheme.color.surface)
                     .padding(top = 8.dp),
             text = keyword,
-            onValueChange = { onKeywordValuedChanged(it.trim()) },
+            onValueChange = { onKeywordValuedChanged(it) },
             hintText = stringResource(R.string.search_hint),
             trailingIcon = com.amsterdam.ui.R.drawable.ic_filter_vertical,
             onTrailingClick = onFilterButtonClicked,

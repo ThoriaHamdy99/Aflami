@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.Icon
@@ -44,9 +45,11 @@ fun RecentSearchItem(
 
         Text(
             modifier = Modifier.padding(start = 8.dp),
-            text = title,
+            text = title.trim().take(50),
             style = AppTheme.textStyle.body.medium,
             color = AppTheme.color.title,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
 
         Spacer(modifier = Modifier.weight(1f))
