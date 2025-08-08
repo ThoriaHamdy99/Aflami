@@ -1,12 +1,14 @@
 package com.amsterdam.ui.components.appBar
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.TopAppBar
@@ -32,6 +34,13 @@ fun DefaultAppBar(
     onLastOptionClicked: () -> Unit = {},
     onNavigateBackClicked: () -> Unit = {},
 ) {
+    val maxTitleLength = 25
+    val shortenedTitle = if (title.length > maxTitleLength) {
+        title.take(maxTitleLength) + "…"
+    } else {
+        title
+    }
+
     TopAppBar(
         modifier = modifier,
         containerColor = containerColor,
@@ -39,9 +48,11 @@ fun DefaultAppBar(
             title.takeIf { it.isNotBlank() }?.let { text ->
                 {
                     Text(
-                        text = text,
+                        text = shortenedTitle,
                         color = AppTheme.color.title,
                         style = AppTheme.textStyle.title.large,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             },
@@ -77,6 +88,7 @@ fun DefaultAppBar(
                         painter = painter,
                         contentDescription = lastOptionContentDescription,
                         tint = lastOptionIconTint,
+                        modifier = Modifier.padding(start = 8.dp),
                         paddingValues = PaddingValues(8.dp),
                         onClick = onLastOptionClicked,
                     )
