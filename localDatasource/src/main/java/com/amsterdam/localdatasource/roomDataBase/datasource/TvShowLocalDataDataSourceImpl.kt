@@ -3,7 +3,7 @@ package com.amsterdam.localdatasource.roomDataBase.datasource
 import androidx.room.Transaction
 import com.amsterdam.localdatasource.roomDataBase.daos.TvShowCategoryInterestDao
 import com.amsterdam.localdatasource.roomDataBase.daos.TvShowDao
-import com.amsterdam.repository.datasource.local.TvShowLocalSource
+import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
 import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.dto.local.PopularTvShowDto
 import com.amsterdam.repository.dto.local.TopRatedTvShowDto
@@ -12,17 +12,17 @@ import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
 import kotlinx.datetime.Instant
 import javax.inject.Inject
 
-class TvShowLocalDataSourceImpl @Inject constructor(
+class TvShowLocalDataDataSourceImpl @Inject constructor(
     private val tvShowDao: TvShowDao,
     private val tvShowCategoryInterestDao: TvShowCategoryInterestDao
-) : TvShowLocalSource {
+) : TvShowLocalDataSource {
     @Transaction
-    override suspend fun addTvShowWithCategories(
+    override suspend fun upsertTvShowWithCategories(
         tvShow: LocalTvShowDto,
         categoryIds: List<Long>,
         storedLanguage: String
     ) {
-        tvShowDao.insertTvShow(tvShow)
+        tvShowDao.upsertTvShow(tvShow)
         val tvShowCrossRefs = categoryIds.map { categoryId ->
             TvShowCategoryCrossRefDto(
                 tvShowId = tvShow.tvShowId,
@@ -30,15 +30,15 @@ class TvShowLocalDataSourceImpl @Inject constructor(
                 storedLanguage = storedLanguage
             )
         }
-        tvShowDao.insertTvShowCategoryCrossRefs(tvShowCrossRefs)
+        tvShowDao.upsertTvShowCategoryCrossRefs(tvShowCrossRefs)
     }
 
     override suspend fun incrementGenreInterest(categoryId: Long) {
         tvShowCategoryInterestDao.incrementInterest(categoryId)
     }
 
-    override suspend fun insertTvShow(tvShow: LocalTvShowDto) {
-        tvShowDao.insertTvShow(tvShow)
+    override suspend fun upsertTvShow(tvShow: LocalTvShowDto) {
+        tvShowDao.upsertTvShow(tvShow)
     }
 
     override suspend fun getTvShowById(
@@ -57,15 +57,15 @@ class TvShowLocalDataSourceImpl @Inject constructor(
     }
 
     @Transaction
-    override suspend fun addPopularTvShows(tvShows: List<LocalTvShowDto>) {
-        tvShowDao.insertTvShows(tvShows)
+    override suspend fun upsertPopularTvShows(tvShows: List<LocalTvShowDto>) {
+        tvShowDao.upsertTvShows(tvShows)
         val entries = tvShows.map { tvShow ->
             PopularTvShowDto(
                 tvShowId = tvShow.tvShowId,
                 storedLanguage = tvShow.storedLanguage
             )
         }
-        tvShowDao.insertPopularTvShows(entries)
+        tvShowDao.upsertPopularTvShows(entries)
     }
 
     override suspend fun deleteExpiredPopularTvShows(
@@ -75,15 +75,15 @@ class TvShowLocalDataSourceImpl @Inject constructor(
         tvShowDao.deleteExpiredPopularTvShows(expirationTime, storedLanguage)
     }
 
-    override suspend fun addTopRatedTvShows(tvShows: List<LocalTvShowDto>) {
-        tvShowDao.insertTvShows(tvShows)
+    override suspend fun upsertTopRatedTvShows(tvShows: List<LocalTvShowDto>) {
+        tvShowDao.upsertTvShows(tvShows)
         val entries = tvShows.map { tvShow ->
             TopRatedTvShowDto(
                 tvShowId = tvShow.tvShowId,
                 storedLanguage = tvShow.storedLanguage
             )
         }
-        tvShowDao.insertTopRatedTvShows(entries)
+        tvShowDao.upsertTopRatedTvShows(entries)
     }
 
     override suspend fun deleteExpiredTopRatedTvShows(

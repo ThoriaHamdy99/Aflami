@@ -228,6 +228,7 @@
     <!-- - Home  -->
     <string name="upcoming">القادمة</string>
     <string name="no_upcoming_movies_found_for_your_selection">لم يتم العثور على أفلام قادمة لاختيارك.</string>
+    <string name="error_mood_movies_loading">عذرًا! لم نتمكن من العثور على أفلام تناسب مزاجك.</string>
 
     <!-- Details Screen -->
     <string name="there_is_no_gallery">لا توجد صور</string>
@@ -262,4 +263,6 @@
 
     <string name="added_to_list_successfully">تمت الإضافة إلى القائمة بنجاح.</string>
     <string name="failed_to_add_to_list">فشل في الإضافة إلى القائمة.</string>
+
+    <string name="brightness_message">سوف تتعرض لهجوم من قبل مجموعة من الألوان الزاهية!</string>
 </resources>

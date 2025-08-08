@@ -8,12 +8,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -37,7 +43,10 @@ fun HistoryAndRatingSection(
     onClickRating: () -> Unit
 ) {
     Row(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .height(IntrinsicSize.Min)
+            .padding(horizontal = 16.dp, vertical = 24.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         CustomCard(
@@ -53,7 +62,6 @@ fun HistoryAndRatingSection(
     }
 }
 
-
 @Composable
 private fun RowScope.CustomCard(
     @DrawableRes imageResourceId: Int,
@@ -61,13 +69,16 @@ private fun RowScope.CustomCard(
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier.weight(1f)
+        modifier = Modifier
+            .weight(1f)
+            .fillMaxHeight()
     ) {
-        Box(
+        Row(
             modifier = Modifier
                 .padding(top = 8.dp)
-                .height(71.dp)
+                .defaultMinSize(minHeight = 71.dp)
                 .fillMaxWidth()
+                .fillMaxHeight()
                 .border(
                     width = 1.dp,
                     color = AppTheme.color.stroke,
@@ -89,10 +100,12 @@ private fun RowScope.CustomCard(
                 style = AppTheme.textStyle.label.medium,
                 color = AppTheme.color.title,
                 modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(vertical = 12.dp, horizontal = 8.dp)
+                    .weight(1f)
+                    .padding(12.dp)
             )
+            Spacer(Modifier.width(64.dp))
         }
+
         Image(
             painter = painterResource(imageResourceId),
             contentDescription = stringResource(R.string.profile),

@@ -3,7 +3,7 @@ package com.amsterdam.localdatasource.roomDataBase.datasource
 import androidx.room.Transaction
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieCategoryInterestDao
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieDao
-import com.amsterdam.repository.datasource.local.MovieLocalSource
+import com.amsterdam.repository.datasource.local.MovieLocalDataSource
 import com.amsterdam.repository.dto.local.LocalMovieDto
 import com.amsterdam.repository.dto.local.MovieCategoryCrossRefDto
 import com.amsterdam.repository.dto.local.PopularMovieDto
@@ -13,10 +13,10 @@ import com.amsterdam.repository.dto.local.relation.MovieWithCategories
 import kotlinx.datetime.Instant
 import javax.inject.Inject
 
-class MovieLocalDataSourceImpl @Inject constructor(
+class MovieLocalDataDataSourceImpl @Inject constructor(
     private val movieDao: MovieDao,
     private val interestDao: MovieCategoryInterestDao
-) : MovieLocalSource {
+) : MovieLocalDataSource {
     override suspend fun getMovieById(
         movieId: Long,
         storedLanguage: String
@@ -25,12 +25,12 @@ class MovieLocalDataSourceImpl @Inject constructor(
     }
 
     @Transaction
-    override suspend fun addMovieWithCategories(
+    override suspend fun upsertMovieWithCategories(
         movie: LocalMovieDto,
         categoryIds: List<Long>,
         storedLanguage: String
     ) {
-        movieDao.insertMovie(movie)
+        movieDao.upsertMovie(movie)
         val movieCrossRefs = categoryIds.map { categoryId ->
             MovieCategoryCrossRefDto(
                 movieId = movie.movieId,
@@ -38,15 +38,15 @@ class MovieLocalDataSourceImpl @Inject constructor(
                 storedLanguage = storedLanguage
             )
         }
-        movieDao.insertMovieCategoryCrossRefs(movieCrossRefs)
+        movieDao.upsertMovieCategoryCrossRefs(movieCrossRefs)
     }
 
     override suspend fun incrementGenreInterest(categoryId: Long) {
         interestDao.incrementInterest(categoryId)
     }
 
-    override suspend fun insertMovie(movie: LocalMovieDto) {
-        movieDao.insertMovie(movie)
+    override suspend fun upsertMovie(movie: LocalMovieDto) {
+        movieDao.upsertMovie(movie)
     }
 
     override suspend fun getPopularMovies(storedLanguage: String): List<MovieWithCategories> {
@@ -62,15 +62,15 @@ class MovieLocalDataSourceImpl @Inject constructor(
     }
 
     @Transaction
-    override suspend fun addPopularMovies(movies: List<LocalMovieDto>) {
-        movieDao.insertMovies(movies)
+    override suspend fun upsertPopularMovies(movies: List<LocalMovieDto>) {
+        movieDao.upsertMovies(movies)
         val entries = movies.map { movie ->
             PopularMovieDto(
                 movieId = movie.movieId,
                 storedLanguage = movie.storedLanguage
             )
         }
-        movieDao.insertPopularMovies(entries)
+        movieDao.upsertPopularMovies(entries)
     }
 
     override suspend fun deleteExpiredPopularMovies(
@@ -81,15 +81,15 @@ class MovieLocalDataSourceImpl @Inject constructor(
     }
 
     @Transaction
-    override suspend fun addTopRatedMovies(movies: List<LocalMovieDto>) {
-        movieDao.insertMovies(movies)
+    override suspend fun upsertTopRatedMovies(movies: List<LocalMovieDto>) {
+        movieDao.upsertMovies(movies)
         val entries = movies.map { movie ->
             TopRatedMovieDto(
                 movieId = movie.movieId,
                 storedLanguage = movie.storedLanguage
             )
         }
-        movieDao.insertTopRatedMovies(entries)
+        movieDao.upsertTopRatedMovies(entries)
     }
 
     override suspend fun deleteAllExpiredTopRatedMovies(
@@ -100,15 +100,15 @@ class MovieLocalDataSourceImpl @Inject constructor(
     }
 
     @Transaction
-    override suspend fun addUpcomingMovies(movies: List<LocalMovieDto>) {
-        movieDao.insertMovies(movies)
+    override suspend fun upsertUpcomingMovies(movies: List<LocalMovieDto>) {
+        movieDao.upsertMovies(movies)
         val entries = movies.map { movie ->
             UpcomingMovieDto(
                 movieId = movie.movieId,
                 storedLanguage = movie.storedLanguage
             )
         }
-        movieDao.insertUpcomingMovies(entries)
+        movieDao.upsertUpcomingMovies(entries)
     }
 
     override suspend fun deleteExpiredUpcomingMovies(
