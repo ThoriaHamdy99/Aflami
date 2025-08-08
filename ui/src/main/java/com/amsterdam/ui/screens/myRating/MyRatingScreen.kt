@@ -43,6 +43,7 @@ import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalNavController
+import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
@@ -51,6 +52,7 @@ import com.amsterdam.ui.navigation.Route.SeriesDetails
 import com.amsterdam.ui.screens.myRating.placeholders.emptyRatingListPlaceholder
 import com.amsterdam.ui.screens.myRating.placeholders.mediaCardsPlaceholder
 import com.amsterdam.ui.utils.SavedStateKeys
+import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.myRating.MyRatingInteractionListener
 import com.amsterdam.viewmodel.myRating.MyRatingUiEffect
 import com.amsterdam.viewmodel.myRating.MyRatingUiState
@@ -113,7 +115,7 @@ private fun MyRatingContent(
 
     var appBarHeight by remember { mutableIntStateOf(0) }
     var tabsHeight by remember { mutableIntStateOf(0) }
-
+    val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     val availableHeight =
         calculateAvailableHeight(appBarHeightPx = appBarHeight, tabsHeightPx = tabsHeight)
 
@@ -165,6 +167,7 @@ private fun MyRatingContent(
                                     modifier = Modifier.fillMaxSize(),
                                     contentDescription = name,
                                     model = posterImageUrl,
+                                    safetyLevel = safetyLevel,
                                     onLoading = { ImageLoadingIndicator() },
                                     onError = { ImageErrorIndicator() },
                                 )
@@ -190,6 +193,7 @@ private fun MyRatingContent(
                                 SafeImageView(
                                     modifier = Modifier.fillMaxSize(),
                                     contentDescription = name,
+                                    safetyLevel = safetyLevel,
                                     model = posterImageUrl,
                                     onLoading = { ImageLoadingIndicator() },
                                     onError = { ImageErrorIndicator() },

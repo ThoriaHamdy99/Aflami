@@ -14,12 +14,12 @@ import org.junit.jupiter.api.Test
 class CategoryLocalDataSourceImplTest {
 
     private lateinit var dao: CategoryDao
-    private lateinit var categoryLocalDataSourceImpl: CategoryLocalDataSourceImpl
+    private lateinit var categoryLocalDataSourceImpl: CategoryLocalDataDataSourceImpl
 
     @BeforeEach
     fun setup() {
         dao = mockk(relaxed = true)
-        categoryLocalDataSourceImpl = CategoryLocalDataSourceImpl(dao)
+        categoryLocalDataSourceImpl = CategoryLocalDataDataSourceImpl(dao)
     }
 
     @Test

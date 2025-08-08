@@ -7,4 +7,6 @@ sealed interface HomeEffect {
     data class NavigateToTvShowDetailsEffect(val tvShowId : Long) : HomeEffect
     object NavigateToTopRatedMoviesEffect : HomeEffect
     object NavigateToContinueWatchingMoviesScreen : HomeEffect
+
+    object ShowGetMoviesByMoodErrorSnackBar: HomeEffect
 }

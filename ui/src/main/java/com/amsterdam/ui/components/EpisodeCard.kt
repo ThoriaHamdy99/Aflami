@@ -50,9 +50,9 @@ fun EpisodeCard(
     episodeTime: String,
     publishedAt: String,
     episodeDescription: String,
-    isActive: Boolean,
     modifier: Modifier = Modifier,
     onPlayEpisodeClick: () -> Unit = {},
+    isActive: Boolean = true,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -82,7 +82,7 @@ fun EpisodeCard(
                     publishedAt = publishedAt,
                 )
             }
-            PlayEpisodeButton(onPlayEpisodeClick,isActive )
+            PlayEpisodeButton(onPlayEpisodeClick, isActive)
         }
         EpisodeDescription(
             episodeDescription = episodeDescription,
@@ -206,7 +206,7 @@ private fun EpisodeDescription(episodeDescription: String) {
 }
 
 @Composable
-private fun PlayEpisodeButton(onPlayEpisodeClick: () -> Unit,isActive:Boolean ) {
+private fun PlayEpisodeButton(onPlayEpisodeClick: () -> Unit, isActive: Boolean) {
     val playButtonColor by animateColorAsState(
         targetValue = if (isActive) AppTheme.color.primary else AppTheme.color.stroke,
         label = "PlayButtonColor"

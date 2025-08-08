@@ -18,13 +18,13 @@ class TvShowLocalDataSourceImplTest {
 
     private lateinit var tvShowDao: TvShowDao
     private lateinit var tvShowCategoryInterestDao: TvShowCategoryInterestDao
-    private lateinit var dataSource: TvShowLocalDataSourceImpl
+    private lateinit var dataSource: TvShowLocalDataDataSourceImpl
 
     @BeforeEach
     fun setUp() {
         tvShowDao = mockk(relaxed = true)
         tvShowCategoryInterestDao = mockk(relaxed = true)
-        dataSource = TvShowLocalDataSourceImpl(tvShowDao, tvShowCategoryInterestDao)
+        dataSource = TvShowLocalDataDataSourceImpl(tvShowDao, tvShowCategoryInterestDao)
     }
 
     @Test
@@ -65,10 +65,10 @@ class TvShowLocalDataSourceImplTest {
                 )
             )
             // When
-            dataSource.addTvShowWithCategories(tvShow, categories, "en")
+            dataSource.upsertTvShowWithCategories(tvShow, categories, "en")
             // Then
-            coVerify(exactly = 1) { tvShowDao.insertTvShow(tvShow) }
-            coVerify(exactly = 1) { tvShowDao.insertTvShowCategoryCrossRefs(expectedCrossRefs) }
+            coVerify(exactly = 1) { tvShowDao.upsertTvShow(tvShow) }
+            coVerify(exactly = 1) { tvShowDao.upsertTvShowCategoryCrossRefs(expectedCrossRefs) }
         }
 
     @Test
@@ -77,9 +77,9 @@ class TvShowLocalDataSourceImplTest {
         val storedLanguage = "en"
         val tvShow = createTvShow(id = 42, language = storedLanguage)
         //When
-        dataSource.insertTvShow(tvShow)
-        //Then
-        coVerify(exactly = 1) { dataSource.insertTvShow(tvShow) }
+        dataSource.upsertTvShow(tvShow)
+        // Then
+        coVerify(exactly = 1) { dataSource.upsertTvShow(tvShow) }
     }
 
     @Test
@@ -111,14 +111,16 @@ class TvShowLocalDataSourceImplTest {
         val storedLanguage = "en"
         val tvShows = listOf(createTvShow(id = 42, language = storedLanguage))
         //When
-        dataSource.addPopularTvShows(tvShows)
-        //Then
+        dataSource.upsertPopularTvShows(tvShows)
+        // Then
         coVerify(exactly = 1) {
-            tvShowDao.insertPopularTvShows(match { list ->
-                list.size == 1 &&
+            tvShowDao.upsertPopularTvShows(
+                match { list ->
+                    list.size == 1 &&
                         list[0].tvShowId == 42L &&
                         list[0].storedLanguage == "en"
-            })
+            }
+                    )
         }
     }
 
@@ -127,10 +129,10 @@ class TvShowLocalDataSourceImplTest {
         //Given
         val storedLanguage = "en"
         val tvShows = listOf(createTvShow(id = 42, language = storedLanguage))        //When
-        dataSource.addTopRatedTvShows(tvShows)
-        //Then
+        dataSource.upsertTopRatedTvShows(tvShows)
+        // Then
         coVerify(exactly = 1) {
-            tvShowDao.insertTopRatedTvShows(match { list ->
+            tvShowDao.upsertTopRatedTvShows(match { list ->
                 list.size == 1 &&
                         list[0].tvShowId == 42L &&
                         list[0].storedLanguage == "en"

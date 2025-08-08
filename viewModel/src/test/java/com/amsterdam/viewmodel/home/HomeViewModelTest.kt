@@ -344,7 +344,7 @@ class HomeViewModelTest {
         val selectedMood = Mood.ROMANTIC
 
         // When
-        viewModel.onClickMood(selectedMood)
+        viewModel.onChangeMood(selectedMood)
         advanceUntilIdle()
 
         // Then
@@ -383,7 +383,7 @@ class HomeViewModelTest {
         coEvery { getMoviesByMoodUseCase(selectedMood) } returns moodMovies
 
         // When
-        viewModel.onClickMood(selectedMood)
+        viewModel.onChangeMood(selectedMood)
         advanceUntilIdle()
 
         viewModel.onClickGetNow()
@@ -411,7 +411,7 @@ class HomeViewModelTest {
             coEvery{ getMoviesByMoodUseCase(selectedMood) } returns firstMoodMovies andThen secondMoodMovies
 
             // When and Then
-            viewModel.onClickMood(selectedMood)
+            viewModel.onChangeMood(selectedMood)
             advanceUntilIdle()
 
             viewModel.onClickGetNow()
@@ -434,7 +434,7 @@ class HomeViewModelTest {
             coEvery { getMoviesByMoodUseCase(selectedMood) } returns emptyList()
 
             // When
-            viewModel.onClickMood(selectedMood)
+            viewModel.onChangeMood(selectedMood)
             advanceUntilIdle()
 
             viewModel.onClickGetNow()

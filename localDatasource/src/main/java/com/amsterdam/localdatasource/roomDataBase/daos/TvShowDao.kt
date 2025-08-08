@@ -4,9 +4,9 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.amsterdam.repository.dto.local.LocalTvShowDto
-import com.amsterdam.repository.dto.local.TvShowCategoryCrossRefDto
 import com.amsterdam.repository.dto.local.PopularTvShowDto
 import com.amsterdam.repository.dto.local.TopRatedTvShowDto
+import com.amsterdam.repository.dto.local.TvShowCategoryCrossRefDto
 import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
 import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 import kotlinx.datetime.Instant
@@ -14,16 +14,16 @@ import kotlinx.datetime.Instant
 @Dao
 interface TvShowDao {
     @Upsert
-    suspend fun insertTvShow(tvShow: LocalTvShowDto)
+    suspend fun upsertTvShow(tvShow: LocalTvShowDto)
 
     @Upsert
-    suspend fun insertTvShows(tvShows: List<LocalTvShowDto>)
+    suspend fun upsertTvShows(tvShows: List<LocalTvShowDto>)
 
     @Query(" SELECT * FROM ${DatabaseConstants.TV_SHOW_TABLE} WHERE tvShowId = :tvShowId and storedLanguage = :storedLanguage")
     suspend fun getTvShowById(tvShowId: Long, storedLanguage: String): LocalTvShowDto?
 
     @Upsert
-    suspend fun insertTvShowCategoryCrossRefs(crossRefs: List<TvShowCategoryCrossRefDto>)
+    suspend fun upsertTvShowCategoryCrossRefs(crossRefs: List<TvShowCategoryCrossRefDto>)
 
     @Query(
         """
@@ -43,7 +43,7 @@ interface TvShowDao {
         """
         SELECT * FROM ${DatabaseConstants.TV_SHOW_TABLE} AS tv
         INNER JOIN ${DatabaseConstants.TOP_RATED_TV_SHOW_TABLE} As topRatedTvShow
-        ON tv.tvShowId = topRatedTvShow.tvShowId 
+        ON tv.tvShowId = topRatedTvShow.tvShowId
         WHERE tv.storedLanguage = topRatedTvShow.storedLanguage
         AND tv.storedLanguage = :storedLanguage
     """
@@ -51,7 +51,7 @@ interface TvShowDao {
     suspend fun getTopRatedTvShows(storedLanguage: String): List<LocalTvShowDto>
 
     @Upsert
-    suspend fun insertPopularTvShows(tvShows: List<PopularTvShowDto>)
+    suspend fun upsertPopularTvShows(tvShows: List<PopularTvShowDto>)
 
     @Query(
         """
@@ -62,11 +62,11 @@ interface TvShowDao {
     suspend fun deleteExpiredPopularTvShows(expirationTime: Instant, storedLanguage: String)
 
     @Upsert
-    suspend fun insertTopRatedTvShows(tvShows: List<TopRatedTvShowDto>)
+    suspend fun upsertTopRatedTvShows(tvShows: List<TopRatedTvShowDto>)
 
     @Query(
         """
-            DELETE FROM ${DatabaseConstants.TOP_RATED_TV_SHOW_TABLE} 
+            DELETE FROM ${DatabaseConstants.TOP_RATED_TV_SHOW_TABLE}
             WHERE dateAdded < :expirationTime AND storedLanguage = :storedLanguage
     """
     )

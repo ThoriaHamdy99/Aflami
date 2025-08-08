@@ -19,9 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +40,7 @@ import io.sifr.shaded.modifiers.blur
 @Composable
 fun MoodPickerCard(
     cardMoods: List<CardMood>,
+    selectedMood: CardMood?,
     isButtonEnabled: Boolean,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
@@ -89,9 +87,10 @@ fun MoodPickerCard(
         }
 
         MoodOptionsSection(
-            cardMoods,
-            isButtonEnabled,
-            isLoading,
+            cardMoods = cardMoods,
+            selectedMood = selectedMood,
+            isButtonEnabled = isButtonEnabled,
+            isLoading = isLoading,
             modifier =
                 Modifier
                     .padding(top = 76.dp, start = 2.dp, end = 2.dp, bottom = 2.dp),
@@ -105,13 +104,15 @@ fun MoodPickerCard(
 @Composable
 private fun MoodOptionsSection(
     cardMoods: List<CardMood>,
+    selectedMood: CardMood?,
     isButtonEnabled: Boolean,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     onSelectMood: (CardMood) -> Unit = {},
     onClickGetNow: () -> Unit = {},
 ) {
-    var selectedIndex by remember { mutableIntStateOf(-1) }
+    //var selectedIndex by remember { mutableIntStateOf(-1) }
+    val selectedIndex = cardMoods.indexOfFirst { it.name == selectedMood?.name }
 
     Column(
         modifier =
@@ -137,10 +138,7 @@ private fun MoodOptionsSection(
                 MoodIcon(
                     iconRes = mood.iconResourceId,
                     isSelected = selectedIndex == index,
-                    onClick = {
-                        selectedIndex = index
-                        onSelectMood(mood)
-                    },
+                    onClick = { onSelectMood(mood) },
                 )
             }
         }
@@ -231,6 +229,8 @@ private fun CustomMoodPickerCardPreview() {
                 CardMood.SAD_DIZZY
             ),
             onSelectMood = {},
+            onClickGetNow = {},
+            selectedMood = CardMood.ANGRY
         )
     }
 }
