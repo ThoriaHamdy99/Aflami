@@ -69,15 +69,6 @@ data class HomeUiState(
         val categories: List<String> = emptyList(),
     )
 
-    data class ContinueWatchingUiState(
-        val id: Long = 0,
-        val name: String = "",
-        val posterImageUrl: String = "",
-        val rate: String = "",
-        val dateAdded: Instant = Clock.System.now(),
-        val mediaType: MediaType = MediaType.MOVIE
-    )
-
     data class TopRatedMoviesUiState(
         val id: Long = 0,
         val name: String = "",

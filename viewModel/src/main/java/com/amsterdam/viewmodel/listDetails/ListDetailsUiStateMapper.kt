@@ -1,7 +1,6 @@
 package com.amsterdam.viewmodel.listDetails
 
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.TvShow
 import com.amsterdam.viewmodel.listDetails.ListDetailsUiState.ListDetailsItemsUiState
 import com.amsterdam.viewmodel.shared.mappers.toFormattedRating
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
@@ -19,13 +18,3 @@ fun Movie.toListDetailsItemUiState(): ListDetailsItemsUiState {
 }
 
 fun List<Movie>.toListDetailsItemUiState(): List<ListDetailsItemsUiState> = map { it.toListDetailsItemUiState() }
-fun TvShow.toListDetailsItemUiState(): ListDetailsItemsUiState {
-    return ListDetailsItemsUiState(
-        id = id,
-        name = name,
-        posterImageUrl = posterUrl,
-        yearOfRelease = airDate.toYearString(),
-        rate = rating.toFormattedRating(),
-        mediaType = MediaType.TV_SHOW
-    )
-}

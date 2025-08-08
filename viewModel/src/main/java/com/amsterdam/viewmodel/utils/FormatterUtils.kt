@@ -1,9 +1,6 @@
 package com.amsterdam.viewmodel.utils
 
 import kotlinx.datetime.LocalDate
-import java.util.Locale
-import kotlin.math.roundToInt
-
 
 fun LocalDate?.toFormattedString(): String {
     return this?.let { date ->

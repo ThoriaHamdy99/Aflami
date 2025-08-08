@@ -16,12 +16,9 @@ import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.components.MediaCard
-
 import com.amsterdam.viewmodel.search.uiState.SearchMediaItemUiState
-import com.amsterdam.viewmodel.shared.TabOption
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
-import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState
-import com.amsterdam.viewmodel.watchHistory.WatchHistoryUiState
+
 
 @Composable
 fun SuccessMediaItemsSection(

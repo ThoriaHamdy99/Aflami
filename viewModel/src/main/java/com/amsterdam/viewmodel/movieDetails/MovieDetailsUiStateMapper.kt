@@ -25,7 +25,7 @@ fun MovieDetails.toUiState(): MovieDetailsUiState {
         originCountry = movie.originCountry,
         description = movie.description,
         videoUrl = movie.videoUrl,
-        actors = actors.toActorsUiState(),
+        actors = actors.toActorsMovieUiState(),
         extraItem = MovieDetailsUiState.defaultMovieExtras,
         similarMovies = similarMovies.toSimilarMoviesUiState(),
         productionCompany = productionCompanies.toProductionMovieCompaniesUiState(),
@@ -33,9 +33,9 @@ fun MovieDetails.toUiState(): MovieDetailsUiState {
         reviews = reviews.map(Review::toUiState)
     )
 }
-fun Actor.toActorUiState(): ActorMovieUiState = ActorMovieUiState(photo = imageUrl, name = name)
+fun Actor.toActorMovieUiState(): ActorMovieUiState = ActorMovieUiState(photo = imageUrl, name = name)
 
-fun List<Actor>.toActorsUiState() : List<ActorMovieUiState> = map { it.toActorUiState() }
+fun List<Actor>.toActorsMovieUiState() : List<ActorMovieUiState> = map { it.toActorMovieUiState() }
 
 private fun Movie.toSimilarMovieUiState(): SimilarMovieUiState {
     return SimilarMovieUiState(

@@ -50,16 +50,6 @@ fun Movie.toUpcomingMediaItemUiState(): UpcomingMoviesUiState {
     )
 }
 
-fun TvShow.toUpcomingMediaItemUiState(): UpcomingMoviesUiState {
-    return UpcomingMoviesUiState(
-        id = id,
-        name = name,
-        posterImageUrl = posterUrl,
-        rate = rating.toFormattedRating(),
-        mediaType = MediaType.TV_SHOW
-    )
-}
-
 fun Movie.toMoodPickerItemUiState(): MoodPickerItemUiState {
     return MoodPickerItemUiState(
         id = id,
@@ -73,15 +63,6 @@ fun Movie.toMoodPickerItemUiState(): MoodPickerItemUiState {
 
 fun List<Movie>.toMoodPickerItemsUiState(): List<MoodPickerItemUiState> = map { it.toMoodPickerItemUiState() }
 
-fun TvShow.toMoodPickerItemUiState(): MoodPickerItemUiState {
-    return MoodPickerItemUiState(
-        id = id,
-        name = name,
-        posterImageUrl = posterUrl,
-        rate = rating.toFormattedRating(),
-        mediaType = MediaType.TV_SHOW
-    )
-}
 fun Movie.toPopularMediaItemUiState(): PopularMediaItemUiState {
     return PopularMediaItemUiState(
         id = id,

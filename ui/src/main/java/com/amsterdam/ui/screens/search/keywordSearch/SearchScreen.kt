@@ -49,7 +49,6 @@ import com.amsterdam.viewmodel.search.keywordSearch.SearchUiState.SearchErrorSta
 import com.amsterdam.viewmodel.search.keywordSearch.SearchViewModel
 import com.amsterdam.viewmodel.search.uiState.SearchMediaItemUiState
 import com.amsterdam.viewmodel.shared.TabOption
-import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

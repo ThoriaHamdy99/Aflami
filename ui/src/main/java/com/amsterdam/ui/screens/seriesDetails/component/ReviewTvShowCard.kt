@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
@@ -34,7 +30,6 @@ import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.utils.toSafetyLevel
-import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.ReviewMovieUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ReviewTvShowUiState
 
 @Composable
@@ -43,7 +38,6 @@ fun ReviewTvShowCard(
     modifier: Modifier = Modifier,
     onToggleExpansion: () -> Unit = {}
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
     val strokeColor = AppTheme.color.stroke
     val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     Column(

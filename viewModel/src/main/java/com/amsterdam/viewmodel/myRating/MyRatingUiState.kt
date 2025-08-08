@@ -3,7 +3,6 @@ package com.amsterdam.viewmodel.myRating
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.viewmodel.shared.TabOption
-import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState
 
 data class MyRatingUiState(
     val selectedTabOption: TabOption = TabOption.MOVIES,

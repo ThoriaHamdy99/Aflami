@@ -3,7 +3,6 @@ package com.amsterdam.viewmodel.watchHistory
 import androidx.paging.PagingData
 import com.amsterdam.viewmodel.shared.TabOption
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
-import com.amsterdam.viewmodel.shared.uiStates.TvShowItemUiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

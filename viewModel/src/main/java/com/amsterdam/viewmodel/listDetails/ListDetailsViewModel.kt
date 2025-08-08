@@ -8,7 +8,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.list.DeleteListUseCase
 import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
@@ -59,8 +58,8 @@ class ListDetailsViewModel @Inject constructor(
                 Pager(
                     config = PagingConfig(pageSize = 10),
                     pagingSourceFactory = {
-                        PagingSource { page ->
-                            getMoviesFromListUseCase(state.value.listId, page)
+                        currentPagingSource =  PagingSource { page ->
+                           getMoviesFromListUseCase(state.value.listId, page)
                                 .toListDetailsItemUiState()
                         }
                         currentPagingSource!!
