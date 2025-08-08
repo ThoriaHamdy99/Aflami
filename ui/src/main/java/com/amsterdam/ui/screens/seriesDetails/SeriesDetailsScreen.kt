@@ -140,6 +140,7 @@ fun SeriesDetailsScreen(
                 SeriesDetailsEffect.NavigateBack -> {
                     navController.navigateUpWithFlag(flagName = REFRESH_AFTER_RATING, value = true)
                 }
+
                 SeriesDetailsEffect.NavigateToCastScreen -> {
                     navController.navigate(
                         Cast(
@@ -157,7 +158,14 @@ fun SeriesDetailsScreen(
                     navController.navigate(SeriesDetails(effect.tvShowId))
                 }
 
-                is SeriesDetailsEffect.LaunchSeriesVideoEffect -> openYouTubeVideo(context ,effect.url ){
+                is SeriesDetailsEffect.ShowEpisodeTrailerNotFound -> {
+                    SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
+                }
+
+                is SeriesDetailsEffect.LaunchSeriesVideoEffect -> openYouTubeVideo(
+                    context,
+                    effect.url
+                ) {
                     SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
                 }
 
@@ -187,7 +195,7 @@ fun SeriesDetailsContent(
     val scrollOffset = remember {
         derivedStateOf { listState.firstVisibleItemScrollOffset }
     }
-    var headerHeight by remember { mutableStateOf(0) }
+    var headerHeight by remember { mutableIntStateOf(0) }
 
     val appBarColor by animateColorAsState(
         targetValue = if (scrollOffset.value > 8) AppTheme.color.surface else Color.Transparent,
@@ -290,7 +298,7 @@ fun SeriesDetailsContent(
             enter = expandIn(),
             exit = shrinkOut()
         ) {
-            with(state.rateDialogUiState){
+            with(state.rateDialogUiState) {
                 RateDialog(
                     interaction = rateDialogInteractionListener,
                     isSubmittingEnabled = isSubmittingEnabled,
@@ -445,7 +453,11 @@ fun SeriesDetailsContent(
                                     }
                                 )
 
-                                SeriesExtras.REVIEWS -> reviewSection(state.reviews, seriesDetailsInteractionListener)
+                                SeriesExtras.REVIEWS -> reviewSection(
+                                    state.reviews,
+                                    seriesDetailsInteractionListener
+                                )
+
                                 SeriesExtras.GALLERY -> gallerySection(
                                     gallery = state.gallery,
                                     deviceWidth = deviceWidth
@@ -581,7 +593,7 @@ private fun LazyListScope.seasonsSection(
             }
             val episodes = if (season.isExpanded) season.episodes else emptyList()
             items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
-                EpisodesMenu(it, interaction::onPlayEpisodeClicked,)
+                EpisodesMenu(season.seasonNumber, it, interaction::onPlayEpisodeClicked)
             }
         }
     }
@@ -632,8 +644,9 @@ private fun SeasonHeader(
 
 @Composable
 private fun EpisodesMenu(
+    seasonNumber: Int,
     episode: EpisodeUiState,
-    onPlayEpisodeClicked: (Int) -> Unit
+    onPlayEpisodeClicked: (seasonNumber: Int, episodeNumber: Int) -> Unit
 ) {
     EpisodeCard(
         episodeBanner = episode.imageUrl,
@@ -645,11 +658,9 @@ private fun EpisodesMenu(
         episodeDescription = episode.description,
         modifier = Modifier.padding(vertical = 12.dp),
         onPlayEpisodeClick = {
-            if (episode.videoUrl.isNotBlank()) {
-                onPlayEpisodeClicked(episode.number)
-            }
+            onPlayEpisodeClicked(seasonNumber, episode.number)
         },
-        isActive = episode.videoUrl.isNotBlank()
+        isActive = true
     )
 }
 
@@ -673,12 +684,13 @@ private fun SeriesDetailsContentPreview() {
                 override fun onDescriptionExpansionToggled() {}
                 override fun onReviewExpansionToggled(reviewId: String) {}
                 override fun onPlayVideoClicked() {}
-                override fun onPlayEpisodeClicked(episodeId: Int) {
-
+                override fun onPlayEpisodeClicked(
+                    seasonNumber: Int,
+                    episodeNumber: Int
+                ) {
                 }
-
             },
-            rateDialogInteractionListener = object : RateDialogInteractionListener{
+            rateDialogInteractionListener = object : RateDialogInteractionListener {
                 override fun onClickCancelRateDialog() {}
 
                 override fun onClickSubmit() {}
