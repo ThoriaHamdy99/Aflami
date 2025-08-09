@@ -43,14 +43,12 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -185,7 +183,6 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
         movieDetailsInteractionListener = viewModel,
         rateDialogInteractionListener = viewModel
     )
-
 }
 
 @SuppressLint("ConfigurationScreenWidthHeight")
@@ -196,10 +193,27 @@ fun MovieContent(
     rateDialogInteractionListener: RateDialogInteractionListener
 ) {
     val configuration = LocalConfiguration.current
+
+    val density = LocalDensity.current
+    val parentScrollState =  rememberScrollState()
+    val childLazyListState = rememberLazyListState()
+    var canChildScroll by remember { mutableStateOf(!parentScrollState.canScrollForward) }
+    var appBarHeight by remember { mutableStateOf(0.dp) }
+    val contentHeightDp = configuration.screenHeightDp.dp
+
+    val scrollOffsetDp = with(density) {
+        parentScrollState.value.toDp()
+    }
+
+    LaunchedEffect(parentScrollState.isScrollInProgress) {
+        canChildScroll = !parentScrollState.canScrollForward
+    }
+
+    LaunchedEffect(childLazyListState.isScrollInProgress) {
+        canChildScroll = childLazyListState.canScrollBackward
+    }
+
     val screenWidthDp by remember { mutableStateOf(configuration.screenWidthDp.dp) }
-    val screenHeightDp = configuration.screenHeightDp.dp
-    var movieExtrasSectionYOffsetDp by remember { mutableStateOf(0.dp) }
-    var headerHeight by remember { mutableStateOf(0) }
     val listState = rememberLazyListState()
     val animationDuration by remember { mutableIntStateOf(1000) }
     val pagerState = rememberPagerState { state.moviePostersUrl.size }
@@ -209,11 +223,8 @@ fun MovieContent(
     val transparent = AppTheme.color.surface.copy(alpha = 0f)
     val stroke = AppTheme.color.stroke
 
-    val scrollOffset = remember {
-        derivedStateOf { listState.firstVisibleItemScrollOffset }
-    }
     val appBarColor by animateColorAsState(
-        targetValue = if (scrollOffset.value > 8) AppTheme.color.surface else Color.Transparent,
+        targetValue = if (scrollOffsetDp > 0.dp) AppTheme.color.surface else Color.Transparent,
         animationSpec = tween(800),
         label = "AppBarScrollColor"
     )
@@ -272,7 +283,7 @@ fun MovieContent(
                     .verticalScroll(rememberScrollState()),
                 contentAlignment = Alignment.Center
             ) {
-                CenterOfScreenContainer(unneededSpace = headerHeight.dp) {
+                CenterOfScreenContainer(unneededSpace = appBarHeight) {
                     NoNetworkContainer(
                         onClickRetry = movieDetailsInteractionListener::onClickRetryRequest,
                     )
@@ -344,123 +355,118 @@ fun MovieContent(
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration)),
         ) {
-            Box {
-
-                LazyColumn(
-                    state = listState,
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .background(AppTheme.color.surface)
-                            .navigationBarsPadding(),
-                ) {
-                    item {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(263.dp),
-                        ) {
-                            if (state.moviePostersUrl.isEmpty()) {
-                                ImageErrorIndicator()
-                            } else {
-                                DetailsPostersPager(
-                                    pagerState = pagerState,
-                                    postersUrl = state.moviePostersUrl
-                                )
-                            }
-
-                            RatingChip(
-                                state.rating,
-                                modifier =
-                                    Modifier
-                                        .align(Alignment.BottomStart)
-                                        .padding(bottom = 4.dp, start = 4.dp, end = 4.dp),
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(AppTheme.color.surface)
+                    .verticalScroll(parentScrollState),
+            ) {
+                Column {
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(263.dp),
+                    ) {
+                        if (state.moviePostersUrl.isEmpty()) {
+                            ImageErrorIndicator()
+                        } else {
+                            DetailsPostersPager(
+                                pagerState = pagerState,
+                                postersUrl = state.moviePostersUrl
                             )
                         }
+
+                        RatingChip(
+                            state.rating,
+                            modifier =
+                                Modifier
+                                    .align(Alignment.BottomStart)
+                                    .padding(bottom = 4.dp, start = 4.dp, end = 4.dp),
+                        )
                     }
-                    item {
+                    Column(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .background(AppTheme.color.surface),
+                    ) {
+                        PlayButton(
+                            modifier =
+                                Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .offset(y = (-32).dp),
+                            isActive = state.videoUrl.isNotBlank(),
+                            onClick = movieDetailsInteractionListener::onClickPlayVideo,
+                        )
                         Column(
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
-                                    .background(AppTheme.color.surface),
+                                    .offset(y = (-20).dp),
                         ) {
-                            PlayButton(
-                                modifier =
-                                    Modifier
-                                        .align(Alignment.CenterHorizontally)
-                                        .offset(y = (-32).dp),
-                                isActive = state.videoUrl.isNotBlank(),
-                                onClick = movieDetailsInteractionListener::onClickPlayVideo,
+                            Text(
+                                text = state.movieTitle,
+                                style = AppTheme.textStyle.title.large,
+                                color = AppTheme.color.title,
+                                modifier = Modifier.padding(horizontal = 16.dp)
                             )
-                            Column(
+                            LazyRow(
                                 modifier =
                                     Modifier
                                         .fillMaxWidth()
-                                        .offset(y = (-20).dp),
+                                        .padding(top = 12.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(horizontal = 16.dp)
                             ) {
-                                Text(
-                                    text = state.movieTitle,
-                                    style = AppTheme.textStyle.title.large,
-                                    color = AppTheme.color.title,
-                                    modifier = Modifier.padding(horizontal = 16.dp)
-                                )
-                                LazyRow(
-                                    modifier =
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .padding(top = 12.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    contentPadding = PaddingValues(horizontal = 16.dp)
-                                ) {
-                                    items(state.categories) {
-                                        CategoryChip(categoryName = getMovieGenreLabel(it))
-                                    }
+                                items(state.categories) {
+                                    CategoryChip(categoryName = getMovieGenreLabel(it))
                                 }
-                                MovieInfoSection(
-                                    modifier = Modifier
-                                        .padding(top = 8.dp)
-                                        .padding(horizontal = 16.dp),
-                                    releaseDate = state.releaseDate,
-                                    movieLength = state.movieLength,
-                                    originCountry = state.originCountry,
-                                )
-                                DescriptionSection(
-                                    modifier = Modifier
-                                        .padding(top = 24.dp)
-                                        .padding(horizontal = 16.dp),
-                                    description = state.description,
-                                    isExpanded = state.isDescriptionExpanded,
-                                    onToggleExpansion = movieDetailsInteractionListener::onDescriptionExpansionToggled
-                                )
-                                MovieCastSection(
-                                    modifier = Modifier.padding(top = 24.dp),
-                                    actors = state.actors.take(10),
-                                    onClickAllCast = movieDetailsInteractionListener::onClickShowAllCast,
-                                )
-                                Spacer(
-                                    modifier =
-                                        Modifier
-                                            .padding(top = 24.dp)
-                                            .requiredWidth(screenWidthDp)
-                                            .height(1.dp)
-                                            .background(AppTheme.color.stroke),
-                                )
-                                MovieExtrasSection(
-                                    modifier = Modifier
-                                        .padding(top = 12.dp)
-                                        .onGloballyPositioned { coordinates ->
-                                            movieExtrasSectionYOffsetDp =
-                                                coordinates.positionOnScreen().y.dp
-                                        },
-                                    extras = state.extraItem,
-                                    onClickExtras = movieDetailsInteractionListener::onClickMovieExtras,
-                                )
                             }
+                            MovieInfoSection(
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .padding(horizontal = 16.dp),
+                                releaseDate = state.releaseDate,
+                                movieLength = state.movieLength,
+                                originCountry = state.originCountry,
+                            )
+                            DescriptionSection(
+                                modifier = Modifier
+                                    .padding(top = 24.dp)
+                                    .padding(horizontal = 16.dp),
+                                description = state.description,
+                                isExpanded = state.isDescriptionExpanded,
+                                onToggleExpansion = movieDetailsInteractionListener::onDescriptionExpansionToggled
+                            )
+                            MovieCastSection(
+                                modifier = Modifier.padding(top = 24.dp),
+                                actors = state.actors.take(10),
+                                onClickAllCast = movieDetailsInteractionListener::onClickShowAllCast,
+                            )
+                            Spacer(
+                                modifier =
+                                    Modifier
+                                        .padding(top = 24.dp)
+                                        .requiredWidth(screenWidthDp)
+                                        .height(1.dp)
+                                        .background(AppTheme.color.stroke),
+                            )
+                            MovieExtrasSection(
+                                modifier = Modifier.padding(top = 12.dp),
+                                extras = state.extraItem,
+                                onClickExtras = movieDetailsInteractionListener::onClickMovieExtras,
+                            )
                         }
                     }
-
+                }
+                LazyColumn(
+                    state = childLazyListState,
+                    userScrollEnabled = canChildScroll,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(contentHeightDp - appBarHeight)
+                ) {
                     state.extraItem
                         .find { it.isSelected }
                         ?.item
@@ -492,40 +498,21 @@ fun MovieContent(
                                 )
                             }
                         }
-
-                    item {
-                        val lastVisibleItemInfo by remember { derivedStateOf { listState.layoutInfo.visibleItemsInfo.lastOrNull() } }
-                        val totalItemsCount by remember { derivedStateOf { listState.layoutInfo.totalItemsCount } }
-
-
-                        val spacerHeight: Dp by remember {
-                            derivedStateOf {
-                                if (movieExtrasSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)) {
-                                    screenHeightDp
-                                } else {
-                                    0.dp
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(spacerHeight))
-                    }
                 }
-
             }
         }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(appBarColor),
+                .background(appBarColor)
+                .onSizeChanged { appBarHeight = with(density) { it.height.toDp() } },
         ) {
             DefaultAppBar(
                 modifier =
                     Modifier
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .statusBarsPadding()
-                        .zIndex(10f)
-                        .onSizeChanged { headerHeight = it.height },
+                        .zIndex(10f),
                 firstOption = painterResource(R.drawable.ic_outlined_star),
                 lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
                 onNavigateBackClicked = movieDetailsInteractionListener::onClickBack,
