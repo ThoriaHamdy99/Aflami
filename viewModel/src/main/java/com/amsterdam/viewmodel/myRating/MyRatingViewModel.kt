@@ -94,7 +94,7 @@ class MyRatingViewModel @Inject constructor(
     }
 
     override fun onClickTvShowCard(tvShowId: Long) {
-        sendNewEffect(MyRatingUiEffect.NavigateToSeriesDetails(tvShowId))
+        sendNewNavigationEffect(MyRatingUiEffect.NavigateToSeriesDetails(tvShowId))
     }
 
     override fun onClickDeleteMyTvShowRatingIcon(tvShowId: Long) {
