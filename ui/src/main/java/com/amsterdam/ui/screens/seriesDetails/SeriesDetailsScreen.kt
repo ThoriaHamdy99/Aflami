@@ -21,13 +21,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -58,9 +61,9 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.R
@@ -144,8 +147,7 @@ fun SeriesDetailsScreen(
                 SeriesDetailsEffect.NavigateToCastScreen -> {
                     navController.navigate(
                         Cast(
-                            mediaType = MediaType.TV_SHOW.name,
-                            mediaId = state.tvShowId
+                            mediaType = MediaType.TV_SHOW.name, mediaId = state.tvShowId
                         )
                     )
                 }
@@ -163,8 +165,7 @@ fun SeriesDetailsScreen(
                 }
 
                 is SeriesDetailsEffect.LaunchSeriesVideoEffect -> openYouTubeVideo(
-                    context,
-                    effect.url
+                    context, effect.url
                 ) {
                     SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
                 }
@@ -184,28 +185,42 @@ fun SeriesDetailsContent(
     rateDialogInteractionListener: RateDialogInteractionListener
 ) {
     val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+
+    val parentLazyListState = rememberLazyListState()
+    val childLazyListState = rememberLazyListState()
+    var canChildScroll by remember { mutableStateOf(!parentLazyListState.canScrollForward) }
+    var appBarHeight by remember { mutableStateOf(0.dp) }
+    val navigationBarPadding = with(density) { WindowInsets.safeDrawing.getBottom(this).toDp() }
+    val contentHeightDp = configuration.screenHeightDp.dp
+
+    LaunchedEffect(parentLazyListState.isScrollInProgress) {
+        canChildScroll = !parentLazyListState.canScrollForward
+    }
+
+    LaunchedEffect(childLazyListState.isScrollInProgress) {
+        canChildScroll = childLazyListState.canScrollBackward
+    }
+
     val screenWidthDp by remember { mutableStateOf(configuration.screenWidthDp.dp) }
-    val screenHeightDp = configuration.screenHeightDp.dp
     var seriesExtrasSectionYOffsetDp by remember { mutableStateOf(0.dp) }
-    val listState = rememberLazyListState()
     val animationDuration by remember { mutableIntStateOf(1000) }
     val surface = AppTheme.color.surface
     val transparent = AppTheme.color.surface.copy(alpha = 0f)
     val stroke = AppTheme.color.stroke
-    val scrollOffset = remember {
-        derivedStateOf { listState.firstVisibleItemScrollOffset }
+    val scrollOffset by remember {
+        derivedStateOf { parentLazyListState.firstVisibleItemScrollOffset }
     }
-    var headerHeight by remember { mutableIntStateOf(0) }
 
     val appBarColor by animateColorAsState(
-        targetValue = if (scrollOffset.value > 8) AppTheme.color.surface else Color.Transparent,
+        targetValue = if (scrollOffset > 8) AppTheme.color.surface else Color.Transparent,
         animationSpec = tween(800),
         label = "AppBarScrollColor"
     )
 
     val dividerColor by remember {
         derivedStateOf {
-            if (listState.firstVisibleItemIndex != 0) {
+            if (parentLazyListState.firstVisibleItemIndex != 0) {
                 stroke
             } else {
                 transparent
@@ -220,9 +235,7 @@ fun SeriesDetailsContent(
     LaunchedEffect(state.postersUrls.size) {
         if (state.postersUrls.size > 1) {
             coroutineScope.launch {
-                snapshotFlow { pagerState.isScrollInProgress }
-                    .distinctUntilChanged()
-                    .filter { !it }
+                snapshotFlow { pagerState.isScrollInProgress }.distinctUntilChanged().filter { !it }
                     .collectLatest {
                         delay(4000)
                         val nextPage = (pagerState.currentPage + 1) % 10
@@ -234,7 +247,7 @@ fun SeriesDetailsContent(
 
     val topPadding by remember {
         derivedStateOf {
-            if (listState.firstVisibleItemIndex >= 1) {
+            if (parentLazyListState.firstVisibleItemIndex >= 1) {
                 96.dp
             } else {
                 0.dp
@@ -242,8 +255,7 @@ fun SeriesDetailsContent(
         }
     }
     val animatedTopPadding by animateDpAsState(
-        targetValue = topPadding,
-        animationSpec = tween(animationDuration), label = ""
+        targetValue = topPadding, animationSpec = tween(animationDuration), label = ""
     )
 
     Box(
@@ -263,7 +275,8 @@ fun SeriesDetailsContent(
         }
 
         AnimatedVisibility(
-            state.networkError, enter = fadeIn(tween(animationDuration)),
+            state.networkError,
+            enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration))
         ) {
             Box(
@@ -273,7 +286,7 @@ fun SeriesDetailsContent(
                 contentAlignment = Alignment.Center
             ) {
                 CenterOfScreenContainer(
-                    unneededSpace = headerHeight.dp,
+                    unneededSpace = appBarHeight,
                 ) {
                     NoNetworkContainer(
                         onClickRetry = seriesDetailsInteractionListener::onClickRetryButton,
@@ -283,8 +296,7 @@ fun SeriesDetailsContent(
         }
 
         AnimatedVisibility(
-            modifier = Modifier,
-            visible = state.isLoginDialogVisible
+            modifier = Modifier, visible = state.isLoginDialogVisible
         ) {
             MustLoginDialog(
                 title = state.dialogType.getMovieAndSeriesDetailsDialogTitle(),
@@ -294,9 +306,7 @@ fun SeriesDetailsContent(
         }
 
         AnimatedVisibility(
-            visible = state.rateDialogUiState.isVisible,
-            enter = expandIn(),
-            exit = shrinkOut()
+            visible = state.rateDialogUiState.isVisible, enter = expandIn(), exit = shrinkOut()
         ) {
             with(state.rateDialogUiState) {
                 RateDialog(
@@ -314,129 +324,131 @@ fun SeriesDetailsContent(
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration))
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
+            LazyColumn(
+                state = parentLazyListState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(AppTheme.color.surface)
+                    .padding(top = animatedTopPadding)
+                    .navigationBarsPadding()
+                    .animateContentSize()
             ) {
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(AppTheme.color.surface)
-                        .padding(top = animatedTopPadding)
-                        .navigationBarsPadding()
-                        .animateContentSize()
-                ) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(263.dp)
-                        ) {
-                            if (state.postersUrls.isEmpty()) {
-                                ImageErrorIndicator()
-                            } else {
-                                DetailsPostersPager(
-                                    pagerState = pagerState,
-                                    postersUrl = state.postersUrls
-                                )
-                            }
-
-                            RatingChip(
-                                state.rating,
-                                modifier = Modifier
-                                    .align(Alignment.BottomStart)
-                                    .padding(vertical = 4.dp)
-                                    .padding(start = 4.dp)
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(263.dp)
+                    ) {
+                        if (state.postersUrls.isEmpty()) {
+                            ImageErrorIndicator()
+                        } else {
+                            DetailsPostersPager(
+                                pagerState = pagerState, postersUrl = state.postersUrls
                             )
                         }
+
+                        RatingChip(
+                            state.rating,
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(vertical = 4.dp)
+                                .padding(start = 4.dp)
+                        )
                     }
-                    item {
+                }
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(AppTheme.color.surface)
+                    ) {
+                        PlayButton(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .offset(y = (-32).dp),
+                            isActive = state.videoUrl.isNotBlank(),
+                            onClick = seriesDetailsInteractionListener::onPlayVideoClicked
+                        )
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(AppTheme.color.surface)
+                                .offset(y = (-20).dp)
                         ) {
-                            PlayButton(
-                                modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .offset(y = (-32).dp),
-                                isActive = state.videoUrl.isNotBlank(),
-                                onClick = seriesDetailsInteractionListener::onPlayVideoClicked
+
+                            Text(
+                                text = state.title,
+                                style = AppTheme.textStyle.title.large,
+                                color = AppTheme.color.title,
+                                modifier = Modifier.padding(horizontal = 16.dp)
                             )
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .offset(y = (-20).dp)
-                            ) {
 
-                                Text(
-                                    text = state.title,
-                                    style = AppTheme.textStyle.title.large,
-                                    color = AppTheme.color.title,
-                                    modifier = Modifier.padding(horizontal = 16.dp)
-                                )
-
-                                if (state.categories.isNotEmpty()) {
-                                    LazyRow(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(top = 12.dp),
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                        contentPadding = PaddingValues(horizontal = 16.dp)
-                                    ) {
-                                        items(state.categories) {
-                                            CategoryChip(categoryName = getTvShowGenreLabel(it))
-                                        }
+                            if (state.categories.isNotEmpty()) {
+                                LazyRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 12.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 16.dp)
+                                ) {
+                                    items(state.categories) {
+                                        CategoryChip(categoryName = getTvShowGenreLabel(it))
                                     }
                                 }
-
-                                SeriesInfoSection(
-                                    modifier = Modifier
-                                        .padding(top = 8.dp)
-                                        .padding(horizontal = 16.dp),
-                                    airDate = state.airDate,
-                                    seasonCount = state.seasonCount,
-                                    originCountry = state.originCountry,
-                                )
-
-                                DescriptionSection(
-                                    modifier = Modifier
-                                        .padding(top = 24.dp)
-                                        .padding(horizontal = 16.dp),
-                                    description = state.description,
-                                    isExpanded = state.isDescriptionExpanded,
-                                    onToggleExpansion = seriesDetailsInteractionListener::onDescriptionExpansionToggled
-                                )
-                                TvShowCastSection(
-                                    modifier = Modifier.padding(top = 24.dp),
-                                    actors = state.cast,
-                                    onClickAllCast = seriesDetailsInteractionListener::onClickShowAllCast
-                                )
-                                Spacer(
-                                    modifier = Modifier
-                                        .padding(top = 24.dp)
-                                        .requiredWidth(screenWidthDp)
-                                        .height(1.dp)
-                                        .background(AppTheme.color.stroke)
-                                )
-                                SeriesExtrasSection(
-                                    modifier = Modifier
-                                        .padding(top = 12.dp)
-                                        .onGloballyPositioned { coordinates ->
-                                            seriesExtrasSectionYOffsetDp =
-                                                coordinates.positionOnScreen().y.dp
-                                        },
-                                    extras = state.extraItem,
-                                    onClickExtras = seriesDetailsInteractionListener::onClickSeriesExtraItem
-                                )
                             }
 
+                            SeriesInfoSection(
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .padding(horizontal = 16.dp),
+                                airDate = state.airDate,
+                                seasonCount = state.seasonCount,
+                                originCountry = state.originCountry,
+                            )
+
+                            DescriptionSection(
+                                modifier = Modifier
+                                    .padding(top = 24.dp)
+                                    .padding(horizontal = 16.dp),
+                                description = state.description,
+                                isExpanded = state.isDescriptionExpanded,
+                                onToggleExpansion = seriesDetailsInteractionListener::onDescriptionExpansionToggled
+                            )
+                            TvShowCastSection(
+                                modifier = Modifier.padding(top = 24.dp),
+                                actors = state.cast,
+                                onClickAllCast = seriesDetailsInteractionListener::onClickShowAllCast
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .padding(top = 24.dp)
+                                    .requiredWidth(screenWidthDp)
+                                    .height(1.dp)
+                                    .background(AppTheme.color.stroke)
+                            )
+                            SeriesExtrasSection(
+                                modifier = Modifier
+                                    .padding(top = 12.dp)
+                                    .onGloballyPositioned { coordinates ->
+                                        seriesExtrasSectionYOffsetDp =
+                                            coordinates.positionOnScreen().y.dp
+                                    },
+                                extras = state.extraItem,
+                                onClickExtras = seriesDetailsInteractionListener::onClickSeriesExtraItem
+                            )
                         }
+
                     }
-                    state.extraItem
-                        .find { it.isSelected }
-                        ?.item
-                        ?.let { selectedExtra ->
+                }
+                item {
+                    LazyColumn(
+                        state = childLazyListState,
+                        userScrollEnabled = canChildScroll,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = contentHeightDp - appBarHeight - navigationBarPadding)
+                            .animateContentSize(tween(500))
+                    ) {
+                        state.extraItem.find { it.isSelected }?.item?.let { selectedExtra ->
                             when (selectedExtra) {
                                 SeriesExtras.SEASONS -> {
                                     seasonsSection(
@@ -449,14 +461,17 @@ fun SeriesDetailsContent(
                                     similarMovies = state.similarSeries,
                                     deviceWidth = deviceWidth,
                                     onClick = { movieId ->
-                                        seriesDetailsInteractionListener.onClickSimilarMovie(movieId)
-                                    }
+                                        seriesDetailsInteractionListener.onClickSimilarMovie(
+                                            movieId
+                                        )
+                                    })
+
+                                SeriesExtras.REVIEWS -> reviewTvShowSection(
+                                    state.reviews, seriesDetailsInteractionListener
                                 )
 
-                                SeriesExtras.REVIEWS -> reviewTvShowSection(state.reviews, seriesDetailsInteractionListener)
                                 SeriesExtras.GALLERY -> gallerySection(
-                                    gallery = state.gallery,
-                                    deviceWidth = deviceWidth
+                                    gallery = state.gallery, deviceWidth = deviceWidth
                                 )
 
                                 SeriesExtras.COMPANY_PRODUCTION -> companyProductionTvShowSection(
@@ -464,21 +479,6 @@ fun SeriesDetailsContent(
                                 )
                             }
                         }
-
-                    item {
-                        val lastVisibleItemInfo by remember { derivedStateOf { listState.layoutInfo.visibleItemsInfo.lastOrNull() } }
-                        val totalItemsCount by remember { derivedStateOf { listState.layoutInfo.totalItemsCount } }
-                        val spacerHeight: Dp by remember {
-                            derivedStateOf {
-                                if (seriesExtrasSectionYOffsetDp > 0.dp || (totalItemsCount > 0 && lastVisibleItemInfo?.index == totalItemsCount - 1)) {
-                                    screenHeightDp
-                                } else {
-                                    0.dp
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(spacerHeight))
                     }
                 }
             }
@@ -487,12 +487,11 @@ fun SeriesDetailsContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(appBarColor)
-        ) {
+                .onSizeChanged { appBarHeight = with(density) { it.height.toDp() } }) {
             DefaultAppBar(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .statusBarsPadding()
-                    .onSizeChanged { headerHeight = it.height },
+                    .statusBarsPadding(),
                 firstOption = painterResource(R.drawable.ic_outlined_star),
                 lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
                 onNavigateBackClicked = seriesDetailsInteractionListener::onNavigateBack,
@@ -508,10 +507,7 @@ fun SeriesDetailsContent(
 
 @Composable
 private fun SeriesInfoSection(
-    modifier: Modifier = Modifier,
-    airDate: String,
-    seasonCount: String,
-    originCountry: String
+    modifier: Modifier = Modifier, airDate: String, seasonCount: String, originCountry: String
 ) {
     val items = listOf(airDate, seasonCount, originCountry)
 
@@ -565,15 +561,13 @@ private fun SeriesExtrasSection(
                 icon = painterResource(extrasSectionItemInfo.iconResId),
                 label = stringResource(extrasSectionItemInfo.textResId),
                 isSelected = it.isSelected,
-                onClick = { onClickExtras(it.item) }
-            )
+                onClick = { onClickExtras(it.item) })
         }
     }
 }
 
 private fun LazyListScope.seasonsSection(
-    seasons: List<SeasonUiState>,
-    interaction: SeriesDetailsInteractionListener
+    seasons: List<SeasonUiState>, interaction: SeriesDetailsInteractionListener
 ) {
     if (seasons.isEmpty()) {
         item { EmptyStateText(stringResource(R.string.there_is_no_seasons)) }
@@ -581,11 +575,9 @@ private fun LazyListScope.seasonsSection(
         seasons.forEachIndexed { index, season ->
             stickyHeader {
                 SeasonHeader(
-                    season = season,
-                    onClickSeasonMenu = { seasonNumber ->
+                    season = season, onClickSeasonMenu = { seasonNumber ->
                         interaction.onClickSeasonMenu(seasonNumber)
-                    }
-                )
+                    })
             }
             val episodes = if (season.isExpanded) season.episodes else emptyList()
             items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
@@ -611,8 +603,7 @@ private fun SeasonHeader(
                 .clickable { onClickSeasonMenu(season.seasonNumber) }
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .animateContentSize(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+            verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = season.title,
                 color = AppTheme.color.title,
@@ -626,10 +617,10 @@ private fun SeasonHeader(
                 modifier = Modifier.padding(end = 4.dp)
             )
             Icon(
-                modifier = Modifier
-                    .size(20.dp),
-                painter = if (season.isExpanded) painterResource(R.drawable.ic_arrow_up) else
-                    painterResource(R.drawable.ic_arrow_down),
+                modifier = Modifier.size(20.dp),
+                painter = if (season.isExpanded) painterResource(R.drawable.ic_arrow_up) else painterResource(
+                    R.drawable.ic_arrow_down
+                ),
                 contentDescription = null,
                 tint = AppTheme.color.title,
             )
@@ -681,8 +672,7 @@ private fun SeriesDetailsContentPreview() {
                 override fun onReviewExpansionToggled(reviewId: String) {}
                 override fun onPlayVideoClicked() {}
                 override fun onPlayEpisodeClicked(
-                    seasonNumber: Int,
-                    episodeNumber: Int
+                    seasonNumber: Int, episodeNumber: Int
                 ) {
                 }
             },
@@ -692,7 +682,6 @@ private fun SeriesDetailsContentPreview() {
                 override fun onClickSubmit() {}
                 override fun onChangeRating(newRate: Int) {}
 
-            }
-        )
+            })
     }
 }
