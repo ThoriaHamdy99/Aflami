@@ -94,14 +94,6 @@ class MovieDaoTest {
     }
 }
 
-private val movieCategoryCrossRefDtoList = listOf(
-    MovieCategoryCrossRefDto(
-        movieId = 1,
-        categoryId = 1,
-        storedLanguage = "en"
-    )
-)
-
 private fun createMovie(
     movieId: Long,
     storedLanguage: String,
