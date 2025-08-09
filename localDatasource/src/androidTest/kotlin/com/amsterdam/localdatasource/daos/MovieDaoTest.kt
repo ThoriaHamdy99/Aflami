@@ -4,23 +4,26 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieDao
-import com.amsterdam.localdatasource.utils.createMovie
-import com.amsterdam.repository.dto.local.utils.SearchType
+import com.amsterdam.repository.dto.local.LocalMovieDto
+import com.amsterdam.repository.dto.local.MovieCategoryCrossRefDto
+import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class MovieDaoTest {
 
-    private lateinit var database: AflamiDatabase
+    private val context by lazy { InstrumentationRegistry.getInstrumentation().targetContext }
+    private val database by lazy {
+        Room.inMemoryDatabaseBuilder(context, AflamiDatabase::class.java).build()
+    }
     private lateinit var dao: MovieDao
 
     @BeforeEach
     fun setup() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        database = Room.inMemoryDatabaseBuilder(context, AflamiDatabase::class.java).build()
         dao = database.movieDao()
     }
 
@@ -30,113 +33,90 @@ class MovieDaoTest {
     }
 
     @Test
-    fun upsertMovies_shouldUpsertMovies() =
-        runTest {
-            // Given
+    fun upsertMovie_shouldInsertMovie() = runTest {
         val movie = createMovie(movieId = 1L, storedLanguage = "en")
 
-        // Act
-            dao.upsertMovies(listOf(movie))
-        // Then
-        val result = dao.getMovieById(1L)
+        dao.upsertMovie(movie)
+        val result = dao.getMovieById(movie.movieId, movie.storedLanguage)
+
         assertThat(result).isEqualTo(movie)
-        }
+    }
 
     @Test
-    fun upsertMovies_shouldUpdateMovieWithoutDuplication_WhenMovieAlreadyStored() =
-        runTest {
-        // Given
+    fun upsertMovie_shouldUpdateMovieWithoutDuplication_WhenMovieAlreadyStored() = runTest {
         val originalMovie = createMovie(movieId = 1L, storedLanguage = "en", name = "Original")
-            dao.upsertMovies(listOf(originalMovie))
-
-        // Act
         val updatedMovie = originalMovie.copy(name = "Updated")
-            dao.upsertMovies(listOf(updatedMovie))
+        dao.upsertMovie(originalMovie)
 
-        // Then
-        val result = dao.getMovieById(1L)
-        assertThat(result.name).isEqualTo("Updated")
+        dao.upsertMovie(updatedMovie)
+        val result = dao.getMovieById(originalMovie.movieId, originalMovie.storedLanguage)
+
+        assertThat(result?.name).isEqualTo("Updated")
     }
 
-
     @Test
-    fun insertSearchEntries_shouldAssociateMovieWithKeyword() = runTest {
-        // Given
+    fun upsertMovies_shouldInsertMovies() = runTest {
         val movie = createMovie(movieId = 1L, storedLanguage = "en")
-        val crossRef = SearchMovieCrossRefDto(
-            searchKeyword = "superman",
-            searchType = SearchType.BY_KEYWORD,
-            movieId = movie.movieId,
-            storedLanguage = movie.storedLanguage,
-        )
+
         dao.upsertMovies(listOf(movie))
+        val result = dao.getMovieById(movie.movieId, movie.storedLanguage)
 
-        // Act
-        dao.insertSearchEntries(listOf(crossRef))
-
-        // Then
-        val result = dao.getMoviesByKeywordAndSearchType(
-            keyword = "superman",
-            searchType = SearchType.BY_KEYWORD,
-            storedLanguage = "en",
-            limit = 10,
-            offset = 0
-        )
-        assertThat(result).hasSize(1)
-        assertThat(result.first().movie).isEqualTo(movie)
+        assertThat(result).isEqualTo(movie)
     }
 
     @Test
-    fun getMoviesByKeywordAndSearchType_shouldReturnEmpty_whenNoMatch() = runTest {
-        // Given
-        val movie = createMovie(movieId = 1L, storedLanguage = "en")
-        val crossRef = SearchMovieCrossRefDto(
-            searchKeyword = "batman",
-            searchType = SearchType.BY_KEYWORD,
-            movieId = movie.movieId,
-            storedLanguage = movie.storedLanguage,
-        )
-        dao.upsertMovies(listOf(movie))
-        dao.insertSearchEntries(listOf(crossRef))
+    fun upsertMovies_shouldUpdateMovieWithoutDuplication_WhenMovieAlreadyStored() = runTest {
+        val originalMovie = createMovie(movieId = 1L, storedLanguage = "en", name = "Original")
+        val updatedMovie = originalMovie.copy(name = "Updated")
+        dao.upsertMovies(listOf(originalMovie))
 
-        // When
-        val result = dao.getMoviesByKeywordAndSearchType(
-            keyword = "superman",
-            searchType = SearchType.BY_KEYWORD,
-            storedLanguage = "en",
-            limit = 10,
-            offset = 0
-        )
+        dao.upsertMovies(listOf(updatedMovie))
+        val result = dao.getMovieById(originalMovie.movieId, originalMovie.storedLanguage)
 
-        // Then
-        assertThat(result).isEmpty()
+        assertThat(result?.name).isEqualTo("Updated")
     }
 
     @Test
-    fun getMoviesByKeywordAndSearchType_shouldRespectPagination() = runTest {
-        // Given
-        val movie1 = createMovie(movieId = 1L, storedLanguage = "en", name = "Movie 1")
-        val movie2 = createMovie(movieId = 2L, storedLanguage = "en", name = "Movie 2")
-        val movie3 = createMovie(movieId = 3L, storedLanguage = "en", name = "Movie 3")
-        val keyword = "test"
-        val searchType = SearchType.BY_KEYWORD
+    fun getMovieById_shouldGetMovie_WhenMovieIsExists() = runTest {
+        val movie = createMovie(movieId = 1L, storedLanguage = "en", name = "Original")
+        dao.upsertMovie(movie)
 
-        dao.upsertMovies(listOf(movie1, movie2, movie3))
-        dao.insertSearchEntries(
-            listOf(
-                SearchMovieCrossRefDto(keyword, searchType, movie1.movieId, movie1.storedLanguage),
-                SearchMovieCrossRefDto(keyword, searchType, movie2.movieId, movie2.storedLanguage),
-                SearchMovieCrossRefDto(keyword, searchType, movie3.movieId, movie3.storedLanguage)
-            )
-        )
+        val result = dao.getMovieById(movie.movieId, movie.storedLanguage)
 
-        // When
-        val page1 = dao.getMoviesByKeywordAndSearchType(keyword, searchType, "en", limit = 2, offset = 0)
-        val page2 = dao.getMoviesByKeywordAndSearchType(keyword, searchType, "en", limit = 2, offset = 2)
-
-        // Then
-        assertThat(page1).hasSize(2)
-        assertThat(page2).hasSize(1)
-        assertThat((page1 + page2).map { it.movie }).isEqualTo(listOf(movie1, movie2, movie3))
+        assertThat(result).isEqualTo(movie)
     }
+
+    @Test
+    fun getMovieById_shouldReturnNull_WhenMovieIsNotExists() = runTest {
+        val result = dao.getMovieById(1L, "en")
+
+        assertThat(result).isEqualTo(null)
+    }
+}
+
+private val movieCategoryCrossRefDtoList = listOf(
+    MovieCategoryCrossRefDto(
+        movieId = 1,
+        categoryId = 1,
+        storedLanguage = "en"
+    )
+)
+
+private fun createMovie(
+    movieId: Long,
+    storedLanguage: String,
+    name: String = "Sample Movie"
+): LocalMovieDto {
+    return LocalMovieDto(
+        movieId = movieId,
+        storedLanguage = storedLanguage,
+        name = name,
+        description = "Test description",
+        poster = "poster.jpg",
+        releaseDate = LocalDate.parse("2020-01-01"),
+        popularity = 9.5,
+        rating = 4.3f,
+        originCountry = "US",
+        movieLength = 120
+    )
 }

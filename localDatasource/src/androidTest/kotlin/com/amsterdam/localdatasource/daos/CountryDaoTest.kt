@@ -12,13 +12,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class CountryDaoTest {
-    private lateinit var database: AflamiDatabase
     private lateinit var countryDao: CountryDao
+    private val context by lazy { InstrumentationRegistry.getInstrumentation().targetContext }
+    private val database by lazy {
+        Room.inMemoryDatabaseBuilder(context, AflamiDatabase::class.java).build()
+    }
 
     @BeforeEach
     fun setup() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        database = Room.inMemoryDatabaseBuilder(context, AflamiDatabase::class.java).build()
         countryDao = database.countryDao()
     }
 
@@ -29,83 +30,61 @@ class CountryDaoTest {
 
     @Test
     fun upsertAllCountries_shouldAddLocalCountryDtoList_whenCalled() = runTest {
-        // Given
-        val countries = listOf(
-            LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "United States"),
-            LocalCountryDto(isoCode = "FR", storedLanguage = "en", name = "France")
-        )
+        countryDao.upsertAllCountries(countriesWithSameLanguage)
+        val stored = countryDao.getAllCountries(countriesWithSameLanguage.first().storedLanguage)
 
-        // When
-        countryDao.upsertAllCountries(countries)
-
-        // Then
-        val stored = countryDao.getAllCountries("en")
-        assertThat(stored).isEqualTo(countries)
+        assertThat(stored).isEqualTo(countriesWithSameLanguage)
     }
 
     @Test
     fun upsertAllCountries_shouldUpdateItem_whenPrimaryKeyExists() = runTest {
-        // Given
-        val initial = listOf(
-            LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "United States")
-        )
-        countryDao.upsertAllCountries(initial)
+        countryDao.upsertAllCountries(initialCountries)
+        countryDao.upsertAllCountries(updatedCountries)
+        val stored = countryDao.getAllCountries(initialCountries.first().storedLanguage)
 
-        val updated = listOf(
-            LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "USA")
-        )
-
-        // When
-        countryDao.upsertAllCountries(updated)
-
-        // Then
-        val stored = countryDao.getAllCountries("en")
-        assertThat(stored).containsExactly(updated.first())
+        assertThat(stored.first().name).isEqualTo(updatedCountries.first().name)
     }
 
     @Test
     fun getAllCountries_shouldReturnOnlyMatchingLanguageEntries() = runTest {
-        // Given
-        val countries = listOf(
-            LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "USA"),
-            LocalCountryDto(isoCode = "EG", storedLanguage = "ar", name = "مصر")
-        )
-        countryDao.upsertAllCountries(countries)
+        countryDao.upsertAllCountries(countriesWithDifferentLanguage)
 
-        // When
-        val resultEn = countryDao.getAllCountries("en")
-        val resultAr = countryDao.getAllCountries("ar")
+        val resultEn = countryDao.getAllCountries(countriesWithDifferentLanguage[0].storedLanguage)
 
-        // Then
-        assertThat(resultEn).containsExactly(
-            LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "USA")
-        )
-        assertThat(resultAr).containsExactly(
-            LocalCountryDto(isoCode = "EG", storedLanguage = "ar", name = "مصر")
-        )
+        assertThat(resultEn).containsExactly(countriesWithDifferentLanguage[0])
     }
 
     @Test
     fun getAllCountries_shouldReturnEmpty_whenNoDataMatchesLanguage() = runTest {
-        // Given
-        val countries = listOf(
-            LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "USA")
-        )
-        countryDao.upsertAllCountries(countries)
+        countryDao.upsertAllCountries(initialCountries)
 
-        // When
         val result = countryDao.getAllCountries("fr")
 
-        // Then
         assertThat(result).isEmpty()
     }
 
     @Test
     fun getAllCountries_shouldReturnEmpty_whenNoDataInserted() = runTest {
-        // When
         val result = countryDao.getAllCountries("en")
 
-        // Then
         assertThat(result).isEmpty()
     }
 }
+
+private val countriesWithSameLanguage = listOf(
+    LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "United States"),
+    LocalCountryDto(isoCode = "FR", storedLanguage = "en", name = "France")
+)
+
+private val initialCountries = listOf(
+    LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "United States")
+)
+
+private val updatedCountries = listOf(
+    LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "USA")
+)
+
+private val countriesWithDifferentLanguage = listOf(
+    LocalCountryDto(isoCode = "US", storedLanguage = "en", name = "USA"),
+    LocalCountryDto(isoCode = "EG", storedLanguage = "ar", name = "مصر")
+)
