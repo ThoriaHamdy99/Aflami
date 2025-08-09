@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
@@ -15,13 +16,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -74,9 +78,9 @@ import com.amsterdam.ui.components.details.DetailsPostersPager
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.navigation.Route.Cast
 import com.amsterdam.ui.navigation.Route.MovieDetails
-import com.amsterdam.ui.screens.movieDetails.components.MovieCastSection
 import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
 import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
+import com.amsterdam.ui.screens.movieDetails.components.MovieCastSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieExtrasSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieInfoSection
 import com.amsterdam.ui.screens.movieDetails.components.PlayButton
@@ -121,11 +125,11 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                 MovieDetailsEffect.NavigateBackEffect -> {
                     navController.navigateUpWithFlag(flagName = REFRESH_AFTER_RATING, value = true)
                 }
+
                 MovieDetailsEffect.NavigateToCastsScreenEffect -> {
                     navController.navigate(
                         Cast(
-                            mediaType = MediaType.MOVIE.name,
-                            mediaId = state.value.movieId
+                            mediaType = MediaType.MOVIE.name, mediaId = state.value.movieId
                         )
                     )
                 }
@@ -144,10 +148,11 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
 
                 MovieDetailsEffect.ShowRatingErrorSnackBar -> SnackBarManager.showError(message = failedRateMessage)
 
-                is MovieDetailsEffect.LaunchMovieVideoEffect ->
-                    openYouTubeVideo(context, effect.url) {
-                        SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
-                    }
+                is MovieDetailsEffect.LaunchMovieVideoEffect -> openYouTubeVideo(
+                    context, effect.url
+                ) {
+                    SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
+                }
 
                 MovieDetailsEffect.MovieAddedToListError -> {
                     SnackBarManager.showError(
@@ -162,17 +167,15 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                 }
 
                 MovieDetailsEffect.FailedToCreateList -> {
-                    SnackBarManager
-                        .showError(
-                            message = context.resources.getString(R.string.general_error_message),
-                        )
+                    SnackBarManager.showError(
+                        message = context.resources.getString(R.string.general_error_message),
+                    )
                 }
 
                 MovieDetailsEffect.ListCreatedSuccessfully -> {
-                    SnackBarManager
-                        .showSuccess(
-                            message = context.resources.getString(R.string.list_added_success_message),
-                        )
+                    SnackBarManager.showSuccess(
+                        message = context.resources.getString(R.string.list_added_success_message),
+                    )
                 }
             }
         }
@@ -193,12 +196,13 @@ fun MovieContent(
     rateDialogInteractionListener: RateDialogInteractionListener
 ) {
     val configuration = LocalConfiguration.current
-
     val density = LocalDensity.current
-    val parentScrollState =  rememberScrollState()
+
+    val parentScrollState = rememberScrollState()
     val childLazyListState = rememberLazyListState()
     var canChildScroll by remember { mutableStateOf(!parentScrollState.canScrollForward) }
     var appBarHeight by remember { mutableStateOf(0.dp) }
+    val navigationBarPadding = with(density) { WindowInsets.safeDrawing.getBottom(this).toDp() }
     val contentHeightDp = configuration.screenHeightDp.dp
 
     val scrollOffsetDp = with(density) {
@@ -244,9 +248,7 @@ fun MovieContent(
     LaunchedEffect(state.moviePostersUrl.size) {
         if (state.moviePostersUrl.size > 1) {
             coroutineScope.launch {
-                snapshotFlow { pagerState.isScrollInProgress }
-                    .distinctUntilChanged()
-                    .filter { !it }
+                snapshotFlow { pagerState.isScrollInProgress }.distinctUntilChanged().filter { !it }
                     .collectLatest {
                         delay(4000)
                         val nextPage = (pagerState.currentPage + 1) % 10
@@ -305,8 +307,7 @@ fun MovieContent(
         }
 
         AnimatedVisibility(
-            modifier = Modifier,
-            visible = state.isLoginDialogVisible
+            modifier = Modifier, visible = state.isLoginDialogVisible
         ) {
             MustLoginDialog(
                 title = state.dialogType.getMovieAndSeriesDetailsDialogTitle(),
@@ -336,9 +337,7 @@ fun MovieContent(
         }
 
         AnimatedVisibility(
-            visible = state.rateDialogUiState.isVisible,
-            enter = expandIn(),
-            exit = shrinkOut()
+            visible = state.rateDialogUiState.isVisible, enter = expandIn(), exit = shrinkOut()
         ) {
             with(state.rateDialogUiState) {
                 RateDialog(
@@ -363,47 +362,41 @@ fun MovieContent(
             ) {
                 Column {
                     Box(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .height(263.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(263.dp),
                     ) {
                         if (state.moviePostersUrl.isEmpty()) {
                             ImageErrorIndicator()
                         } else {
                             DetailsPostersPager(
-                                pagerState = pagerState,
-                                postersUrl = state.moviePostersUrl
+                                pagerState = pagerState, postersUrl = state.moviePostersUrl
                             )
                         }
 
                         RatingChip(
                             state.rating,
-                            modifier =
-                                Modifier
-                                    .align(Alignment.BottomStart)
-                                    .padding(bottom = 4.dp, start = 4.dp, end = 4.dp),
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(bottom = 4.dp, start = 4.dp, end = 4.dp),
                         )
                     }
                     Column(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .background(AppTheme.color.surface),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(AppTheme.color.surface),
                     ) {
                         PlayButton(
-                            modifier =
-                                Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .offset(y = (-32).dp),
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .offset(y = (-32).dp),
                             isActive = state.videoUrl.isNotBlank(),
                             onClick = movieDetailsInteractionListener::onClickPlayVideo,
                         )
                         Column(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .offset(y = (-20).dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset(y = (-20).dp),
                         ) {
                             Text(
                                 text = state.movieTitle,
@@ -412,10 +405,9 @@ fun MovieContent(
                                 modifier = Modifier.padding(horizontal = 16.dp)
                             )
                             LazyRow(
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 12.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 12.dp),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 contentPadding = PaddingValues(horizontal = 16.dp)
                             ) {
@@ -445,12 +437,11 @@ fun MovieContent(
                                 onClickAllCast = movieDetailsInteractionListener::onClickShowAllCast,
                             )
                             Spacer(
-                                modifier =
-                                    Modifier
-                                        .padding(top = 24.dp)
-                                        .requiredWidth(screenWidthDp)
-                                        .height(1.dp)
-                                        .background(AppTheme.color.stroke),
+                                modifier = Modifier
+                                    .padding(top = 24.dp)
+                                    .requiredWidth(screenWidthDp)
+                                    .height(1.dp)
+                                    .background(AppTheme.color.stroke),
                             )
                             MovieExtrasSection(
                                 modifier = Modifier.padding(top = 12.dp),
@@ -465,39 +456,33 @@ fun MovieContent(
                     userScrollEnabled = canChildScroll,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(contentHeightDp - appBarHeight)
+                        .heightIn(max = contentHeightDp - appBarHeight - navigationBarPadding)
+                        .animateContentSize()
                 ) {
-                    state.extraItem
-                        .find { it.isSelected }
-                        ?.item
-                        ?.let { selectedExtra ->
-                            when (selectedExtra) {
-                                MovieExtras.MORE_LIKE_THIS -> moreLikeSection(
-                                    similarMovies = state.similarMovies,
-                                    deviceWidth = deviceWidth,
-                                    onClick = { selectedMovieId ->
-                                        movieDetailsInteractionListener.onClickSimilarMovie(
-                                            selectedMovieId
-                                        )
-                                    }
-                                )
+                    state.extraItem.find { it.isSelected }?.item?.let { selectedExtra ->
+                        when (selectedExtra) {
+                            MovieExtras.MORE_LIKE_THIS -> moreLikeSection(
+                                similarMovies = state.similarMovies,
+                                deviceWidth = deviceWidth,
+                                onClick = { selectedMovieId ->
+                                    movieDetailsInteractionListener.onClickSimilarMovie(
+                                        selectedMovieId
+                                    )
+                                })
 
-                                MovieExtras.REVIEWS -> reviewMovieSection(
-                                    state.reviews,
-                                    movieDetailsInteractionListener
-                                )
+                            MovieExtras.REVIEWS -> reviewMovieSection(
+                                state.reviews, movieDetailsInteractionListener
+                            )
 
-                                MovieExtras.GALLERY -> gallerySection(
-                                    gallery = state.gallery,
-                                    deviceWidth = deviceWidth
-                                )
+                            MovieExtras.GALLERY -> gallerySection(
+                                gallery = state.gallery, deviceWidth = deviceWidth
+                            )
 
-                                MovieExtras.COMPANY_PRODUCTION -> companyProductionSection(
-                                    state.productionCompany,
-                                    deviceWidth = deviceWidth
-                                )
-                            }
+                            MovieExtras.COMPANY_PRODUCTION -> companyProductionSection(
+                                state.productionCompany, deviceWidth = deviceWidth
+                            )
                         }
+                    }
                 }
             }
         }
@@ -508,11 +493,10 @@ fun MovieContent(
                 .onSizeChanged { appBarHeight = with(density) { it.height.toDp() } },
         ) {
             DefaultAppBar(
-                modifier =
-                    Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .statusBarsPadding()
-                        .zIndex(10f),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .statusBarsPadding()
+                    .zIndex(10f),
                 firstOption = painterResource(R.drawable.ic_outlined_star),
                 lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
                 onNavigateBackClicked = movieDetailsInteractionListener::onClickBack,
@@ -532,46 +516,43 @@ private fun SearchByActorContentPreview() {
     AflamiTheme {
         MovieContent(
             MovieDetailsUiState(),
-            movieDetailsInteractionListener =
-                object : MovieDetailsInteractionListener {
-                    override fun onClickMovieExtras(movieExtras: MovieExtras) {}
-                    override fun onClickShowAllCast() {}
-                    override fun onClickBack() {}
-                    override fun onClickRetryRequest() {}
+            movieDetailsInteractionListener = object : MovieDetailsInteractionListener {
+                override fun onClickMovieExtras(movieExtras: MovieExtras) {}
+                override fun onClickShowAllCast() {}
+                override fun onClickBack() {}
+                override fun onClickRetryRequest() {}
 
-                    override fun onClickAddToList() {}
+                override fun onClickAddToList() {}
 
-                    override fun onSaveMovieToList(
-                        movieId: Int,
-                        listId: Long
-                    ) {
-                    }
+                override fun onSaveMovieToList(
+                    movieId: Int, listId: Long
+                ) {
+                }
 
-                    override fun onClickCreateList() {}
+                override fun onClickCreateList() {}
 
-                    override fun onChangeListName(listName: String) {}
+                override fun onChangeListName(listName: String) {}
 
-                    override fun onClickCreateNewList() {}
+                override fun onClickCreateNewList() {}
 
-                    override fun onSelectedListChange(selectedList: UserListUiState) {}
+                override fun onSelectedListChange(selectedList: UserListUiState) {}
 
-                    override fun onClickRate() {}
+                override fun onClickRate() {}
 
-                    override fun onClickNavigateToLogin() {}
+                override fun onClickNavigateToLogin() {}
 
-                    override fun onClickCancel() {}
-                    override fun onClickSimilarMovie(movieId: Long) {}
-                    override fun onDescriptionExpansionToggled() {}
-                    override fun onReviewExpansionToggled(reviewId: String) {}
+                override fun onClickCancel() {}
+                override fun onClickSimilarMovie(movieId: Long) {}
+                override fun onDescriptionExpansionToggled() {}
+                override fun onReviewExpansionToggled(reviewId: String) {}
 
-                    override fun onClickPlayVideo() {}
-                },
+                override fun onClickPlayVideo() {}
+            },
             rateDialogInteractionListener = object : RateDialogInteractionListener {
                 override fun onClickCancelRateDialog() {}
                 override fun onClickSubmit() {}
                 override fun onChangeRating(newRate: Int) {}
 
-            }
-        )
+            })
     }
 }
