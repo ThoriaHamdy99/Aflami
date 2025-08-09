@@ -198,19 +198,19 @@ fun MovieContent(
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
 
-    val parentScrollState = rememberScrollState()
+    val parentLazyListState = rememberLazyListState()
     val childLazyListState = rememberLazyListState()
-    var canChildScroll by remember { mutableStateOf(!parentScrollState.canScrollForward) }
+    var canChildScroll by remember { mutableStateOf(!parentLazyListState.canScrollForward) }
     var appBarHeight by remember { mutableStateOf(0.dp) }
     val navigationBarPadding = with(density) { WindowInsets.safeDrawing.getBottom(this).toDp() }
     val contentHeightDp = configuration.screenHeightDp.dp
 
-    val scrollOffsetDp = with(density) {
-        parentScrollState.value.toDp()
+    val scrollOffset by remember {
+        derivedStateOf { parentLazyListState.firstVisibleItemScrollOffset }
     }
 
-    LaunchedEffect(parentScrollState.isScrollInProgress) {
-        canChildScroll = !parentScrollState.canScrollForward
+    LaunchedEffect(parentLazyListState.isScrollInProgress) {
+        canChildScroll = !parentLazyListState.canScrollForward
     }
 
     LaunchedEffect(childLazyListState.isScrollInProgress) {
@@ -228,7 +228,7 @@ fun MovieContent(
     val stroke = AppTheme.color.stroke
 
     val appBarColor by animateColorAsState(
-        targetValue = if (scrollOffsetDp > 0.dp) AppTheme.color.surface else Color.Transparent,
+        targetValue = if (scrollOffset > 8) AppTheme.color.surface else Color.Transparent,
         animationSpec = tween(800),
         label = "AppBarScrollColor"
     )
@@ -344,9 +344,8 @@ fun MovieContent(
                     interaction = rateDialogInteractionListener,
                     isSubmittingEnabled = isSubmittingEnabled,
                     isLoading = isLoading,
-                    selectedStarIndex = selectedStarIndex,
-
-                    )
+                    selectedStarIndex = selectedStarIndex
+                )
             }
         }
         AnimatedVisibility(
@@ -354,13 +353,13 @@ fun MovieContent(
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration)),
         ) {
-            Column(
+            LazyColumn(
+                state = parentLazyListState,
                 modifier = Modifier
                     .fillMaxSize()
                     .background(AppTheme.color.surface)
-                    .verticalScroll(parentScrollState),
             ) {
-                Column {
+                item {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -381,6 +380,8 @@ fun MovieContent(
                                 .padding(bottom = 4.dp, start = 4.dp, end = 4.dp),
                         )
                     }
+                }
+                item {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -451,36 +452,38 @@ fun MovieContent(
                         }
                     }
                 }
-                LazyColumn(
-                    state = childLazyListState,
-                    userScrollEnabled = canChildScroll,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = contentHeightDp - appBarHeight - navigationBarPadding)
-                        .animateContentSize(tween(500))
-                ) {
-                    state.extraItem.find { it.isSelected }?.item?.let { selectedExtra ->
-                        when (selectedExtra) {
-                            MovieExtras.MORE_LIKE_THIS -> moreLikeSection(
-                                similarMovies = state.similarMovies,
-                                deviceWidth = deviceWidth,
-                                onClick = { selectedMovieId ->
-                                    movieDetailsInteractionListener.onClickSimilarMovie(
-                                        selectedMovieId
-                                    )
-                                })
+                item {
+                    LazyColumn(
+                        state = childLazyListState,
+                        userScrollEnabled = canChildScroll,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = contentHeightDp - appBarHeight - navigationBarPadding)
+                            .animateContentSize(tween(500))
+                    ) {
+                        state.extraItem.find { it.isSelected }?.item?.let { selectedExtra ->
+                            when (selectedExtra) {
+                                MovieExtras.MORE_LIKE_THIS -> moreLikeSection(
+                                    similarMovies = state.similarMovies,
+                                    deviceWidth = deviceWidth,
+                                    onClick = { selectedMovieId ->
+                                        movieDetailsInteractionListener.onClickSimilarMovie(
+                                            selectedMovieId
+                                        )
+                                    })
 
-                            MovieExtras.REVIEWS -> reviewMovieSection(
-                                state.reviews, movieDetailsInteractionListener
-                            )
+                                MovieExtras.REVIEWS -> reviewMovieSection(
+                                    state.reviews, movieDetailsInteractionListener
+                                )
 
-                            MovieExtras.GALLERY -> gallerySection(
-                                gallery = state.gallery, deviceWidth = deviceWidth
-                            )
+                                MovieExtras.GALLERY -> gallerySection(
+                                    gallery = state.gallery, deviceWidth = deviceWidth
+                                )
 
-                            MovieExtras.COMPANY_PRODUCTION -> companyProductionSection(
-                                state.productionCompany, deviceWidth = deviceWidth
-                            )
+                                MovieExtras.COMPANY_PRODUCTION -> companyProductionSection(
+                                    state.productionCompany, deviceWidth = deviceWidth
+                                )
+                            }
                         }
                     }
                 }
