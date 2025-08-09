@@ -457,7 +457,7 @@ fun MovieContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(max = contentHeightDp - appBarHeight - navigationBarPadding)
-                        .animateContentSize()
+                        .animateContentSize(tween(500))
                 ) {
                     state.extraItem.find { it.isSelected }?.item?.let { selectedExtra ->
                         when (selectedExtra) {
