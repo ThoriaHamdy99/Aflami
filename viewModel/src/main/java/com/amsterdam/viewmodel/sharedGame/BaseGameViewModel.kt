@@ -19,19 +19,19 @@ open class BaseGameViewModel<S, E>(
     private var isStopTimerClicked: Boolean = false
 
     override fun startTheTimer(
-        questionSecondsLimit: Int,
+        questionTimeLimitSeconds: Int,
         onTimerChange: (BaseGameUiState) -> Unit,
         onTimerFinished: () -> Unit
     ) {
         timerJob?.cancel()
         isStopTimerClicked = false
-        endTimeMillis = System.currentTimeMillis() + (questionSecondsLimit * 1000L)
+        endTimeMillis = System.currentTimeMillis() + (questionTimeLimitSeconds * 1000L)
 
         timerJob = viewModelScope.launch(dispatcherProvider.Default) {
             while (true) {
                 val remainingMillis = endTimeMillis - System.currentTimeMillis()
                 val remainingSeconds = max(0, (remainingMillis / 1000).toInt())
-                val progress = remainingSeconds / (questionSecondsLimit.toFloat())
+                val progress = remainingSeconds / (questionTimeLimitSeconds.toFloat())
                 onTimerChange(
                     BaseGameUiState(
                         remainingSeconds,

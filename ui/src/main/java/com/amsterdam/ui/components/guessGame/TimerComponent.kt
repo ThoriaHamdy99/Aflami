@@ -56,8 +56,8 @@ fun TimerComponent(
                 .zIndex(1f)
         )
 
-        Canvas(modifier = Modifier.size(48.dp).zIndex(10f)) {
-            val strokeWidth = 5.dp.toPx()
+        Canvas(modifier = Modifier.size(40.dp).zIndex(10f)) {
+            val strokeWidth = 3.dp.toPx()
             drawArc(
                 color = animatedColor,
                 startAngle = -90f,
