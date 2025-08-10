@@ -1,15 +1,11 @@
 package com.amsterdam.ui.screens.search.actorSearch
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
@@ -45,11 +41,11 @@ import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.application.LocalRestrictionLevel
-import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.navigation.Route
+import com.amsterdam.ui.screens.search.countrySearch.components.MoviesVerticalGrid
 import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchEffect
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchErrorState
@@ -62,14 +58,16 @@ import kotlinx.coroutines.flow.emptyFlow
 @Composable
 fun SearchByActorScreen(
     modifier: Modifier = Modifier,
-    viewModel: ActorSearchViewModel = hiltViewModel(),
+    viewModel: ActorSearchViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.state.collectAsStateWithLifecycle()
     val movies = uiState.value.movies.collectAsLazyPagingItems()
     val navController = LocalNavController.current
+
     LaunchedEffect(movies.loadState) {
         viewModel.onPagingLoadStateChanged(movies.loadState)
     }
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
@@ -80,6 +78,7 @@ fun SearchByActorScreen(
             }
         }
     }
+
     SearchByActorContent(
         modifier = modifier,
         state = uiState.value,
@@ -103,63 +102,43 @@ private fun SearchByActorContent(
             .statusBarsPadding()
             .navigationBarsPadding()
     ) {
-        Column(Modifier.onSizeChanged { headerHeight = it.height.dp }) {
+        Column(
+            Modifier
+                .padding(horizontal = 16.dp)
+                .onSizeChanged { headerHeight = it.height.dp }
+        ) {
             DefaultAppBar(
-                modifier = Modifier.padding(horizontal = 16.dp),
                 title = stringResource(com.amsterdam.designsystem.R.string.find_by_actor),
                 showNavigateBackButton = true,
                 onNavigateBackClicked = interactionListener::onClickNavigateBack
             )
             TextField(
+                modifier = Modifier.padding(top = 8.dp),
                 text = state.keyword,
                 hintText = stringResource(com.amsterdam.designsystem.R.string.find_by_actor_hint),
                 onValueChange = { interactionListener.onUserSearchChange(it) },
+                imeAction = ImeAction.Search,
                 keyboardActions = KeyboardActions(
                     onSearch = {
                         keyboardController?.hide()
                         interactionListener.onUserSearchChange(state.keyword)
-                    },
-                ),
-                imeAction = ImeAction.Search,
-                modifier =
-                    Modifier
-                        .padding(top = 8.dp)
-                        .padding(horizontal = 16.dp),
+                    }
+                )
             )
         }
+
         if (
             state.keyword.isNotBlank() &&
             !state.isLoading &&
             state.error == null &&
             movies.itemCount != 0
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(160.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(
-                    vertical = 12.dp,
-                    horizontal = 16.dp
-                ),
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                items(
-                    count = movies.itemCount,
-                ) { index ->
-                    val movie = movies[index] ?: return@items
-                    MediaCard(
-                        movieImage = { MovieImage(movie.posterImageUrl) },
-                        movieType = stringResource(R.string.movie),
-                        movieYear = movie.yearOfRelease,
-                        movieTitle = movie.name,
-                        movieRating = movie.rate,
-                    ) {
-                        interactionListener.onClickMovie(movie.id)
-                    }
-                }
-            }
-        }
-        else {
+            MoviesVerticalGrid(
+                movies = movies,
+                isVisible = true,
+                onMovieClicked = interactionListener::onClickMovie
+            )
+        } else {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -192,8 +171,6 @@ private fun SearchByActorContent(
                                 modifier = Modifier.padding(horizontal = 24.dp)
                             )
                         }
-
-                        else -> {}
                     }
                 }
             }

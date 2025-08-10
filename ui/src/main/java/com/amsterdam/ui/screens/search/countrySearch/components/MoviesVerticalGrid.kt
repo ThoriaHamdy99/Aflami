@@ -4,19 +4,26 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
+import com.amsterdam.designsystem.components.LoadingIndicator
+import com.amsterdam.designsystem.components.buttons.ButtonDefaults
+import com.amsterdam.designsystem.components.buttons.PlainTextButton
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.imageviewer.ui.SafeImageView
@@ -40,7 +47,7 @@ internal fun MoviesVerticalGrid(
             columns = GridCells.Adaptive(160.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(vertical = 12.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
         ) {
             items(
                 count = movies.itemCount,
@@ -66,6 +73,35 @@ internal fun MoviesVerticalGrid(
                     movieRating = movie.rate,
                     onClick = { onMovieClicked(movie.id) }
                 )
+            }
+
+            if (
+                movies.loadState.append is LoadState.Loading
+                && movies.itemCount > 1
+            ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    LoadingIndicator(
+                        Modifier
+                            .size(48.dp)
+                            .padding(top = 8.dp)
+                    )
+                }
+            }
+
+            if (movies.loadState.append is LoadState.Error) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    PlainTextButton(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .padding(top = 8.dp),
+                        title = stringResource(com.amsterdam.ui.R.string.retry),
+                        onClick = { movies.retry() },
+                        isEnabled = true,
+                        isLoading = movies.loadState.append is LoadState.Loading,
+                        isNegative = false,
+                        colors = ButtonDefaults.textButtonColors()
+                    )
+                }
             }
         }
     }

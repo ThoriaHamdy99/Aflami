@@ -93,10 +93,13 @@ private fun SearchByCountryContent(
             .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding()
-            .padding(horizontal = 16.dp)
     ) {
         var headerHeight by remember { mutableStateOf(0.dp) }
-        Column(Modifier.onSizeChanged { headerHeight = it.height.dp }) {
+        Column(
+            Modifier
+                .padding(horizontal = 16.dp)
+                .onSizeChanged { headerHeight = it.height.dp }
+        ) {
             DefaultAppBar(
                 title = stringResource(R.string.world_tour_title),
                 showNavigateBackButton = true,
@@ -157,6 +160,7 @@ private fun SearchByCountryContent(
                 onItemClicked = interactionListener::onSelectCountry,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
                     .background(AppTheme.color.profileOverlay)
             )
         }
