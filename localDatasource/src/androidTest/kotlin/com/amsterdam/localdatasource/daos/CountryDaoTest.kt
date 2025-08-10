@@ -1,31 +1,18 @@
 package com.amsterdam.localdatasource.daos
 
-import androidx.room.Room
-import androidx.test.platform.app.InstrumentationRegistry
-import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
 import com.amsterdam.localdatasource.roomDataBase.daos.CountryDao
 import com.amsterdam.repository.dto.local.LocalCountryDto
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class CountryDaoTest {
+class CountryDaoTest : BaseDaoTest() {
     private lateinit var countryDao: CountryDao
-    private val context by lazy { InstrumentationRegistry.getInstrumentation().targetContext }
-    private val database by lazy {
-        Room.inMemoryDatabaseBuilder(context, AflamiDatabase::class.java).build()
-    }
 
     @BeforeEach
     fun setup() {
-        countryDao = database.countryDao()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        database.close()
+        countryDao = aflamiDatabase.countryDao()
     }
 
     @Test

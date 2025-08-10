@@ -1,33 +1,20 @@
 package com.amsterdam.localdatasource.daos
 
-import androidx.room.Room
-import androidx.test.platform.app.InstrumentationRegistry
-import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
 import com.amsterdam.localdatasource.roomDataBase.daos.RecentSearchDao
 import com.amsterdam.repository.dto.local.LocalSearchDto
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class RecentSearchDaoTest {
+class RecentSearchDaoTest : BaseDaoTest() {
     private lateinit var dao: RecentSearchDao
-    private val context by lazy { InstrumentationRegistry.getInstrumentation().targetContext }
-    private val database by lazy {
-        Room.inMemoryDatabaseBuilder(context, AflamiDatabase::class.java).build()
-    }
 
     @BeforeEach
     fun setup() {
-        dao = database.recentSearchDao()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        database.close()
+        dao = aflamiDatabase.recentSearchDao()
     }
 
     @Test

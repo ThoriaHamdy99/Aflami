@@ -1,8 +1,5 @@
 package com.amsterdam.localdatasource.daos
 
-import androidx.room.Room
-import androidx.test.platform.app.InstrumentationRegistry
-import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
 import com.amsterdam.localdatasource.roomDataBase.daos.CategoryDao
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieDao
 import com.amsterdam.repository.dto.local.LocalMovieCategoryDto
@@ -16,29 +13,18 @@ import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.days
 
-class MovieDaoTest {
-
-    private val context by lazy { InstrumentationRegistry.getInstrumentation().targetContext }
-    private val database by lazy {
-        Room.inMemoryDatabaseBuilder(context, AflamiDatabase::class.java).build()
-    }
+class MovieDaoTest : BaseDaoTest() {
     private lateinit var movieDao: MovieDao
     private lateinit var categoryDao: CategoryDao
 
     @BeforeEach
     fun setup() {
-        movieDao = database.movieDao()
-        categoryDao = database.categoryDao()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        database.close()
+        movieDao = aflamiDatabase.movieDao()
+        categoryDao = aflamiDatabase.categoryDao()
     }
 
     @Test
@@ -99,7 +85,7 @@ class MovieDaoTest {
         movieDao.upsertMovie(movie)
 
         movieDao.upsertMovieCategoryCrossRefs(movieCategoryCrossRefs)
-        val cursor = database.query(
+        val cursor = aflamiDatabase.query(
             "SELECT * FROM ${DatabaseConstants.MOVIE_CATEGORY_CROSS_REF_TABLE}",
             null
         )

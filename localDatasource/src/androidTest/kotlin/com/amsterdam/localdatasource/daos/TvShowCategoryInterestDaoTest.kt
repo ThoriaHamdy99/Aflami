@@ -1,31 +1,18 @@
 package com.amsterdam.localdatasource.daos
 
-import androidx.room.Room
-import androidx.test.platform.app.InstrumentationRegistry
-import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
 import com.amsterdam.localdatasource.roomDataBase.daos.TvShowCategoryInterestDao
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryInterestDto
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TvShowCategoryInterestDaoTest {
+class TvShowCategoryInterestDaoTest : BaseDaoTest() {
     private lateinit var interestDao: TvShowCategoryInterestDao
-    private val context by lazy { InstrumentationRegistry.getInstrumentation().targetContext }
-    private val database by lazy {
-        Room.inMemoryDatabaseBuilder(context, AflamiDatabase::class.java).build()
-    }
 
     @BeforeEach
     fun setup() {
-        interestDao = database.tvShowCategoryInterestDao()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        database.close()
+        interestDao = aflamiDatabase.tvShowCategoryInterestDao()
     }
 
     @Test
