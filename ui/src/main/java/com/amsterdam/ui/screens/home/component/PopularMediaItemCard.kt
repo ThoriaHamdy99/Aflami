@@ -66,7 +66,13 @@ fun PopularMediaItemCard(
                     modifier =
                         Modifier
                             .size(imageWidth, imageHeight)
-                            .clip(RoundedCornerShape(24.dp)),
+                            .clip(RoundedCornerShape(24.dp))
+                            .border(
+                                width = 1.dp,
+                                color = AppTheme.color.stroke,
+                                shape = RoundedCornerShape(24.dp),
+                            )
+                            .background(AppTheme.color.surface),
                     onLoading = { ImageLoadingIndicator() },
                     safetyLevel = safetyLevel,
                     onError = { ImageErrorIndicator() },
