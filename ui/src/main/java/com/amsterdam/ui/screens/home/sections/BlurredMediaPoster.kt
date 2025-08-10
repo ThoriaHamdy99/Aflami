@@ -2,7 +2,6 @@ package com.amsterdam.ui.screens.home.sections
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -16,7 +15,7 @@ import io.sifr.shaded.blurProcessor.BlurEdgeTreatment
 import io.sifr.shaded.modifiers.blur
 
 @Composable
-fun BoxScope.BlurredMoviePoster(
+fun BlurredMediaPoster(
     posterUrl: String,
     modifier: Modifier = Modifier,
     ) {
