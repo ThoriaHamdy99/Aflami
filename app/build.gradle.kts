@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "com.amsterdam.aflami"
+    namespace = libs.versions.namespaceAflami.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.amsterdam.aflami"
+        applicationId = libs.versions.namespaceAflami.get()
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = libs.versions.versionCode.get().toInt()

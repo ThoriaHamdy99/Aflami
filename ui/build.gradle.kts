@@ -6,9 +6,7 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
-android {
-    namespace = "com.amsterdam.ui"
-}
+android { namespace = libs.versions.namespaceUi.get() }
 
 dependencies {
     modulesDependencies()

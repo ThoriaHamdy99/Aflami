@@ -6,7 +6,8 @@ plugins {
 }
 
 android {
-    namespace = "com.amsterdam.localdatasource"
+    namespace = libs.versions.namespaceLocalDatasource.get()
+
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["runnerBuilder"] =

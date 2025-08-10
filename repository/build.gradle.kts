@@ -7,10 +7,10 @@ plugins {
 }
 
 android {
-    namespace = "com.amsterdam.repository"
-    buildFeatures {
-        buildConfig = true
-    }
+    namespace = libs.versions.namespaceRepository.get()
+
+    buildFeatures { buildConfig = true }
+
     defaultConfig {
         testInstrumentationRunnerArguments["runnerBuilder"] =
             "de.mannodermaus.junit5.AndroidJUnit5Builder"

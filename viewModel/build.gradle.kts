@@ -13,21 +13,13 @@ plugins {
 }
 
 android {
-    namespace = "com.amsterdam.viewmodel"
-    buildFeatures {
-        buildConfig = true
-    }
+    namespace = libs.versions.namespaceViewModel.get()
+
+    buildFeatures { buildConfig = true }
+
     defaultConfig {
-        buildConfigField(
-            "String",
-            "MOVIE_SIGN_UP_URL",
-            movieSignUp
-        )
-        buildConfigField(
-            "String",
-            "MOVIE_RESET_PASSWORD_URL",
-            movieResetPassword
-        )
+        buildConfigField("String", "MOVIE_SIGN_UP_URL", movieSignUp)
+        buildConfigField("String", "MOVIE_RESET_PASSWORD_URL", movieResetPassword)
     }
 }
 

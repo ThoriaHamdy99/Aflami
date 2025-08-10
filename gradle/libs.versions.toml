@@ -54,6 +54,16 @@ uiToolingPreviewAndroid = "1.8.3"
 uiTooling = "1.8.3"
 splashscreen = "1.0.1"
 
+namespaceAflami= "com.amsterdam.aflami"
+namespaceLocalDatasource = "com.amsterdam.localdatasource"
+namespaceRemoteDataSource = "com.amsterdam.remotedatasource"
+namespaceRepository = "com.amsterdam.repository"
+namespaceViewModel= "com.amsterdam.viewmodel"
+namespaceDesignSystem = "com.amsterdam.designsystem"
+namespaceUi= "com.amsterdam.ui"
+namespaceImageViewer = "com.amsterdam.imageviewer"
+
+
 [libraries]
 android-test-core = { module = "de.mannodermaus.junit5:android-test-core", version.ref = "androidTestCore" }
 android-test-runner = { module = "de.mannodermaus.junit5:android-test-runner", version.ref = "androidTestCore" }
