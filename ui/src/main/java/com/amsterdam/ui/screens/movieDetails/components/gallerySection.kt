@@ -1,7 +1,7 @@
 package com.amsterdam.ui.screens.movieDetails.components
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
@@ -28,10 +28,14 @@ fun LazyListScope.gallerySection(
         }
     } else {
         adaptiveGrid(
-            deviceWidth = deviceWidth,
+            availableWidth = deviceWidth,
             gallery,
             160,
-            modifier = modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 12.dp,
+            ),
         ) { item ->
             val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
             SafeImageView(
