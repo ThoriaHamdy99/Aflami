@@ -137,8 +137,8 @@ private fun SearchByCountryContent(
                             state.isLoading -> LoadingContainer()
                             state.errorUiState is CountrySearchErrorState.NoNetworkConnection -> {
                                 NoNetworkContainer(
-                                    onClickRetry = interactionListener::onClickRetry,
-                                    modifier = Modifier.padding(vertical = 8.dp)
+                                    modifier = Modifier.padding(vertical = 8.dp),
+                                    onClickRetry = interactionListener::onClickRetry
                                 )
                             }
 
@@ -155,13 +155,13 @@ private fun SearchByCountryContent(
                 }
             }
             CountriesDropdownMenu(
-                items = state.suggestedCountries.take(4),
-                isVisible = state.showSuggestedCountries && state.suggestedCountries.isNotEmpty(),
-                onItemClicked = interactionListener::onSelectCountry,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .background(AppTheme.color.profileOverlay)
+                    .background(AppTheme.color.profileOverlay),
+                items = state.suggestedCountries.take(4),
+                isVisible = state.showSuggestedCountries && state.suggestedCountries.isNotEmpty(),
+                onItemClicked = interactionListener::onSelectCountry
             )
         }
     }

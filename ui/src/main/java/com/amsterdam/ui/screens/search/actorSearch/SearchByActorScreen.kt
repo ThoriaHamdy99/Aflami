@@ -140,11 +140,11 @@ private fun SearchByActorContent(
             )
         } else {
             Box(
-                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                contentAlignment = Alignment.Center
             ) {
                 CenterOfScreenContainer(headerHeight) {
                     when {
@@ -156,19 +156,19 @@ private fun SearchByActorContent(
 
                         state.keyword.isBlank() -> {
                             NoDataContainer(
+                                modifier = Modifier.padding(horizontal = 24.dp),
                                 imageRes = painterResource(R.drawable.img_suggestion_magician),
                                 title = stringResource(com.amsterdam.designsystem.R.string.find_by_actor),
-                                description = stringResource(com.amsterdam.designsystem.R.string.find_by_actor_description),
-                                modifier = Modifier.padding(horizontal = 24.dp)
+                                description = stringResource(com.amsterdam.designsystem.R.string.find_by_actor_description)
                             )
                         }
 
                         movies.itemCount == 0 -> {
                             NoDataContainer(
+                                modifier = Modifier.padding(horizontal = 24.dp),
                                 imageRes = painterResource(R.drawable.placeholder_no_result_found),
                                 title = stringResource(R.string.no_search_result),
-                                description = stringResource(R.string.no_search_result_description),
-                                modifier = Modifier.padding(horizontal = 24.dp)
+                                description = stringResource(R.string.no_search_result_description)
                             )
                         }
                     }
