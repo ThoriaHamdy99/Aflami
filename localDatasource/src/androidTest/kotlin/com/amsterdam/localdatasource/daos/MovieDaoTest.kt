@@ -3,9 +3,15 @@ package com.amsterdam.localdatasource.daos
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
+import com.amsterdam.localdatasource.roomDataBase.daos.CategoryDao
 import com.amsterdam.localdatasource.roomDataBase.daos.MovieDao
+import com.amsterdam.repository.dto.local.LocalMovieCategoryDto
 import com.amsterdam.repository.dto.local.LocalMovieDto
 import com.amsterdam.repository.dto.local.MovieCategoryCrossRefDto
+import com.amsterdam.repository.dto.local.PopularMovieDto
+import com.amsterdam.repository.dto.local.TopRatedMovieDto
+import com.amsterdam.repository.dto.local.UpcomingMovieDto
+import com.amsterdam.repository.dto.local.relation.MovieWithCategories
 import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -13,6 +19,7 @@ import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.days
 
 class MovieDaoTest {
 
@@ -20,11 +27,13 @@ class MovieDaoTest {
     private val database by lazy {
         Room.inMemoryDatabaseBuilder(context, AflamiDatabase::class.java).build()
     }
-    private lateinit var dao: MovieDao
+    private lateinit var movieDao: MovieDao
+    private lateinit var categoryDao: CategoryDao
 
     @BeforeEach
     fun setup() {
-        dao = database.movieDao()
+        movieDao = database.movieDao()
+        categoryDao = database.categoryDao()
     }
 
     @AfterEach
@@ -34,70 +43,239 @@ class MovieDaoTest {
 
     @Test
     fun upsertMovie_shouldInsertMovie() = runTest {
-        val movie = createMovie(movieId = 1L, storedLanguage = "en")
-
-        dao.upsertMovie(movie)
-        val result = dao.getMovieById(movie.movieId, movie.storedLanguage)
+        movieDao.upsertMovie(movie)
+        val result = movieDao.getMovieById(movie.movieId, movie.storedLanguage)
 
         assertThat(result).isEqualTo(movie)
     }
 
     @Test
-    fun upsertMovie_shouldUpdateMovieWithoutDuplication_WhenMovieAlreadyStored() = runTest {
-        val originalMovie = createMovie(movieId = 1L, storedLanguage = "en", name = "Original")
-        val updatedMovie = originalMovie.copy(name = "Updated")
-        dao.upsertMovie(originalMovie)
+    fun upsertMovie_shouldUpdateMovieWithoutDuplication_whenMovieAlreadyStored() = runTest {
+        movieDao.upsertMovie(movie)
 
-        dao.upsertMovie(updatedMovie)
-        val result = dao.getMovieById(originalMovie.movieId, originalMovie.storedLanguage)
+        movieDao.upsertMovie(updatedMovie)
+        val result = movieDao.getMovieById(movie.movieId, movie.storedLanguage)
 
-        assertThat(result?.name).isEqualTo("Updated")
+        assertThat(result?.name).isEqualTo(updatedMovie.name)
     }
 
     @Test
     fun upsertMovies_shouldInsertMovies() = runTest {
-        val movie = createMovie(movieId = 1L, storedLanguage = "en")
-
-        dao.upsertMovies(listOf(movie))
-        val result = dao.getMovieById(movie.movieId, movie.storedLanguage)
+        movieDao.upsertMovies(listOf(movie))
+        val result = movieDao.getMovieById(movie.movieId, movie.storedLanguage)
 
         assertThat(result).isEqualTo(movie)
     }
 
     @Test
-    fun upsertMovies_shouldUpdateMovieWithoutDuplication_WhenMovieAlreadyStored() = runTest {
-        val originalMovie = createMovie(movieId = 1L, storedLanguage = "en", name = "Original")
-        val updatedMovie = originalMovie.copy(name = "Updated")
-        dao.upsertMovies(listOf(originalMovie))
+    fun upsertMovies_shouldUpdateMovieWithoutDuplication_whenMovieAlreadyStored() = runTest {
+        movieDao.upsertMovies(listOf(movie))
 
-        dao.upsertMovies(listOf(updatedMovie))
-        val result = dao.getMovieById(originalMovie.movieId, originalMovie.storedLanguage)
+        movieDao.upsertMovies(listOf(updatedMovie))
+        val result = movieDao.getMovieById(movie.movieId, movie.storedLanguage)
 
-        assertThat(result?.name).isEqualTo("Updated")
+        assertThat(result?.name).isEqualTo(updatedMovie.name)
     }
 
     @Test
-    fun getMovieById_shouldGetMovie_WhenMovieIsExists() = runTest {
-        val movie = createMovie(movieId = 1L, storedLanguage = "en", name = "Original")
-        dao.upsertMovie(movie)
+    fun getMovieById_shouldGetMovie_whenMovieIsExists() = runTest {
+        movieDao.upsertMovie(movie)
 
-        val result = dao.getMovieById(movie.movieId, movie.storedLanguage)
+        val result = movieDao.getMovieById(movie.movieId, movie.storedLanguage)
 
         assertThat(result).isEqualTo(movie)
     }
 
     @Test
-    fun getMovieById_shouldReturnNull_WhenMovieIsNotExists() = runTest {
-        val result = dao.getMovieById(1L, "en")
+    fun getMovieById_shouldReturnNull_whenMovieIsNotExists() = runTest {
+        val result = movieDao.getMovieById(1L, "en")
 
         assertThat(result).isEqualTo(null)
     }
+
+    @Test
+    fun upsertMovieCategoryCrossRefs_shouldInsertsNewCrossRefs_usingRawQuery() = runTest {
+        categoryDao.upsertAllMovieCategories(moviesCategories)
+        movieDao.upsertMovie(movie)
+
+        movieDao.upsertMovieCategoryCrossRefs(movieCategoryCrossRefs)
+        val cursor = database.query(
+            "SELECT * FROM ${DatabaseConstants.MOVIE_CATEGORY_CROSS_REF_TABLE}",
+            null
+        )
+        val retrievedCrossRefs = mutableListOf<MovieCategoryCrossRefDto>()
+        cursor.use {
+            if (it.moveToFirst()) {
+                do {
+                    val movieId = it.getLong(it.getColumnIndexOrThrow("movieId"))
+                    val categoryId = it.getLong(it.getColumnIndexOrThrow("categoryId"))
+                    val storedLanguage = it.getString(it.getColumnIndexOrThrow("storedLanguage"))
+                    retrievedCrossRefs.add(
+                        MovieCategoryCrossRefDto(
+                            movieId,
+                            categoryId,
+                            storedLanguage
+                        )
+                    )
+                } while (it.moveToNext())
+            }
+        }
+
+        assertThat(retrievedCrossRefs).containsExactlyElementsIn(movieCategoryCrossRefs)
+    }
+
+    @Test
+    fun getPopularMovies_shouldReturnPopularMovies_whenMoviesStored() = runTest {
+        movieDao.upsertMovie(movie)
+        movieDao.upsertPopularMovies(popularMovies)
+
+        val result = movieDao.getPopularMovies("en")
+
+        assertThat(result).isEqualTo(moviesWithCategories)
+    }
+
+    @Test
+    fun getPopularMovies_shouldReturnEmptyList_whenNoMoviesStored() = runTest {
+        val result = movieDao.getPopularMovies("en")
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun getTopRatedMovies_shouldReturnTopRatedMovies_whenMoviesStored() = runTest {
+        movieDao.upsertMovie(movie)
+        movieDao.upsertTopRatedMovies(topRatedMovies)
+
+        val result = movieDao.getTopRatedMovies("en")
+
+        assertThat(result).isEqualTo(listOf(movie))
+    }
+
+    @Test
+    fun getTopRatedMovies_shouldReturnEmptyList_whenNoMoviesStored() = runTest {
+        val result = movieDao.getTopRatedMovies("en")
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun getUpcomingMovies_shouldReturnUpcomingMovies_whenMoviesStored() = runTest {
+        movieDao.upsertMovie(movie)
+        movieDao.upsertUpcomingMovies(upcomingMovies)
+
+        val result = movieDao.getUpcomingMovies("en")
+
+        assertThat(result).isEqualTo(moviesWithCategories)
+    }
+
+    @Test
+    fun getUpcomingMovies_shouldReturnEmptyList_whenNoMoviesStored() = runTest {
+        val result = movieDao.getUpcomingMovies("en")
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun upsertPopularMovies_shouldInsertPopularMovies_whenMoviesNotExist() = runTest {
+        movieDao.upsertMovie(movie)
+
+        movieDao.upsertPopularMovies(popularMovies)
+        val result = movieDao.getPopularMovies("en")
+
+        assertThat(result).isEqualTo(moviesWithCategories)
+    }
+
+    @Test
+    fun upsertTopRatedMovies_shouldInsertTopRatedMovies_whenMoviesNotExist() = runTest {
+        movieDao.upsertMovie(movie)
+
+        movieDao.upsertTopRatedMovies(topRatedMovies)
+        val result = movieDao.getTopRatedMovies("en")
+
+        assertThat(result).isEqualTo(listOf(movie))
+    }
+
+    @Test
+    fun upsertUpcomingMovies_shouldInsertComingMovies_whenMoviesNotExist() = runTest {
+        movieDao.upsertMovie(movie)
+
+        movieDao.upsertUpcomingMovies(upcomingMovies)
+        val result = movieDao.getUpcomingMovies("en")
+
+        assertThat(result).isEqualTo(moviesWithCategories)
+    }
+
+    @Test
+    fun deleteExpiredPopularMovies_shouldDeleteExpiredPopularMovies() = runTest {
+        movieDao.upsertMovie(movie)
+        movieDao.upsertPopularMovies(popularMovies)
+
+        movieDao.deleteExpiredPopularMovies(popularMovies[0].dateAdded + 5.days, "en")
+        val result = movieDao.getPopularMovies("en")
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun deleteExpiredTopRatedMovies_shouldDeleteExpiredTopRatedMovies() = runTest {
+        movieDao.upsertMovie(movie)
+        movieDao.upsertTopRatedMovies(topRatedMovies)
+
+        movieDao.deleteAllExpiredTopRatedMovies(topRatedMovies[0].dateAdded + 5.days, "en")
+        val result = movieDao.getTopRatedMovies("en")
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun deleteExpiredUpcomingMovies_shouldDeleteExpiredUpcomingMovies() = runTest {
+        movieDao.upsertMovie(movie)
+        movieDao.upsertUpcomingMovies(upcomingMovies)
+
+        movieDao.deleteExpiredUpcomingMovies(upcomingMovies[0].dateAdded + 5.days, "en")
+        val result = movieDao.getUpcomingMovies("en")
+
+        assertThat(result).isEmpty()
+    }
 }
 
+private val topRatedMovies = listOf(TopRatedMovieDto(1L, "en"))
+
+private val popularMovies = listOf(PopularMovieDto(1L, "en"))
+
+private val upcomingMovies = listOf(UpcomingMovieDto(1L, "en"))
+
+private val moviesCategories = listOf(
+    LocalMovieCategoryDto(1),
+    LocalMovieCategoryDto(2)
+)
+
+private val movie = createMovie()
+
+private val updatedMovie = movie.copy(name = "Updated")
+
+private val moviesWithCategories = listOf(
+    MovieWithCategories(
+        movie = movie,
+        categories = emptyList()
+    )
+)
+
+private val movieCategoryCrossRefs = listOf(
+    MovieCategoryCrossRefDto(
+        movieId = 1, categoryId = 1,
+        storedLanguage = "en"
+    ),
+    MovieCategoryCrossRefDto(
+        movieId = 1, categoryId = 2,
+        storedLanguage = "en"
+    ),
+)
+
 private fun createMovie(
-    movieId: Long,
-    storedLanguage: String,
-    name: String = "Sample Movie"
+    movieId: Long = 1L,
+    storedLanguage: String = "en",
+    name: String = "Original"
 ): LocalMovieDto {
     return LocalMovieDto(
         movieId = movieId,
