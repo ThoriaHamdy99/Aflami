@@ -22,12 +22,11 @@ import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetMoviesByGenreIdUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
+import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
+import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
-import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
-import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
-import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
@@ -303,6 +302,7 @@ object UseCaseModule {
 
     @Provides
     fun provideGetTotalUserPointsUseCase() = GetTotalUserPointsUseCase()
-   @Provides
-   fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
+
+    @Provides
+    fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
 }
