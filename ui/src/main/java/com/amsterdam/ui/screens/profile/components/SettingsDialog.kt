@@ -11,14 +11,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.Dialog
 import com.amsterdam.designsystem.components.Icon
-import com.amsterdam.designsystem.components.IconButton
-import com.amsterdam.designsystem.components.Text
+import com.amsterdam.designsystem.components.buttons.PlainTextButton
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.R
-import com.amsterdam.designsystem.R as R2
 import com.amsterdam.ui.components.DialogTitleRow
+import com.amsterdam.designsystem.R as R2
 
 @Composable
 fun SettingsDialog(
@@ -27,16 +26,20 @@ fun SettingsDialog(
     onContentRestrictionClick: () -> Unit,
     onLogoutClick: () -> Unit,
     onDismissClick: () -> Unit
-){
+) {
     Dialog(
         onDismiss = onDismissClick
     ) {
         Column(
-            modifier = modifier.padding(vertical = 12.dp).background(AppTheme.color.surface)
+            modifier = modifier
+                .padding(vertical = 12.dp)
+                .background(AppTheme.color.surface)
         ) {
             DialogTitleRow(
                 title = stringResource(R.string.settings),
-                modifier = Modifier.padding(horizontal = 12.dp).padding(bottom = 24.dp),
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .padding(bottom = 24.dp),
                 onDismiss = onDismissClick
             )
             OptionRow(
@@ -71,13 +74,15 @@ fun SettingsDialog(
                 title = stringResource(R.string.tired_of_watching),
                 leadingIcon = painterResource(R.drawable.ic_logout),
                 trailingContent = {
-                    Text(
-                        text = stringResource(R.string.logout),
+                    PlainTextButton(
+                        title = stringResource(R.string.logout),
                         style = AppTheme.textStyle.label.medium,
-                        color = AppTheme.color.primary
+                        onClick = onLogoutClick,
+                        isLoading = false,
+                        isEnabled = true,
+                        isNegative = false,
                     )
                 },
-                onClick = onLogoutClick
             )
         }
     }
@@ -85,13 +90,13 @@ fun SettingsDialog(
 
 @ThemeAndLocalePreviews
 @Composable
-private fun SettingsDialogPreview(){
-    AflamiTheme { 
+private fun SettingsDialogPreview() {
+    AflamiTheme {
         SettingsDialog(
             onChangePasswordClick = {},
             onContentRestrictionClick = {},
             onLogoutClick = {},
             onDismissClick = {},
-        ) 
+        )
     }
 }
