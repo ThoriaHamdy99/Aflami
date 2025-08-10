@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
@@ -26,9 +28,15 @@ fun TimerComponent(
     baseGameUiState: BaseGameUiState,
     modifier: Modifier = Modifier
 ) {
-    val targetColor = when (baseGameUiState.currentTimerColor) {
-        BaseGameUiState.TimerColor.GREEN -> AppTheme.color.greenAccent
-        BaseGameUiState.TimerColor.RED -> AppTheme.color.redAccent
+    val greenColor = AppTheme.color.greenAccent
+    val redColor = AppTheme.color.redAccent
+    val targetColor by remember(baseGameUiState.currentTimerColor) {
+        derivedStateOf {
+            when (baseGameUiState.currentTimerColor) {
+                BaseGameUiState.TimerColor.GREEN -> greenColor
+                BaseGameUiState.TimerColor.RED -> redColor
+            }
+        }
     }
 
     val animatedColor by animateColorAsState(

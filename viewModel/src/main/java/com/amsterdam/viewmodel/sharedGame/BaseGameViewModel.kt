@@ -31,7 +31,7 @@ open class BaseGameViewModel<S, E>(
             while (true) {
                 val remainingMillis = endTimeMillis - System.currentTimeMillis()
                 val remainingSeconds = max(0, (remainingMillis / 1000).toInt())
-                val progress = remainingMillis.toFloat() / (questionSecondsLimit * 1000)
+                val progress = remainingSeconds / (questionSecondsLimit.toFloat())
                 onTimerChange(
                     BaseGameUiState(
                         remainingSeconds,
