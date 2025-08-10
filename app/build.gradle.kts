@@ -62,12 +62,12 @@ dependencies {
 }
 
 private fun DependencyHandlerScope.appModulesDependencies() {
-    implementation(project(":ui"))
-    implementation(project(":viewModel"))
-    implementation(project(":localDatasource"))
-    implementation(project(":remoteDatasource"))
-    implementation(project(":domain"))
-    implementation(project(":repository"))
+    implementation(projects.ui)
+    implementation(projects.viewModel)
+    implementation(projects.localDatasource)
+    implementation(projects.remoteDatasource)
+    implementation(projects.domain)
+    implementation(projects.repository)
 }
 
 private fun DependencyHandlerScope.firebaseDependencies() {

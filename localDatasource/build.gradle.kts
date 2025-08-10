@@ -29,7 +29,7 @@ dependencies {
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
-    implementation(project(":repository"))
+    implementation(projects.repository)
 }
 
 private fun DependencyHandlerScope.roomDependencies() {

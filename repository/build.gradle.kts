@@ -31,7 +31,7 @@ dependencies {
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
-    api(project(":domain"))
+    api(projects.domain)
 
 }
 

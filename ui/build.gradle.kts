@@ -27,9 +27,9 @@ dependencies {
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
-    implementation(project(":designSystem"))
-    implementation(project(":viewModel"))
-    implementation(project(":imageViewer"))
+    implementation(projects.designSystem)
+    implementation(projects.viewModel)
+    implementation(projects.imageViewer)
 }
 
 private fun DependencyHandlerScope.navigationDependencies() {

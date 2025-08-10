@@ -20,7 +20,7 @@ dependencies {
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {
-    api(project(":entity"))
+    api(projects.entity)
 }
 
 private fun DependencyHandlerScope.coroutinesDependencies() {
