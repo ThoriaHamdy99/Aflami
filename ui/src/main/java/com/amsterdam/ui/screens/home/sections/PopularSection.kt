@@ -80,7 +80,7 @@ fun LazyListScope.popularSection(
                         targetState = pagerState.currentPage,
                         animationSpec = tween(500, easing = FastOutSlowInEasing)
                     ) { page ->
-                        BlurredMoviePoster(
+                        BlurredMediaPoster(
                             posterUrl = state.mediaItems[page % state.mediaItems.size].posterUrl,
                             modifier = Modifier.offset(y = (-26).dp)
                         )
@@ -102,7 +102,7 @@ fun LazyListScope.popularSection(
                         AutoScrollingPager(pagerState)
                         BoxWithConstraints {
                             val screenWidth = maxWidth
-                            PopularMoviesPager(
+                            PopularMediaPager(
                                 pagerState = pagerState,
                                 state = state,
                                 screenWidth = screenWidth,
@@ -110,7 +110,7 @@ fun LazyListScope.popularSection(
                             )
                         }
 
-                        DisplayGenresForMovie(
+                        DisplayMediaGenres(
                             modifier = Modifier
                                 .zIndex(2f),
                             mediaItem = state.mediaItems[pagerState.currentPage % state.mediaItems.size],
@@ -123,7 +123,7 @@ fun LazyListScope.popularSection(
 }
 
 @Composable
-private fun DisplayGenresForMovie(
+private fun DisplayMediaGenres(
     mediaItem: PopularMediaItemUiState,
     modifier: Modifier = Modifier
 ) {
@@ -181,7 +181,7 @@ private fun AutoScrollingPager(
 }
 
 @Composable
-private fun PopularMoviesPager(
+private fun PopularMediaPager(
     pagerState: PagerState,
     state: HomeUiState.PopularMediaSectionUiState,
     screenWidth: Dp,
