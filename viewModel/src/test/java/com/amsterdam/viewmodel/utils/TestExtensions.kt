@@ -17,10 +17,12 @@ class TestExtension @OptIn(ExperimentalCoroutinesApi::class) constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun beforeEach(context: ExtensionContext?) {
         Dispatchers.setMain(testDispatcherProvider)
+
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun afterEach(context: ExtensionContext?) {
         Dispatchers.resetMain()
     }
+
 }
