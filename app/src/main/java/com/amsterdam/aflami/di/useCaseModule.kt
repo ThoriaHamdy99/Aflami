@@ -15,15 +15,16 @@ import com.amsterdam.domain.useCase.authentication.LoginWithPasswordUseCase
 import com.amsterdam.domain.useCase.authentication.LogoutUseCase
 import com.amsterdam.domain.useCase.common.AddMovieWatchHistoryUseCase
 import com.amsterdam.domain.useCase.common.AddTvShowWatchHistoryUseCase
+import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetMovieCastUseCase
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
+import com.amsterdam.domain.useCase.details.GetMoviesByGenreIdUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
-import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
@@ -32,18 +33,18 @@ import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
+import com.amsterdam.domain.useCase.list.CreateNewListUseCase
+import com.amsterdam.domain.useCase.list.DeleteListUseCase
+import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
+import com.amsterdam.domain.useCase.list.GetUserListsUseCase
+import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.myRating.movie.DeleteUserRatedMovieUseCase
 import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase
 import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
-import com.amsterdam.domain.useCase.list.CreateNewListUseCase
-import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
-import com.amsterdam.domain.useCase.list.DeleteListUseCase
-import com.amsterdam.domain.useCase.list.GetMoviesFromListUseCase
-import com.amsterdam.domain.useCase.list.GetUserListsUseCase
-import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
@@ -166,6 +167,10 @@ object UseCaseModule {
         GetTopRatedMoviesUseCase(movieRepository)
 
     @Provides
+    fun provideGetMoviesByGenreId(movieRepository: MovieRepository): GetMoviesByGenreIdUseCase =
+        GetMoviesByGenreIdUseCase(movieRepository)
+
+    @Provides
     fun provideGetContinueWatchingMoviesUseCase(watchHistoryRepository: WatchHistoryRepository): GetContinueWatchingMoviesUseCase =
         GetContinueWatchingMoviesUseCase(watchHistoryRepository)
 
@@ -249,6 +254,7 @@ object UseCaseModule {
         userListRepository: UserListRepository,
     ): GetUserListsUseCase =
         GetUserListsUseCase(userListRepository)
+
     @Provides
     fun provideAddMovieToListUseCase(userListRepository: UserListRepository): AddMovieToListUseCase =
         AddMovieToListUseCase(userListRepository)
