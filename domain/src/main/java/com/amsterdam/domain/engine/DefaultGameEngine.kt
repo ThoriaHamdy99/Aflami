@@ -4,7 +4,14 @@ import com.amsterdam.domain.strategies.QuestionProvider
 import com.amsterdam.domain.strategies.HintStrategy
 import com.amsterdam.domain.strategies.ScoringPolicy
 import com.amsterdam.entity.Game.GameType
-import com.amsterdam.domain.models.*
+import com.amsterdam.domain.models.gameModels.AnswerOption
+import com.amsterdam.domain.models.gameModels.GameConfig
+import com.amsterdam.domain.models.gameModels.GameResult
+import com.amsterdam.domain.models.gameModels.GameSession
+import com.amsterdam.domain.models.gameModels.GameSessionState
+import com.amsterdam.domain.models.gameModels.GameStatus
+import com.amsterdam.domain.models.gameModels.HintState
+import com.amsterdam.domain.models.gameModels.Question
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,268 +23,250 @@ class DefaultGameEngine(
     private val scoringPolicy: ScoringPolicy
 ) : GameEngine {
 
-    // Immutable state container
-    private data class EngineState(
-        val session: GameSession? = null,
-        val timeLeftSeconds: Int = 0,
-        val totalTimeSpent: Int = 0,
-        val sessionStartTime: Long = 0,
-        val correctAnswersCount: Int = 0
+    private val _state = MutableStateFlow(
+        GameSessionState(
+            status = GameStatus.Idle,
+            session = null,
+            timeLeftSeconds = 0,
+            currentQuestion = null,
+            options = emptyList(),
+            hintState = HintState.None
+        )
     )
-
-    private val _state = MutableStateFlow(createInitialState())
     override val state: StateFlow<GameSessionState> = _state.asStateFlow()
-    
-    private var engineState = EngineState()
+
+    private var currentSession: GameSession? = null
+    private var timeLeftSeconds: Int = 0
+    private var totalTimeSpent: Int = 0
+    private var sessionStartTime: Long = 0
+    private var correctAnswersCount: Int = 0
 
     override suspend fun start(config: GameConfig) {
         try {
-            updateState { copy(status = GameStatus.Loading) }
-            
+            _state.value = _state.value.copy(status = GameStatus.Loading)
+
             val questions = questionProvider.generateQuestions(config)
-            require(questions.isNotEmpty()) { "No questions generated for game type: ${config.type}" }
-            
-            val timePerQuestion = scoringPolicy.getTimePerQuestion(config.difficulty)
-            val session = createGameSession(config, questions)
-            
-            engineState = EngineState(
-                session = session,
-                timeLeftSeconds = timePerQuestion,
-                totalTimeSpent = 0,
-                sessionStartTime = System.currentTimeMillis(),
-                correctAnswersCount = 0
-            )
-            
-            val currentQuestion = questions.first()
-            val options = getCurrentOptions(currentQuestion, emptySet())
-            
-            updateState {
-                copy(
-                    status = GameStatus.Active,
-                    session = session,
-                    timeLeftSeconds = timePerQuestion,
-                    currentQuestion = currentQuestion,
-                    options = options,
-                    hintState = HintState.None
-                )
+            if (questions.isEmpty()) {
+                throw IllegalStateException("No questions generated for game type: ${config.type}")
             }
-            
+
+            val timePerQuestion = scoringPolicy.getTimePerQuestion(config.difficulty)
+
+            currentSession = GameSession(
+                id = UUID.randomUUID().toString(),
+                config = config,
+                questions = questions,
+                currentIndex = 0,
+                score = 0,
+                hintUsedForQuestionIds = emptySet(),
+                removedOptionIdsByQuestion = emptyMap()
+            )
+
+            timeLeftSeconds = timePerQuestion
+            totalTimeSpent = 0
+            sessionStartTime = System.currentTimeMillis()
+            correctAnswersCount = 0
+
+            val currentQuestion = questions[0]
+            val options = getCurrentOptions(currentQuestion, emptySet())
+
+            _state.value = GameSessionState(
+                status = GameStatus.Active,
+                session = currentSession!!,
+                timeLeftSeconds = timeLeftSeconds,
+                currentQuestion = currentQuestion,
+                options = options,
+                hintState = HintState.None
+            )
+
         } catch (e: Exception) {
-            updateState { copy(status = GameStatus.Idle, session = null) }
+            _state.value = _state.value.copy(
+                status = GameStatus.Idle,
+                session = null
+            )
             throw e
         }
     }
 
     override fun submitAnswer(optionId: String) {
-        val session = engineState.session ?: return
-        val currentQuestion = session.getCurrentQuestion() ?: return
-        
-        if (!isValidOption(optionId, currentQuestion)) return
-        
+        val session = currentSession ?: return
+        val currentQuestion = session.questions[session.currentIndex]
+
+        if (optionId !in currentQuestion.options.map { it.id }) {
+            return // Invalid option
+        }
+
         val isCorrect = optionId == currentQuestion.correctOptionId
+        if (isCorrect) {
+            correctAnswersCount++
+        }
+
         val pointsEarned = if (isCorrect) {
             scoringPolicy.getPointsPerCorrect(session.config.difficulty)
         } else 0
-        
-        val updatedSession = updateSessionScore(session, pointsEarned)
-        val updatedEngineState = if (isCorrect) {
-            engineState.copy(
-                session = updatedSession,
-                correctAnswersCount = engineState.correctAnswersCount + 1
-            )
-        } else {
-            engineState.copy(session = updatedSession)
-        }
-        
-        engineState = updatedEngineState
-        
-        updateState {
-            copy(
-                status = GameStatus.QuestionAnswered,
-                session = updatedSession,
-                timeLeftSeconds = engineState.timeLeftSeconds,
-                currentQuestion = currentQuestion,
-                options = getCurrentOptions(currentQuestion, getRemovedOptions(currentQuestion.id)),
-                hintState = getCurrentHintState(currentQuestion.id),
-                selectedOptionId = optionId,
-                isCorrect = isCorrect,
-                pointsEarned = pointsEarned
-            )
-        }
+
+        val updatedSession = session.copy(score = session.score + pointsEarned)
+        currentSession = updatedSession
+
+        _state.value = GameSessionState(
+            status = GameStatus.QuestionAnswered,
+            session = updatedSession,
+            timeLeftSeconds = timeLeftSeconds,
+            currentQuestion = currentQuestion,
+            options = getCurrentOptions(currentQuestion, getRemovedOptions(currentQuestion.id)),
+            hintState = getCurrentHintState(currentQuestion.id),
+            selectedOptionId = optionId,
+            isCorrect = isCorrect,
+            pointsEarned = pointsEarned
+        )
     }
 
     override fun useHint() {
-        val session = engineState.session ?: return
-        val currentQuestion = session.getCurrentQuestion() ?: return
-        
-        if (session.hintUsedForQuestionIds.contains(currentQuestion.id)) return
-        
-        val updatedSession = hintStrategy.applyHint(session)
-        engineState = engineState.copy(session = updatedSession)
-        
-        val hintState = createHintState(session.config.type, currentQuestion.id)
-        
-        updateState {
-            copy(
-                status = GameStatus.Active,
-                session = updatedSession,
-                timeLeftSeconds = engineState.timeLeftSeconds,
-                currentQuestion = currentQuestion,
-                options = getCurrentOptions(currentQuestion, getRemovedOptions(currentQuestion.id)),
-                hintState = hintState
-            )
+        val session = currentSession ?: return
+        val currentQuestion = session.questions[session.currentIndex]
+
+        // Check if hint already used for this question
+        if (session.hintUsedForQuestionIds.contains(currentQuestion.id)) {
+            return // Hint already used
         }
+
+        val updatedSession = hintStrategy.applyHint(session)
+        currentSession = updatedSession
+
+        val hintState = when (session.config.type) {
+            GameType.GUESS_CHARACTER, GameType.GUESS_MOVIE_BY_POSTER -> {
+                HintState.BlurReduced
+            }
+            else -> {
+                val removedOptions = getRemovedOptions(currentQuestion.id)
+                HintState.OptionRemoved(removedOptions)
+            }
+        }
+
+        _state.value = GameSessionState(
+            status = GameStatus.Active,
+            session = updatedSession,
+            timeLeftSeconds = timeLeftSeconds,
+            currentQuestion = currentQuestion,
+            options = getCurrentOptions(currentQuestion, getRemovedOptions(currentQuestion.id)),
+            hintState = hintState
+        )
     }
 
-    override fun skip() = next()
+    override fun skip() {
+        next()
+    }
 
     override fun next() {
-        val session = engineState.session ?: return
-        
-        if (session.isFinished()) {
+        val session = currentSession ?: return
+
+        if (session.currentIndex >= session.questions.size - 1) {
             finish()
         } else {
             val nextIndex = session.currentIndex + 1
             val timePerQuestion = scoringPolicy.getTimePerQuestion(session.config.difficulty)
-            
-            val updatedSession = session.copy(currentIndex = nextIndex)
-            engineState = engineState.copy(
-                session = updatedSession,
-                timeLeftSeconds = timePerQuestion
-            )
-            
-            val nextQuestion = updatedSession.getCurrentQuestion() ?: return
+
+            currentSession = session.copy(currentIndex = nextIndex)
+            timeLeftSeconds = timePerQuestion
+
+            val nextQuestion = session.questions[nextIndex]
             val options = getCurrentOptions(nextQuestion, getRemovedOptions(nextQuestion.id))
-            
-            updateState {
-                copy(
-                    status = GameStatus.Active,
-                    session = updatedSession,
-                    timeLeftSeconds = timePerQuestion,
-                    currentQuestion = nextQuestion,
-                    options = options,
-                    hintState = HintState.None
-                )
-            }
+
+            _state.value = GameSessionState(
+                status = GameStatus.Active,
+                session = currentSession!!,
+                timeLeftSeconds = timeLeftSeconds,
+                currentQuestion = nextQuestion,
+                options = options,
+                hintState = HintState.None
+            )
         }
     }
 
     override fun tick(deltaMillis: Long) {
-        if (engineState.session == null || !_state.value.isGameActive()) return
-        
+        if (currentSession == null || _state.value.status != GameStatus.Active) {
+            return
+        }
+
         val deltaSeconds = (deltaMillis / 1000).toInt()
-        val newTimeLeft = (engineState.timeLeftSeconds - deltaSeconds).coerceAtLeast(0)
-        val newTotalTime = engineState.totalTimeSpent + deltaSeconds
-        
-        engineState = engineState.copy(
-            timeLeftSeconds = newTimeLeft,
-            totalTimeSpent = newTotalTime
-        )
-        
-        if (newTimeLeft <= 0) {
+        timeLeftSeconds -= deltaSeconds
+        totalTimeSpent += deltaSeconds
+
+        if (timeLeftSeconds <= 0) {
+            // Auto-advance to next question on timeout
             next()
         } else {
-            updateState { copy(timeLeftSeconds = newTimeLeft) }
+            _state.value = _state.value.copy(timeLeftSeconds = timeLeftSeconds)
         }
     }
 
     override fun finish() {
-        val session = engineState.session ?: return
-        
-        val result = createGameResult(session)
-        
-        updateState {
-            copy(
-                status = GameStatus.Finished,
-                session = session,
-                timeLeftSeconds = 0,
-                currentQuestion = null,
-                options = emptyList(),
-                hintState = HintState.None
-            )
-        }
-        
-        resetEngineState()
+        val session = currentSession ?: return
+
+        val result = GameResult(
+            sessionId = session.id,
+            score = session.score,
+            totalTimeSpent = totalTimeSpent,
+            questionsAnswered = session.currentIndex + 1,
+            correctAnswers = correctAnswersCount
+        )
+
+        _state.value = GameSessionState(
+            status = GameStatus.Finished,
+            session = session,
+            timeLeftSeconds = 0,
+            currentQuestion = null,
+            options = emptyList(),
+            hintState = HintState.None
+        )
+
+        // Reset for next game
+        currentSession = null
+        timeLeftSeconds = 0
+        totalTimeSpent = 0
+        sessionStartTime = 0
+        correctAnswersCount = 0
     }
 
     override fun reset() {
-        resetEngineState()
-        updateState { createInitialState() }
-    }
+        currentSession = null
+        timeLeftSeconds = 0
+        totalTimeSpent = 0
+        sessionStartTime = 0
+        correctAnswersCount = 0
 
-    // Private helper methods - pure functions
-    private fun createInitialState() = GameSessionState(
-        status = GameStatus.Idle,
-        session = null,
-        timeLeftSeconds = 0,
-        currentQuestion = null,
-        options = emptyList(),
-        hintState = HintState.None
-    )
-
-    private fun createGameSession(config: GameConfig, questions: List<Question>): GameSession {
-        return GameSession(
-            id = UUID.randomUUID().toString(),
-            config = config,
-            questions = questions,
-            currentIndex = 0,
-            score = 0,
-            hintUsedForQuestionIds = emptySet(),
-            removedOptionIdsByQuestion = emptyMap()
+        _state.value = GameSessionState(
+            status = GameStatus.Idle,
+            session = null,
+            timeLeftSeconds = 0,
+            currentQuestion = null,
+            options = emptyList(),
+            hintState = HintState.None
         )
     }
 
-    private fun updateSessionScore(session: GameSession, pointsEarned: Int): GameSession {
-        return session.copy(score = session.score + pointsEarned)
-    }
-
-    private fun isValidOption(optionId: String, question: Question): Boolean {
-        return question.options.any { it.id == optionId }
-    }
-
+    // Private helper methods
     private fun getCurrentOptions(question: Question, removedOptionIds: Set<String>): List<AnswerOption> {
         return question.options.filter { it.id !in removedOptionIds }
     }
 
     private fun getRemovedOptions(questionId: String): Set<String> {
-        return engineState.session?.removedOptionIdsByQuestion?.get(questionId) ?: emptySet()
+        return currentSession?.removedOptionIdsByQuestion?.get(questionId) ?: emptySet()
     }
 
     private fun getCurrentHintState(questionId: String): HintState {
-        val session = engineState.session ?: return HintState.None
-        
+        val session = currentSession ?: return HintState.None
+
         return if (session.hintUsedForQuestionIds.contains(questionId)) {
-            createHintState(session.config.type, questionId)
+            when (session.config.type) {
+                GameType.GUESS_CHARACTER, GameType.GUESS_MOVIE_BY_POSTER -> HintState.BlurReduced
+                else -> {
+                    val removedOptions = getRemovedOptions(questionId)
+                    HintState.OptionRemoved(removedOptions)
+                }
+            }
         } else {
             HintState.None
         }
-    }
-
-    private fun createHintState(gameType: GameType, questionId: String): HintState {
-        return when (gameType) {
-            GameType.GUESS_CHARACTER, GameType.GUESS_MOVIE_BY_POSTER -> HintState.BlurReduced
-            else -> {
-                val removedOptions = getRemovedOptions(questionId)
-                HintState.OptionRemoved(removedOptions)
-            }
-        }
-    }
-
-    private fun createGameResult(session: GameSession): GameResult {
-        return GameResult(
-            sessionId = session.id,
-            score = session.score,
-            totalTimeSpent = engineState.totalTimeSpent,
-            questionsAnswered = session.currentIndex + 1,
-            correctAnswers = engineState.correctAnswersCount
-        )
-    }
-
-    private fun resetEngineState() {
-        engineState = EngineState()
-    }
-
-    private fun updateState(update: GameSessionState.() -> GameSessionState) {
-        _state.value = _state.value.update()
     }
 }
