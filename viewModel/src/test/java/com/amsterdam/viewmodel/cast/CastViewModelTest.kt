@@ -13,6 +13,7 @@ import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
 import com.google.common.truth.Truth.assertThat
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -39,27 +40,24 @@ class CastViewModelTest {
         every { mediaId } returns 100
         every { mediaType } returns MediaType.MOVIE.name
     }
-
-    private val testDispatcherProvider = TestDispatcherProvider()
     private val viewModel by lazy {
         CastViewModel(
             getMovieCastUseCase,
             getTvShowCastUseCase,
             args,
             manageLocaleLanguageUseCase,
-            testDispatcherProvider
+            TestDispatcherProvider()
         )
     }
 
     @BeforeEach
     fun setUp() {
         every { manageLocaleLanguageUseCase.getAppLanguage() } returns flowOf(Language.ENGLISH)
-        Dispatchers.setMain(testDispatcherProvider.testDispatcher)
     }
 
     @AfterEach
     fun tearDown() {
-        Dispatchers.resetMain()
+        clearAllMocks()
     }
 
     @Test
@@ -95,7 +93,7 @@ class CastViewModelTest {
                 every { mediaType } returns MediaType.TV_SHOW.name
             },
             manageLocaleLanguageUseCase,
-            testDispatcherProvider
+            TestDispatcherProvider()
         )
         viewModel
         advanceUntilIdle()
