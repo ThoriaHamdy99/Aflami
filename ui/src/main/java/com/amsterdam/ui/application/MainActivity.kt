@@ -4,6 +4,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,10 +21,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { !viewModel.state.value.isThemeLoaded }
-
+        splashScreen.setKeepOnScreenCondition { !viewModel.state.value.isThemeLoaded}
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
         setContent {
             AflamiApp()
