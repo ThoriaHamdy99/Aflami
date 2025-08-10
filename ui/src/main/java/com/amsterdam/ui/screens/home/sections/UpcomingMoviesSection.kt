@@ -84,12 +84,12 @@ fun LazyListScope.upcomingMoviesSection(
                 adaptiveGrid(
                     items = state.movies,
                     itemMinWidth = 320,
-                    modifier = Modifier.padding(
+                    contentPadding = PaddingValues(
                         vertical = 12.dp, horizontal = 16.dp
                     ),
                     itemsHorizontalPadding = 8.dp,
                     itemsVerticalPadding = 8.dp,
-                    deviceWidth = deviceWidth,
+                    availableWidth = deviceWidth,
                 ) { movie ->
                     val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
                     MediaCard(
