@@ -104,8 +104,8 @@ private fun SearchByActorContent(
     ) {
         Column(
             Modifier
-                .padding(horizontal = 16.dp)
                 .onSizeChanged { headerHeight = it.height.dp }
+                .padding(horizontal = 16.dp)
         ) {
             DefaultAppBar(
                 title = stringResource(com.amsterdam.designsystem.R.string.find_by_actor),

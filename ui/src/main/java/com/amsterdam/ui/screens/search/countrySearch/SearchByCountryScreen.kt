@@ -97,8 +97,8 @@ private fun SearchByCountryContent(
         var headerHeight by remember { mutableStateOf(0.dp) }
         Column(
             Modifier
-                .padding(horizontal = 16.dp)
                 .onSizeChanged { headerHeight = it.height.dp }
+                .padding(horizontal = 16.dp)
         ) {
             DefaultAppBar(
                 title = stringResource(R.string.world_tour_title),
