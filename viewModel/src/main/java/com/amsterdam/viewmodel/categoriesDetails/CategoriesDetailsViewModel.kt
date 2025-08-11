@@ -5,7 +5,6 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.details.GetMoviesByGenreIdUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +23,7 @@ class CategoriesDetailsViewModel @Inject constructor(
     init {
         val mediaType = categoriesMovieDetailsArgs.mediaType
         val initialGenre =
-            MovieGenre.valueOf(categoriesMovieDetailsArgs.genre!!) // تحويل من String إلى MovieGenre
+            MovieGenre.valueOf(categoriesMovieDetailsArgs.genre!!)
         viewModelScope.launch {
             updateState { state ->
                 state.copy(
@@ -41,7 +40,6 @@ class CategoriesDetailsViewModel @Inject constructor(
             getMovieByGenre(initialGenre, 1)
         }
     }
-
 
 
     override fun onClickRetryRequest(movieGenre: MovieGenre, page: Int) {
@@ -69,9 +67,6 @@ class CategoriesDetailsViewModel @Inject constructor(
         sendNewNavigationEffect(CategoriesDetailsUiEffect.NavigateToMovieDetails(movieId))
 
 
-    }
-
-    override fun onTvGenreClicked(tvGenre: TvShowGenre) {
     }
 
 

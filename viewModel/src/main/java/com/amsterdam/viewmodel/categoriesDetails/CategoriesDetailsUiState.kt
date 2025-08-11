@@ -8,11 +8,8 @@ import com.amsterdam.viewmodel.shared.uiStates.TvGenreItemUiState
 
 
 data class CategoriesDetailsUiState(
-    val mediaType: MediaType = MediaType.MOVIE,
     val selectedGenreName: String = "",
-    val appBarTitle: String = "",
     val movieGenres: List<MovieGenreItemUiState> = defaultMovieGenres,
-    val tvShowGenres: List<TvGenreItemUiState> = emptyList(),
     val movies: List<MoviesUiState> = emptyList(),
     val isLoading: Boolean = false,
     val errorUiState: CategoriesDetailsErrorState? = null,
