@@ -30,7 +30,7 @@ interface UserListApiService {
     ): RemoteUserListResponse
 
     @GET("list/{list_id}")
-    suspend fun getMoviesFromList(
+    suspend fun getMoviesAndShowsFromList(
         @Path("list_id") listId: Long,
         @Query("page") page: Int,
     ): UserListDetailsResponse
