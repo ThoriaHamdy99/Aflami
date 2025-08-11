@@ -21,20 +21,20 @@ import androidx.compose.ui.zIndex
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.R
-import com.amsterdam.viewmodel.sharedGame.BaseGameUiState
+import com.amsterdam.viewmodel.sharedGame.TimerUiState
 
 @Composable
 fun TimerComponent(
-    baseGameUiState: BaseGameUiState,
+    timerUiState: TimerUiState,
     modifier: Modifier = Modifier
 ) {
     val greenColor = AppTheme.color.greenAccent
     val redColor = AppTheme.color.redAccent
-    val targetColor by remember(baseGameUiState.currentTimerColor) {
+    val targetColor by remember(timerUiState.currentTimerColor) {
         derivedStateOf {
-            when (baseGameUiState.currentTimerColor) {
-                BaseGameUiState.TimerColor.GREEN -> greenColor
-                BaseGameUiState.TimerColor.RED -> redColor
+            when (timerUiState.currentTimerColor) {
+                TimerUiState.TimerColor.GREEN -> greenColor
+                TimerUiState.TimerColor.RED -> redColor
             }
         }
     }
@@ -48,7 +48,7 @@ fun TimerComponent(
         modifier = modifier.size(40.dp).background(AppTheme.color.primaryVariant, CircleShape)
     ) {
         Text(
-            text = stringResource(R.string.second, baseGameUiState.currentTimerCount),
+            text = stringResource(R.string.second, timerUiState.currentTimerCount),
             style = AppTheme.textStyle.label.small,
             color = animatedColor,
             modifier = Modifier
@@ -61,7 +61,7 @@ fun TimerComponent(
             drawArc(
                 color = animatedColor,
                 startAngle = -90f,
-                sweepAngle = baseGameUiState.progress * 360,
+                sweepAngle = timerUiState.progress * 360,
                 useCenter = false,
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
