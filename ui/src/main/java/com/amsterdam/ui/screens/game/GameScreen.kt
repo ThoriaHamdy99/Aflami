@@ -31,8 +31,10 @@ import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.entity.Game
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.GuessPicture
+import com.amsterdam.ui.components.guessGame.GuessTitle
 import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
 import com.amsterdam.ui.screens.login.components.LoginBackground
@@ -48,7 +50,8 @@ fun GameScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     GameScreenContent(
-        state.questions,
+        questions = state.questions,
+        gameType = state.gameType,
         interactionListener = viewModel,
         modifier = modifier,
     )
@@ -57,6 +60,7 @@ fun GameScreen(
 @Composable
 private fun GameScreenContent(
     questions: List<GameQuestionUiState>,
+    gameType: Game.GameType,
     interactionListener: GameInteractionListener,
     modifier: Modifier = Modifier,
 ) {
@@ -95,6 +99,8 @@ private fun GameScreenContent(
             ) { page ->
                 GameQuestion(
                     question = questions[page],
+                    gameType = gameType,
+                    modifier = Modifier.padding(horizontal = 12.dp),
                 )
             }
 
@@ -117,6 +123,7 @@ private fun GameScreenContent(
 @Composable
 fun GameQuestion(
     question: GameQuestionUiState,
+    gameType: Game.GameType,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -124,13 +131,26 @@ fun GameQuestion(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        GuessPicture(
-            blurRadius = 8.dp,
-            points = 10,
-            painter = painterResource(com.amsterdam.ui.R.drawable.bg_children_wearing_3d),
-            isHintVisible = true,
-            onClick = {},
-        )
+        when (gameType) {
+            Game.GameType.GUESS_CHARACTER, Game.GameType.GUESS_MOVIE_BY_POSTER -> {
+                GuessPicture(
+                    blurRadius = 8.dp,
+                    points = 10,
+                    imageUrl = question.name,
+                    isHintVisible = true,
+                    onClick = {},
+                )
+            }
+
+            Game.GameType.GUESS_MOVIE_BY_RELEASE, Game.GameType.GUESS_MOVIE_BY_GENRE -> {
+                GuessTitle(
+                    title = question.name,
+                    points = 10,
+                    isHintVisible = true,
+                    onClick = {},
+                )
+            }
+        }
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
