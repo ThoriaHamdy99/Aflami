@@ -1,6 +1,5 @@
 package com.amsterdam.ui.screens.categories
 
-import LocalGenres
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +35,8 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.CategoryCard
 import com.amsterdam.ui.navigation.Route
+import com.amsterdam.ui.screens.categoriesDetails.GenreMovieUiModel
+import com.amsterdam.ui.screens.categoriesDetails.GenreTvShowUiModel
 import com.amsterdam.viewmodel.categories.CategoriesInteractionListener
 import com.amsterdam.viewmodel.categories.CategoriesUiEffect
 import com.amsterdam.viewmodel.categories.CategoriesUiState
@@ -123,12 +124,12 @@ private fun CategoriesScreenContent(
             ) {
                 when (state.selectedTabOption) {
                     TabOption.MOVIES -> {
-                        items(LocalGenres.movieGenres) { movie ->
-                            val genre = movie.genre.name
+                        items(GenreMovieUiModel.entries) {movieGenre ->
+                            val genre = movieGenre.name
                             CategoryCard(
                                 modifier = Modifier,
-                                categoryName = stringResource(movie.displayName),
-                                categoryImage = painterResource(movie.imageRes),
+                                categoryName = stringResource(movieGenre.displayName),
+                                categoryImage = painterResource(movieGenre.imageRes),
                                 onClick = {
                                     interaction.onNavigateCategoriesDetailsScreen(
                                         genre,
@@ -139,12 +140,12 @@ private fun CategoriesScreenContent(
                     }
 
                     TabOption.TV_SHOWS -> {
-                        items(LocalGenres.tvShowGenres) { tvShow ->
-                            val genre = tvShow.genre.name
+                        items(GenreTvShowUiModel.entries) { tvShowGenre ->
+                            val genre = tvShowGenre.name
                             CategoryCard(
                                 modifier = Modifier,
-                                categoryName = stringResource(tvShow.displayName),
-                                categoryImage = painterResource(tvShow.imageRes),
+                                categoryName = stringResource(tvShowGenre.displayName),
+                                categoryImage = painterResource(tvShowGenre.imageRes),
                                 onClick = {
                                     interaction.onNavigateCategoriesTvShowsDetailsScreen(
                                         genre,
@@ -156,6 +157,5 @@ private fun CategoriesScreenContent(
                 }
             }
         }
-
     }
 }
