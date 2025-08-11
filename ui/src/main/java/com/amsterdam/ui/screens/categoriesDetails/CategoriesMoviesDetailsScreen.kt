@@ -26,13 +26,14 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.designsystem.components.LoadingIndicator
 import com.amsterdam.designsystem.components.chip.Chip
-import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalNavController
@@ -53,30 +54,48 @@ fun CategoriesMoviesDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
-    CategoriesMoviesDetailsContent(
-        state = state,
-        interaction = viewModel,
-    )
+    val movies = remember(state.selectedGenreName) {
+        state.movies
+    }.collectAsLazyPagingItems()
+    LaunchedEffect(state.selectedGenreName) {
+        movies.refresh()
+    }
+    LaunchedEffect(
+        key1 = movies.loadState,
+    ) {
+        viewModel.onPagingLoadStateChanged(movies.loadState)
+    }
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CategoriesMoviesDetailsUiEffect.NavigateBack -> {
                     navController.popBackStack()
                 }
+
                 is CategoriesMoviesDetailsUiEffect.NavigateToMovieDetails -> {
-                    navController.navigate(Route.MovieDetails(
-                        movieId = effect.movieId
-                    ))
+                    navController.navigate(
+                        Route.MovieDetails(
+                            movieId = effect.movieId
+                        )
+                    )
                 }
             }
         }
     }
+    CategoriesMoviesDetailsContent(
+        state = state,
+        interaction = viewModel,
+        movies = movies
+
+    )
 }
 
 @Composable
 private fun CategoriesMoviesDetailsContent(
     state: CategoriesMoviesDetailsUiState,
-    interaction: CategoriesMoviesDetailsInteractionListener
+    interaction: CategoriesMoviesDetailsInteractionListener,
+    movies: LazyPagingItems<CategoriesMoviesDetailsUiState.MoviesUiState>
 ) {
     var appBarHeight by remember { mutableIntStateOf(0) }
     Box(
@@ -90,7 +109,7 @@ private fun CategoriesMoviesDetailsContent(
             DefaultAppBar(
                 modifier = Modifier
                     .onSizeChanged { appBarHeight = it.height },
-                title =stringResource(R.string.movies),
+                title = stringResource(R.string.movies),
                 onNavigateBackClicked = interaction::onBackClicked
             )
             Row(
@@ -101,7 +120,7 @@ private fun CategoriesMoviesDetailsContent(
             ) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
+                ) {
                     items(state.movieGenres) { genreItem ->
                         val genre = genreItem.selectableMovieGenre.item
                         if (genre == MovieGenre.ALL) return@items
@@ -115,7 +134,6 @@ private fun CategoriesMoviesDetailsContent(
                     }
 
                 }
-
                 when {
                     state.isLoading -> {
                         CenterOfScreenContainer(
@@ -126,36 +144,33 @@ private fun CategoriesMoviesDetailsContent(
                             }
                         }
                     }
-
-                    state.errorUiState is CategoriesMoviesDetailsUiState.CategoriesDetailsErrorState.NoNetworkConnection -> {
+                    state.errorUiState != null && state.errorUiState is CategoriesMoviesDetailsUiState.CategoriesDetailsErrorState.NoNetworkConnection -> {
                         CenterOfScreenContainer(
                             unneededSpace = 0.dp
                         ) {
                             NoNetworkContainer(
                                 onClickRetry = {
-                                    interaction.onClickRetryRequest(
-                                        movieGenre = MovieGenre.ROMANCE,
-                                        page = 1
-                                    )
+                                    interaction.onClickRetryRequest()
                                 }
                             )
                         }
                     }
 
-                    state.movies.isNotEmpty() -> {
+                    else -> {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxHeight()
                                 .weight(1f),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items(state.movies) { mediaItem ->
+                            items(movies.itemCount) { index ->
+                                val movie = movies[index] ?: return@items
                                 MediaCard(
                                     modifier = Modifier.fillMaxWidth(),
                                     movieImage = {
                                         SafeImageView(
-                                            model = mediaItem.posterImageUrl,
-                                            contentDescription = mediaItem.name,
+                                            model = movie.posterImageUrl,
+                                            contentDescription = movie.name,
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier.fillMaxWidth(),
                                             onLoading = {
@@ -166,11 +181,11 @@ private fun CategoriesMoviesDetailsContent(
                                             },
                                         )
                                     },
-                                    movieTitle = mediaItem.name,
+                                    movieTitle = movie.name,
                                     movieType = stringResource(R.string.movie),
-                                    movieYear = mediaItem.yearOfRelease,
-                                    movieRating = mediaItem.rate,
-                                    onClick = {interaction.onMovieCardClicked(mediaItem.id)}
+                                    movieYear = movie.yearOfRelease,
+                                    movieRating = movie.rate,
+                                    onClick = { interaction.onMovieCardClicked(movie.id) }
                                 )
 
                             }
@@ -178,23 +193,8 @@ private fun CategoriesMoviesDetailsContent(
                         }
                     }
                 }
-
             }
         }
     }
-}
-
-@ThemeAndLocalePreviews
-@Composable
-private fun CategoriesMoviesDetailsScreenPreview() {
-    CategoriesMoviesDetailsContent(
-        state = CategoriesMoviesDetailsUiState(),
-        interaction = object : CategoriesMoviesDetailsInteractionListener {
-            override fun onBackClicked() {}
-            override fun onMovieCardClicked(movieId: Long) {}
-            override fun onGenreClicked(movieGenre: MovieGenre) {}
-            override fun onClickRetryRequest(movieGenre: MovieGenre, page: Int) {}
-        }
-    )
 }
 

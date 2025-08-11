@@ -14,6 +14,4 @@ fun Movie.toMovieUiState( ): CategoriesMoviesDetailsUiState.MoviesUiState{
         yearOfRelease = releaseDate.toYearString(),
         mediaType = MediaType.MOVIE,
     )
-
-
 }
