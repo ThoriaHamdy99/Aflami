@@ -241,7 +241,7 @@ class UserListRepositoryImplTest {
         val result = userListRepository.getMoviesAndTvShowsFromList(listId, 1)
 
         // Then
-        assertThat(result).containsExactlyElementsIn(listItems.map { it.toMovie() })
+        assertThat(result.listDetailsMovies).containsExactlyElementsIn(listItems.filter { it.mediaType == "movie" }.map { it.toMovie() })
     }
 
     @Test
@@ -255,7 +255,7 @@ class UserListRepositoryImplTest {
         val result = userListRepository.getMoviesAndTvShowsFromList(listId, 1)
 
         // Then
-        assertThat(result).isEmpty()
+        assertThat(result.listDetailsMovies).isEmpty()
     }
 
     @Test

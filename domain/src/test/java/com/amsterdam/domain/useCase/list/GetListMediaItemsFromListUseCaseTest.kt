@@ -28,7 +28,11 @@ class GetListMediaItemsFromListUseCaseTest {
         // Given
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyList()
+        val emptyResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
+            emptyList(),
+            emptyList()
+        )
+        coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyResult
 
         // When
         getListMediaItemsFromListUseCase(listId, page)
@@ -42,13 +46,17 @@ class GetListMediaItemsFromListUseCaseTest {
         // Given
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyList()
+        val emptyResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
+            emptyList(),
+            emptyList()
+        )
+        coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyResult
 
         // When
         val result = getListMediaItemsFromListUseCase(listId, page)
 
         // Then
-        assertThat(result).isEmpty()
+        assertThat(result).isEqualTo(emptyResult)
     }
 
     @Test
@@ -56,13 +64,17 @@ class GetListMediaItemsFromListUseCaseTest {
         // Given
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns specificMovieList
+        val repositoryResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
+            specificMovieList,
+            emptyList()
+        )
+        coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns repositoryResult
 
         // When
         val result = getListMediaItemsFromListUseCase(listId, page)
 
         // Then
-        assertThat(result).containsExactlyElementsIn(specificMovieList)
+        assertThat(result.listDetailsMovies).containsExactlyElementsIn(specificMovieList)
     }
 
     @Test
