@@ -40,7 +40,7 @@ fun AnswerSelectionItem(
                 shape = shape,
             )
             .border(
-                color = status.backgroundColor(),
+                color = status.borderColor(),
                 width = 1.dp,
                 shape = shape,
             )
