@@ -33,7 +33,6 @@ import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.TabsLayout
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AppTheme
-import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.CategoryCard
 import com.amsterdam.ui.navigation.Route
@@ -42,7 +41,6 @@ import com.amsterdam.viewmodel.categories.CategoriesUiEffect
 import com.amsterdam.viewmodel.categories.CategoriesUiState
 import com.amsterdam.viewmodel.categories.CategoriesViewModel
 import com.amsterdam.viewmodel.shared.TabOption
-import com.amsterdam.viewmodel.shared.uiStates.MediaType
 
 @Composable
 fun CategoriesScreen(
@@ -60,6 +58,14 @@ fun CategoriesScreen(
                 is CategoriesUiEffect.NavigateCategoriesDetailsScreen -> {
                     navController.navigate(
                         Route.CategoriesDetails(
+                            genreName = effect.genreName,
+                        )
+                    )
+                }
+
+                is CategoriesUiEffect.NavigateCategoriesTvShowsDetailsScreen -> {
+                    navController.navigate(
+                        Route.CategoriesTvShowsDetails(
                             genreName = effect.genreName,
                         )
                     )
@@ -115,40 +121,41 @@ private fun CategoriesScreenContent(
                 contentPadding = PaddingValues(top = 17.dp, bottom = 80.dp),
                 columns = GridCells.Adaptive(160.dp)
             ) {
-                val categories = when (state.selectedTabOption) {
-                    TabOption.MOVIES -> LocalGenres.movieGenres
-                    TabOption.TV_SHOWS -> LocalGenres.tvShowGenres
-                }
-                items(categories) { movie ->
-
-                    val genre = movie.genre.name
-                    val mediaType =
-                        if (state.selectedTabOption == TabOption.MOVIES) MediaType.MOVIE.name else MediaType.TV_SHOW.name
-                    CategoryCard(
-                        modifier = Modifier,
-                        categoryName = stringResource(movie.displayName),
-                        categoryImage = painterResource(movie.imageRes),
-                        onClick = {
-                            interaction.onNavigateCategoriesDetailsScreen(
-                                genre,
+                when (state.selectedTabOption) {
+                    TabOption.MOVIES -> {
+                        items(LocalGenres.movieGenres) { movie ->
+                            val genre = movie.genre.name
+                            CategoryCard(
+                                modifier = Modifier,
+                                categoryName = stringResource(movie.displayName),
+                                categoryImage = painterResource(movie.imageRes),
+                                onClick = {
+                                    interaction.onNavigateCategoriesDetailsScreen(
+                                        genre,
+                                    )
+                                }
                             )
                         }
-                    )
+                    }
+
+                    TabOption.TV_SHOWS -> {
+                        items(LocalGenres.tvShowGenres) { tvShow ->
+                            val genre = tvShow.genre.name
+                            CategoryCard(
+                                modifier = Modifier,
+                                categoryName = stringResource(tvShow.displayName),
+                                categoryImage = painterResource(tvShow.imageRes),
+                                onClick = {
+                                    interaction.onNavigateCategoriesTvShowsDetailsScreen(
+                                        genre,
+                                        )
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
+
     }
-}
-
-
-@ThemeAndLocalePreviews
-@Composable
-private fun CategoriesScreenPreview() {
-    CategoriesScreenContent(
-        state = CategoriesUiState(),
-        interaction = object : CategoriesInteractionListener {
-            override fun onChangeTabOption(tabOption: TabOption) {}
-            override fun onNavigateCategoriesDetailsScreen(genreName: String, ) {}
-        }
-    )
 }

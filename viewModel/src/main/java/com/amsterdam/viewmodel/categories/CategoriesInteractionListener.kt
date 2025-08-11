@@ -5,6 +5,8 @@ import com.amsterdam.viewmodel.shared.TabOption
 interface CategoriesInteractionListener {
     fun onChangeTabOption(tabOption: TabOption)
     fun onNavigateCategoriesDetailsScreen(genreName: String)
+    fun onNavigateCategoriesTvShowsDetailsScreen(genreName: String)
+
 
 
 }
