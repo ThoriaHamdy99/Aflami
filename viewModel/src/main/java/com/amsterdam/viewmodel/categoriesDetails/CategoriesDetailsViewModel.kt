@@ -16,8 +16,8 @@ class CategoriesDetailsViewModel @Inject constructor(
     private val getMoviesByGenreIdUseCase: GetMoviesByGenreIdUseCase,
     private val categoriesMovieDetailsArgs: CategoriesMovieDetailsArgs,
     dispatcherProvider: DispatcherProvider
-) : BaseViewModel<CategoriesDetailsUiState, CategoriesDetailsUiEffect>(
-    CategoriesDetailsUiState(),
+) : BaseViewModel<CategoriesMoviesDetailsUiState, CategoriesMoviesDetailsUiEffect>(
+    CategoriesMoviesDetailsUiState(),
     dispatcherProvider
 ), CategoriesMoviesDetailsInteractionListener {
     init {
@@ -27,7 +27,6 @@ class CategoriesDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             updateState { state ->
                 state.copy(
-                    appBarTitle = mediaType.toString(),
                     movieGenres = state.movieGenres.map { genreItem ->
                         genreItem.copy(
                             selectableMovieGenre = genreItem.selectableMovieGenre.copy(
@@ -50,7 +49,7 @@ class CategoriesDetailsViewModel @Inject constructor(
     private fun onFetchError(exception: AflamiException) {
         updateState {
             it.copy(
-                errorUiState = CategoriesDetailsUiState.CategoriesDetailsErrorState.toSearchErrorState(
+                errorUiState = CategoriesMoviesDetailsUiState.CategoriesDetailsErrorState.toSearchErrorState(
                     exception
                 ), isLoading = false
             )
@@ -59,12 +58,12 @@ class CategoriesDetailsViewModel @Inject constructor(
 
 
     override fun onBackClicked() {
-        sendNewNavigationEffect(CategoriesDetailsUiEffect.NavigateBack)
+        sendNewNavigationEffect(CategoriesMoviesDetailsUiEffect.NavigateBack)
     }
 
 
     override fun onMovieCardClicked(movieId: Long) {
-        sendNewNavigationEffect(CategoriesDetailsUiEffect.NavigateToMovieDetails(movieId))
+        sendNewNavigationEffect(CategoriesMoviesDetailsUiEffect.NavigateToMovieDetails(movieId))
 
 
     }

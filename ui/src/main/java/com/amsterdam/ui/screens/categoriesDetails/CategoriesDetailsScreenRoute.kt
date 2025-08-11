@@ -6,7 +6,7 @@ import com.amsterdam.ui.navigation.Route
 
 fun NavGraphBuilder.categoriesDetailsScreenRoute(){
     composable<Route.CategoriesDetails> {
-        CategoriesDetailsScreen()
+        CategoriesMoviesDetailsScreen()
     }
 
 }

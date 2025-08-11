@@ -34,7 +34,6 @@ import com.amsterdam.designsystem.components.LoadingIndicator
 import com.amsterdam.designsystem.components.chip.Chip
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.MediaCard
@@ -44,30 +43,27 @@ import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreIcon
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsInteractionListener
-import com.amsterdam.viewmodel.categoriesDetails.CategoriesDetailsUiEffect
-import com.amsterdam.viewmodel.categoriesDetails.CategoriesDetailsUiState
+import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsUiEffect
+import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsUiState
 import com.amsterdam.viewmodel.categoriesDetails.CategoriesDetailsViewModel
-import com.amsterdam.viewmodel.shared.uiStates.MediaType
 
 @Composable
-fun CategoriesDetailsScreen(
-    modifier: Modifier = Modifier,
+fun CategoriesMoviesDetailsScreen(
     viewModel: CategoriesDetailsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
-    CategoriesDetailsContent(
-        modifier = modifier,
+    CategoriesMoviesDetailsContent(
         state = state,
         interaction = viewModel,
     )
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is CategoriesDetailsUiEffect.NavigateBack -> {
+                is CategoriesMoviesDetailsUiEffect.NavigateBack -> {
                     navController.popBackStack()
                 }
-                is CategoriesDetailsUiEffect.NavigateToMovieDetails -> {
+                is CategoriesMoviesDetailsUiEffect.NavigateToMovieDetails -> {
                     navController.navigate(Route.MovieDetails(
                         movieId = effect.movieId
                     ))
@@ -78,30 +74,23 @@ fun CategoriesDetailsScreen(
 }
 
 @Composable
-private fun CategoriesDetailsContent(
-    modifier: Modifier = Modifier,
-    state: CategoriesDetailsUiState,
+private fun CategoriesMoviesDetailsContent(
+    state: CategoriesMoviesDetailsUiState,
     interaction: CategoriesMoviesDetailsInteractionListener
 ) {
     var appBarHeight by remember { mutableIntStateOf(0) }
-
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding()
             .padding(horizontal = 16.dp)
     ) {
         Column(Modifier.fillMaxSize()) {
-            val title = when (state.appBarTitle) {
-                MediaType.MOVIE.name -> stringResource(R.string.movies)
-                MediaType.TV_SHOW.name -> stringResource(R.string.tv_shows)
-                else -> stringResource(R.string.movies)
-            }
             DefaultAppBar(
                 modifier = Modifier
                     .onSizeChanged { appBarHeight = it.height },
-                title = title,
+                title =stringResource(R.string.movies),
                 onNavigateBackClicked = interaction::onBackClicked
             )
             Row(
@@ -138,7 +127,7 @@ private fun CategoriesDetailsContent(
                         }
                     }
 
-                    state.errorUiState is CategoriesDetailsUiState.CategoriesDetailsErrorState.NoNetworkConnection -> {
+                    state.errorUiState is CategoriesMoviesDetailsUiState.CategoriesDetailsErrorState.NoNetworkConnection -> {
                         CenterOfScreenContainer(
                             unneededSpace = 0.dp
                         ) {
@@ -191,40 +180,20 @@ private fun CategoriesDetailsContent(
                 }
 
             }
-
-
         }
     }
 }
 
 @ThemeAndLocalePreviews
 @Composable
-private fun CategoriesDetailsScreenPreview() {
-    CategoriesDetailsContent(
-        state = CategoriesDetailsUiState(),
+private fun CategoriesMoviesDetailsScreenPreview() {
+    CategoriesMoviesDetailsContent(
+        state = CategoriesMoviesDetailsUiState(),
         interaction = object : CategoriesMoviesDetailsInteractionListener {
-            override fun onBackClicked() {
-
-
-            }
-
-            override fun onMovieCardClicked(movieId: Long) {
-
-            }
-
-            override fun onGenreClicked(movieGenre: MovieGenre) {
-
-            }
-
-            override fun onTvGenreClicked(tvGenre: TvShowGenre) {
-            }
-
-
-            override fun onClickRetryRequest(movieGenre: MovieGenre, page: Int) {
-
-
-            }
-
+            override fun onBackClicked() {}
+            override fun onMovieCardClicked(movieId: Long) {}
+            override fun onGenreClicked(movieGenre: MovieGenre) {}
+            override fun onClickRetryRequest(movieGenre: MovieGenre, page: Int) {}
         }
     )
 }

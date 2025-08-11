@@ -5,8 +5,8 @@ import com.amsterdam.viewmodel.shared.mappers.toFormattedRating
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.utils.toYearString
 
-fun Movie.toMovieUiState( ): CategoriesDetailsUiState.MoviesUiState{
-    return CategoriesDetailsUiState.MoviesUiState(
+fun Movie.toMovieUiState( ): CategoriesMoviesDetailsUiState.MoviesUiState{
+    return CategoriesMoviesDetailsUiState.MoviesUiState(
         id = id,
         name = name,
         posterImageUrl = posterUrl,

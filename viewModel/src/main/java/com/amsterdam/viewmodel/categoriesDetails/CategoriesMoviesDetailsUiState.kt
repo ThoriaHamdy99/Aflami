@@ -4,10 +4,9 @@ import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.viewmodel.shared.defaultMovieGenres
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.shared.uiStates.MovieGenreItemUiState
-import com.amsterdam.viewmodel.shared.uiStates.TvGenreItemUiState
 
 
-data class CategoriesDetailsUiState(
+data class CategoriesMoviesDetailsUiState(
     val selectedGenreName: String = "",
     val movieGenres: List<MovieGenreItemUiState> = defaultMovieGenres,
     val movies: List<MoviesUiState> = emptyList(),
