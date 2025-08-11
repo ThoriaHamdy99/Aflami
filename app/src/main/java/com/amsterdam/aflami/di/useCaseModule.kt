@@ -22,6 +22,7 @@ import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetMoviesByGenreIdUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
+import com.amsterdam.domain.useCase.details.GetTvShowsByGenreIdUseCase
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
@@ -175,6 +176,10 @@ object UseCaseModule {
     @Provides
     fun provideGetContinueWatchingMoviesUseCase(watchHistoryRepository: WatchHistoryRepository): GetContinueWatchingMoviesUseCase =
         GetContinueWatchingMoviesUseCase(watchHistoryRepository)
+
+    @Provides
+    fun provideGetTvShowByGenreIdUseCase(tvShowRepository: TvShowRepository): GetTvShowsByGenreIdUseCase =
+        GetTvShowsByGenreIdUseCase(tvShowRepository)
 
     @Provides
     fun provideGetTvShowCastUseCase(tvShowRepository: TvShowRepository): GetTvShowCastUseCase =
