@@ -12,15 +12,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class GetMoviesFromListUseCaseTest {
+class GetListMediaItemsFromListUseCaseTest {
 
-    private lateinit var getMoviesFromListUseCase: GetMoviesFromListUseCase
+    private lateinit var getListMediaItemsFromListUseCase: GetListMediaItemsFromListUseCase
     private lateinit var userListRepository: UserListRepository
 
     @BeforeEach
     fun setup() {
         userListRepository = mockk()
-        getMoviesFromListUseCase = GetMoviesFromListUseCase(userListRepository)
+        getListMediaItemsFromListUseCase = GetListMediaItemsFromListUseCase(userListRepository)
     }
 
     @Test
@@ -28,13 +28,13 @@ class GetMoviesFromListUseCaseTest {
         // Given
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesFromList(listId, page) } returns emptyList()
+        coEvery { userListRepository.getMoviesAndShowsFromList(listId, page) } returns emptyList()
 
         // When
-        getMoviesFromListUseCase(listId, page)
+        getListMediaItemsFromListUseCase(listId, page)
 
         // Then
-        coVerify(exactly = 1) { userListRepository.getMoviesFromList(listId, page) }
+        coVerify(exactly = 1) { userListRepository.getMoviesAndShowsFromList(listId, page) }
     }
 
     @Test
@@ -42,10 +42,10 @@ class GetMoviesFromListUseCaseTest {
         // Given
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesFromList(listId, page) } returns emptyList()
+        coEvery { userListRepository.getMoviesAndShowsFromList(listId, page) } returns emptyList()
 
         // When
-        val result = getMoviesFromListUseCase(listId, page)
+        val result = getListMediaItemsFromListUseCase(listId, page)
 
         // Then
         assertThat(result).isEmpty()
@@ -56,10 +56,10 @@ class GetMoviesFromListUseCaseTest {
         // Given
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesFromList(listId, page) } returns specificMovieList
+        coEvery { userListRepository.getMoviesAndShowsFromList(listId, page) } returns specificMovieList
 
         // When
-        val result = getMoviesFromListUseCase(listId, page)
+        val result = getListMediaItemsFromListUseCase(listId, page)
 
         // Then
         assertThat(result).containsExactlyElementsIn(specificMovieList)
@@ -69,8 +69,8 @@ class GetMoviesFromListUseCaseTest {
     fun `should throw exception when getMoviesFromList failed`() = runTest {
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesFromList(listId, page) } throws AflamiException()
+        coEvery { userListRepository.getMoviesAndShowsFromList(listId, page) } throws AflamiException()
 
-        assertThrows<AflamiException> { getMoviesFromListUseCase(listId, page) }
+        assertThrows<AflamiException> { getListMediaItemsFromListUseCase(listId, page) }
     }
 }

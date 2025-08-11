@@ -5,9 +5,11 @@ import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.entity.Movie
+import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.UserList
 import com.amsterdam.repository.datasource.remote.UserListRemoteSource
 import com.amsterdam.repository.mapper.remote.toMovie
+import com.amsterdam.repository.mapper.remote.toTvShow
 import com.amsterdam.repository.mapper.remote.toUserList
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -34,10 +36,15 @@ class UserListRepositoryImpl @Inject constructor(
         ).listId
     }
 
-    override suspend fun getMoviesFromList(listId: Long, page: Int): List<Movie> {
-        return userListDataSource.getMoviesFromList(listId, page).items
-            .map { it.toMovie() }
+    override suspend fun getMoviesAndShowsFromList(listId: Long, page: Int): Pair<List<TvShow>, List<Movie>> {
+        val items = userListDataSource.getMoviesAndShowsFromList(listId, page).items
+
+        val tvShows = items.filter { it.mediaType == "tv" }.map { it.toTvShow() }
+        val movies = items.filter { it.mediaType == "movie" }.map { it.toMovie() }
+
+        return tvShows to movies
     }
+
 
     override suspend fun deleteList(listId: Long) {
         val sessionId = authenticationRepository.getSessionId()
