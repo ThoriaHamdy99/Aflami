@@ -43,18 +43,7 @@ class ApplicationViewModel @Inject constructor(
                     )
                 }
             } else {
-                val sessionType = getsSessionType()
-                val destination = when (sessionType) {
-                    SessionType.NOT_LOGGED_IN -> ApplicationUiState.StartDestinations.LOGIN
-                    SessionType.LOGGED_IN -> ApplicationUiState.StartDestinations.HOME
-                    SessionType.GUEST -> ApplicationUiState.StartDestinations.HOME
-                }
-                updateState {
-                    it.copy(
-                        startDestination = destination,
-                        isDestinationLoaded = true
-                    )
-                }
+                setNonOnboardingStartDestination()
             }
         }
     }
@@ -62,6 +51,21 @@ class ApplicationViewModel @Inject constructor(
     fun initAppSettings(locale: Locale) {
         viewModelScope.launch(dispatcherProvider.IO) {
             manageLocaleLanguageUseCase.initAppLanguage(locale.language)
+        }
+    }
+
+    private suspend fun setNonOnboardingStartDestination(){
+        val sessionType = getsSessionType()
+        val destination = when (sessionType) {
+            SessionType.NOT_LOGGED_IN -> ApplicationUiState.StartDestinations.LOGIN
+            SessionType.LOGGED_IN -> ApplicationUiState.StartDestinations.HOME
+            SessionType.GUEST -> ApplicationUiState.StartDestinations.HOME
+        }
+        updateState {
+            it.copy(
+                startDestination = destination,
+                isDestinationLoaded = true
+            )
         }
     }
 
