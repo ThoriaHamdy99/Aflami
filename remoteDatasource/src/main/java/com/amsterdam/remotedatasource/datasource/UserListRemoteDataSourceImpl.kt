@@ -17,37 +17,25 @@ class UserListRemoteDataSourceImpl @Inject constructor(
 ) : UserListRemoteSource {
     override suspend fun createNewList(
         listName: String,
-        description: String,
         language: String,
-        sessionId: String,
     ): CreateUserListResponse {
         return responseCall {
             userListApiService.createNewList(
-                sessionId = sessionId,
                 listName = listName,
-                description = description,
-                language = language,
+                language = language
             )
         }
     }
 
-    override suspend fun getUserLists(
-        accountId: Int,
-        page: Int,
-        sessionId: String
-    ): RemoteUserListResponse {
-        return responseCall({ userListApiService.getUserLists(accountId, page, sessionId) }) {
+    override suspend fun getUserLists(accountId: Int, page: Int, ): RemoteUserListResponse {
+        return responseCall({ userListApiService.getUserLists(accountId, page) }) {
             val response = json.decodeFromString<AuthenticationResponseDto>(it)
             response.statusCode!!
         }
     }
 
-    override suspend fun addMovieToList(
-        listId: Long,
-        sessionId: String,
-        movieId: Int,
-    ): AddItemToListResponse {
-        return responseCall { userListApiService.addMediaItemToList(listId, sessionId, movieId) }
+    override suspend fun addMovieToList(listId: Long, movieId: Int, ): AddItemToListResponse {
+        return responseCall { userListApiService.addMediaItemToList(listId, movieId) }
     }
 
     override suspend fun getMoviesFromList(listId: Long, page: Int): UserListDetailsResponse {
@@ -57,15 +45,15 @@ class UserListRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteList(listId: Long, sessionId: String) {
-        responseCall({ userListApiService.deleteList(listId, sessionId) }) {
+    override suspend fun deleteList(listId: Long) {
+        responseCall({ userListApiService.deleteList(listId) }) {
             val response = json.decodeFromString<AuthenticationResponseDto>(it)
             response.statusCode!!
         }
     }
 
-    override suspend fun removeMovieFromList(listId: Long, sessionId: String, movieId: Long) {
-        responseCall({ userListApiService.removeMovieFromList(listId, sessionId, movieId) }) {
+    override suspend fun deleteMovieFromList(listId: Long, movieId: Long) {
+        responseCall({ userListApiService.removeMovieFromList(listId, movieId) }) {
             val response = json.decodeFromString<AuthenticationResponseDto>(it)
             response.statusCode!!
         }

@@ -190,7 +190,7 @@ class UserListRepositoryImplTest {
             val sessionId = "123"
             coEvery { authenticationRepository.getSessionId() } returns sessionId
             coEvery {
-                userListRemoteSource.removeMovieFromList(
+                userListRemoteSource.deleteMovieFromList(
                     listId,
                     sessionId,
                     movieId
@@ -202,7 +202,7 @@ class UserListRepositoryImplTest {
 
             // Then
             coVerify { authenticationRepository.getSessionId() }
-            coVerify { userListRemoteSource.removeMovieFromList(listId, sessionId, movieId) }
+            coVerify { userListRemoteSource.deleteMovieFromList(listId, sessionId, movieId) }
         }
 
     @Test

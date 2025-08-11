@@ -16,9 +16,8 @@ interface UserListApiService {
     @FormUrlEncoded
     @POST("list")
     suspend fun createNewList(
-        @Query("session_id") sessionId: String,
         @Field("name") listName: String,
-        @Field("description") description: String,
+        @Field("description") description: String = "",
         @Field("language") language: String,
     ): CreateUserListResponse
 
@@ -26,7 +25,6 @@ interface UserListApiService {
     suspend fun getUserLists(
         @Path("account_id") accountId: Int = 0,
         @Query("page") page: Int = 1,
-        @Query("session_id") sessionId: String,
     ): RemoteUserListResponse
 
     @GET("list/{list_id}")
@@ -38,14 +36,12 @@ interface UserListApiService {
     @DELETE("list/{list_id}")
     suspend fun deleteList(
         @Path("list_id") listId: Long,
-        @Query("session_id") sessionId: String,
     )
 
     @FormUrlEncoded
     @POST("list/{list_id}/add_item")
     suspend fun addMediaItemToList(
         @Path("list_id") listId: Long,
-        @Query("session_id") sessionId: String,
         @Field("media_id") movieId: Int,
     ): AddItemToListResponse
 
@@ -53,7 +49,6 @@ interface UserListApiService {
     @POST("list/{list_id}/remove_item")
     suspend fun removeMovieFromList(
         @Path("list_id") listId: Long,
-        @Query("session_id") sessionId: String,
         @Field("media_id") movieId: Long,
     )
 
