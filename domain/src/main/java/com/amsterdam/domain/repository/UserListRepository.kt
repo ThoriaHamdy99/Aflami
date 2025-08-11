@@ -16,7 +16,7 @@ interface UserListRepository {
         page: Int = 1,
     ): List<UserList>
 
-    suspend fun getMoviesAndShowsFromList(listId: Long, page: Int): Pair<List<TvShow>, List<Movie>>
+    suspend fun getMoviesAndTvShowsFromList(listId: Long, page: Int): Pair<List<TvShow>, List<Movie>>
     suspend fun deleteList(listId: Long)
     suspend fun removeMovieFromList(listId: Long, movieId: Long)
 }

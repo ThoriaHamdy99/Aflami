@@ -28,13 +28,13 @@ class GetListMediaItemsFromListUseCaseTest {
         // Given
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesAndShowsFromList(listId, page) } returns emptyList()
+        coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyList()
 
         // When
         getListMediaItemsFromListUseCase(listId, page)
 
         // Then
-        coVerify(exactly = 1) { userListRepository.getMoviesAndShowsFromList(listId, page) }
+        coVerify(exactly = 1) { userListRepository.getMoviesAndTvShowsFromList(listId, page) }
     }
 
     @Test
@@ -42,7 +42,7 @@ class GetListMediaItemsFromListUseCaseTest {
         // Given
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesAndShowsFromList(listId, page) } returns emptyList()
+        coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyList()
 
         // When
         val result = getListMediaItemsFromListUseCase(listId, page)
@@ -56,7 +56,7 @@ class GetListMediaItemsFromListUseCaseTest {
         // Given
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesAndShowsFromList(listId, page) } returns specificMovieList
+        coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns specificMovieList
 
         // When
         val result = getListMediaItemsFromListUseCase(listId, page)
@@ -69,7 +69,7 @@ class GetListMediaItemsFromListUseCaseTest {
     fun `should throw exception when getMoviesFromList failed`() = runTest {
         val listId = 1L
         val page = 1
-        coEvery { userListRepository.getMoviesAndShowsFromList(listId, page) } throws AflamiException()
+        coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } throws AflamiException()
 
         assertThrows<AflamiException> { getListMediaItemsFromListUseCase(listId, page) }
     }

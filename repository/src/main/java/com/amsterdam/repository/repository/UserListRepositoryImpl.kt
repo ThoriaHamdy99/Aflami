@@ -36,8 +36,8 @@ class UserListRepositoryImpl @Inject constructor(
         ).listId
     }
 
-    override suspend fun getMoviesAndShowsFromList(listId: Long, page: Int): Pair<List<TvShow>, List<Movie>> {
-        val items = userListDataSource.getMoviesAndShowsFromList(listId, page).items
+    override suspend fun getMoviesAndTvShowsFromList(listId: Long, page: Int): Pair<List<TvShow>, List<Movie>> {
+        val items = userListDataSource.getMoviesAndTvShowsFromList(listId, page).items
 
         val tvShows = items.filter { it.mediaType == "tv" }.map { it.toTvShow() }
         val movies = items.filter { it.mediaType == "movie" }.map { it.toMovie() }
