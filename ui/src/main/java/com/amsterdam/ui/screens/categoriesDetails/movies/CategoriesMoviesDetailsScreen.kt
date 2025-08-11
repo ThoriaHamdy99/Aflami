@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.categoriesDetails
+package com.amsterdam.ui.screens.categoriesDetails.movies
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement

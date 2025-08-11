@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.categoriesDetails
+package com.amsterdam.ui.screens.categoriesDetails.movies
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
