@@ -21,7 +21,6 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
     dispatcherProvider
 ), CategoriesMoviesDetailsInteractionListener {
     init {
-        val mediaType = categoriesMovieDetailsArgs.mediaType
         val initialGenre =
             MovieGenre.valueOf(categoriesMovieDetailsArgs.genre!!)
         viewModelScope.launch {
@@ -39,13 +38,9 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
             getMovieByGenre(initialGenre, 1)
         }
     }
-
-
     override fun onClickRetryRequest(movieGenre: MovieGenre, page: Int) {
         getMovieByGenre(movieGenre, page)
     }
-
-
     private fun onFetchError(exception: AflamiException) {
         updateState {
             it.copy(
@@ -55,17 +50,11 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
             )
         }
     }
-
-
     override fun onBackClicked() {
         sendNewNavigationEffect(CategoriesMoviesDetailsUiEffect.NavigateBack)
     }
-
-
     override fun onMovieCardClicked(movieId: Long) {
         sendNewNavigationEffect(CategoriesMoviesDetailsUiEffect.NavigateToMovieDetails(movieId))
-
-
     }
 
 
@@ -96,7 +85,6 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
             onError = ::onFetchError
         )
     }
-
     private fun onGetMoviesByGenreSuccess(movieGenre: MovieGenre, movies: List<Movie>) {
         updateState { currentState ->
             currentState.copy(
