@@ -19,9 +19,6 @@ interface TvShowRepository {
     suspend fun setTvShowRate(rate: Int, tvShowId: Long)
     suspend fun getUserRatedTvShows(): List<UserRatedTvShow>
     suspend fun deleteTvShowRate(tvShowId: Long)
-    suspend fun getEpisodeVideoUrl(
-        tvShowId: Long,
-        seasonNumber: Int,
-        episodeNumber: Int
-    ): String
+
+    suspend fun getEpisodeVideoUrl(tvShowId: Long, seasonNumber: Int, episodeNumber: Int): String
 }

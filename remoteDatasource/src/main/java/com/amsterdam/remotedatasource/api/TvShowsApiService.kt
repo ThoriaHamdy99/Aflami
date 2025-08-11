@@ -10,6 +10,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -35,10 +36,10 @@ interface TvShowsApiService {
         @Path("tvShowId") tvShowId: Long
     ): RemoteCastAndCrewResponse
 
+    @Headers("X-Require-Session: true")
     @GET("tv/{tvShowId}")
     suspend fun getTvShowDetailsById(
         @Path("tvShowId") tvShowId: Long,
-        @Query("session_id") sessionId: String = "",
         @Query("append_to_response") appendToResponse: String = "credits,similar,reviews,images,videos,account_states",
         @Query("include_video_language") videoLang: String = "en"
     ): TvShowDetailsRemoteResponse
@@ -63,18 +64,15 @@ interface TvShowsApiService {
     suspend fun postTvRating(
         @Path("tv_id") tvId: Long,
         @Field("value") rate: Float,
-        @Query("session_id") sessionId: String
     ): RatingResponse
 
     @DELETE("tv/{tv_id}/rating")
     suspend fun deleteTvRating(
         @Path("tv_id") tvId: Long,
-        @Query("session_id") sessionId: String
     ): RatingResponse
 
     @GET("account/{account_id}/rated/tv")
     suspend fun getRatedTvShows(
         @Path("account_id") accountId: Int = 0,
-        @Query("session_id") sessionId: String
     ): RemoteTvShowResponse
 }
