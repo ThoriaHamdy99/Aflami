@@ -235,10 +235,10 @@ class UserListRepositoryImplTest {
         // Given
         val listId = 1L
         val response = remoteListResponse.copy(items = listItems)
-        coEvery { userListRemoteSource.getMoviesFromList(listId, 1) } returns response
+        coEvery { userListRemoteSource.getMoviesAndShowsFromList(listId, 1) } returns response
 
         // When
-        val result = userListRepository.getMoviesFromList(listId, 1)
+        val result = userListRepository.getMoviesAndShowsFromList(listId, 1)
 
         // Then
         assertThat(result).containsExactlyElementsIn(listItems.map { it.toMovie() })
@@ -249,10 +249,10 @@ class UserListRepositoryImplTest {
         // Given
         val listId = 1L
         val response = remoteListResponse
-        coEvery { userListRemoteSource.getMoviesFromList(listId, 1) } returns response
+        coEvery { userListRemoteSource.getMoviesAndShowsFromList(listId, 1) } returns response
 
         // When
-        val result = userListRepository.getMoviesFromList(listId, 1)
+        val result = userListRepository.getMoviesAndShowsFromList(listId, 1)
 
         // Then
         assertThat(result).isEmpty()

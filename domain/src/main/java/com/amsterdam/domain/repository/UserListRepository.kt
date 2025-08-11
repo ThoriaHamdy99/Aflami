@@ -1,6 +1,7 @@
 package com.amsterdam.domain.repository
 
 import com.amsterdam.entity.Movie
+import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.UserList
 
 interface UserListRepository {
@@ -15,7 +16,7 @@ interface UserListRepository {
         page: Int = 1,
     ): List<UserList>
 
-    suspend fun getMoviesFromList(listId: Long, page: Int): List<Movie>
+    suspend fun getMoviesAndShowsFromList(listId: Long, page: Int): Pair<List<TvShow>, List<Movie>>
     suspend fun deleteList(listId: Long)
     suspend fun removeMovieFromList(listId: Long, movieId: Long)
 }
