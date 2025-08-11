@@ -27,7 +27,6 @@ object LocalGenres {
     )
 
     val tvShowGenres = listOf(
-        GenreUiModel(TvShowGenre.SCIENCE_FICTION_FANTASY, R.string.science_fiction, R.drawable.img_sciencefiction),
         GenreUiModel(TvShowGenre.CRIME, R.string.crime, R.drawable.img_crime),
         GenreUiModel(TvShowGenre.FAMILY, R.string.family, R.drawable.img_family),
         GenreUiModel(TvShowGenre.MYSTERY, R.string.mystery, R.drawable.img_mystery),
