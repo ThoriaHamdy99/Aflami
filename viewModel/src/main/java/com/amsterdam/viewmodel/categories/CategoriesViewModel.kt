@@ -12,20 +12,19 @@ class CategoriesViewModel @Inject constructor(
 ) : BaseViewModel<CategoriesUiState, CategoriesUiEffect>
     (CategoriesUiState(), dispatcherProvider), CategoriesInteractionListener {
 
-
     override fun onChangeTabOption(tabOption: TabOption) {
         updateState {
             it.copy(selectedTabOption = tabOption)
         }
-
     }
-
     override fun onNavigateCategoriesDetailsScreen(
         genreName: String,
-        mediaType: String
     ) {
-        sendNewNavigationEffect(CategoriesUiEffect.NavigateCategoriesDetailsScreen(genreName,mediaType))
+        sendNewNavigationEffect(
+            CategoriesUiEffect.NavigateCategoriesDetailsScreen(
+                genreName,
+            )
+        )
     }
-
-    }
+}
 

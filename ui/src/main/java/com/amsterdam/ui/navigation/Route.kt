@@ -44,7 +44,6 @@ sealed interface Route {
     @Serializable
     data class CategoriesDetails(
         private val genreName: String,
-        private val mediaType: String
     ) : Route
 
     @Serializable

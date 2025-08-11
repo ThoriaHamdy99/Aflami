@@ -20,16 +20,20 @@ import javax.inject.Singleton
 object ViewModelViewModelScope {
 
     @Provides
-    fun provideMovieDetailsArgs(savedStateHandle: SavedStateHandle): MovieDetailsArgs = MovieDetailsArgs(savedStateHandle)
+    fun provideMovieDetailsArgs(savedStateHandle: SavedStateHandle): MovieDetailsArgs =
+        MovieDetailsArgs(savedStateHandle)
+
     @Provides
-    fun provideCategoriesMoviesDetailsArgs(savedStateHandle: SavedStateHandle): CategoriesMovieDetailsArgs=
+    fun provideCategoriesMoviesDetailsArgs(savedStateHandle: SavedStateHandle): CategoriesMovieDetailsArgs =
         CategoriesMovieDetailsArgs(savedStateHandle)
 
     @Provides
-    fun provideSeriesDetailsArgs(savedStateHandle: SavedStateHandle): SeriesDetailsArgs = SeriesDetailsArgs(savedStateHandle)
+    fun provideSeriesDetailsArgs(savedStateHandle: SavedStateHandle): SeriesDetailsArgs =
+        SeriesDetailsArgs(savedStateHandle)
 
     @Provides
-    fun provideCastScreenArgs(savedStateHandle: SavedStateHandle): CastScreenArgs = CastScreenArgs(savedStateHandle)
+    fun provideCastScreenArgs(savedStateHandle: SavedStateHandle): CastScreenArgs =
+        CastScreenArgs(savedStateHandle)
 
     @Provides
     fun provideListDetailsArgs(

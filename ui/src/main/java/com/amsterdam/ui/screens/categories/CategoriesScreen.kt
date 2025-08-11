@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -47,7 +46,6 @@ import com.amsterdam.viewmodel.shared.uiStates.MediaType
 
 @Composable
 fun CategoriesScreen(
-    modifier: Modifier = Modifier,
     viewModel: CategoriesViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -55,7 +53,6 @@ fun CategoriesScreen(
     CategoriesScreenContent(
         interaction = viewModel,
         state = state,
-        modifier = modifier
     )
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -64,8 +61,6 @@ fun CategoriesScreen(
                     navController.navigate(
                         Route.CategoriesDetails(
                             genreName = effect.genreName,
-                            mediaType = effect.mediaType
-
                         )
                     )
                 }
@@ -73,17 +68,17 @@ fun CategoriesScreen(
         }
     }
 }
+
 @Composable
 private fun CategoriesScreenContent(
     interaction: CategoriesInteractionListener,
     state: CategoriesUiState,
-    modifier: Modifier = Modifier
 ) {
     val lazyState = rememberLazyGridState()
     var appBarHeight by remember { mutableIntStateOf(0) }
     var tabsHeight by remember { mutableIntStateOf(0) }
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding()
@@ -113,8 +108,6 @@ private fun CategoriesScreenContent(
                     .padding(horizontal = 16.dp)
                     .fillMaxSize()
                     .background(AppTheme.color.surface)
-                    .statusBarsPadding()
-                    .systemBarsPadding()
                     .animateContentSize(),
                 state = lazyState,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -128,15 +121,18 @@ private fun CategoriesScreenContent(
                 }
                 items(categories) { movie ->
 
-                 val genre=movie.genre.name
-                    val mediaType=if(state.selectedTabOption==TabOption.MOVIES) MediaType.MOVIE.name else MediaType.TV_SHOW.name
+                    val genre = movie.genre.name
+                    val mediaType =
+                        if (state.selectedTabOption == TabOption.MOVIES) MediaType.MOVIE.name else MediaType.TV_SHOW.name
                     CategoryCard(
                         modifier = Modifier,
                         categoryName = stringResource(movie.displayName),
                         categoryImage = painterResource(movie.imageRes),
-                        onClick = { interaction.onNavigateCategoriesDetailsScreen(genre, mediaType ) }
-
-
+                        onClick = {
+                            interaction.onNavigateCategoriesDetailsScreen(
+                                genre,
+                            )
+                        }
                     )
                 }
             }
@@ -151,19 +147,8 @@ private fun CategoriesScreenPreview() {
     CategoriesScreenContent(
         state = CategoriesUiState(),
         interaction = object : CategoriesInteractionListener {
-
-            override fun onChangeTabOption(tabOption: TabOption) {
-            }
-
-            override fun onNavigateCategoriesDetailsScreen(
-                genreName: String,
-                mediaType: String
-
-            ) {
-            }
-
-
-
+            override fun onChangeTabOption(tabOption: TabOption) {}
+            override fun onNavigateCategoriesDetailsScreen(genreName: String, ) {}
         }
     )
 }

@@ -1,8 +1,6 @@
 package com.amsterdam.viewmodel.categories
 
 
-
 interface CategoriesUiEffect {
-    data class NavigateCategoriesDetailsScreen(val genreName: String,val mediaType: String) : CategoriesUiEffect
-
+    data class NavigateCategoriesDetailsScreen(val genreName: String) : CategoriesUiEffect
 }
