@@ -48,7 +48,7 @@ class AccountDetailsDaoTest : BaseDaoTest() {
     fun getAccountDetails_shouldReturnNull_whenAccountDetailsNotExist() = runTest {
         val result = accountDetailsDao.getAccountDetails()
 
-        assertThat(result).isEqualTo(null)
+        assertThat(result).isNull()
     }
 
     @Test
@@ -58,7 +58,7 @@ class AccountDetailsDaoTest : BaseDaoTest() {
         accountDetailsDao.deleteAccountDetails()
         val result = accountDetailsDao.getAccountDetails()
 
-        assertThat(result).isEqualTo(null)
+        assertThat(result).isNull()
     }
 
 }

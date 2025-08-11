@@ -76,7 +76,7 @@ class MovieDaoTest : BaseDaoTest() {
     fun getMovieById_shouldReturnNull_whenMovieIsNotExists() = runTest {
         val result = movieDao.getMovieById(1L, "en")
 
-        assertThat(result).isEqualTo(null)
+        assertThat(result).isNull()
     }
 
     @Test
