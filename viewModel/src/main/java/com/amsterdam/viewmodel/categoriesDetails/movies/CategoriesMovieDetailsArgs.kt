@@ -1,7 +1,6 @@
-package com.amsterdam.viewmodel.categoriesDetails
+package com.amsterdam.viewmodel.categoriesDetails.movies
 
 import androidx.lifecycle.SavedStateHandle
-import com.amsterdam.entity.category.MovieGenre
 
 class CategoriesMovieDetailsArgs (savedStateHandle: SavedStateHandle){
     val genre = savedStateHandle.get<String>(GENRE_NAME)

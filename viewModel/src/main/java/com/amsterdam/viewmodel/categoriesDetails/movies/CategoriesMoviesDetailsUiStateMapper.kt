@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.categoriesDetails
+package com.amsterdam.viewmodel.categoriesDetails.movies
 
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.shared.mappers.toFormattedRating

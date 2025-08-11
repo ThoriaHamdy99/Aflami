@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.categoriesDetails
+package com.amsterdam.viewmodel.categoriesDetails.movies
 
 import androidx.paging.PagingData
 import com.amsterdam.domain.exceptions.NetworkException

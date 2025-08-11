@@ -43,10 +43,10 @@ import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreIcon
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
-import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsInteractionListener
-import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsUiEffect
-import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsUiState
-import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsViewModel
+import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsInteractionListener
+import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiEffect
+import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiState
+import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsViewModel
 
 @Composable
 fun CategoriesMoviesDetailsScreen(

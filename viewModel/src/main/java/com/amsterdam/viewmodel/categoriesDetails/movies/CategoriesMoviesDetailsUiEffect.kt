@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.categoriesDetails
+package com.amsterdam.viewmodel.categoriesDetails.movies
 
 interface CategoriesMoviesDetailsUiEffect {
     data object NavigateBack : CategoriesMoviesDetailsUiEffect
