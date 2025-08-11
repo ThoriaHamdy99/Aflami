@@ -16,7 +16,7 @@ class UserListRepositoryImpl @Inject constructor(
     private val preferences: AppPreferencesRepository,
 ) : UserListRepository {
 
-    override suspend fun addMovieToList(listId: Long, movieId: Int) {
+    override suspend fun addMovieToList(listId: Long, movieId: Long) {
         val response = userListDataSource.addMovieToList(listId, movieId)
         if (!response.success) throw UnknownException()
     }

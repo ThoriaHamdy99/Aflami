@@ -8,7 +8,7 @@ interface UserListRepository {
     suspend fun getUserLists(accountId: Int = 0, page: Int = 1, ): List<UserList>
     suspend fun deleteList(listId: Long)
 
-    suspend fun addMovieToList(listId: Long, movieId: Int, )
+    suspend fun addMovieToList(listId: Long, movieId: Long)
     suspend fun getMoviesFromList(listId: Long, page: Int): List<Movie>
     suspend fun removeMovieFromList(listId: Long, movieId: Long)
 }

@@ -42,7 +42,7 @@ interface UserListApiService {
     @POST("list/{list_id}/add_item")
     suspend fun addMediaItemToList(
         @Path("list_id") listId: Long,
-        @Field("media_id") movieId: Int,
+        @Field("media_id") movieId: Long,
     ): AddItemToListResponse
 
     @FormUrlEncoded
