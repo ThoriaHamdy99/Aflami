@@ -66,6 +66,7 @@ private fun DependencyHandlerScope.composeDependencies() {
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.foundation)
+    implementation(libs.androidx.ui.graphics.android)
 }
 
 private fun DependencyHandlerScope.uiGraphicsDependencies() {
