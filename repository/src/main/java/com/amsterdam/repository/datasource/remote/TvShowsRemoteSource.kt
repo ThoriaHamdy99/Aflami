@@ -29,6 +29,7 @@ interface TvShowsRemoteSource {
         seasonNumber: Int,
         episodeNumber: Int
     ): VideoResponse
+    suspend fun getTvShowsByGenreIds(genresIds: List<Long>, page: Int): RemoteTvShowResponse
 
     suspend fun getRatedTvShows(sessionId: String): RemoteTvShowResponse
 
