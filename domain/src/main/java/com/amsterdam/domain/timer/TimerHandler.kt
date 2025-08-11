@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase.timer
+package com.amsterdam.domain.timer
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -6,7 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
-open class TimerHandler(
+class TimerHandler(
     private val scope: CoroutineScope
 ) {
     private var timerJob: Job? = null
