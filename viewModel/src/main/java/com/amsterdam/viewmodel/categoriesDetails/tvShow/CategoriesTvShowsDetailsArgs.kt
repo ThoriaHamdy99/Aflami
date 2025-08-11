@@ -7,7 +7,7 @@ class CategoriesTvShowsDetailsArgs(savedStateHandle: SavedStateHandle) {
 
 
     companion object{
-        const val GENRE = "genre"
+        const val GENRE = "genreName"
 
     }
 }
