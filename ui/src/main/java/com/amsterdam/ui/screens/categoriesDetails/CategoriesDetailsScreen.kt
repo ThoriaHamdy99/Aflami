@@ -43,7 +43,7 @@ import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreIcon
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
-import com.amsterdam.viewmodel.categoriesDetails.CategoriesDetailsInteractionListener
+import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsInteractionListener
 import com.amsterdam.viewmodel.categoriesDetails.CategoriesDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.CategoriesDetailsUiState
 import com.amsterdam.viewmodel.categoriesDetails.CategoriesDetailsViewModel
@@ -81,7 +81,7 @@ fun CategoriesDetailsScreen(
 private fun CategoriesDetailsContent(
     modifier: Modifier = Modifier,
     state: CategoriesDetailsUiState,
-    interaction: CategoriesDetailsInteractionListener
+    interaction: CategoriesMoviesDetailsInteractionListener
 ) {
     var appBarHeight by remember { mutableIntStateOf(0) }
 
@@ -121,7 +121,7 @@ private fun CategoriesDetailsContent(
                             icon = getMovieGenreIcon(genre),
                             label = getMovieGenreLabel(genre),
                             isSelected = genreItem.selectableMovieGenre.isSelected,
-                            onClick = { interaction.onMovieGenreClicked(genre) },
+                            onClick = { interaction.onGenreClicked(genre) },
                         )
                     }
 
@@ -181,7 +181,7 @@ private fun CategoriesDetailsContent(
                                     movieType = stringResource(R.string.movie),
                                     movieYear = mediaItem.yearOfRelease,
                                     movieRating = mediaItem.rate,
-                                    onClick = {interaction.onMediaClicked(mediaItem.id)}
+                                    onClick = {interaction.onMovieCardClicked(mediaItem.id)}
                                 )
 
                             }
@@ -202,17 +202,17 @@ private fun CategoriesDetailsContent(
 private fun CategoriesDetailsScreenPreview() {
     CategoriesDetailsContent(
         state = CategoriesDetailsUiState(),
-        interaction = object : CategoriesDetailsInteractionListener {
+        interaction = object : CategoriesMoviesDetailsInteractionListener {
             override fun onBackClicked() {
 
 
             }
 
-            override fun onMediaClicked(mediaId: Long) {
+            override fun onMovieCardClicked(movieId: Long) {
 
             }
 
-            override fun onMovieGenreClicked(movieGenre: MovieGenre) {
+            override fun onGenreClicked(movieGenre: MovieGenre) {
 
             }
 

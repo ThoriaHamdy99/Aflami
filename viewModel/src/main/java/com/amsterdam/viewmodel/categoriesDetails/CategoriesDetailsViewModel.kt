@@ -7,7 +7,6 @@ import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.BaseViewModel
-import com.amsterdam.viewmodel.shared.TabOption
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -21,7 +20,7 @@ class CategoriesDetailsViewModel @Inject constructor(
 ) : BaseViewModel<CategoriesDetailsUiState, CategoriesDetailsUiEffect>(
     CategoriesDetailsUiState(),
     dispatcherProvider
-), CategoriesDetailsInteractionListener {
+), CategoriesMoviesDetailsInteractionListener {
     init {
         val mediaType = categoriesMovieDetailsArgs.mediaType
         val initialGenre =
@@ -66,8 +65,8 @@ class CategoriesDetailsViewModel @Inject constructor(
     }
 
 
-    override fun onMediaClicked(mediaId: Long) {
-        sendNewNavigationEffect(CategoriesDetailsUiEffect.NavigateToMovieDetails(mediaId))
+    override fun onMovieCardClicked(movieId: Long) {
+        sendNewNavigationEffect(CategoriesDetailsUiEffect.NavigateToMovieDetails(movieId))
 
 
     }
@@ -93,7 +92,7 @@ class CategoriesDetailsViewModel @Inject constructor(
         )
     }
 
-    override fun onMovieGenreClicked(movieGenre: MovieGenre) {
+    override fun onGenreClicked(movieGenre: MovieGenre) {
 
         tryToExecute(
             action = { getMoviesByGenreIdUseCase(movieGenre, 1) },
