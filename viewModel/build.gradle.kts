@@ -104,7 +104,6 @@ kover.reports {
             "*.application",
             "*.continueWatching",
             "*.letsPlay",
-            "*.myRating",
             "*.onboarding",
             "*.profile",
             "*.keywordSearch",

@@ -140,9 +140,11 @@ private fun SearchContent(
             )
 
             AnimatedVisibility(state.keyword.isBlank()) {
-                Column(Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
                     SuggestionsHubSection(
                         onWorldSearchCardClicked = interaction::onClickWorldSearchCard,
                         onActorSearchCardClicked = interaction::onClickActorSearchCard
@@ -176,13 +178,16 @@ private fun SearchContent(
                 }
                 if (state.isLoading || state.errorUiState != null || isSelectedTabHasNoData) {
                     Box(
-                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        CenterOfScreenContainer(headerHeight, modifier = Modifier.fillMaxSize()) {
+                        CenterOfScreenContainer(
+                            unneededSpace = headerHeight,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
                             when {
                                 state.isLoading && state.errorUiState == null -> {
                                     LoadingContainer()
@@ -208,7 +213,10 @@ private fun SearchContent(
             }
         }
 
-        AnimatedVisibility(modifier = Modifier.fillMaxSize(), visible = state.isDialogVisible) {
+        AnimatedVisibility(
+            modifier = Modifier.fillMaxSize(),
+            visible = state.isDialogVisible
+        ) {
             val currentFilterState = if (state.selectedTabOption == TabOption.MOVIES) {
                 state.movieFilterItemUiState
             } else {

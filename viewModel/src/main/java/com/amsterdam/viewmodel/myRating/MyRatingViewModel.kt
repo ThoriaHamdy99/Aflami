@@ -66,7 +66,8 @@ class MyRatingViewModel @Inject constructor(
 
     override fun onChangeTabOption(tabOption: TabOption) {
         if (tabOption == state.value.selectedTabOption) return
-        updateState { it.copy(selectedTabOption = tabOption) }.also { refreshRatedContent() }
+        updateState { it.copy(selectedTabOption = tabOption) }
+        refreshRatedContent()
     }
 
     override fun onClickMovieCard(movieId: Long) {
@@ -85,11 +86,11 @@ class MyRatingViewModel @Inject constructor(
     }
 
     private fun onDeleteMovieRateSuccess(unit: Unit) {
-        sendNewNavigationEffect(MyRatingUiEffect.ShowDeleteRateSuccessSnackBar)
+        sendNewEffect(MyRatingUiEffect.ShowDeleteRateSuccessSnackBar)
     }
 
     private fun onDeleteMovieRateError(exception: AflamiException) {
-        sendNewNavigationEffect(MyRatingUiEffect.ShowDeleteRateErrorSnackBar)
+        sendNewEffect(MyRatingUiEffect.ShowDeleteRateErrorSnackBar)
     }
 
     override fun onClickTvShowCard(tvShowId: Long) {
@@ -112,7 +113,7 @@ class MyRatingViewModel @Inject constructor(
     }
 
     private fun onDeleteTvShowRateError(exception: AflamiException) {
-        sendNewEffect(MyRatingUiEffect.ShowDeleteRateSuccessSnackBar)
+        sendNewEffect(MyRatingUiEffect.ShowDeleteRateErrorSnackBar)
     }
 
 
