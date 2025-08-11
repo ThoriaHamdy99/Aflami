@@ -4,6 +4,7 @@ import com.amsterdam.domain.exceptions.UnknownException
 import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.repository.UserListRepository
+import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.UserList
@@ -36,13 +37,16 @@ class UserListRepositoryImpl @Inject constructor(
         ).listId
     }
 
-    override suspend fun getMoviesAndTvShowsFromList(listId: Long, page: Int): Pair<List<TvShow>, List<Movie>> {
+    override suspend fun getMoviesAndTvShowsFromList(listId: Long, page: Int): GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems {
         val items = userListDataSource.getMoviesAndTvShowsFromList(listId, page).items
 
         val tvShows = items.filter { it.mediaType == "tv" }.map { it.toTvShow() }
         val movies = items.filter { it.mediaType == "movie" }.map { it.toMovie() }
 
-        return tvShows to movies
+        return GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
+            listDetailsMovies = movies,
+            listDetailsShows = tvShows
+        )
     }
 
 
