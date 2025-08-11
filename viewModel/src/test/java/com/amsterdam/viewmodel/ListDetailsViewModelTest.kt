@@ -64,13 +64,11 @@ class ListDetailsViewModelTest {
 
     @Test
     fun `init should update state with args list id and name`() = testScope.runTest {
-        // Given
         val listId = 1L
         val listName = "List"
         every { args.listId } returns listId
         every { args.listName } returns listName
 
-        // When
         viewModel = ListDetailsViewModel(
             getListMediaItemsFromListUseCase = getListMediaItemsFromListUseCase,
             removeMovieFromListUseCase = removeMovieFromListUseCase,
@@ -81,18 +79,15 @@ class ListDetailsViewModelTest {
         )
         advanceUntilIdle()
 
-        // Then
         assertThat(viewModel.state.value.listId).isEqualTo(listId)
         assertThat(viewModel.state.value.listName).isEqualTo(listName)
     }
 
     @Test
     fun `onMovieClicked should send NavigateToDetails effect when its call`() = testScope.runTest {
-        // Given
         val movieId = 1L
         var effect: ListDetailsEffect? = null
 
-        // When
         val job = launch {
             viewModel.effect.collect { listEffects -> effect = listEffects }
         }
@@ -100,7 +95,6 @@ class ListDetailsViewModelTest {
         advanceUntilIdle()
         job.cancel()
 
-        // Then
         assertThat(effect).isEqualTo(ListDetailsEffect.NavigateToMovieDetailsScreen(1))
     }
 
@@ -206,10 +200,8 @@ class ListDetailsViewModelTest {
     @Test
     fun `should set loading to true when pagination load changed to loading`() =
         testScope.runTest {
-            // Given
             val loadState = LoadState.Loading
 
-            // When
             viewModel.onPagingLoadStateChanged(
                 CombinedLoadStates(
                     refresh = loadState,
@@ -221,17 +213,14 @@ class ListDetailsViewModelTest {
                 )
             )
 
-            // Then
             assertThat(viewModel.state.value.isLoading).isTrue()
         }
 
     @Test
     fun `should set loading to false when pagination load changed to not loading`() =
         testScope.runTest {
-            // Given
             val loadState = LoadState.NotLoading(true)
 
-            // When
             viewModel.onPagingLoadStateChanged(
                 CombinedLoadStates(
                     refresh = loadState,
@@ -243,17 +232,14 @@ class ListDetailsViewModelTest {
             )
             advanceUntilIdle()
 
-            // Then
             assertThat(viewModel.state.value.isLoading).isFalse()
         }
 
     @Test
     fun `should set error ui state when pagination load changed to error`() = testScope.runTest {
-        // Given
         val loadState = LoadState.Error(error = NetworkException())
         loadState.error
 
-        // When
         viewModel.onPagingLoadStateChanged(
             CombinedLoadStates(
                 refresh = loadState,
@@ -265,7 +251,6 @@ class ListDetailsViewModelTest {
         )
         advanceUntilIdle()
 
-        // Then
         viewModel.state.test {
             assertThat(awaitItem().error).isEqualTo(ListDetailsUiState.ListDetailsError.NoNetwork)
         }

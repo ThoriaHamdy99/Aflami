@@ -25,7 +25,6 @@ class GetListMediaItemsFromListUseCaseTest {
 
     @Test
     fun `should call getMoviesFromList on userListRepository`() = runTest {
-        // Given
         val listId = 1L
         val page = 1
         val emptyResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
@@ -34,16 +33,13 @@ class GetListMediaItemsFromListUseCaseTest {
         )
         coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyResult
 
-        // When
         getListMediaItemsFromListUseCase(listId, page)
 
-        // Then
         coVerify(exactly = 1) { userListRepository.getMoviesAndTvShowsFromList(listId, page) }
     }
 
     @Test
     fun `should return empty list userListRepository return empty list`() = runTest {
-        // Given
         val listId = 1L
         val page = 1
         val emptyResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
@@ -52,16 +48,13 @@ class GetListMediaItemsFromListUseCaseTest {
         )
         coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyResult
 
-        // When
         val result = getListMediaItemsFromListUseCase(listId, page)
 
-        // Then
         assertThat(result).isEqualTo(emptyResult)
     }
 
     @Test
     fun `should return list of movies when userListRepository return list successfully`() = runTest {
-        // Given
         val listId = 1L
         val page = 1
         val repositoryResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
@@ -70,10 +63,8 @@ class GetListMediaItemsFromListUseCaseTest {
         )
         coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns repositoryResult
 
-        // When
         val result = getListMediaItemsFromListUseCase(listId, page)
 
-        // Then
         assertThat(result.listDetailsMovies).containsExactlyElementsIn(specificMovieList)
     }
 
