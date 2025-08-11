@@ -45,11 +45,11 @@ import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre
 import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsInteractionListener
 import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsUiState
-import com.amsterdam.viewmodel.categoriesDetails.CategoriesDetailsViewModel
+import com.amsterdam.viewmodel.categoriesDetails.CategoriesMoviesDetailsViewModel
 
 @Composable
 fun CategoriesMoviesDetailsScreen(
-    viewModel: CategoriesDetailsViewModel = hiltViewModel()
+    viewModel: CategoriesMoviesDetailsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current

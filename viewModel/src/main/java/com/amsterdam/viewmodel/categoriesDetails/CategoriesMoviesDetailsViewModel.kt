@@ -12,7 +12,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class CategoriesDetailsViewModel @Inject constructor(
+class CategoriesMoviesDetailsViewModel @Inject constructor(
     private val getMoviesByGenreIdUseCase: GetMoviesByGenreIdUseCase,
     private val categoriesMovieDetailsArgs: CategoriesMovieDetailsArgs,
     dispatcherProvider: DispatcherProvider
