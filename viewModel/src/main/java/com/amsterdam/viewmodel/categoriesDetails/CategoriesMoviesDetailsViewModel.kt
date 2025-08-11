@@ -18,7 +18,6 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 @HiltViewModel
 class CategoriesMoviesDetailsViewModel @Inject constructor(
@@ -36,39 +35,44 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
         val initialGenre = MovieGenre.valueOf(categoriesMovieDetailsArgs.genre!!)
         currentGenre.value = initialGenre
 
-        val pagingFlow = currentGenre.flatMapLatest { genre ->
-            Pager(
-                config = PagingConfig(pageSize = 20),
-                pagingSourceFactory = {
-                    PagingSource { page ->
-                        getMoviesByGenreIdUseCase(genre!!, page)
+        val pagingFlow = currentGenre
+            .flatMapLatest { genre ->
+                Pager(
+                    config = PagingConfig(pageSize = 20),
+                    pagingSourceFactory = {
+                        PagingSource { page ->
+                            getMoviesByGenreIdUseCase(genre!!, page)
+                        }
                     }
-                }
-            ).flow.map { pagingData -> pagingData.map { it.toMovieUiState() } }
-        }.cachedIn(viewModelScope)
+                ).flow.map { pagingData -> pagingData.map { it.toMovieUiState() } }
+            }
+            .cachedIn(viewModelScope)
 
-        updateState { it.copy(movies = pagingFlow) }
+        updateState {
+            it.copy(
+                movies = pagingFlow,
+                selectedGenreName = initialGenre.name,
+                movieGenres = it.movieGenres.map { genreItem ->
+                    genreItem.copy(
+                        selectableMovieGenre = genreItem.selectableMovieGenre.copy(
+                            isSelected = genreItem.selectableMovieGenre.item == initialGenre
+                        )
+                    )
+                }
+            )
+        }
     }
 
-
     override fun onClickRetryRequest() {
-        val selectedGenre = state.value.selectedGenreName
-        if (selectedGenre.isNotEmpty()) {
-            getMovieByGenre(MovieGenre.valueOf(selectedGenre))
+        currentGenre.value?.let {
+            currentGenre.value = it
         }
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
-        when (val refreshState = loadStates.refresh
-        ) {
-            is LoadState.Loading -> {
-                updateState { it.copy(isLoading = true, errorUiState = null) }
-            }
-
-            is LoadState.NotLoading -> {
-                updateState { it.copy(isLoading = false) }
-            }
-
+        when (val refreshState = loadStates.refresh) {
+            is LoadState.Loading -> updateState { it.copy(isLoading = true, errorUiState = null) }
+            is LoadState.NotLoading -> updateState { it.copy(isLoading = false) }
             is LoadState.Error -> {
                 updateState { it.copy(isLoading = false) }
                 onFetchError(refreshState.error as AflamiException)
@@ -94,42 +98,19 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
         sendNewNavigationEffect(CategoriesMoviesDetailsUiEffect.NavigateToMovieDetails(movieId))
     }
 
-    private fun getMovieByGenre(genre: MovieGenre) {
+    override fun onGenreClicked(movieGenre: MovieGenre) {
+        currentGenre.value = movieGenre
         updateState {
             it.copy(
-                isLoading = true,
-                selectedGenreName = genre.name,
+                selectedGenreName = movieGenre.name,
                 movieGenres = it.movieGenres.map { genreItem ->
                     genreItem.copy(
                         selectableMovieGenre = genreItem.selectableMovieGenre.copy(
-                            isSelected = genreItem.selectableMovieGenre.item == genre
+                            isSelected = genreItem.selectableMovieGenre.item == movieGenre
                         )
                     )
                 }
             )
         }
-
-        tryToExecute(
-            action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getMoviesByGenreIdUseCase(genre, page)
-                        }
-                    }
-                ).flow
-                    .map { pagingData -> pagingData.map { it.toMovieUiState() } }
-                    .cachedIn(viewModelScope)
-            },
-            onSuccess = { flow ->
-                updateState { it.copy(movies = flow, isLoading = false) }
-            },
-            onError = ::onFetchError
-        )
     }
-    override fun onGenreClicked(movieGenre: MovieGenre) {
-        currentGenre.value = movieGenre
-    }
-
 }
