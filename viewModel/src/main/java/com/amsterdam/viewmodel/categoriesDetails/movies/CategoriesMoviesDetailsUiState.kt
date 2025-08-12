@@ -2,6 +2,7 @@ package com.amsterdam.viewmodel.categoriesDetails.movies
 
 import androidx.paging.PagingData
 import com.amsterdam.domain.exceptions.NetworkException
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.shared.defaultMovieGenres
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.shared.uiStates.MovieGenreItemUiState
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.emptyFlow
 
 
 data class CategoriesMoviesDetailsUiState(
-    val selectedGenreName: String = "",
+    val selectedGenre: MovieGenre = MovieGenre.COMEDY,
     val movieGenres: List<MovieGenreItemUiState> = defaultMovieGenres,
     val movies: Flow<PagingData<MoviesUiState>> = emptyFlow(),
     val isLoading: Boolean = false,
