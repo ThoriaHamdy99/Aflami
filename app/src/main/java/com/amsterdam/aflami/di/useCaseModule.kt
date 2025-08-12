@@ -39,6 +39,7 @@ import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
 import com.amsterdam.domain.useCase.list.CreateNewListUseCase
 import com.amsterdam.domain.useCase.list.DeleteListUseCase
+import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
 import com.amsterdam.domain.useCase.list.GetUserListsUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.myRating.movie.DeleteUserRatedMovieUseCase
@@ -48,7 +49,6 @@ import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
-import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
@@ -170,7 +170,7 @@ object UseCaseModule {
         GetTopRatedMoviesUseCase(movieRepository)
 
     @Provides
-    fun provideGetMoviesByGenreIdUseCase(movieRepository: MovieRepository): GetMoviesByGenreUseCase =
+    fun provideGetMoviesByGenreUseCase(movieRepository: MovieRepository): GetMoviesByGenreUseCase =
         GetMoviesByGenreUseCase(movieRepository)
 
     @Provides
@@ -178,7 +178,7 @@ object UseCaseModule {
         GetContinueWatchingMoviesUseCase(watchHistoryRepository)
 
     @Provides
-    fun provideGetTvShowByGenreIdUseCase(tvShowRepository: TvShowRepository): GetTvShowsByGenreUseCase =
+    fun provideGetTvShowByGenreUseCase(tvShowRepository: TvShowRepository): GetTvShowsByGenreUseCase =
         GetTvShowsByGenreUseCase(tvShowRepository)
 
     @Provides
