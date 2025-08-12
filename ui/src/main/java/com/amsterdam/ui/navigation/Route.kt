@@ -82,4 +82,7 @@ sealed interface Route {
 
     @Serializable
     data object Game : Route
+
+    @Serializable
+    data object ResultScreen: Route
 }
