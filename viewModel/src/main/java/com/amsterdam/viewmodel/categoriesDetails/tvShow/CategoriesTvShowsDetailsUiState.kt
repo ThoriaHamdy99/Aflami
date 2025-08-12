@@ -18,7 +18,7 @@ data class CategoriesTvShowsDetailsUiState(
         data object NoNetworkConnection : CategoriesTvShowsDetailsErrorState
         data object UnknownError : CategoriesTvShowsDetailsErrorState
         companion object {
-            fun toSearchErrorState(exception: Throwable): CategoriesTvShowsDetailsErrorState =
+            fun toCategoriesTvShowsDetailsErrorState(exception: Throwable): CategoriesTvShowsDetailsErrorState =
                 when (exception) {
                     is NetworkException -> NoNetworkConnection
                     else -> UnknownError

@@ -84,7 +84,7 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
         updateState {
             it.copy(
                 errorUiState = CategoriesMoviesDetailsUiState.CategoriesDetailsErrorState
-                    .toSearchErrorState(exception),
+                    .toCategoriesMoviesDetailsErrorState(exception),
                 isLoading = false
             )
         }
