@@ -111,6 +111,7 @@
     <string name="points_acheived">النقاط المحققة</string>
     <string name="total_time">الوقت الكلي</string>
     <string name="finish_game_message">لقد أنهيت اللعبة!</string>
+    <string name="cd_cancel">يلغي</string>
     <!-- -   -->
     <!-- -  -->
     <string name="loading">تحميل…</string>
