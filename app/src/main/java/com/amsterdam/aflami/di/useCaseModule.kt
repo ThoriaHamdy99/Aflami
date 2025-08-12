@@ -26,6 +26,7 @@ import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
+import com.amsterdam.domain.useCase.game.DoGuessReleaseGameHintUseCase
 import com.amsterdam.domain.useCase.game.GenerateMovieReleaseYearQuestionsUseCase
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
@@ -317,17 +318,21 @@ object UseCaseModule {
 
 
     @Provides
-    fun provideTimerHandler(
-    ) = TimerHandler()
+    fun provideTimerHandler() = TimerHandler()
+
+    @Provides
+    fun provideDoGuessReleaseGameHintUseCase()  = DoGuessReleaseGameHintUseCase()
 
     @Provides
     fun provideGuessReleaseYearForMovieGameEngine(
         generateMovieReleaseYearQuestionsUseCase: GenerateMovieReleaseYearQuestionsUseCase,
         getGameDifficultyByDifficultyTypeUseCase: GetGameDifficultyByDifficultyTypeUseCase,
+        doGuessReleaseGameHintUseCase: DoGuessReleaseGameHintUseCase,
         timerHandler: TimerHandler
     ) = GuessReleaseYearForMovieGameEngine(
         generateMovieReleaseYearQuestionsUseCase,
         getGameDifficultyByDifficultyTypeUseCase,
+        doGuessReleaseGameHintUseCase,
         timerHandler
     )
 }

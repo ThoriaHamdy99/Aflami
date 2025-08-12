@@ -6,8 +6,10 @@ import com.amsterdam.entity.GameDifficulty
 
 class GuessReleaseYearForMovieGameEngine(
     private val generateMovieReleaseYearQuestionsUseCase: GenerateMovieReleaseYearQuestionsUseCase,
-    private val getGameDifficultyByDifficultyTypeUseCase : GetGameDifficultyByDifficultyTypeUseCase,
-    private val timerHandler: TimerHandler) {
+    private val getGameDifficultyByDifficultyTypeUseCase: GetGameDifficultyByDifficultyTypeUseCase,
+    private val doGuessReleaseGameHintUseCase: DoGuessReleaseGameHintUseCase,
+    private val timerHandler: TimerHandler
+) {
 
     suspend fun startGame(
         difficultyType: GameDifficulty.DifficultyType,
@@ -28,12 +30,12 @@ class GuessReleaseYearForMovieGameEngine(
     }
 
     data class GuessReleaseYearGame(
-        val hint : Int,
-        val questions : List<MovieReleasedDateQuestion>
+        val hint: Int,
+        val questions: List<MovieReleasedDateQuestion>
     )
 
-    fun useHint(movieReleasedDateQuestion : MovieReleasedDateQuestion){
-
+    fun useHint(movieReleasedDateQuestion: MovieReleasedDateQuestion) {
+        doGuessReleaseGameHintUseCase
     }
 
     //fun submitA
