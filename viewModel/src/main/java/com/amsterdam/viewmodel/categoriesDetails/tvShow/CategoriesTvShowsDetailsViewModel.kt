@@ -7,9 +7,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.details.GetTvShowsByGenreIdUseCase
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.paging.PagingSource
+import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -114,6 +116,15 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
                 }
 
             }
+        }
+    }
+    private fun onFetchError(exception: AflamiException) {
+        updateState {
+            it.copy(
+                errorUiState = CategoriesTvShowsDetailsUiState.CategoriesTvShowsDetailsErrorState
+                    .toCategoriesTvShowsDetailsErrorState(exception),
+                isLoading = false
+            )
         }
     }
 }
