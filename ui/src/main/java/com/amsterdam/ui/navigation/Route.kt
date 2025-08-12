@@ -47,7 +47,7 @@ sealed interface Route {
     ) : Route
     @Serializable
     data class CategoriesTvShowsDetails(
-        private val genreName: String,
+        private val genreName: String
     ) : Route
 
     @Serializable

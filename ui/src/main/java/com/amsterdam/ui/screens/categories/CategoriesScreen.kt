@@ -51,7 +51,7 @@ fun CategoriesScreen(
     val navController = LocalNavController.current
     CategoriesScreenContent(
         interaction = viewModel,
-        state = state,
+        state = state
     )
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -79,7 +79,7 @@ fun CategoriesScreen(
 @Composable
 private fun CategoriesScreenContent(
     interaction: CategoriesInteractionListener,
-    state: CategoriesUiState,
+    state: CategoriesUiState
 ) {
     val lazyState = rememberLazyGridState()
     var appBarHeight by remember { mutableIntStateOf(0) }
