@@ -30,9 +30,7 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     private val currentGenre = MutableStateFlow<TvShowGenre?>(null)
 
     init {
-        val initialGenre = categoriesTvShowsDetailsArgs.genre
-            ?.let { genreStr -> TvShowGenre.entries.find { it.name == genreStr } }
-            ?: TvShowGenre.DRAMA
+        val initialGenre = TvShowGenre.valueOf(categoriesTvShowsDetailsArgs.genre!!)
         currentGenre.value = initialGenre
 
         val pagingFlow = currentGenre
