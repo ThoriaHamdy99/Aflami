@@ -13,4 +13,18 @@ interface UserListRemoteSource {
     suspend fun addMovieToList(listId: Long, movieId: Long): AddItemToListResponse
     suspend fun getMoviesFromList(listId: Long, page: Int): UserListDetailsResponse
     suspend fun deleteMovieFromList(listId: Long, movieId: Long)
+    suspend fun getUserLists(
+        accountId: Int,
+        page: Int,
+        sessionId: String
+    ): RemoteUserListResponse
+    suspend fun addMovieToList(
+        listId: Long,
+        sessionId: String,
+        movieId: Int,
+    ): AddItemToListResponse
+
+    suspend fun getMoviesAndTvShowsFromList(listId: Long, page: Int): UserListDetailsResponse
+    suspend fun deleteList(listId: Long, sessionId: String)
+    suspend fun removeMovieFromList(listId: Long, sessionId: String, movieId: Long)
 }
