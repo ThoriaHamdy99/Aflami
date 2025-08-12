@@ -3,6 +3,7 @@ package com.amsterdam.aflami.di
 import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.repository.CountryRepository
+import com.amsterdam.domain.repository.GamePointsRepository
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.repository.ProfileRepository
 import com.amsterdam.domain.repository.RecentSearchRepository
@@ -24,6 +25,8 @@ import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
+import com.amsterdam.domain.useCase.game.AddGamePointsUseCase
+import com.amsterdam.domain.useCase.game.DeductGamePointsUseCase
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
@@ -52,6 +55,7 @@ import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
+import com.amsterdam.domain.useCase.profile.GetUserPointsUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
@@ -296,6 +300,22 @@ object UseCaseModule {
 
     @Provides
     fun provideGetTotalUserPointsUseCase() = GetTotalUserPointsUseCase()
-   @Provides
-   fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
+
+    @Provides
+    fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
+
+    @Provides
+    fun provideGetGamePointsUseCase(
+        gameRepository: GamePointsRepository
+    ) = GetUserPointsUseCase(gameRepository)
+
+    @Provides
+    fun provideDeductGamePointsUseCase(
+        gameRepository: GamePointsRepository,
+    ) = DeductGamePointsUseCase(gameRepository)
+
+    @Provides
+    fun provideAddGamePointsUseCase(
+        gameRepository: GamePointsRepository
+    ) = AddGamePointsUseCase(gameRepository)
 }
