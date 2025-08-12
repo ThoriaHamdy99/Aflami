@@ -79,4 +79,7 @@ sealed interface Route {
 
     @Serializable
     data object MyRating: Route
+
+    @Serializable
+    data object Game : Route
 }
