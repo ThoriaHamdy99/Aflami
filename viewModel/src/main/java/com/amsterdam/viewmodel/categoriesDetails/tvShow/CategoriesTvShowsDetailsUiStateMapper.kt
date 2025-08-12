@@ -2,6 +2,7 @@ package com.amsterdam.viewmodel.categoriesDetails.tvShow
 
 import com.amsterdam.entity.TvShow
 import com.amsterdam.viewmodel.shared.mappers.toFormattedRating
+import com.amsterdam.viewmodel.utils.toYearString
 
 fun TvShow.toTvShowUiState(): CategoriesTvShowsDetailsUiState.TvShowsUiState{
     return CategoriesTvShowsDetailsUiState.TvShowsUiState(
@@ -9,6 +10,6 @@ fun TvShow.toTvShowUiState(): CategoriesTvShowsDetailsUiState.TvShowsUiState{
         name = name,
         posterImageUrl = posterUrl,
         rate = rating.toFormattedRating(),
-        yearOfRelease =airDate.year.toString(),
+        yearOfRelease = airDate.toYearString(),
     )
 }
