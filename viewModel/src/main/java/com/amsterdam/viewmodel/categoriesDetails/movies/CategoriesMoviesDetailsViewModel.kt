@@ -92,6 +92,9 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
     }
 
     override fun onClickGenre(movieGenre: MovieGenre) {
+        if (state.value.selectedGenre == movieGenre) {
+            return
+        }
         updateUiStateForSelectedGenre(movieGenre)
         loadMoviesForSelectedGenre()
     }

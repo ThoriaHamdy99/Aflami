@@ -44,6 +44,9 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     }
 
     override fun onClickGenre(tvShowGenre: TvShowGenre) {
+        if (state.value.selectedGenre == tvShowGenre) {
+            return
+        }
         updateUiStateForSelectedGenre(tvShowGenre)
         loadTvShowsForSelectedGenre()
     }
