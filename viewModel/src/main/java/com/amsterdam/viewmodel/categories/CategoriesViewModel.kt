@@ -21,7 +21,7 @@ class CategoriesViewModel @Inject constructor(
         genreName: String,
     ) {
         sendNewNavigationEffect(
-            CategoriesUiEffect.NavigateCategoriesDetailsScreen(
+            CategoriesUiEffect.NavigateToCategoriesDetailsScreen(
                 genreName,
             )
         )
@@ -29,7 +29,7 @@ class CategoriesViewModel @Inject constructor(
 
     override fun onNavigateCategoriesTvShowsDetailsScreen(genreName: String) {
         sendNewNavigationEffect(
-            CategoriesUiEffect.NavigateCategoriesTvShowsDetailsScreen(
+            CategoriesUiEffect.NavigateToCategoriesTvShowsDetailsScreen(
                 genreName,
             )
         )
