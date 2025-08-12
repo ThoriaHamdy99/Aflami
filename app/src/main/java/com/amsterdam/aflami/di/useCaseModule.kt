@@ -170,7 +170,7 @@ object UseCaseModule {
         GetTopRatedMoviesUseCase(movieRepository)
 
     @Provides
-    fun provideGetMoviesByGenreId(movieRepository: MovieRepository): GetMoviesByGenreIdUseCase =
+    fun provideGetMoviesByGenreIdUseCase(movieRepository: MovieRepository): GetMoviesByGenreIdUseCase =
         GetMoviesByGenreIdUseCase(movieRepository)
 
     @Provides
