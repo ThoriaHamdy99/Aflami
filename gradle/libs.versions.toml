@@ -55,6 +55,16 @@ uiTooling = "1.8.3"
 splashscreen = "1.0.1"
 uiGraphicsAndroid = "1.7.0"
 
+namespaceAflami= "com.amsterdam.aflami"
+namespaceLocalDatasource = "com.amsterdam.localdatasource"
+namespaceRemoteDataSource = "com.amsterdam.remotedatasource"
+namespaceRepository = "com.amsterdam.repository"
+namespaceViewModel= "com.amsterdam.viewmodel"
+namespaceDesignSystem = "com.amsterdam.designsystem"
+namespaceUi= "com.amsterdam.ui"
+namespaceImageViewer = "com.amsterdam.imageviewer"
+
+
 [libraries]
 android-test-core = { module = "de.mannodermaus.junit5:android-test-core", version.ref = "androidTestCore" }
 android-test-runner = { module = "de.mannodermaus.junit5:android-test-runner", version.ref = "androidTestCore" }
@@ -64,6 +74,7 @@ androidx-foundation = { module = "androidx.compose.foundation:foundation", versi
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingRuntime" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
+androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "pagingRuntime" }
 androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "composeRuntime" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
