@@ -59,6 +59,10 @@ fun CategoriesTvShowsDetailsScreen(
         tvShows.refresh()
     }
 
+    LaunchedEffect(tvShows.loadState) {
+        viewModel.onPagingLoadStateChanged(tvShows.loadState)
+    }
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {

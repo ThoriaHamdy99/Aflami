@@ -66,6 +66,7 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
             it.copy(
                 errorUiState = CategoriesTvShowsDetailsUiState.CategoriesTvShowsDetailsErrorState
                     .toCategoriesTvShowsDetailsErrorState(exception),
+                isLoading = false
             )
         }
     }
