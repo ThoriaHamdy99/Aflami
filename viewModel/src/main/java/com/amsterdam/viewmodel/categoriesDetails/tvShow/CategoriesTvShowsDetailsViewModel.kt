@@ -51,24 +51,12 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
-        when (loadStates.refresh) {
-            is LoadState.Loading -> {
-                updateState {
-                    it.copy(isLoading = true)
-                }
-            }
-
-            is LoadState.NotLoading -> {
-                updateState {
-                    it.copy(isLoading = false)
-                }
-            }
-
+        when (val refreshState = loadStates.refresh) {
+            is LoadState.Loading -> updateState { it.copy(isLoading = true, errorUiState = null) }
+            is LoadState.NotLoading -> updateState { it.copy(isLoading = false) }
             is LoadState.Error -> {
-                updateState {
-                    it.copy(isLoading = false)
-                }
-                onFetchError((loadStates.refresh as LoadState.Error).error as AflamiException)
+                updateState { it.copy(isLoading = false) }
+                onFetchError(refreshState.error as AflamiException)
             }
         }
     }
