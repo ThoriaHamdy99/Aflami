@@ -28,8 +28,6 @@ interface TvShowsRemoteSource {
     suspend fun setTvShowRate(rate: Int, tvShowId: Long): RatingResponse?
     suspend fun getTvShowsByGenreId(genreId: Long, page: Int): RemoteTvShowResponse
 
-    suspend fun getRatedTvShows(sessionId: String): RemoteTvShowResponse
-
     suspend fun deleteTvShowRate(tvShowId: Long)
 
 }

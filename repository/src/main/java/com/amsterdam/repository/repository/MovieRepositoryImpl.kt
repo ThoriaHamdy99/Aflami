@@ -138,12 +138,6 @@ class MovieRepositoryImpl @Inject constructor(
                 page
             ).results
                 .toMovieEntityList()
-
-            movieRemoteDataSource.getMoviesByGenreIds(
-                genresIds,
-                page
-            ).results
-                .toMovieEntityList()
         }
     }
 
