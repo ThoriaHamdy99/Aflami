@@ -4,7 +4,7 @@ import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.TvShowGenre
 
-class GetTvShowsByGenreIdUseCase(
+class GetTvShowsByGenreUseCase(
     private val tvShowRepository: TvShowRepository
 ) {
     suspend operator fun invoke(

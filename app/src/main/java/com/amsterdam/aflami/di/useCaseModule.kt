@@ -19,10 +19,10 @@ import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetMovieCastUseCase
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
-import com.amsterdam.domain.useCase.details.GetMoviesByGenreIdUseCase
+import com.amsterdam.domain.useCase.details.GetMoviesByGenreUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
-import com.amsterdam.domain.useCase.details.GetTvShowsByGenreIdUseCase
+import com.amsterdam.domain.useCase.details.GetTvShowsByGenreUseCase
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
@@ -170,16 +170,16 @@ object UseCaseModule {
         GetTopRatedMoviesUseCase(movieRepository)
 
     @Provides
-    fun provideGetMoviesByGenreIdUseCase(movieRepository: MovieRepository): GetMoviesByGenreIdUseCase =
-        GetMoviesByGenreIdUseCase(movieRepository)
+    fun provideGetMoviesByGenreIdUseCase(movieRepository: MovieRepository): GetMoviesByGenreUseCase =
+        GetMoviesByGenreUseCase(movieRepository)
 
     @Provides
     fun provideGetContinueWatchingMoviesUseCase(watchHistoryRepository: WatchHistoryRepository): GetContinueWatchingMoviesUseCase =
         GetContinueWatchingMoviesUseCase(watchHistoryRepository)
 
     @Provides
-    fun provideGetTvShowByGenreIdUseCase(tvShowRepository: TvShowRepository): GetTvShowsByGenreIdUseCase =
-        GetTvShowsByGenreIdUseCase(tvShowRepository)
+    fun provideGetTvShowByGenreIdUseCase(tvShowRepository: TvShowRepository): GetTvShowsByGenreUseCase =
+        GetTvShowsByGenreUseCase(tvShowRepository)
 
     @Provides
     fun provideGetTvShowCastUseCase(tvShowRepository: TvShowRepository): GetTvShowCastUseCase =

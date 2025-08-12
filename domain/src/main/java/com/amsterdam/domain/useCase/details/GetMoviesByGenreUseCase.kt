@@ -4,7 +4,7 @@ import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
 
-class GetMoviesByGenreIdUseCase(
+class GetMoviesByGenreUseCase(
     private val movieRepository: MovieRepository
 ) {
     suspend operator fun invoke(selectedGenre: MovieGenre, page: Int): List<Movie> {

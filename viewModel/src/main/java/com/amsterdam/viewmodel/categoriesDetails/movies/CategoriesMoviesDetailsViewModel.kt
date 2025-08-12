@@ -9,7 +9,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.useCase.details.GetMoviesByGenreIdUseCase
+import com.amsterdam.domain.useCase.details.GetMoviesByGenreUseCase
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -17,12 +17,11 @@ import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 @HiltViewModel
 class CategoriesMoviesDetailsViewModel @Inject constructor(
-    private val getMoviesByGenreIdUseCase: GetMoviesByGenreIdUseCase,
+    private val getMoviesByGenreIdUseCase: GetMoviesByGenreUseCase,
     private val categoriesMovieDetailsArgs: CategoriesMovieDetailsArgs,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<CategoriesMoviesDetailsUiState, CategoriesMoviesDetailsUiEffect>(

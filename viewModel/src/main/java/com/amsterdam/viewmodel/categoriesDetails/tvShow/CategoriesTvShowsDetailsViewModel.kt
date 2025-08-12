@@ -9,7 +9,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.useCase.details.GetTvShowsByGenreIdUseCase
+import com.amsterdam.domain.useCase.details.GetTvShowsByGenreUseCase
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.map
 
 @HiltViewModel
 class CategoriesTvShowsDetailsViewModel @Inject constructor(
-    private val getTvShowsByGenreIdUseCase: GetTvShowsByGenreIdUseCase,
+    private val getTvShowsByGenreIdUseCase: GetTvShowsByGenreUseCase,
     private val categoriesTvShowsDetailsArgs: CategoriesTvShowsDetailsArgs,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<CategoriesTvShowsDetailsUiState, CategoriesTvShowsDetailsUiEffect>(
