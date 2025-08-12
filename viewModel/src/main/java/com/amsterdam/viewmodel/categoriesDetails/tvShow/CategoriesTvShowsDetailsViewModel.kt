@@ -11,7 +11,6 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.details.GetTvShowsByGenreIdUseCase
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.paging.PagingSource
-import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +31,7 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     private val currentGenre = MutableStateFlow<TvShowGenre?>(null)
 
     init {
-        val initialGenre = TvShowGenre.valueOf(categoriesTvShowsDetailsArgs.genre!!)
+        val initialGenre = TvShowGenre.valueOf(categoriesTvShowsDetailsArgs.genreName!!)
         currentGenre.value = initialGenre
 
         val pagingFlow = currentGenre
