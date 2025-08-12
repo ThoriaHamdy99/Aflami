@@ -40,6 +40,8 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.entity.Game
+import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.GuessPicture
 import com.amsterdam.ui.components.guessGame.GuessTitle
@@ -47,6 +49,8 @@ import com.amsterdam.ui.components.guessGame.TimerComponent
 import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
 import com.amsterdam.ui.screens.login.components.LoginBackground
+import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.uiModel
+import com.amsterdam.viewmodel.game.GameEffect
 import com.amsterdam.viewmodel.game.GameInteractionListener
 import com.amsterdam.viewmodel.game.GameQuestionUiState
 import com.amsterdam.viewmodel.game.GameUiState
@@ -60,7 +64,21 @@ fun GameScreen(
     viewModel: GameViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val navController = LocalNavController.current
 
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                GameEffect.CancelGame -> {
+                    navController.popBackStack()
+                }
+
+                GameEffect.GameOver -> {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
     GameScreenContent(
         state = state,
         gameType = state.gameType,
@@ -106,6 +124,7 @@ private fun GameScreenContent(
             GameTopBar(
                 title = topBarTitle,
                 timerUiState = state.timerUiState,
+                onCancelGameClick = interactionListener::onCancelGameClick,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
             Row(
@@ -139,7 +158,14 @@ private fun GameScreenContent(
                     selectedAnswerIndex = state.selectedAnswerIndex,
                     isAnswerCorrect = state.isAnswerCorrect,
                     onHintClick = interactionListener::onUseHint,
-                    onSelectAnswer = interactionListener::onChooseAnswerClick,
+                    onSelectAnswer = { answerIndex, answer ->
+                        interactionListener
+                            .onChooseAnswerClick(
+                                answerIndex,
+                                answer,
+                                state.questions[page].id,
+                            )
+                    },
                 )
             }
 
@@ -169,7 +195,7 @@ fun GameQuestion(
     isHintEnabled: Boolean,
     modifier: Modifier = Modifier,
     onHintClick: () -> Unit = {},
-    onSelectAnswer: (Int) -> Unit = {},
+    onSelectAnswer: (answerIndex: Int, answer: String) -> Unit = { _, _ -> },
 ) {
     Column(
         modifier = modifier,
@@ -216,12 +242,17 @@ fun GameQuestion(
                         AnswerStatus.Unselected
                 }
 
+                val answerTitle = when (gameType) {
+                    Game.GameType.GUESS_MOVIE_BY_GENRE -> stringResource(MovieGenre.valueOf(answer).uiModel.displayableName)
+                    else -> answer
+                }
+
                 AnswerSelectionItem(
-                    text = answer,
+                    text = answerTitle,
                     status = state,
                     onClick = {
                         if (isAnswerCorrect != null) return@AnswerSelectionItem
-                        onSelectAnswer(index)
+                        onSelectAnswer(index, answer)
                     },
                 )
             }
@@ -272,6 +303,7 @@ private fun GameScreenPreview() {
                     questions =
                         listOf(
                             GameQuestionUiState(
+                                id = 1L,
                                 questionData = "A",
                                 answers =
                                     listOf(
@@ -282,6 +314,7 @@ private fun GameScreenPreview() {
                                     ),
                             ),
                             GameQuestionUiState(
+                                id = 2L,
                                 questionData = "B",
                                 answers =
                                     listOf(
@@ -292,6 +325,7 @@ private fun GameScreenPreview() {
                                     ),
                             ),
                             GameQuestionUiState(
+                                id = 3L,
                                 questionData = "C",
                                 answers =
                                     listOf(
@@ -302,6 +336,7 @@ private fun GameScreenPreview() {
                                     ),
                             ),
                             GameQuestionUiState(
+                                id = 4L,
                                 questionData = "D",
                                 answers =
                                     listOf(
@@ -317,8 +352,12 @@ private fun GameScreenPreview() {
             interactionListener =
                 object : GameInteractionListener {
                     override fun onCancelGameClick() {}
-
-                    override fun onChooseAnswerClick(answerIndex: Int) {}
+                    override fun onChooseAnswerClick(
+                        answerIndex: Int,
+                        answer: String,
+                        questionId: Long
+                    ) {
+                    }
 
                     override fun onUseHint() {}
 

@@ -19,7 +19,7 @@ interface MovieRemoteSource {
 
     suspend fun getMovieDetailsById(movieId: Long, sessionId: String = ""): RemoteMovieDetailsResponse
 
-    suspend fun getPopularMovies(): RemoteMovieResponse
+    suspend fun getPopularMovies(page: Int = 1): RemoteMovieResponse
 
     suspend fun getUpcomingMovies(): RemoteMovieResponse
 

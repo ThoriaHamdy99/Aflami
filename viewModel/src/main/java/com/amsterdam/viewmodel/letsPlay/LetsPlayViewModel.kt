@@ -46,8 +46,8 @@ class LetsPlayViewModel @Inject constructor(
     }
 
     override fun onClickStartGame() {
-        updateState { it.copy(selectedGameTypeUiState = null) }
-        sendNewEffect(LetsPlayEffect.NavigateToGameScreen)
+        val difficultyLevelName =
+            state.value.selectedDifficultyLevel?.difficultyLevel?.name ?: return
+        sendNewEffect(LetsPlayEffect.NavigateToGameScreen(difficulty = difficultyLevelName))
     }
-
 }

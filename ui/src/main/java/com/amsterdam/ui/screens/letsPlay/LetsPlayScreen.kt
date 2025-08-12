@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.GameCard
-import com.amsterdam.ui.navigation.Route
+import com.amsterdam.ui.navigation.Route.Game
 import com.amsterdam.ui.screens.letsPlay.component.DifficultyLevelDialog
 import com.amsterdam.ui.screens.letsPlay.component.PlayScreenAppBar
 import com.amsterdam.viewmodel.letsPlay.LetsPlayEffect
@@ -33,6 +33,7 @@ import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState
 import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState.GameDifficultyUiState
 import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState.GameUiState.GameTypeUiState
 import com.amsterdam.viewmodel.letsPlay.LetsPlayViewModel
+import com.amsterdam.viewmodel.letsPlay.toGameType
 
 @Composable
 fun LetsPlayScreen(viewModel: LetsPlayViewModel = hiltViewModel()) {
@@ -42,9 +43,12 @@ fun LetsPlayScreen(viewModel: LetsPlayViewModel = hiltViewModel()) {
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                LetsPlayEffect.NavigateToGameScreen -> {
-                    navController.navigate(Route.Game)
-                }
+                is LetsPlayEffect.NavigateToGameScreen -> navController.navigate(
+                    Game(
+                        difficulty = effect.difficulty,
+                        gameType = state.value.selectedGameTypeUiState?.toGameType()!!,
+                    ),
+                )
             }
         }
     }

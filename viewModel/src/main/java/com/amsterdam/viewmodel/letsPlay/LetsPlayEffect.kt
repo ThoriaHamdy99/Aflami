@@ -1,5 +1,5 @@
 package com.amsterdam.viewmodel.letsPlay
 
 sealed interface LetsPlayEffect {
-    object NavigateToGameScreen : LetsPlayEffect
+    data class NavigateToGameScreen(val difficulty: String) : LetsPlayEffect
 }

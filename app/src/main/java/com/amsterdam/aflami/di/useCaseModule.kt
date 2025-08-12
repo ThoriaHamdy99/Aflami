@@ -3,29 +3,35 @@ package com.amsterdam.aflami.di
 import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.repository.CountryRepository
+import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.repository.ProfileRepository
 import com.amsterdam.domain.repository.RecentSearchRepository
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.domain.repository.WatchHistoryRepository
+import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.authentication.LoginAsGuestUseCase
 import com.amsterdam.domain.useCase.authentication.LoginWithPasswordUseCase
 import com.amsterdam.domain.useCase.authentication.LogoutUseCase
 import com.amsterdam.domain.useCase.common.AddMovieWatchHistoryUseCase
 import com.amsterdam.domain.useCase.common.AddTvShowWatchHistoryUseCase
+import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
 import com.amsterdam.domain.useCase.details.GetMovieCastUseCase
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
+import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
+import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
+import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
+import com.amsterdam.domain.useCase.game.whichGenre.DoGuessGenreGameHintUseCase
+import com.amsterdam.domain.useCase.game.whichGenre.GetGenreQuestionsUseCase
+import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreGameEngin
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
-import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
-import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
-import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
@@ -34,18 +40,18 @@ import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
+import com.amsterdam.domain.useCase.list.CreateNewListUseCase
+import com.amsterdam.domain.useCase.list.DeleteListUseCase
+import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
+import com.amsterdam.domain.useCase.list.GetUserListsUseCase
+import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.myRating.movie.DeleteUserRatedMovieUseCase
 import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase
 import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
-import com.amsterdam.domain.useCase.list.CreateNewListUseCase
-import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
-import com.amsterdam.domain.useCase.list.DeleteListUseCase
-import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
-import com.amsterdam.domain.useCase.list.GetUserListsUseCase
-import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
@@ -296,6 +302,35 @@ object UseCaseModule {
 
     @Provides
     fun provideGetTotalUserPointsUseCase() = GetTotalUserPointsUseCase()
-   @Provides
-   fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
+
+    @Provides
+    fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
+
+    @Provides
+    fun provideGetGameDifficultyByDifficultyTypeUseCase(
+    ) = GetGameDifficultyByDifficultyTypeUseCase()
+
+    @Provides
+    fun provideGetGenreQuestionsUseCase(
+        gameRepository: GameRepository
+    ) = GetGenreQuestionsUseCase(gameRepository)
+
+    @Provides
+    fun provideTimerHandler() = TimerHandler()
+
+    @Provides
+    fun provideDoGuessGenreGameHintUseCase() = DoGuessGenreGameHintUseCase()
+
+    @Provides
+    fun provideGuessMovieGenreGameEngin(
+        getGenreQuestionsUseCase: GetGenreQuestionsUseCase,
+        getGameDifficultyByDifficultyTypeUseCase: GetGameDifficultyByDifficultyTypeUseCase,
+        doGuessGenreGameHintUseCase: DoGuessGenreGameHintUseCase,
+        timerHandler: TimerHandler
+    ) = GuessMovieGenreGameEngin(
+        getGenreQuestionsUseCase,
+        getGameDifficultyByDifficultyTypeUseCase,
+        doGuessGenreGameHintUseCase,
+        timerHandler
+    )
 }

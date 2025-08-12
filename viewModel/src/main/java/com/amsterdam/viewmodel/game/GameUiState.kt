@@ -15,6 +15,7 @@ data class GameUiState(
 )
 
 data class GameQuestionUiState(
+    val id: Long,
     val questionData: String,
     val answers: List<String>,
 )
