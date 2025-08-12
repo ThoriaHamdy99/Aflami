@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.categoriesDetails.tvShow
 
-interface CategoriesTvShowsDetailsUiEffect {
+sealed interface CategoriesTvShowsDetailsUiEffect {
     data object NavigateBack : CategoriesTvShowsDetailsUiEffect
     data class NavigateToTvShowDetails(val tvShowId:Long) : CategoriesTvShowsDetailsUiEffect
 }
