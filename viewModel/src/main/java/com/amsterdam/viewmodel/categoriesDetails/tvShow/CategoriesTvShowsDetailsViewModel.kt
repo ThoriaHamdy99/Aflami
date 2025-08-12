@@ -17,8 +17,6 @@ import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
 @HiltViewModel
@@ -34,9 +32,7 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     init {
         getInitialGenre()
         loadTvShowsForSelectedGenre()
-
     }
-
     override fun onBackClicked() {
         sendNewNavigationEffect(CategoriesTvShowsDetailsUiEffect.NavigateBack)
     }
@@ -61,11 +57,13 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
                     it.copy(isLoading = true)
                 }
             }
+
             is LoadState.NotLoading -> {
                 updateState {
                     it.copy(isLoading = false)
                 }
             }
+
             is LoadState.Error -> {
                 updateState {
                     it.copy(isLoading = false)
@@ -80,15 +78,16 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
             it.copy(
                 errorUiState = CategoriesTvShowsDetailsUiState.CategoriesTvShowsDetailsErrorState
                     .toCategoriesTvShowsDetailsErrorState(exception),
-                isLoading = false
             )
         }
     }
+
     private fun updateUiStateForSelectedGenre(tvShowGenre: TvShowGenre) {
         updateState {
             it.copy(
+                isLoading = true,
                 selectedGenre = tvShowGenre,
-                tvShowGenres =state.value.tvShowGenres.map { genreItem ->
+                tvShowGenres = state.value.tvShowGenres.map { genreItem ->
                     genreItem.copy(
                         selectableTvShowGenre = genreItem.selectableTvShowGenre.copy(
                             isSelected = genreItem.selectableTvShowGenre.item == tvShowGenre
@@ -97,8 +96,10 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
                 })
         }
     }
+
     private fun loadTvShowsForSelectedGenre() {
         updateUiStateForSelectedGenre(state.value.selectedGenre)
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
             action = {
                 Pager(
@@ -110,9 +111,9 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
                     }
                 ).flow.map { pagingData -> pagingData.map { it.toTvShowUiState() } }
                     .cachedIn(viewModelScope)
-
             },
             onSuccess = ::onGetTvShowsByGenreSuccess,
+            onCompletion = ::onCompletion
         )
     }
 
@@ -121,9 +122,12 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
             it.copy(tvShows = tvShows)
         }
     }
-    private fun getInitialGenre(){
+
+    private fun getInitialGenre() {
         val initialGenre = TvShowGenre.valueOf(categoriesTvShowsDetailsArgs.genreName!!)
         updateUiStateForSelectedGenre(initialGenre)
     }
+    private fun onCompletion() = updateState { it.copy(isLoading = false) }
+
 }
 
