@@ -111,6 +111,7 @@
     <string name="points_acheived">Points Achieved</string>
     <string name="total_time">Total time</string>
     <string name="finish_game_message">You finished the GAME!</string>
+    <string name="cd_cancel">Cancel</string>
     <!-- -   -->
     <!-- -   -->
     <string name="loading">Loading…</string>
@@ -263,5 +264,6 @@
     <string name="error_mood_movies_loading">Oops! We couldn’t find movies for that mood.</string>
 
     <string name="brightness_message">You will be attacked by a group of bright colors!</string>
+
 
 </resources>
