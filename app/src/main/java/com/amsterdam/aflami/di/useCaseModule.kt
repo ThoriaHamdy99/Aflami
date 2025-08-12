@@ -3,12 +3,14 @@ package com.amsterdam.aflami.di
 import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.repository.CountryRepository
+import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.repository.ProfileRepository
 import com.amsterdam.domain.repository.RecentSearchRepository
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.domain.repository.WatchHistoryRepository
+import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.authentication.LoginAsGuestUseCase
 import com.amsterdam.domain.useCase.authentication.LoginWithPasswordUseCase
@@ -24,8 +26,11 @@ import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
+import com.amsterdam.domain.useCase.game.GenerateMovieReleaseYearQuestionsUseCase
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
+import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
+import com.amsterdam.domain.useCase.game.GuessReleaseYearForMovieGameEngine
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
@@ -251,6 +256,7 @@ object UseCaseModule {
         userListRepository: UserListRepository,
     ): GetUserListsUseCase =
         GetUserListsUseCase(userListRepository)
+
     @Provides
     fun provideAddMovieToListUseCase(userListRepository: UserListRepository): AddMovieToListUseCase =
         AddMovieToListUseCase(userListRepository)
@@ -296,6 +302,32 @@ object UseCaseModule {
 
     @Provides
     fun provideGetTotalUserPointsUseCase() = GetTotalUserPointsUseCase()
-   @Provides
-   fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
+
+    @Provides
+    fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
+
+    @Provides
+    fun provideGenerateMovieReleaseYearQuestionsUseCase(
+        gameRepository: GameRepository
+    ) = GenerateMovieReleaseYearQuestionsUseCase(gameRepository)
+
+    @Provides
+    fun provideGetGameDifficultyByDifficultyTypeUseCase(
+    ) = GetGameDifficultyByDifficultyTypeUseCase()
+
+
+    @Provides
+    fun provideTimerHandler(
+    ) = TimerHandler()
+
+    @Provides
+    fun provideGuessReleaseYearForMovieGameEngine(
+        generateMovieReleaseYearQuestionsUseCase: GenerateMovieReleaseYearQuestionsUseCase,
+        getGameDifficultyByDifficultyTypeUseCase: GetGameDifficultyByDifficultyTypeUseCase,
+        timerHandler: TimerHandler
+    ) = GuessReleaseYearForMovieGameEngine(
+        generateMovieReleaseYearQuestionsUseCase,
+        getGameDifficultyByDifficultyTypeUseCase,
+        timerHandler
+    )
 }

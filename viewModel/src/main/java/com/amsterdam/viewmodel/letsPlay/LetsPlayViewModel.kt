@@ -34,7 +34,13 @@ class LetsPlayViewModel @Inject constructor(
     }
 
     override fun onClickCloseDifficultyLevelDialog() {
-        updateState { it.copy(selectedGameTypeUiState = null, selectedDifficultyLevel = null) }
+        updateState {
+            it.copy(
+                selectedGameTypeUiState = null,
+                selectedDifficultyLevel = null,
+                isStartGameButtonEnable = false
+            )
+        }
     }
 
     override fun onClickGameCard(gameTypeUiState: GameTypeUiState) {
@@ -46,7 +52,26 @@ class LetsPlayViewModel @Inject constructor(
     }
 
     override fun onClickStartGame() {
+        val difficultyLevelName =
+            state.value.selectedDifficultyLevel?.difficultyLevel?.name ?: return
+        val navigateEffect = when (state.value.selectedGameTypeUiState) {
+            GameTypeUiState.GUESS_CHARACTER ->
+                LetsPlayEffect.NavigateToGuessMovieByReleaseScreen(difficultyLevelName)
 
+            GameTypeUiState.GUESS_MOVIE_BY_POSTER ->
+                LetsPlayEffect.NavigateToGuessMovieByReleaseScreen(difficultyLevelName)
+
+            GameTypeUiState.GUESS_MOVIE_BY_RELEASE ->
+                LetsPlayEffect.NavigateToGuessMovieByReleaseScreen(difficultyLevelName)
+
+            GameTypeUiState.GUESS_MOVIE_BY_GENRE ->
+                LetsPlayEffect.NavigateToGuessMovieByReleaseScreen(difficultyLevelName)
+
+            null -> {
+                return
+            }
+        }
+        sendNewNavigationEffect(navigateEffect)
     }
 
 }

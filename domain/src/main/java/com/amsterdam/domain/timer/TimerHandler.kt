@@ -1,26 +1,29 @@
 package com.amsterdam.domain.timer
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
-class TimerHandler(
-    private val scope: CoroutineScope
-) {
+class TimerHandler {
+
+    private val job = Job()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
+
     private var timerJob: Job? = null
     private var endTimeMillis: Long = 0L
     private var isTimerStopped = false
 
     fun startTimer(
-        questionTimeLimitSeconds: Int,
+        totalSeconds: Int,
         onTimerUpdate: (remainingSeconds: Int) -> Unit,
         onTimerFinish: () -> Unit
     ) {
         timerJob?.cancel()
         isTimerStopped = false
-        endTimeMillis = System.currentTimeMillis() + questionTimeLimitSeconds * 1000L
+        endTimeMillis = System.currentTimeMillis() + totalSeconds * 1000L
 
         timerJob = scope.launch {
             while (true) {

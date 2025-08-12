@@ -13,6 +13,7 @@ import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.repository.repository.AppPreferencesRepositoryImpl
 import com.amsterdam.repository.repository.AuthenticationRepositoryImpl
 import com.amsterdam.repository.repository.CountryRepositoryImpl
+import com.amsterdam.repository.repository.GameRepositoryImpl
 import com.amsterdam.repository.repository.MovieRepositoryImpl
 import com.amsterdam.repository.repository.ProfileRepositoryImpl
 import com.amsterdam.repository.repository.RecentSearchRepositoryImpl
@@ -92,5 +93,9 @@ abstract class RepositoryModule {
         profileRepositoryImpl: ProfileRepositoryImpl
     ): ProfileRepository
 
-
+    @Binds
+    @Singleton
+    abstract fun bindGameRepository(
+        gameRepository: GameRepositoryImpl
+    ): GameRepository
 }
