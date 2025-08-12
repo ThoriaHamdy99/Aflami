@@ -1,6 +1,7 @@
 package com.amsterdam.viewmodel.categoriesDetails.tvShow
 
 import com.amsterdam.entity.TvShow
+import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.mappers.toFormattedRating
 import com.amsterdam.viewmodel.utils.toYearString
 

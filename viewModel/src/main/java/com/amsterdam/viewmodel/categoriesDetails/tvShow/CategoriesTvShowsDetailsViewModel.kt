@@ -5,6 +5,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
@@ -15,6 +16,7 @@ import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -28,41 +30,11 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     CategoriesTvShowsDetailsUiState(),
     dispatcherProvider
 ), CategoriesTvShowsDetailsInteractionListener {
-    private val currentGenre = MutableStateFlow<TvShowGenre?>(null)
 
     init {
-        val initialGenre = TvShowGenre.valueOf(categoriesTvShowsDetailsArgs.genreName!!)
-        currentGenre.value = initialGenre
+        getInitialGenre()
+        loadTvShowsForSelectedGenre()
 
-        val pagingFlow = currentGenre
-            .flatMapLatest { genre ->
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getTvShowsByGenreIdUseCase(genre!!, page)
-                        }
-                    }
-                ).flow.map { pagingData -> pagingData.map { it.toTvShowUiState() } }
-            }
-            .cachedIn(viewModelScope)
-
-        updateState {
-            it.copy(
-
-                selectedGenreName = initialGenre.name,
-                tvShowGenres = it.tvShowGenres.map { genreItem ->
-                    genreItem.copy(
-                        selectableTvShowGenre = genreItem.selectableTvShowGenre.copy(
-                            isSelected = genreItem.selectableTvShowGenre.item == initialGenre
-                        )
-                    )
-                },
-                tvShows = pagingFlow
-
-
-            )
-        }
     }
 
     override fun onBackClicked() {
@@ -74,25 +46,12 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     }
 
     override fun onGenreClicked(tvShowGenre: TvShowGenre) {
-        currentGenre.value = tvShowGenre
-        updateState {
-            it.copy(
-                selectedGenreName = tvShowGenre.name,
-                tvShowGenres = it.tvShowGenres.map { genreItem ->
-                    genreItem.copy(
-                        selectableTvShowGenre = genreItem.selectableTvShowGenre.copy(
-                            isSelected = genreItem.selectableTvShowGenre.item == tvShowGenre
-                        )
-                    )
-                }
-            )
-        }
+        updateUiStateForSelectedGenre(tvShowGenre)
+        loadTvShowsForSelectedGenre()
     }
 
     override fun onClickRetryRequest() {
-        currentGenre.value?.let {
-            currentGenre.value = it
-        }
+        loadTvShowsForSelectedGenre()
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
@@ -102,21 +61,20 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
                     it.copy(isLoading = true)
                 }
             }
-
-            is LoadState.Error -> {
-                updateState {
-                    it.copy(isLoading = false)
-                }
-            }
-
             is LoadState.NotLoading -> {
                 updateState {
                     it.copy(isLoading = false)
                 }
-
+            }
+            is LoadState.Error -> {
+                updateState {
+                    it.copy(isLoading = false)
+                }
+                onFetchError((loadStates.refresh as LoadState.Error).error as AflamiException)
             }
         }
     }
+
     private fun onFetchError(exception: AflamiException) {
         updateState {
             it.copy(
@@ -126,4 +84,46 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
             )
         }
     }
+    private fun updateUiStateForSelectedGenre(tvShowGenre: TvShowGenre) {
+        updateState {
+            it.copy(
+                selectedGenre = tvShowGenre,
+                tvShowGenres =state.value.tvShowGenres.map { genreItem ->
+                    genreItem.copy(
+                        selectableTvShowGenre = genreItem.selectableTvShowGenre.copy(
+                            isSelected = genreItem.selectableTvShowGenre.item == tvShowGenre
+                        )
+                    )
+                })
+        }
+    }
+    private fun loadTvShowsForSelectedGenre() {
+        updateUiStateForSelectedGenre(state.value.selectedGenre)
+        tryToExecute(
+            action = {
+                Pager(
+                    config = PagingConfig(pageSize = 20),
+                    pagingSourceFactory = {
+                        PagingSource { page ->
+                            getTvShowsByGenreIdUseCase(state.value.selectedGenre, page)
+                        }
+                    }
+                ).flow.map { pagingData -> pagingData.map { it.toTvShowUiState() } }
+                    .cachedIn(viewModelScope)
+
+            },
+            onSuccess = ::onGetTvShowsByGenreSuccess,
+        )
+    }
+
+    private fun onGetTvShowsByGenreSuccess(tvShows: Flow<PagingData<CategoriesTvShowsDetailsUiState.TvShowsUiState>>) {
+        updateState {
+            it.copy(tvShows = tvShows)
+        }
+    }
+    private fun getInitialGenre(){
+        val initialGenre = TvShowGenre.valueOf(categoriesTvShowsDetailsArgs.genreName!!)
+        updateUiStateForSelectedGenre(initialGenre)
+    }
 }
+
