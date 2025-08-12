@@ -8,7 +8,7 @@ class GetTvShowsByGenreUseCase(
     private val tvShowRepository: TvShowRepository
 ) {
     suspend operator fun invoke(
-       selectedGenre: TvShowGenre,
+        selectedGenre: TvShowGenre,
         page: Int
-    ):List<TvShow> = tvShowRepository.getTvShowsByGenre(listOf(selectedGenre), page)
+    ): List<TvShow> = tvShowRepository.getTvShowsByGenre(selectedGenre, page)
 }

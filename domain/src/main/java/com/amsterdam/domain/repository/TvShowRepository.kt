@@ -25,5 +25,5 @@ interface TvShowRepository {
         seasonNumber: Int,
         episodeNumber: Int
     ): String
-    suspend fun getTvShowsByGenre(tvShowGenres: List<TvShowGenre>, page: Int): List<TvShow>
+    suspend fun getTvShowsByGenre(tvShowGenre: TvShowGenre, page: Int): List<TvShow>
 }

@@ -8,6 +8,6 @@ class GetMoviesByGenreUseCase(
     private val movieRepository: MovieRepository
 ) {
     suspend operator fun invoke(selectedGenre: MovieGenre, page: Int): List<Movie> {
-        return movieRepository.getMoviesByGenres(listOf(selectedGenre), page)
+        return movieRepository.getMoviesByGenre(selectedGenre, page)
     }
 }

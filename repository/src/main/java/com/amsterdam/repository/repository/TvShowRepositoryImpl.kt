@@ -23,7 +23,7 @@ import com.amsterdam.repository.dto.remote.RemoteCategoryResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowItemDto
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
-import com.amsterdam.repository.mapper.local.toDtoList
+import com.amsterdam.repository.mapper.local.toDto
 import com.amsterdam.repository.mapper.local.toEntity
 import com.amsterdam.repository.mapper.remote.toEntity
 import com.amsterdam.repository.mapper.remote.toEntityList
@@ -123,12 +123,12 @@ class TvShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getTvShowsByGenre(
-        tvShowGenres: List<TvShowGenre>,
+        tvShowGenre:TvShowGenre,
         page: Int
     ): List<TvShow> {
-        return tvShowGenres.toDtoList().let { genresIds ->
-            remoteTvDataSource.getTvShowsByGenreIds(
-                genresIds,
+        return tvShowGenre.toDto().let { genreId ->
+            remoteTvDataSource.getTvShowsByGenreId(
+                genreId,
                 page
             ).results.toEntityList()
         }

@@ -90,11 +90,10 @@ class TvRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTvShowsByGenreIds(
-        genresIds: List<Long>,
+    override suspend fun getTvShowsByGenreId(
+        genreId: Long,
         page: Int
     ): RemoteTvShowResponse {
-        return responseCall { tvShowsApiService.getTvShowsByGenreIds(genresIds, page) }
-
+        return responseCall { tvShowsApiService.getTvShowsByGenreIds(listOf(genreId), page) }
     }
 }
