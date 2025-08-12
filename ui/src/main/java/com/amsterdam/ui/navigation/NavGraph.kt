@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.amsterdam.ui.screens.cast.castScreenRoute
 import com.amsterdam.ui.screens.categories.categoriesScreenRoute
-import com.amsterdam.ui.screens.categoriesDetails.movies.categoriesDetailsScreenRoute
+import com.amsterdam.ui.screens.categoriesDetails.movies.categoriesMoviesDetailsScreenRoute
 import com.amsterdam.ui.screens.categoriesDetails.tvShow.categoriesTvShowsDetailsScreen
 import com.amsterdam.ui.screens.continueWatching.continueWatchingScreenRoute
 import com.amsterdam.ui.screens.home.homeScreenRoute
@@ -52,7 +52,7 @@ fun NavGraph(
         listDetailsScreenRoute()
         watchHistoryScreenRoute()
         myRatingScreenRoute()
-        categoriesDetailsScreenRoute()
+        categoriesMoviesDetailsScreenRoute()
         categoriesTvShowsDetailsScreen()
     }
 }
