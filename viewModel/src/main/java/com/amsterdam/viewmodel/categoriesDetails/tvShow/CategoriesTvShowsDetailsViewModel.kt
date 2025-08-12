@@ -33,6 +33,7 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
         getInitialGenre()
         loadTvShowsForSelectedGenre()
     }
+
     override fun onBackClicked() {
         sendNewNavigationEffect(CategoriesTvShowsDetailsUiEffect.NavigateBack)
     }
@@ -74,7 +75,6 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     private fun updateUiStateForSelectedGenre(tvShowGenre: TvShowGenre) {
         updateState {
             it.copy(
-                isLoading = true,
                 selectedGenre = tvShowGenre,
                 tvShowGenres = state.value.tvShowGenres.map { genreItem ->
                     genreItem.copy(
@@ -87,7 +87,6 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     }
 
     private fun loadTvShowsForSelectedGenre() {
-        updateUiStateForSelectedGenre(state.value.selectedGenre)
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             action = {
@@ -116,6 +115,7 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
         val initialGenre = TvShowGenre.valueOf(categoriesTvShowsDetailsArgs.genreName!!)
         updateUiStateForSelectedGenre(initialGenre)
     }
+
     private fun onCompletion() = updateState { it.copy(isLoading = false) }
 
 }

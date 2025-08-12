@@ -32,9 +32,9 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
         getInitialGenre()
         loadMoviesForSelectedGenre()
     }
+
     private fun loadMoviesForSelectedGenre() {
         updateState { it.copy(isLoading = true) }
-        updateUiStateForSelectedGenre(state.value.selectedGenre)
         tryToExecute(
             action = {
                 Pager(
@@ -57,8 +57,9 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
         val initialGenre = MovieGenre.valueOf(categoriesMovieDetailsArgs.genreName!!)
         updateUiStateForSelectedGenre(initialGenre)
     }
+
     override fun onClickRetryRequest() {
-      loadMoviesForSelectedGenre()
+        loadMoviesForSelectedGenre()
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
@@ -92,12 +93,12 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
 
     override fun onGenreClicked(movieGenre: MovieGenre) {
         updateUiStateForSelectedGenre(movieGenre)
+        loadMoviesForSelectedGenre()
     }
 
     private fun updateUiStateForSelectedGenre(movieGenre: MovieGenre) {
         updateState {
             it.copy(
-                isLoading = true,
                 selectedGenre = movieGenre,
                 movieGenres = state.value.movieGenres.map { genreItem ->
                     genreItem.copy(
