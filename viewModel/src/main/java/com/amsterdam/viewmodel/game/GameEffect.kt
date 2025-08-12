@@ -1,3 +1,7 @@
 package com.amsterdam.viewmodel.game
 
-sealed interface GameEffect
+sealed interface GameEffect {
+    object CancelGame : GameEffect
+
+    object GameOver : GameEffect
+}
