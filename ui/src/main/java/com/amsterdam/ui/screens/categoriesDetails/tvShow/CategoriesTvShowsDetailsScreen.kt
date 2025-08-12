@@ -106,7 +106,7 @@ private fun CategoriesTvShowsDetailsContent(
                 modifier = Modifier
                     .onSizeChanged { appBarHeight = it.height },
                 title = stringResource(R.string.tv_shows),
-                onNavigateBackClicked = interactionListener::onBackClicked
+                onNavigateBackClicked = interactionListener::onClickBack
             )
             Row(
                 modifier = Modifier
@@ -125,7 +125,7 @@ private fun CategoriesTvShowsDetailsContent(
                             icon = getTvShowGenreIcon(genre),
                             label = getTvShowGenreLabel(genre),
                             isSelected = genreItem.selectableTvShowGenre.isSelected,
-                            onClick = { interactionListener.onGenreClicked(genre) },
+                            onClick = { interactionListener.onClickGenre(genre) },
                         )
                     }
 
@@ -182,7 +182,7 @@ private fun CategoriesTvShowsDetailsContent(
                                     movieType = stringResource(R.string.tv_shows),
                                     movieYear = tvShow.yearOfRelease,
                                     movieRating = tvShow.rate,
-                                    onClick = { interactionListener.onTvShowCardClicked(tvShow.id) }
+                                    onClick = { interactionListener.onClickTvShowCard(tvShow.id) }
                                 )
 
                             }

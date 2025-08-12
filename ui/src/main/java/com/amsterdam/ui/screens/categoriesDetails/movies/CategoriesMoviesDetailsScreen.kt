@@ -108,7 +108,7 @@ private fun CategoriesMoviesDetailsContent(
                 modifier = Modifier
                     .onSizeChanged { appBarHeight = it.height },
                 title = stringResource(R.string.movies),
-                onNavigateBackClicked = interaction::onBackClicked
+                onNavigateBackClicked = interaction::onClickBack
             )
             Row(
                 modifier = Modifier
@@ -127,7 +127,7 @@ private fun CategoriesMoviesDetailsContent(
                             icon = getMovieGenreIcon(genre),
                             label = getMovieGenreLabel(genre),
                             isSelected = genreItem.selectableMovieGenre.isSelected,
-                            onClick = { interaction.onGenreClicked(genre) },
+                            onClick = { interaction.onClickGenre(genre) },
                         )
                     }
 
@@ -183,7 +183,7 @@ private fun CategoriesMoviesDetailsContent(
                                     movieType = stringResource(R.string.movie),
                                     movieYear = movie.yearOfRelease,
                                     movieRating = movie.rate,
-                                    onClick = { interaction.onMovieCardClicked(movie.id) }
+                                    onClick = { interaction.onClickMovieCard(movie.id) }
                                 )
 
                             }

@@ -34,15 +34,15 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
         loadTvShowsForSelectedGenre()
     }
 
-    override fun onBackClicked() {
+    override fun onClickBack() {
         sendNewNavigationEffect(CategoriesTvShowsDetailsUiEffect.NavigateBack)
     }
 
-    override fun onTvShowCardClicked(tvShowId: Long) {
+    override fun onClickTvShowCard(tvShowId: Long) {
         sendNewNavigationEffect(CategoriesTvShowsDetailsUiEffect.NavigateToTvShowDetails(tvShowId))
     }
 
-    override fun onGenreClicked(tvShowGenre: TvShowGenre) {
+    override fun onClickGenre(tvShowGenre: TvShowGenre) {
         updateUiStateForSelectedGenre(tvShowGenre)
         loadTvShowsForSelectedGenre()
     }

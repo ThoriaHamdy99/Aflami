@@ -83,15 +83,15 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
         }
     }
 
-    override fun onBackClicked() {
+    override fun onClickBack() {
         sendNewNavigationEffect(CategoriesMoviesDetailsUiEffect.NavigateBack)
     }
 
-    override fun onMovieCardClicked(movieId: Long) {
+    override fun onClickMovieCard(movieId: Long) {
         sendNewNavigationEffect(CategoriesMoviesDetailsUiEffect.NavigateToMovieDetails(movieId))
     }
 
-    override fun onGenreClicked(movieGenre: MovieGenre) {
+    override fun onClickGenre(movieGenre: MovieGenre) {
         updateUiStateForSelectedGenre(movieGenre)
         loadMoviesForSelectedGenre()
     }
