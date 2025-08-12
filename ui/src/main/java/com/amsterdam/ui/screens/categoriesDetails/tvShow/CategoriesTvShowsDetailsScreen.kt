@@ -54,9 +54,7 @@ fun CategoriesTvShowsDetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
-    val tvShows = remember(state.selectedGenreName) {
-        state.tvShows
-    }.collectAsLazyPagingItems()
+    val tvShows = state.tvShows.collectAsLazyPagingItems()
     LaunchedEffect(state.selectedGenreName) {
         tvShows.refresh()
     }
