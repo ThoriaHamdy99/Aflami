@@ -44,9 +44,7 @@ class MovieRepositoryImpl @Inject constructor(
     private val movieLocalDataSource: MovieLocalDataSource,
     private val categoryRemoteSource: CategoryRemoteSource,
     private val movieRemoteDataSource: MovieRemoteSource,
-    private val authenticationLocalDataSource: AuthenticationLocalDataSource,
     private val preferences: AppPreferences,
-    val cryptoData: CryptoData,
 ) : MovieRepository {
 
     override suspend fun getMoviesByKeyword(
@@ -54,10 +52,7 @@ class MovieRepositoryImpl @Inject constructor(
         page: Int,
         moviesPerPage: Int
     ): List<Movie> {
-        return getMoviesByKeywordFromRemote(
-            keyword,
-            page
-        )
+        return getMoviesByKeywordFromRemote(keyword, page)
     }
 
     override suspend fun getMoviesByActor(
@@ -65,10 +60,7 @@ class MovieRepositoryImpl @Inject constructor(
         page: Int,
         moviesPerPage: Int
     ): List<Movie> {
-        return getMoviesByActorNameFromRemote(
-            actorName,
-            page
-        )
+        return getMoviesByActorNameFromRemote(actorName, page)
     }
 
     override suspend fun getMoviesByCountry(
@@ -76,10 +68,7 @@ class MovieRepositoryImpl @Inject constructor(
         page: Int,
         moviesPerPage: Int
     ): List<Movie> {
-        return getMoviesByCountryIsoCodeFromRemote(
-            country.countryIsoCode,
-            page
-        )
+        return getMoviesByCountryIsoCodeFromRemote(country.countryIsoCode, page)
     }
 
     override suspend fun getActorsByMovieId(movieId: Long): List<Actor> {
@@ -87,10 +76,7 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMovieDetailsById(movieId: Long): GetMovieDetailsUseCase.MovieDetails {
-        val sessionId =
-            cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
-
-        return movieRemoteDataSource.getMovieDetailsById(movieId, sessionId)
+        return movieRemoteDataSource.getMovieDetailsById(movieId)
             .also {
                 incrementUserInterestByMovie(it.genres)
                 cacheWatchedMovie(it.toMovieItemDto())
@@ -152,7 +138,6 @@ class MovieRepositoryImpl @Inject constructor(
                 page
             ).results
                 .toMovieEntityList()
-
         }
     }
 
@@ -244,37 +229,31 @@ class MovieRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun getMoviesByKeywordFromRemote(
-        keyword: String, page: Int
-    ): List<Movie> {
-        return onSuccessGetRemoteMovies(
-            movieRemoteDataSource.getMoviesByKeyword(keyword, page)
-        )
+    private suspend fun getMoviesByKeywordFromRemote(keyword: String, page: Int): List<Movie> {
+        return onSuccessGetRemoteMovies(movieRemoteDataSource.getMoviesByKeyword(keyword, page))
     }
 
-    private suspend fun getMoviesByActorNameFromRemote(
-        actorName: String, page: Int
-    ): List<Movie> {
-        return movieRemoteDataSource.getActorIdsByName(actorName, page).takeIf { actorIds ->
-            actorIds.isNotEmpty()
-        }?.let { actorIds ->
-            onSuccessGetRemoteMovies(
-                movieRemoteDataSource.getMoviesByActorIds(actorIds, page)
-            )
-        } ?: emptyList()
+    private suspend fun getMoviesByActorNameFromRemote(actorName: String, page: Int): List<Movie> {
+        return movieRemoteDataSource.getActorIdsByName(actorName, page)
+            .takeIf { actorIds -> actorIds.isNotEmpty() }
+            ?.let { actorIds ->
+                onSuccessGetRemoteMovies(movieRemoteDataSource.getMoviesByActorIds(actorIds, page))
+            } ?: emptyList()
     }
 
     private suspend fun getMoviesByCountryIsoCodeFromRemote(
-        countryIsoCode: String, page: Int
+        countryIsoCode: String,
+        page: Int
     ): List<Movie> {
         return onSuccessGetRemoteMovies(
-            movieRemoteDataSource.getMoviesByCountryIsoCode(countryIsoCode, page)
+            movieRemoteDataSource.getMoviesByCountryIsoCode(
+                countryIsoCode,
+                page
+            )
         )
     }
 
-    private fun onSuccessGetRemoteMovies(
-        remoteMovies: RemoteMovieResponse
-    ): List<Movie> {
+    private fun onSuccessGetRemoteMovies(remoteMovies: RemoteMovieResponse): List<Movie> {
         return remoteMovies.results.toMovieEntityList()
     }
 
@@ -285,37 +264,28 @@ class MovieRepositoryImpl @Inject constructor(
 
     private suspend fun onSaveMovieWithCategories(remoteMovie: RemoteMovieItemDto) {
         movieLocalDataSource.upsertMovieWithCategories(
-            movie =
-                remoteMovie.toLocalDto(storedLanguage = preferences.getAppLanguage().first()),
+            movie = remoteMovie.toLocalDto(storedLanguage = preferences.getAppLanguage().first()),
             categoryIds = remoteMovie.genreIds.map(Int::toLong),
             storedLanguage = preferences.getAppLanguage().first()
         )
     }
 
     override suspend fun setMovieRate(rate: Int, movieId: Long) {
-        val sessionId =
-            cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
-        movieRemoteDataSource.setMovieRate(
-            rate = rate.toFloat(),
-            movieId = movieId,
-            sessionId = sessionId
+        movieRemoteDataSource.setMovieRate(rate = rate.toFloat(), movieId = movieId
         )
     }
 
     override suspend fun getUserRatedMovies(): List<UserRatedMovie> {
-        val sessionId =
-            cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
-        return movieRemoteDataSource.getRatedMovies(sessionId).results.toMovieUserRateEntityList()
+        return movieRemoteDataSource.getRatedMovies().results.toMovieUserRateEntityList()
     }
 
     override suspend fun deleteMovieRate(movieId: Long) {
-        val sessionId =
-            cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId()) ?: ""
-        movieRemoteDataSource.deleteMovieRate(movieId = movieId, sessionId = sessionId)
+        movieRemoteDataSource.deleteMovieRate(movieId = movieId)
     }
 
     private suspend fun incrementUserInterestByMovie(remoteCategories: List<RemoteCategoryDto>) {
-        remoteCategories.map(RemoteCategoryDto::id)
+        remoteCategories
+            .map(RemoteCategoryDto::id)
             .map { movieLocalDataSource.incrementGenreInterest(it.toLong()) }
     }
 
@@ -328,12 +298,8 @@ class MovieRepositoryImpl @Inject constructor(
         return categoryLocalDataSource.getMovieCategories()
     }
 
-    private suspend fun saveMovieCategoriesToDatabase(
-        movieCategories: RemoteCategoryResponse
-    ) {
-        categoryLocalDataSource.upsertMovieCategories(
-            movieCategories.genres.toLocalDtoList()
-        )
+    private suspend fun saveMovieCategoriesToDatabase(movieCategories: RemoteCategoryResponse) {
+        categoryLocalDataSource.upsertMovieCategories(movieCategories.genres.toLocalDtoList())
     }
 
 }

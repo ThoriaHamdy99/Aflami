@@ -15,15 +15,12 @@ interface TvShowRepository {
     suspend fun getTvShowByKeyword(keyword: String, page: Int, tvShowsPerPage: Int): List<TvShow>
     suspend fun getTvShowDetails(tvShowId: Long): TvShowDetails
     suspend fun getTvShowSeasons(tvShowId: Long): List<Season>
+    suspend fun getTvShowsByGenre(selectedGenre: TvShowGenre, page: Int): List<TvShow>
     suspend fun getEpisodesBySeasonNumber(tvShowId: Long, seasonNumber: Int): List<Episode>
 
     suspend fun setTvShowRate(rate: Int, tvShowId: Long)
     suspend fun getUserRatedTvShows(): List<UserRatedTvShow>
     suspend fun deleteTvShowRate(tvShowId: Long)
-    suspend fun getEpisodeVideoUrl(
-        tvShowId: Long,
-        seasonNumber: Int,
-        episodeNumber: Int
-    ): String
-    suspend fun getTvShowsByGenre(tvShowGenre: TvShowGenre, page: Int): List<TvShow>
+
+    suspend fun getEpisodeVideoUrl(tvShowId: Long, seasonNumber: Int, episodeNumber: Int): String
 }

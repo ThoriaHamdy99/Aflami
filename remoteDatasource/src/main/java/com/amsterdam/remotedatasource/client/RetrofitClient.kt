@@ -9,6 +9,8 @@ import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.api.ProfileApiService
 import com.amsterdam.remotedatasource.api.TvShowsApiService
 import com.amsterdam.remotedatasource.api.UserListApiService
+import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
+import com.amsterdam.repository.security.CryptoData
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -22,14 +24,16 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitClient(
     private val json: Json,
-    private val preferences: AppPreferencesRepository
+    private val preferences: AppPreferencesRepository,
+    private val authenticationLocalDataSource: AuthenticationLocalDataSource,
+    private val cryptoData: CryptoData
+
 ) {
     private val TOKEN_HEADER_NAME = "Authorization"
     private val LANGUAGE_PARAM_NAME = "language"
     private val SESSION_PARAM_NAME = "session_id"
 
     private val token = BuildConfig.BEARER_TOKEN
-    private val sessionId: String? = null
 
     private val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
@@ -51,13 +55,22 @@ class RetrofitClient(
             val language = runBlocking { preferences.getAppLanguage().first() }
             originalHttpUrlBuilder.addQueryParameter(LANGUAGE_PARAM_NAME, language)
 
-            if (!sessionId.isNullOrBlank()) {
-                originalHttpUrlBuilder.addQueryParameter(SESSION_PARAM_NAME, sessionId)
+            val requireSession = originalRequest.header("X-Require-Session")?.toBoolean() == true
+
+            if (requireSession) {
+                val sessionId = runBlocking {
+                    cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId())
+                }
+
+                if (!sessionId.isNullOrBlank()) {
+                    originalHttpUrlBuilder.addQueryParameter(SESSION_PARAM_NAME, sessionId)
+                }
             }
 
             val newRequest = originalRequest.newBuilder()
                 .url(originalHttpUrlBuilder.build())
                 .header(TOKEN_HEADER_NAME, "Bearer $token")
+                .removeHeader("X-Require-Session")
                 .build()
 
             chain.proceed(newRequest)
