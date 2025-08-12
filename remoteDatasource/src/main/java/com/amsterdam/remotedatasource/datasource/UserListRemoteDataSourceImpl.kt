@@ -20,14 +20,11 @@ class UserListRemoteDataSourceImpl @Inject constructor(
         language: String,
     ): CreateUserListResponse {
         return responseCall {
-            userListApiService.createNewList(
-                listName = listName,
-                language = language
-            )
+            userListApiService.createNewList(listName = listName, language = language)
         }
     }
 
-    override suspend fun getUserLists(accountId: Int, page: Int, ): RemoteUserListResponse {
+    override suspend fun getUserLists(accountId: Int, page: Int): RemoteUserListResponse {
         return responseCall({ userListApiService.getUserLists(accountId, page) }) {
             val response = json.decodeFromString<AuthenticationResponseDto>(it)
             response.statusCode!!
@@ -38,7 +35,10 @@ class UserListRemoteDataSourceImpl @Inject constructor(
         return responseCall { userListApiService.addMediaItemToList(listId, movieId) }
     }
 
-    override suspend fun getMoviesAndTvShowsFromList(listId: Long, page: Int): UserListDetailsResponse {
+    override suspend fun getMoviesAndTvShowsFromList(
+        listId: Long,
+        page: Int
+    ): UserListDetailsResponse {
         return responseCall({ userListApiService.getMoviesAndTvShowsFromList(listId, page) }) {
             val response = json.decodeFromString<AuthenticationResponseDto>(it)
             response.statusCode!!
