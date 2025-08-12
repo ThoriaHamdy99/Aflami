@@ -49,10 +49,8 @@ fun CategoriesScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navController = LocalNavController.current
-    CategoriesScreenContent(
-        interaction = viewModel,
-        state = state
-    )
+    CategoriesScreenContent(interaction = viewModel, state = state)
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
@@ -78,8 +76,7 @@ fun CategoriesScreen(
 
 @Composable
 private fun CategoriesScreenContent(
-    interaction: CategoriesInteractionListener,
-    state: CategoriesUiState
+    interaction: CategoriesInteractionListener, state: CategoriesUiState
 ) {
     val lazyState = rememberLazyGridState()
     var appBarHeight by remember { mutableIntStateOf(0) }
@@ -104,8 +101,7 @@ private fun CategoriesScreenContent(
                     .fillMaxWidth()
                     .onSizeChanged { tabsHeight = it.height },
                 tabs = listOf(
-                    stringResource(R.string.movies),
-                    stringResource(R.string.tv_shows)
+                    stringResource(R.string.movies), stringResource(R.string.tv_shows)
                 ),
                 selectedIndex = state.selectedTabOption.index,
                 onSelectTab = { index -> interaction.onChangeTabOption(TabOption.entries[index]) },
@@ -124,18 +120,15 @@ private fun CategoriesScreenContent(
             ) {
                 when (state.selectedTabOption) {
                     TabOption.MOVIES -> {
-                        items(GenreMovieUiModel.entries) {movieGenre ->
+                        items(GenreMovieUiModel.entries) { movieGenre ->
                             val genre = movieGenre.name
                             CategoryCard(
                                 modifier = Modifier,
                                 categoryName = stringResource(movieGenre.displayName),
                                 categoryImage = painterResource(movieGenre.imageRes),
                                 onClick = {
-                                    interaction.onNavigateCategoriesDetailsScreen(
-                                        genre,
-                                    )
-                                }
-                            )
+                                    interaction.onClickMovieGenreCard(genre)
+                                })
                         }
                     }
 
@@ -147,11 +140,8 @@ private fun CategoriesScreenContent(
                                 categoryName = stringResource(tvShowGenre.displayName),
                                 categoryImage = painterResource(tvShowGenre.imageRes),
                                 onClick = {
-                                    interaction.onNavigateCategoriesTvShowsDetailsScreen(
-                                        genre,
-                                        )
-                                }
-                            )
+                                    interaction.onClickTvShowGenreCard(genre)
+                                })
                         }
                     }
                 }

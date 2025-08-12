@@ -17,7 +17,7 @@ class CategoriesViewModel @Inject constructor(
             it.copy(selectedTabOption = tabOption)
         }
     }
-    override fun onNavigateCategoriesDetailsScreen(
+    override fun onClickMovieGenreCard(
         genreName: String,
     ) {
         sendNewNavigationEffect(
@@ -27,7 +27,7 @@ class CategoriesViewModel @Inject constructor(
         )
     }
 
-    override fun onNavigateCategoriesTvShowsDetailsScreen(genreName: String) {
+    override fun onClickTvShowGenreCard(genreName: String) {
         sendNewNavigationEffect(
             CategoriesUiEffect.NavigateToCategoriesTvShowsDetailsScreen(
                 genreName,
