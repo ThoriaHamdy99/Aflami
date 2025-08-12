@@ -20,6 +20,7 @@ import com.amsterdam.repository.dto.remote.RemoteCategoryDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
+import com.amsterdam.repository.mapper.local.toDto
 import com.amsterdam.repository.mapper.local.toDtoList
 import com.amsterdam.repository.mapper.local.toEntity
 import com.amsterdam.repository.mapper.remote.toEntity
@@ -119,6 +120,25 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>, page: Int): List<Movie> {
         return movieGenres.toDtoList().let { genresIds ->
+            movieRemoteDataSource.getMoviesByGenreIds(
+                genresIds,
+                page
+            ).results
+                .toMovieEntityList()
+        }
+    }
+
+    override suspend fun getMoviesByGenre(
+        movieGenre: MovieGenre,
+        page: Int
+    ): List<Movie> {
+        return movieGenre.toDto().let { genreId ->
+            movieRemoteDataSource.getMoviesByGenreId(
+                genreId,
+                page
+            ).results
+                .toMovieEntityList()
+
             movieRemoteDataSource.getMoviesByGenreIds(
                 genresIds,
                 page
@@ -257,7 +277,8 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setMovieRate(rate: Int, movieId: Long) {
-        movieRemoteDataSource.setMovieRate(rate = rate.toFloat(), movieId = movieId)
+        movieRemoteDataSource.setMovieRate(rate = rate.toFloat(), movieId = movieId
+        )
     }
 
     override suspend fun getUserRatedMovies(): List<UserRatedMovie> {
