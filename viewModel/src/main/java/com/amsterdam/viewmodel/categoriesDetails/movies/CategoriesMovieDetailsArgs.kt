@@ -3,7 +3,7 @@ package com.amsterdam.viewmodel.categoriesDetails.movies
 import androidx.lifecycle.SavedStateHandle
 
 class CategoriesMovieDetailsArgs (savedStateHandle: SavedStateHandle){
-    val genre = savedStateHandle.get<String>(GENRE_NAME)
+    val genreName = savedStateHandle.get<String>(GENRE_NAME)
 
 
     companion object{
