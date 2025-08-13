@@ -1,6 +1,5 @@
 package com.amsterdam.aflami.di
 
-import com.amsterdam.domain.logger.Logger
 import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.repository.CountryRepository
