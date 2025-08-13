@@ -2,7 +2,7 @@ package com.amsterdam.repository.mapper.local
 
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
 import com.amsterdam.repository.dto.local.LocalTvShowDto
-import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
+import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.DisplayName
@@ -15,7 +15,7 @@ class TvShowCategoryLocalMapperTest {
     @DisplayName("should map LocalTvShowCategoryDto to Category correctly")
     fun `toEntity should map correctly`() {
         // Arrange
-        val dto = TvShowWithCategory(
+        val dto = TvShowWithCategories(
             tvShow = LocalTvShowDto(
                 tvShowId = 1,
                 name = "Drama",

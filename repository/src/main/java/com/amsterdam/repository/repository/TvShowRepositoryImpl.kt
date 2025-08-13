@@ -9,14 +9,13 @@ import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.repository.datasource.local.AppPreferences
-import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
 import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
 import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
 import com.amsterdam.repository.dto.local.LocalTvShowDto
-import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
+import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
 import com.amsterdam.repository.dto.remote.EpisodeDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryResponse
@@ -31,7 +30,6 @@ import com.amsterdam.repository.mapper.remote.toTvShowUserRateEntityList
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalDto
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalDtoList
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalTvShowCategoryDtoList
-import com.amsterdam.repository.security.CryptoData
 import com.amsterdam.repository.utils.getCachedOrRemoteData
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Clock
@@ -55,7 +53,7 @@ class TvShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPopularTvShows(): List<TvShow> {
-        return getCachedOrRemoteData<TvShowWithCategory, RemoteTvShowItemDto, TvShow>(
+        return getCachedOrRemoteData<TvShowWithCategories, RemoteTvShowItemDto, TvShow>(
             deleteExpired = ::deleteExpiredPopularTvShows,
             getFromLocal = ::getPopularTvShowsFromLocal,
             getFromRemote = ::getPopularTvShowsFromRemote,
@@ -159,7 +157,7 @@ class TvShowRepositoryImpl @Inject constructor(
         )
     }
 
-    private suspend fun getPopularTvShowsFromLocal(): List<TvShowWithCategory> {
+    private suspend fun getPopularTvShowsFromLocal(): List<TvShowWithCategories> {
         return localTvDataSource.getPopularTvShows(
             preferences.getAppLanguage().first()
         )

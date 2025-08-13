@@ -1,7 +1,7 @@
 package com.amsterdam.repository.datasource.local
 
 import com.amsterdam.repository.dto.local.LocalTvShowDto
-import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
+import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
 import kotlinx.datetime.Instant
 
 interface TvShowLocalDataSource {
@@ -17,7 +17,7 @@ interface TvShowLocalDataSource {
 
     suspend fun getTvShowById(tvShowId: Long, storedLanguage: String): LocalTvShowDto?
 
-    suspend fun getPopularTvShows(storedLanguage: String): List<TvShowWithCategory>
+    suspend fun getPopularTvShows(storedLanguage: String): List<TvShowWithCategories>
 
     suspend fun getTopRatedTvShows(storedLanguage: String): List<LocalTvShowDto>
 

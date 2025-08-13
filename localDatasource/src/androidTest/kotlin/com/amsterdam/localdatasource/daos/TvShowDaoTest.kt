@@ -7,7 +7,7 @@ import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.dto.local.PopularTvShowDto
 import com.amsterdam.repository.dto.local.TopRatedTvShowDto
 import com.amsterdam.repository.dto.local.TvShowCategoryCrossRefDto
-import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
+import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
 import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -175,7 +175,7 @@ private val popularTvShows = listOf(
 )
 
 private val tvShowWithCategories = listOf(
-    TvShowWithCategory(
+    TvShowWithCategories(
         tvShow = tvShow,
         categories = emptyList()
     )

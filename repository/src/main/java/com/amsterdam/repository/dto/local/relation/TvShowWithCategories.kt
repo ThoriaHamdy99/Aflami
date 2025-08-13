@@ -7,7 +7,7 @@ import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
 import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.dto.local.TvShowCategoryCrossRefDto
 
-data class TvShowWithCategory(
+data class TvShowWithCategories(
     @Embedded val tvShow: LocalTvShowDto,
     @Relation(
         parentColumn = "tvShowId",

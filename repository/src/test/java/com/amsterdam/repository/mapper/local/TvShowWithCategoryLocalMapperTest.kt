@@ -4,7 +4,7 @@ import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
 import com.amsterdam.repository.dto.local.LocalTvShowDto
-import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
+import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDate
 import org.junit.Test
@@ -15,7 +15,7 @@ class TvShowWithCategoryLocalMapperTest {
     @Test
     fun `toEntity maps TvShowWithCategory to TvShow correctly`() {
         // Arrange
-        val dto = TvShowWithCategory(
+        val dto = TvShowWithCategories(
             tvShow = LocalTvShowDto(
                 tvShowId = 1,
                 name = "Drama",

@@ -1,10 +1,10 @@
 package com.amsterdam.repository.mapper.local
 
 import com.amsterdam.entity.TvShow
-import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
+import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
 import com.amsterdam.repository.mapper.shared.toTvShowGenre
 
-fun TvShowWithCategory.toEntity(): TvShow =
+fun TvShowWithCategories.toEntity(): TvShow =
     TvShow(
         id = tvShow.tvShowId,
         name = tvShow.name,
