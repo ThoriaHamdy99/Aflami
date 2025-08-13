@@ -1,6 +1,5 @@
 package com.amsterdam.domain.useCase.profile
 
-import com.amsterdam.domain.repository.GamePointsRepository
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

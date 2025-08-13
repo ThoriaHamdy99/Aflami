@@ -267,6 +267,8 @@
     <string name="error_mood_movies_loading">Oops! We couldn’t find movies for that mood.</string>
 
     <string name="brightness_message">You will be attacked by a group of bright colors!</string>
+    <string name="when_is_released">When is released?</string>
+
     <string name="oops_there_are_not_enough_points">Oops, there are not enough points</string>
 
 </resources>

@@ -1,13 +1,11 @@
 package com.amsterdam.remotedatasource.datasource
 
-import android.util.Log
 import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
 import com.amsterdam.repository.dto.remote.RatingResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
-import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import javax.inject.Inject
 
@@ -45,8 +43,8 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         return responseCall { movieApiService.getMovieDetailsById(movieId) }
     }
 
-    override suspend fun getPopularMovies(page: Int): RemoteMovieResponse {
-        return responseCall { movieApiService.getPopularMovies(page) }
+    override suspend fun getPopularMovies(): RemoteMovieResponse {
+        return responseCall { movieApiService.getPopularMovies() }
     }
 
     override suspend fun getUpcomingMovies(): RemoteMovieResponse {
@@ -106,7 +104,9 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         return collectedMovies
     }
 
+
     private suspend fun getPopularMoviesByPage(page: Int): List<RemoteMovieItemDto> {
         return getPopularMovies(page = page).results
     }
+
 }

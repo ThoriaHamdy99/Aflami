@@ -5,6 +5,7 @@ import com.amsterdam.entity.Movie
 import com.amsterdam.repository.datasource.local.GameLocalDataSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteSource
 import com.amsterdam.repository.mapper.remote.toMovieEntityList
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GameRepositoryImpl @Inject constructor(
@@ -12,15 +13,15 @@ class GameRepositoryImpl @Inject constructor(
     private val movieRemoteSource: MovieRemoteSource
 ) : GameRepository {
 
-    override suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<Movie> {
-        return movieRemoteSource.getRandomMoviesWithNotNullDate(requiredMoviesNumber).toMovieEntityList()
-    }
+  override suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<Movie> {
+   return movieRemoteSource.getRandomMoviesWithNotNullDate(requiredMoviesNumber).toMovieEntityList()
+  }
 
     override suspend fun updatePoints(points: Int) {
         gameLocalDataSource.upsertPoints(points)
     }
 
-    override suspend fun getUserPoints(): Int {
+    override fun getUserPoints(): Flow<Int> {
         return gameLocalDataSource.getUserPoints()
     }
 }

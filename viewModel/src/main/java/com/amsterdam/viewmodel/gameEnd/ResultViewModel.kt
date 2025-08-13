@@ -8,8 +8,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResultViewModel @Inject constructor(
-    dispatcherProvider: DispatcherProvider,
-    gameResultArgs: GameResultArgs
+    gameResultArgs: GameResultArgs,
+    dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<ResultUiState, ResultSideEffect>(
     initialState = ResultUiState(),
     dispatcherProvider = dispatcherProvider
