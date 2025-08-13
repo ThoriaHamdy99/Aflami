@@ -1,12 +1,17 @@
-package com.amsterdam.domain.useCase.game
+package com.amsterdam.domain.useCase.game.releaseYear
 
 import com.amsterdam.domain.repository.GameRepository
+import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
+import com.amsterdam.entity.GameDifficulty
+import com.amsterdam.entity.GameDifficulty.DifficultyType
 
 class GenerateMovieReleaseYearQuestionsUseCase(
-    private val gameRepository: GameRepository
+    private val gameRepository: GameRepository,
+    private val getGameDifficultyByDifficultyTypeUseCase: GetGameDifficultyByDifficultyTypeUseCase
 ) {
-    suspend operator fun invoke(questionCount: Int): List<MovieReleasedDateQuestion> {
-        val movies = gameRepository.getRandomMoviesWithNotNullDate(questionCount)
+    suspend operator fun invoke(difficultyType: DifficultyType): List<MovieReleasedDateQuestion> {
+      val questionsCounts =  getGameDifficultyByDifficultyTypeUseCase(difficultyType).totalQuestions
+        val movies = gameRepository.getRandomMoviesWithNotNullDate(questionsCounts)
 
         return movies.map { movie ->
             val correctYear = movie.releaseDate!!.year

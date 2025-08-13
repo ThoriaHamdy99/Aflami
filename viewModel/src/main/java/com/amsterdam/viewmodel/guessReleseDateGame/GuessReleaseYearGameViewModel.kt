@@ -1,8 +1,8 @@
 package com.amsterdam.viewmodel.guessReleseDateGame
 
 import com.amsterdam.domain.timer.TimerHandler
-import com.amsterdam.domain.useCase.game.GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion
-import com.amsterdam.domain.useCase.game.GuessReleaseYearForMovieGameEngine
+import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion
+import com.amsterdam.domain.useCase.game.releaseYear.GuessReleaseYearGameUseCase
 import com.amsterdam.entity.GameDifficulty.DifficultyType
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GuessReleaseYearGameViewModel @Inject constructor(
-    private val gameEngine: GuessReleaseYearForMovieGameEngine,
+    private val guessReleaseYearForMovieGameUseCase: GuessReleaseYearGameUseCase,
     args: GuessReleaseYearGameArgs,
     dispatcherProvider: DispatcherProvider,
     private val timerHandler: TimerHandler
@@ -36,11 +36,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
     }
 
     private suspend fun startTheGame(): List<MovieReleasedDateQuestion> {
-        return gameEngine.startGame(
-            difficultyType,
-            onTimerUpdate = ::onTimerUpdate,
-            onTimeFinish = ::onTimeFinish
-        )
+        return guessReleaseYearForMovieGameUseCase.startGame(difficultyType)
     }
 
     private fun onSuccessGetQuestions(questions: List<MovieReleasedDateQuestion>) {

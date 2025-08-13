@@ -1,6 +1,8 @@
-package com.amsterdam.domain.useCase.game
+package com.amsterdam.domain.useCase.game.releaseYear
 
-import com.amsterdam.entity.GameDifficulty.DifficultyType
+import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
+import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.entity.GameDifficulty
 
 class SubmitGuessReleaseYearAnswerUseCase(
     private val getDifficulty: GetGameDifficultyByDifficultyTypeUseCase,
@@ -9,7 +11,7 @@ class SubmitGuessReleaseYearAnswerUseCase(
     suspend operator fun invoke(
         question: GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion,
         answer: Int,
-        difficultyType: DifficultyType
+        difficultyType: GameDifficulty.DifficultyType
     ): AnswerResult {
         val gameDifficulty = getDifficulty(difficultyType)
         val correct = question.correctChoice == answer

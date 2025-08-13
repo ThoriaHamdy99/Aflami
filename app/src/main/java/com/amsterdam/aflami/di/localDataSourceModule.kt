@@ -154,9 +154,4 @@ abstract class LocalDataSourceBindsModule {
         gameLocalDataSource: GameLocalDataSourceImpl
     ): GameLocalDataSource
 
-    @Binds
-    @Singleton
-    abstract fun bindGamePointsLocalDataSource(
-        gamePointsLocalDataSource: GamePointsLocalDataSourceImpl
-    ): GamePointsLocalDataSource
 }

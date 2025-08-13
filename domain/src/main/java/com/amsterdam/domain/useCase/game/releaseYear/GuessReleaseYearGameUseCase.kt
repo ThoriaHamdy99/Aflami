@@ -1,13 +1,14 @@
-package com.amsterdam.domain.useCase.game
+package com.amsterdam.domain.useCase.game.releaseYear
 
-import com.amsterdam.entity.GameDifficulty.DifficultyType
+import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswerUseCase
+import com.amsterdam.entity.GameDifficulty
 
 class GuessReleaseYearGameUseCase(
-    private val getGameData: GetGuessReleaseYearGameDataUseCase,
+    private val getGameData: GenerateMovieReleaseYearQuestionsUseCase,
     private val doHint: DoGuessReleaseGameHintUseCase,
     private val submitAnswer: SubmitGuessReleaseYearAnswerUseCase
 ) {
-    suspend fun startGame(difficultyType: DifficultyType) =
+    suspend fun startGame(difficultyType: GameDifficulty.DifficultyType) =
         getGameData(difficultyType)
 
     suspend fun giveHint(question: GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion) =
@@ -16,7 +17,6 @@ class GuessReleaseYearGameUseCase(
     suspend fun answer(
         question: GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion,
         answer: Int,
-        difficultyType: DifficultyType
+        difficultyType: GameDifficulty.DifficultyType
     ) = submitAnswer(question, answer, difficultyType)
 }
-
