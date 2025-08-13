@@ -1,9 +1,9 @@
 package com.amsterdam.repository.mapper.local
 
 import com.amsterdam.entity.Movie
-import com.amsterdam.repository.dto.local.LocalMovieDto
+import com.amsterdam.repository.dto.local.MovieLocalDto
 
-fun LocalMovieDto.toEntity(): Movie =
+fun MovieLocalDto.toEntity(): Movie =
     Movie(
         id = movieId,
         name = name,

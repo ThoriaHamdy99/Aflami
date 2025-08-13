@@ -2,7 +2,7 @@
 package com.amsterdam.repository.mapper.local
 
 import com.amsterdam.entity.Country
-import com.amsterdam.repository.dto.local.LocalCountryDto
+import com.amsterdam.repository.dto.local.CountryLocalDto
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -12,7 +12,7 @@ class CountryLocalMapperTest {
     @Test
     fun `toEntity should return Country entity when given LocalCountryDto`() {
         // When
-        val dto = LocalCountryDto(
+        val dto = CountryLocalDto(
             name = "Egypt",
             isoCode = "EG",
             storedLanguage = "en",
@@ -45,8 +45,8 @@ class CountryLocalMapperTest {
     fun `test list of LocalCountryDto is correctly mapped to list of Country`() {
         // Given
         val dtoList = listOf(
-            LocalCountryDto(name = "Egypt", isoCode = "EG", storedLanguage = "ar"),
-            LocalCountryDto(name = "Germany", isoCode = "DE", storedLanguage = "de")
+            CountryLocalDto(name = "Egypt", isoCode = "EG", storedLanguage = "ar"),
+            CountryLocalDto(name = "Germany", isoCode = "DE", storedLanguage = "de")
         )
 
         // When

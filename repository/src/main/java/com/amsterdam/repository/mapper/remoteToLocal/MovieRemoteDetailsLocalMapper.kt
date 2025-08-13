@@ -1,11 +1,11 @@
 package com.amsterdam.repository.mapper.remoteToLocal
 
-import com.amsterdam.repository.dto.local.LocalMovieDto
+import com.amsterdam.repository.dto.local.MovieLocalDto
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
 import com.amsterdam.repository.utils.toSafeLocalDate
 
-fun RemoteMovieDetailsResponse.toLocalDto(storedLanguage: String): LocalMovieDto {
-    return LocalMovieDto(
+fun RemoteMovieDetailsResponse.toLocalDto(storedLanguage: String): MovieLocalDto {
+    return MovieLocalDto(
         movieId = id,
         storedLanguage = storedLanguage,
         name = title,

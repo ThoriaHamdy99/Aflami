@@ -7,6 +7,6 @@ import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 @Entity(
     tableName = DatabaseConstants.MOVIE_CATEGORY_TABLE,
 )
-data class LocalMovieCategoryDto(
+data class MovieCategoryLocalDto(
     @PrimaryKey val categoryId: Long
 )

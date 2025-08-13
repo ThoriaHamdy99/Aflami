@@ -9,7 +9,7 @@ import kotlinx.datetime.Instant
 @Entity(
     tableName = DatabaseConstants.RECENT_SEARCH_TABLE,
 )
-data class LocalSearchDto(
+data class SearchLocalDto(
     @PrimaryKey val searchKeyword: String,
     val dateAdded: Instant = Clock.System.now()
 )

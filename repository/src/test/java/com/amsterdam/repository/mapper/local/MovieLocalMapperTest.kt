@@ -3,7 +3,7 @@ package com.amsterdam.repository.mapper.local
 
 
 import com.amsterdam.entity.Movie
-import com.amsterdam.repository.dto.local.LocalMovieDto
+import com.amsterdam.repository.dto.local.MovieLocalDto
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.DisplayName
@@ -16,7 +16,7 @@ class MovieLocalMapperTest {
     @DisplayName("should return Movie entity when converting from LocalMovieDto")
     fun `toEntity should return Movie when given LocalMovieDto`() {
         // Given
-        val dto = LocalMovieDto(
+        val dto = MovieLocalDto(
             movieId = 101,
             name = "Inception",
             description = "A mind-bending thriller",

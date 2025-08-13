@@ -1,10 +1,10 @@
 package com.amsterdam.repository.mapper.local
 
 import com.amsterdam.entity.category.TvShowGenre
-import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
+import com.amsterdam.repository.dto.local.TvShowCategoryLocalDto
 
 
-fun LocalTvShowCategoryDto.toTvShowGenreEntity(): TvShowGenre = when (categoryId) {
+fun TvShowCategoryLocalDto.toTvShowGenreEntity(): TvShowGenre = when (categoryId) {
     28L -> TvShowGenre.ACTION_ADVENTURE
     16L -> TvShowGenre.ANIMATION
     35L -> TvShowGenre.COMEDY

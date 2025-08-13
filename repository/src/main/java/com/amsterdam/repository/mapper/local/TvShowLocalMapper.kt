@@ -1,9 +1,9 @@
 package com.amsterdam.repository.mapper.local
 
 import com.amsterdam.entity.TvShow
-import com.amsterdam.repository.dto.local.LocalTvShowDto
+import com.amsterdam.repository.dto.local.TvShowLocalDto
 
-fun LocalTvShowDto.toEntity(): TvShow =
+fun TvShowLocalDto.toEntity(): TvShow =
     TvShow(
         id = tvShowId,
         name = name,

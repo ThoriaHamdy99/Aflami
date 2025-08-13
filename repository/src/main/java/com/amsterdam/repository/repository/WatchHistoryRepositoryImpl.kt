@@ -9,8 +9,8 @@ import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
 import com.amsterdam.repository.datasource.local.WatchHistoryLocalDataSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
-import com.amsterdam.repository.dto.local.LocalMovieDto
-import com.amsterdam.repository.dto.local.LocalTvShowDto
+import com.amsterdam.repository.dto.local.MovieLocalDto
+import com.amsterdam.repository.dto.local.TvShowLocalDto
 import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
 import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
@@ -57,7 +57,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
     private suspend fun getMovieByIdFromLocal(movieId: Long, language: String) =
         movieLocalDataSource.getMovieById(movieId, language)
 
-    private suspend fun fetchAndCacheRemoteMovie(movieId: Long, language: String): LocalMovieDto {
+    private suspend fun fetchAndCacheRemoteMovie(movieId: Long, language: String): MovieLocalDto {
         return movieRemoteDataSource.getMovieDetailsById(movieId)
             .also { cacheWatchedMovie(it) }
             .toLocalDto(language)
@@ -95,7 +95,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
     private suspend fun getTvShowByIdFromLocal(tvShowId: Long, language: String) =
         tvShowLocalDataSource.getTvShowById(tvShowId, language)
 
-    private suspend fun fetchAndCacheRemoteTvShow(movieId: Long, language: String): LocalTvShowDto {
+    private suspend fun fetchAndCacheRemoteTvShow(movieId: Long, language: String): TvShowLocalDto {
         return tvShowRemoteSource.getTvShowDetailsById(movieId)
             .also { cacheWatchedTvShow(it) }
             .toLocalDto(language)

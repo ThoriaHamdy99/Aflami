@@ -13,8 +13,8 @@ import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
 import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteDataSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
-import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
-import com.amsterdam.repository.dto.local.LocalTvShowDto
+import com.amsterdam.repository.dto.local.TvShowCategoryLocalDto
+import com.amsterdam.repository.dto.local.TvShowLocalDto
 import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
 import com.amsterdam.repository.dto.remote.EpisodeDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryDto
@@ -64,7 +64,7 @@ class TvShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getTopRatedTvShows(page: Int): List<TvShow> {
-        return getCachedOrRemoteData<LocalTvShowDto, RemoteTvShowItemDto, TvShow>(
+        return getCachedOrRemoteData<TvShowLocalDto, RemoteTvShowItemDto, TvShow>(
             deleteExpired = ::deleteExpiredTopRatedTvShows,
             getFromLocal = ::getTopRatedTvShowsFromLocal,
             getFromRemote = { getTopRatedTvShowsFromRemote(page) },
@@ -182,7 +182,7 @@ class TvShowRepositoryImpl @Inject constructor(
         )
     }
 
-    private suspend fun getTopRatedTvShowsFromLocal(): List<LocalTvShowDto> {
+    private suspend fun getTopRatedTvShowsFromLocal(): List<TvShowLocalDto> {
         return localTvDataSource.getTopRatedTvShows(
             preferences.getAppLanguage().first()
         )
@@ -228,7 +228,7 @@ class TvShowRepositoryImpl @Inject constructor(
             ?: saveTvShowCategoriesToDatabase(categoryRemoteDataSource.getTvShowCategories())
     }
 
-    private suspend fun getTvShowCategoriesFromLocal(): List<LocalTvShowCategoryDto> {
+    private suspend fun getTvShowCategoriesFromLocal(): List<TvShowCategoryLocalDto> {
         return categoryLocalDataSource.getTvShowCategories()
     }
 

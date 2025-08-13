@@ -7,7 +7,7 @@ import com.amsterdam.repository.dto.local.utils.DatabaseConstants
     tableName = DatabaseConstants.COUNTRY_TABLE,
     primaryKeys = ["isoCode", "storedLanguage"]
 )
-data class LocalCountryDto(
+data class CountryLocalDto(
     val isoCode: String,
     val storedLanguage: String,
     val name: String,

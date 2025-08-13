@@ -1,13 +1,13 @@
 package com.amsterdam.repository.mapper.remoteToLocal
 
-import com.amsterdam.repository.dto.local.LocalCountryDto
+import com.amsterdam.repository.dto.local.CountryLocalDto
 import com.amsterdam.repository.dto.remote.RemoteCountryDto
 
-fun RemoteCountryDto.toLocalDto(storedLanguage: String): LocalCountryDto =
-    LocalCountryDto(
+fun RemoteCountryDto.toLocalDto(storedLanguage: String): CountryLocalDto =
+    CountryLocalDto(
         name = nativeName,
         storedLanguage = storedLanguage,
         isoCode = isoCode
     )
 
-fun List<RemoteCountryDto>.toLocalDtoList(storedLanguage: String): List<LocalCountryDto> = map { it.toLocalDto(storedLanguage) }
+fun List<RemoteCountryDto>.toLocalDtoList(storedLanguage: String): List<CountryLocalDto> = map { it.toLocalDto(storedLanguage) }

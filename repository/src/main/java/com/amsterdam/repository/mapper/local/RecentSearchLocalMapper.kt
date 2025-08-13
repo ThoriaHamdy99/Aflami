@@ -1,8 +1,8 @@
 package com.amsterdam.repository.mapper.local
 
-import com.amsterdam.repository.dto.local.LocalSearchDto
+import com.amsterdam.repository.dto.local.SearchLocalDto
 
-fun LocalSearchDto.toEntity(): String =
+fun SearchLocalDto.toEntity(): String =
     searchKeyword
 
-fun List<LocalSearchDto>.toEntityList(): List<String> = map { it.toEntity() }
+fun List<SearchLocalDto>.toEntityList(): List<String> = map { it.toEntity() }

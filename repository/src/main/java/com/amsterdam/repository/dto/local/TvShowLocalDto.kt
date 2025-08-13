@@ -6,21 +6,21 @@ import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 import kotlinx.datetime.LocalDate
 
 @Entity(
-    tableName = DatabaseConstants.MOVIE_TABLE,
-    primaryKeys = ["movieId", "storedLanguage"],
+    tableName = DatabaseConstants.TV_SHOW_TABLE,
+    primaryKeys = ["tvShowId", "storedLanguage"],
     indices = [
-        Index(value = ["movieId", "storedLanguage"], unique = true),
+        Index(value = ["tvShowId", "storedLanguage"], unique = true),
     ]
 )
-data class LocalMovieDto(
-    val movieId: Long,
+data class TvShowLocalDto(
+    val tvShowId: Long,
     val storedLanguage: String,
     val name: String,
     val description: String,
     val poster: String,
-    val releaseDate: LocalDate?,
-    val popularity: Double,
+    val airDate: LocalDate?,
     val rating: Float,
-    val originCountry: String,
-    val movieLength: Int
+    val popularity: Double,
+    val seasonCount: Int,
+    val originCountry: String
 )

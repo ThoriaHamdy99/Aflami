@@ -7,6 +7,6 @@ import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 @Entity(
     tableName = DatabaseConstants.TV_SHOW_CATEGORY_TABLE
 )
-data class LocalTvShowCategoryDto(
+data class TvShowCategoryLocalDto(
     @PrimaryKey val categoryId: Long,
 )

@@ -12,8 +12,8 @@ import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
 import com.amsterdam.repository.datasource.local.MovieLocalDataSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteDataSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
-import com.amsterdam.repository.dto.local.LocalMovieCategoryDto
-import com.amsterdam.repository.dto.local.LocalMovieDto
+import com.amsterdam.repository.dto.local.MovieCategoryLocalDto
+import com.amsterdam.repository.dto.local.MovieLocalDto
 import com.amsterdam.repository.dto.local.relation.MovieWithCategories
 import com.amsterdam.repository.dto.remote.RemoteCategoryDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryResponse
@@ -106,12 +106,12 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getTopRatedMovies(
         page: Int,
     ): List<Movie> {
-        return getCachedOrRemoteData<LocalMovieDto, RemoteMovieItemDto, Movie>(
+        return getCachedOrRemoteData<MovieLocalDto, RemoteMovieItemDto, Movie>(
             deleteExpired = ::deleteExpiredTopRatedMovies,
             getFromLocal = ::getTopRatedMoviesFromLocal,
             getFromRemote = { getTopRatedMoviesFromRemote(page) },
             saveRemoteToDatabase = ::saveTopRatedMovies,
-            mapFromLocalToEntity = LocalMovieDto::toEntity,
+            mapFromLocalToEntity = MovieLocalDto::toEntity,
             mapFromRemoteToEntity = { it.toEntity(isPoster = true) }
         )
     }
@@ -207,7 +207,7 @@ class MovieRepositoryImpl @Inject constructor(
         )
     }
 
-    private suspend fun getTopRatedMoviesFromLocal(): List<LocalMovieDto> {
+    private suspend fun getTopRatedMoviesFromLocal(): List<MovieLocalDto> {
         return movieLocalDataSource.getTopRatedMovies(
             preferences.getAppLanguage().first()
         )
@@ -292,7 +292,7 @@ class MovieRepositoryImpl @Inject constructor(
             ?: saveMovieCategoriesToDatabase(categoryRemoteDataSource.getMovieCategories())
     }
 
-    private suspend fun getMovieCategoriesFromLocal(): List<LocalMovieCategoryDto> {
+    private suspend fun getMovieCategoriesFromLocal(): List<MovieCategoryLocalDto> {
         return categoryLocalDataSource.getMovieCategories()
     }
 

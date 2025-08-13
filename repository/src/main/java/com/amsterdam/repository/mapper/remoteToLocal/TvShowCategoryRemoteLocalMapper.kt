@@ -1,12 +1,12 @@
 package com.amsterdam.repository.mapper.remoteToLocal
 
-import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
+import com.amsterdam.repository.dto.local.TvShowCategoryLocalDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryDto
 
-fun RemoteCategoryDto.toLocalTvShowCategoryDto(storedLanguage: String): LocalTvShowCategoryDto =
-    LocalTvShowCategoryDto(
+fun RemoteCategoryDto.toLocalTvShowCategoryDto(storedLanguage: String): TvShowCategoryLocalDto =
+    TvShowCategoryLocalDto(
         categoryId = this.id.toLong()
     )
 
-fun List<RemoteCategoryDto>.toLocalTvShowCategoryDtoList(storedLanguage: String): List<LocalTvShowCategoryDto> =
+fun List<RemoteCategoryDto>.toLocalTvShowCategoryDtoList(storedLanguage: String): List<TvShowCategoryLocalDto> =
     map { it.toLocalTvShowCategoryDto(storedLanguage) }

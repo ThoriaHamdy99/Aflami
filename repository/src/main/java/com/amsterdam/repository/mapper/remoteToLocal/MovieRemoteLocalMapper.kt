@@ -1,13 +1,13 @@
 package com.amsterdam.repository.mapper.remoteToLocal
 
-import com.amsterdam.repository.dto.local.LocalMovieDto
+import com.amsterdam.repository.dto.local.MovieLocalDto
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.utils.toSafeLocalDate
 
-fun RemoteMovieItemDto.toLocalDto(isPoster : Boolean = true, storedLanguage: String): LocalMovieDto {
+fun RemoteMovieItemDto.toLocalDto(isPoster : Boolean = true, storedLanguage: String): MovieLocalDto {
     val imageUrl = if (isPoster) fullPosterUrl else fullBackdropUrl
 
-    return LocalMovieDto(
+    return MovieLocalDto(
         movieId = id,
         storedLanguage = storedLanguage,
         name = title,
