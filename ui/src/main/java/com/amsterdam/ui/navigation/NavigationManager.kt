@@ -45,6 +45,12 @@ class NavigationManager(
         }
     }
 
+    fun toLetsPlay(clearBackStack: Boolean = false) {
+        navController.navigate(Route.Tab.LetsPlay) {
+            if (clearBackStack) popUpTo(0)
+        }
+    }
+
     // --- Auth & Onboarding ---
     fun toLogin(clearBackStack: Boolean = true) {
         navController.navigate(Route.Login) {
@@ -61,7 +67,7 @@ class NavigationManager(
     }
 
     // --- Search ---
-    fun toSearch() {
+    fun toSearchByKeyword() {
         navController.navigate(Route.Search)
     }
 
@@ -116,12 +122,16 @@ class NavigationManager(
     }
 
     // --- Game ---
-    fun toGame() {
-        navController.navigate(Route.Game)
+    fun toGenreGame(difficulty: String) {
+        navController.navigate(Route.GenreGame(difficulty = difficulty))
     }
 
-    fun toResultScreen() {
-        navController.navigate(Route.ResultScreen)
+    fun toGuessReleaseYearGame(difficulty: String) {
+        navController.navigate(Route.GuessReleaseYearGame(difficulty = difficulty))
+    }
+
+    fun toResultScreen(totalCollectedPoints: Int, totalSpentSeconds: Int) {
+        navController.navigate(Route.ResultScreen(totalCollectedPoints = totalCollectedPoints, totalSpentSeconds = totalSpentSeconds))
     }
 
     @Composable

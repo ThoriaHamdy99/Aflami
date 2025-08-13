@@ -74,7 +74,7 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hil
     LaunchedEffect(Unit) {
         homeViewModel.effect.collectLatest { effect ->
             when (effect) {
-                is NavigateToSearchScreenEffect -> navigationManager.toSearch()
+                is NavigateToSearchScreenEffect -> navigationManager.toSearchByKeyword()
 
                 is NavigateToMovieDetailsEffect -> {
                     navigationManager.toMovieDetails(effect.movieId)

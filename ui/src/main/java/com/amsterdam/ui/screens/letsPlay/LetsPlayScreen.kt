@@ -22,9 +22,8 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.theme.AppTheme
-import com.amsterdam.ui.application.LocalNavController
+import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.GameCard
-import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.letsPlay.component.DifficultyLevelDialog
 import com.amsterdam.ui.screens.letsPlay.component.PlayScreenAppBar
 import com.amsterdam.viewmodel.letsPlay.LetsPlayEffect
@@ -37,17 +36,15 @@ import com.amsterdam.viewmodel.letsPlay.LetsPlayViewModel
 @Composable
 fun LetsPlayScreen(viewModel: LetsPlayViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val navController = LocalNavController.current
+    val navigationManager = LocalNavManager.current
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is LetsPlayEffect.NavigateToGuessMovieByReleaseScreen ->
-                    navController.navigate(Route.GuessReleaseYearGame(effect.difficulty))
+                    navigationManager.toGuessReleaseYearGame(effect.difficulty)
 
-                is LetsPlayEffect.NavigateToGuessMovieByGenreScreen -> navController.navigate(
-                    Route.GenreGame(difficulty = effect.difficulty)
-                )
+                is LetsPlayEffect.NavigateToGuessMovieByGenreScreen -> navigationManager.toGenreGame(effect.difficulty)
             }
         }
     }
