@@ -1,6 +1,6 @@
 package com.amsterdam.domain.useCase.game.releaseYear
 
-import com.amsterdam.domain.exceptions.NoEnoughPointsException
+import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 
@@ -20,7 +20,7 @@ class DoGuessReleaseGameHintUseCase(
         val currentPoints = getTotalUserPointsUseCase()
 
         if (currentPoints < REQUIRED_HINT_POINTS)
-            throw NoEnoughPointsException()
+            throw NotEnoughPointsException()
 
         val choices = movieReleasedDateQuestion.releaseYearChoices.toMutableList()
 
