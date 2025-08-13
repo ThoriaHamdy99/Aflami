@@ -33,21 +33,21 @@ import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState
 import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState.GameDifficultyUiState
 import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState.GameUiState.GameTypeUiState
 import com.amsterdam.viewmodel.letsPlay.LetsPlayViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun LetsPlayScreen(viewModel: LetsPlayViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
-
     LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
-                LetsPlayEffect.NavigateToGameScreen -> {
-                    navController.navigate(Route.Game)
-                }
+                is LetsPlayEffect.NavigateToGuessMovieByReleaseScreen ->
+                    navController.navigate(Route.GuessReleaseYearGame(effect.difficulty))
             }
         }
     }
+
     LetsPlayScreenContent(state = state.value, interactionListener = viewModel)
 }
 
@@ -78,7 +78,7 @@ private fun LetsPlayScreenContent(
                     onCardClick = { interactionListener.onClickGameCard(it.gameTypeUiState) },
                     gameCardImageContentType = gameCardData.gameCardImageContentType,
                     modifier = Modifier.padding(top = 12.dp),
-                    isPlayable = state.totalUserPoint <= it.requiredPoints,
+                    isPlayable = state.totalUserPoint >= it.requiredPoints,
                     unlockPrice = "${it.requiredPoints}"
                 )
             }

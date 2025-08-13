@@ -24,6 +24,8 @@ import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.components.buttons.OutlinedButton
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.R
+import com.amsterdam.ui.application.LocalNavController
+import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.letsPlay.component.CompletionCard
 import com.amsterdam.ui.screens.letsPlay.component.GameResultAppBar
 import com.amsterdam.ui.screens.letsPlay.component.StatCard
@@ -36,17 +38,16 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ResultScreen(
-    viewModel: ResultViewModel = hiltViewModel(),
-    onNavigateToGame: () -> Unit,
-    onNavigateToMenu: () -> Unit
+    viewModel: ResultViewModel = hiltViewModel()
+
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
+   val navController = LocalNavController.current
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is ResultSideEffect.NavigateToGame -> onNavigateToGame()
-                is ResultSideEffect.NavigateBackToMenu -> onNavigateToMenu()
+                is ResultSideEffect.NavigateToGame ->{}
+                is ResultSideEffect.NavigateBackToMenu -> navController.navigate(Route.Tab.LetsPlay)
             }
         }
     }

@@ -3,6 +3,7 @@ package com.amsterdam.repository.datasource.remote
 import com.amsterdam.repository.dto.remote.RatingResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
+import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 
 interface MovieRemoteSource {
@@ -19,7 +20,7 @@ interface MovieRemoteSource {
 
     suspend fun getMovieDetailsById(movieId: Long): RemoteMovieDetailsResponse
 
-    suspend fun getPopularMovies(): RemoteMovieResponse
+    suspend fun getPopularMovies(page: Int = 1): RemoteMovieResponse
 
     suspend fun getUpcomingMovies(): RemoteMovieResponse
 
@@ -32,5 +33,7 @@ interface MovieRemoteSource {
     suspend fun deleteMovieRate(movieId: Long)
 
     suspend fun getMoviesByGenreIds(genresIds: List<Long>, page: Int): RemoteMovieResponse
+
+    suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<RemoteMovieItemDto>
     suspend fun getMoviesByGenreId(genreId: Long, page: Int): RemoteMovieResponse
 }

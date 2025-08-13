@@ -8,7 +8,7 @@ data class LetsPlayUiState(
     val selectedGameTypeUiState: GameTypeUiState? = null,
     val selectedDifficultyLevel: GameDifficultyUiState? = null,
     val isStartGameButtonEnable: Boolean = false,
-    val totalUserPoint: Int = 0
+    val totalUserPoint: Int = 550
 ) {
 
     data class GameDifficultyUiState(
