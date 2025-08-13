@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.games
+package com.amsterdam.ui.screens.games.releaseYear
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute

@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.guessGenre
+package com.amsterdam.ui.screens.games.guessGenre
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,13 +28,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.ui.application.LocalNavController
+import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.GameTopBar
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.GuessTitle
 import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
-import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.uiModel
 import com.amsterdam.viewmodel.game.whichGenre.GameQuestionUiState
@@ -50,7 +49,7 @@ fun GuessGenreScreen(
     viewModel: GuessGenreViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val navController = LocalNavController.current
+    val navigationManager = LocalNavManager.current
     val context = LocalContext.current
 
 
@@ -58,15 +57,13 @@ fun GuessGenreScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 GenreGameEffect.CancelGame -> {
-                    navController.popBackStack()
+                    navigationManager.navigateUp()
                 }
 
                 is GenreGameEffect.GameOver -> {
-                    navController.navigate(
-                        Route.ResultScreen(
-                            totalCollectedPoints = effect.totalEarnedPoints,
-                            totalSpentSeconds = effect.answersTotalTime
-                        )
+                    navigationManager.toResultScreen(
+                        totalCollectedPoints = effect.totalEarnedPoints,
+                        totalSpentSeconds = effect.answersTotalTime
                     )
                 }
 

@@ -130,6 +130,10 @@ class NavigationManager(
         navController.navigate(Route.GuessReleaseYearGame(difficulty = difficulty))
     }
 
+    fun toGuessCharacter(difficulty: String){
+        navController.navigate(Route.GuessCharacter(difficulty = difficulty))
+    }
+
     fun toResultScreen(totalCollectedPoints: Int, totalSpentSeconds: Int) {
         navController.navigate(Route.ResultScreen(totalCollectedPoints = totalCollectedPoints, totalSpentSeconds = totalSpentSeconds))
     }

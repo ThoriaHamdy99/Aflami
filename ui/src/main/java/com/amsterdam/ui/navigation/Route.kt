@@ -85,7 +85,7 @@ sealed interface Route {
     data class GuessReleaseYearGame(val difficulty : String): Route
 
     @Serializable
-    data class GuessCharacter(private val difficulty : String): Route
+    data class GuessCharacter(val difficulty : String): Route
 
     @Serializable
     data class ResultScreen (val totalCollectedPoints: Int , val totalSpentSeconds: Int): Route

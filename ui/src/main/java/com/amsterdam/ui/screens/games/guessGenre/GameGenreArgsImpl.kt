@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.guessGenre
+package com.amsterdam.ui.screens.games.guessGenre
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute

@@ -4,8 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import com.amsterdam.ui.screens.cast.CastScreenArgsImpl
 import com.amsterdam.ui.screens.categoriesDetails.movies.CategoriesMovieDetailsArgsImpl
 import com.amsterdam.ui.screens.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgsImpl
-import com.amsterdam.ui.screens.games.GuessReleaseYearGameArgsImpl
-import com.amsterdam.ui.screens.guessGenre.GameGenreArgsImpl
+import com.amsterdam.ui.screens.games.character.GuessCharacterGameArgsImpl
+import com.amsterdam.ui.screens.games.releaseYear.GuessReleaseYearGameArgsImpl
+import com.amsterdam.ui.screens.games.guessGenre.GameGenreArgsImpl
 import com.amsterdam.ui.screens.letsPlay.GameResultArgsImpl
 import com.amsterdam.ui.screens.listDetails.ListDetailsArgsImpl
 import com.amsterdam.ui.screens.movieDetails.MovieDetailsArgsImpl
@@ -61,7 +62,7 @@ object ViewModelViewModelScope {
     @Provides
     fun provideGuessCharacterGameArgs(
         savedStateHandle: SavedStateHandle
-    ): GuessCharacterGameArgs = GuessCharacterGameArgs(savedStateHandle)
+    ): GuessCharacterGameArgs = GuessCharacterGameArgsImpl(savedStateHandle)
 
     @Provides
     fun provideListDetailsArgs(
