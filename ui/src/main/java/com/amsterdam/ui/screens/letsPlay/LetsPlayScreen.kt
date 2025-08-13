@@ -22,8 +22,9 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.theme.AppTheme
-import com.amsterdam.ui.application.LocalNavManager
+import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.GameCard
+import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.letsPlay.component.DifficultyLevelDialog
 import com.amsterdam.ui.screens.letsPlay.component.PlayScreenAppBar
 import com.amsterdam.viewmodel.letsPlay.LetsPlayEffect
@@ -36,14 +37,17 @@ import com.amsterdam.viewmodel.letsPlay.LetsPlayViewModel
 @Composable
 fun LetsPlayScreen(viewModel: LetsPlayViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val navigationManager = LocalNavManager.current
+    val navController = LocalNavController.current
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                LetsPlayEffect.NavigateToGameScreen -> {
-                    navigationManager.toGame()
-                }
+                is LetsPlayEffect.NavigateToGuessMovieByReleaseScreen ->
+                    navController.navigate(Route.GuessReleaseYearGame(effect.difficulty))
+
+                is LetsPlayEffect.NavigateToGuessMovieByGenreScreen -> navController.navigate(
+                    Route.GenreGame(difficulty = effect.difficulty)
+                )
             }
         }
     }
@@ -77,7 +81,7 @@ private fun LetsPlayScreenContent(
                     onCardClick = { interactionListener.onClickGameCard(it.gameTypeUiState) },
                     gameCardImageContentType = gameCardData.gameCardImageContentType,
                     modifier = Modifier.padding(top = 12.dp),
-                    isPlayable = state.totalUserPoint <= it.requiredPoints,
+                    isPlayable = state.totalUserPoint >= it.requiredPoints,
                     unlockPrice = "${it.requiredPoints}"
                 )
             }
