@@ -1,11 +1,10 @@
 package com.amsterdam.remotedatasource.datasource
 
-import android.util.Log
 import com.amsterdam.remotedatasource.api.AuthenticationApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
-import com.amsterdam.repository.dto.remote.authentication.AuthenticationResponseDto
-import com.amsterdam.repository.dto.remote.authentication.CreateSessionDto
+import com.amsterdam.repository.dto.remote.authentication.AuthenticationRemoteResponse
+import com.amsterdam.repository.dto.remote.authentication.CreateSessionRemoteDto
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
@@ -23,10 +22,10 @@ class AuthenticationRemoteDataSourceImpl @Inject constructor(
         return createSession(activeToken.requestToken ?: "").sessionId
     }
 
-    private suspend fun createRequestToken(): AuthenticationResponseDto {
+    private suspend fun createRequestToken(): AuthenticationRemoteResponse {
         val response =
             responseCall({ authenticationApiService.createRequestToken() }) {
-                val response = json.decodeFromString<AuthenticationResponseDto>(it)
+                val response = json.decodeFromString<AuthenticationRemoteResponse>(it)
                 response.statusCode!!
             }
 
@@ -37,18 +36,18 @@ class AuthenticationRemoteDataSourceImpl @Inject constructor(
         username: String,
         password: String,
         requestToken: String,
-    ): AuthenticationResponseDto {
+    ): AuthenticationRemoteResponse {
         val response =
             responseCall({
                 authenticationApiService.createSessionWithLogin(
-                    CreateSessionDto(
+                    CreateSessionRemoteDto(
                         username = username,
                         password = password,
                         requestToken = requestToken,
                     ),
                 )
             }) {
-                val response = json.decodeFromString<AuthenticationResponseDto>(it)
+                val response = json.decodeFromString<AuthenticationRemoteResponse>(it)
                 response.statusCode!!
             }
 
@@ -57,7 +56,7 @@ class AuthenticationRemoteDataSourceImpl @Inject constructor(
 
     private suspend fun createSession(requestToken: String) =
         responseCall({ authenticationApiService.createSession(requestToken) }) {
-            val response = json.decodeFromString<AuthenticationResponseDto>(it)
+            val response = json.decodeFromString<AuthenticationRemoteResponse>(it)
             response.statusCode!!
         }
 }

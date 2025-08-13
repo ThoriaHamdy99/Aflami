@@ -1,9 +1,9 @@
 package com.amsterdam.repository.mapper.remote
 
 import com.amsterdam.entity.UserList
-import com.amsterdam.repository.dto.remote.RemoteUserListDto
+import com.amsterdam.repository.dto.remote.UserListRemoteDto
 
-fun RemoteUserListDto.toUserList(): UserList {
+fun UserListRemoteDto.toUserList(): UserList {
     return UserList(
         id = id,
         name = name,

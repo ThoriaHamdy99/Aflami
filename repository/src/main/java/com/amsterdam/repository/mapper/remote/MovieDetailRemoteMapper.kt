@@ -2,11 +2,11 @@ package com.amsterdam.repository.mapper.remote
 
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.repository.dto.remote.Rated
-import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
-import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
+import com.amsterdam.repository.dto.remote.MovieDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.MovieItemRemoteDto
 
-fun RemoteMovieDetailsResponse.toMovieDetailsEntity(): MovieDetails {
-    val movieItemDto = RemoteMovieItemDto(
+fun MovieDetailsRemoteResponse.toMovieDetailsEntity(): MovieDetails {
+    val movieItemDto = MovieItemRemoteDto(
         adult = adult,
         backdropPath = backdropPath,
         genreIds = genreIds,
@@ -39,8 +39,8 @@ fun RemoteMovieDetailsResponse.toMovieDetailsEntity(): MovieDetails {
     )
 }
 
-fun RemoteMovieDetailsResponse.toMovieItemDto(): RemoteMovieItemDto {
-    return RemoteMovieItemDto(
+fun MovieDetailsRemoteResponse.toMovieItemDto(): MovieItemRemoteDto {
+    return MovieItemRemoteDto(
         adult = adult,
         backdropPath = backdropPath,
         genreIds = genreIds,

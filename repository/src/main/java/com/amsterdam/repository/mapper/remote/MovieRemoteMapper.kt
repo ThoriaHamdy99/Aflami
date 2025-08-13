@@ -1,11 +1,11 @@
 package com.amsterdam.repository.mapper.remote
 
 import com.amsterdam.entity.Movie
-import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
+import com.amsterdam.repository.dto.remote.MovieItemRemoteDto
 import com.amsterdam.repository.mapper.shared.toMovieGenre
 import com.amsterdam.repository.utils.toSafeLocalDate
 
-fun RemoteMovieItemDto.toEntity(
+fun MovieItemRemoteDto.toEntity(
     isPoster: Boolean = true,
     videoUrl : String = ""
 ): Movie {
@@ -28,5 +28,5 @@ fun RemoteMovieItemDto.toEntity(
 }
 
 
-fun List<RemoteMovieItemDto>.toMovieEntityList(isPoster: Boolean = true): List<Movie> =
+fun List<MovieItemRemoteDto>.toMovieEntityList(isPoster: Boolean = true): List<Movie> =
     map { it.toEntity(isPoster) }

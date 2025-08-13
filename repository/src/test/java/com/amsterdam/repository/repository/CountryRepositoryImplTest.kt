@@ -6,7 +6,7 @@ import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.CountryLocalDataSource
 import com.amsterdam.repository.datasource.remote.CountryRemoteSource
 import com.amsterdam.repository.dto.local.LocalCountryDto
-import com.amsterdam.repository.dto.remote.RemoteCountryDto
+import com.amsterdam.repository.dto.remote.CountryRemoteDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coJustRun
@@ -66,7 +66,7 @@ class CountryRepositoryImplTest {
     fun `getCountries should fetch countries from remote and cache them when local is empty`() =
         runTest {
             // Given
-            val remoteDto1 = RemoteCountryDto(
+            val remoteDto1 = CountryRemoteDto(
                 englishName = "United States",
                 isoCode = "US",
                 nativeName = "الولايات المتحدة"
@@ -106,7 +106,7 @@ class CountryRepositoryImplTest {
             coEvery { localDataSource.getCountries(testLanguage) } throws localException
 
             val remoteDto1 =
-                RemoteCountryDto(englishName = "Canada", isoCode = "CA", nativeName = "كندا")
+                CountryRemoteDto(englishName = "Canada", isoCode = "CA", nativeName = "كندا")
             val remoteCountriesDto = listOf(remoteDto1)
             coEvery { remoteDataSource.getCountries() } returns remoteCountriesDto
 

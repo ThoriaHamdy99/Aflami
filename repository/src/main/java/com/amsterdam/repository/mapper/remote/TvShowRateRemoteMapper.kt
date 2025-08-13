@@ -1,13 +1,13 @@
 package com.amsterdam.repository.mapper.remote
 
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
-import com.amsterdam.repository.dto.remote.RemoteTvShowItemDto
+import com.amsterdam.repository.dto.remote.TvShowRemoteItemDto
 
-fun RemoteTvShowItemDto.toTvShowUserRateEntity(dto: RemoteTvShowItemDto): UserRatedTvShow {
+fun TvShowRemoteItemDto.toTvShowUserRateEntity(dto: TvShowRemoteItemDto): UserRatedTvShow {
     return UserRatedTvShow(
         tvShow = dto.toEntity(),
         userRate = rating.toInt()
     )
 }
 
-fun List<RemoteTvShowItemDto>.toTvShowUserRateEntityList(): List<UserRatedTvShow> = map { it.toTvShowUserRateEntity(it)}
+fun List<TvShowRemoteItemDto>.toTvShowUserRateEntityList(): List<UserRatedTvShow> = map { it.toTvShowUserRateEntity(it)}

@@ -6,10 +6,10 @@ import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.entity.UserList
 import com.amsterdam.repository.datasource.remote.UserListRemoteSource
-import com.amsterdam.repository.dto.remote.AddItemToListResponse
-import com.amsterdam.repository.dto.remote.CreateUserListResponse
-import com.amsterdam.repository.dto.remote.RemoteUserListDto
-import com.amsterdam.repository.dto.remote.RemoteUserListResponse
+import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
+import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
+import com.amsterdam.repository.dto.remote.UserListRemoteDto
+import com.amsterdam.repository.dto.remote.UserListRemoteResponse
 import com.amsterdam.repository.mapper.remote.toMovie
 import com.amsterdam.repository.utils.listItems
 import com.amsterdam.repository.utils.remoteListResponse
@@ -33,7 +33,7 @@ class UserListRepositoryImplTest {
     @Test
     fun `addMovieToList should call addMovieToList from userListRemoteSource`() =
         runTest {
-            coEvery { userListRemoteSource.addMovieToList(listId, movieId) }returns AddItemToListResponse(1, "", true)
+            coEvery { userListRemoteSource.addMovieToList(listId, movieId) }returns AddItemToListRemoteResponse(1, "", true)
 
             userListRepository.addMovieToList(listId, movieId)
 
@@ -44,7 +44,7 @@ class UserListRepositoryImplTest {
     fun `addMovieToList should throw UnknownException when addMovieToList fails`() =
         runTest {
             coEvery { userListRemoteSource.addMovieToList(listId, movieId)
-            } returns AddItemToListResponse(1, "", false)
+            } returns AddItemToListRemoteResponse(1, "", false)
 
             assertThrows<UnknownException> { userListRepository.addMovieToList(listId, movieId) }
         }
@@ -142,10 +142,10 @@ class UserListRepositoryImplTest {
         )
     )
 
-    private val expectedResult = RemoteUserListResponse(
+    private val expectedResult = UserListRemoteResponse(
         page = 1,
         results = listOf(
-            RemoteUserListDto(
+            UserListRemoteDto(
                 id = 1,
                 name = "List 1",
                 description = "Description 1",
@@ -158,5 +158,5 @@ class UserListRepositoryImplTest {
 
     private val page = 1
 
-    val fakeUserListResponse = CreateUserListResponse(1, 1, "", true)
+    val fakeUserListResponse = CreateUserListRemoteResponse(1, 1, "", true)
 }

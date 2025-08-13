@@ -1,32 +1,32 @@
 package com.amsterdam.repository.datasource.remote
 
-import com.amsterdam.repository.dto.remote.EpisodeResponse
-import com.amsterdam.repository.dto.remote.RatingResponse
-import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
-import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
+import com.amsterdam.repository.dto.remote.EpisodeRemoteResponse
+import com.amsterdam.repository.dto.remote.RatingRemoteResponse
+import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
+import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
-import com.amsterdam.repository.dto.remote.VideoResponse
+import com.amsterdam.repository.dto.remote.VideoRemoteResponse
 
 interface TvShowsRemoteSource {
 
-    suspend fun getPopularTvShows(): RemoteTvShowResponse
-    suspend fun getTopRatedTvShows(page: Int): RemoteTvShowResponse
-    suspend fun getTvShowCast(tvShowId: Long): RemoteCastAndCrewResponse
+    suspend fun getPopularTvShows(): TvShowRemoteResponse
+    suspend fun getTopRatedTvShows(page: Int): TvShowRemoteResponse
+    suspend fun getTvShowCast(tvShowId: Long): CastAndCrewRemoteResponse
 
-    suspend fun getTvShowsByKeyword(keyword: String, page: Int, ): RemoteTvShowResponse
+    suspend fun getTvShowsByKeyword(keyword: String, page: Int, ): TvShowRemoteResponse
 
     suspend fun getTvShowDetailsById(tvShowId: Long): TvShowDetailsRemoteResponse
 
-    suspend fun getEpisodesBySeasonNumber(tvShowId: Long, seasonNumber: Int): EpisodeResponse
+    suspend fun getEpisodesBySeasonNumber(tvShowId: Long, seasonNumber: Int): EpisodeRemoteResponse
     suspend fun getEpisodeVideos(
         tvShowId: Long,
         seasonNumber: Int,
         episodeNumber: Int
-    ): VideoResponse
+    ): VideoRemoteResponse
 
-    suspend fun getRatedTvShows(): RemoteTvShowResponse
-    suspend fun setTvShowRate(rate: Int, tvShowId: Long): RatingResponse?
-    suspend fun getTvShowsByGenreId(genreId: Long, page: Int): RemoteTvShowResponse
+    suspend fun getRatedTvShows(): TvShowRemoteResponse
+    suspend fun setTvShowRate(rate: Int, tvShowId: Long): RatingRemoteResponse?
+    suspend fun getTvShowsByGenreId(genreId: Long, page: Int): TvShowRemoteResponse
 
     suspend fun deleteTvShowRate(tvShowId: Long)
 

@@ -1,11 +1,11 @@
 package com.amsterdam.repository.mapper.remote
 
 import com.amsterdam.entity.Review
-import com.amsterdam.repository.dto.remote.review.ReviewDto
+import com.amsterdam.repository.dto.remote.review.ReviewRemoteDto
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-fun ReviewDto.toEntity(): Review {
+fun ReviewRemoteDto.toEntity(): Review {
     return Review(
         id = id.hashCode().toLong(),
         reviewerName = author,
@@ -17,4 +17,4 @@ fun ReviewDto.toEntity(): Review {
     )
 }
 
-fun List<ReviewDto>.toEntityList(): List<Review> = map { it.toEntity() }
+fun List<ReviewRemoteDto>.toEntityList(): List<Review> = map { it.toEntity() }

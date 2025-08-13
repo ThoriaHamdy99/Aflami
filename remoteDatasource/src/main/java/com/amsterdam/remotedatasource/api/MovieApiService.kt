@@ -1,10 +1,10 @@
 package com.amsterdam.remotedatasource.api
 
-import com.amsterdam.repository.dto.remote.RatingResponse
-import com.amsterdam.repository.dto.remote.RemoteActorSearchResponse
-import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
-import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
-import com.amsterdam.repository.dto.remote.RemoteMovieResponse
+import com.amsterdam.repository.dto.remote.RatingRemoteResponse
+import com.amsterdam.repository.dto.remote.ActorSearchRemoteResponse
+import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
+import com.amsterdam.repository.dto.remote.MovieDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.MovieRemoteResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -17,38 +17,38 @@ import retrofit2.http.Query
 interface MovieApiService {
 
     @GET("movie/popular")
-    suspend fun getPopularMovies(): RemoteMovieResponse
+    suspend fun getPopularMovies(): MovieRemoteResponse
 
     @GET("movie/upcoming")
-    suspend fun getUpcomingMovies(): RemoteMovieResponse
+    suspend fun getUpcomingMovies(): MovieRemoteResponse
 
     @GET("search/movie")
     suspend fun getMoviesByKeyword(
         @Query("query") keyword: String,
         @Query("page") page: Int
-    ): RemoteMovieResponse
+    ): MovieRemoteResponse
 
     @GET("search/person")
     suspend fun getActorIdByName(
         @Query("query") name: String,
         @Query("page") page: Int
-    ): RemoteActorSearchResponse
+    ): ActorSearchRemoteResponse
 
     @GET("discover/movie")
     suspend fun getMoviesByActorId(
         @Query("with_cast") actorIds: String
-    ): RemoteMovieResponse
+    ): MovieRemoteResponse
 
     @GET("discover/movie")
     suspend fun getMoviesByCountryIsoCode(
         @Query("with_origin_country") countryIsoCode: String,
         @Query("page") page: Int
-    ): RemoteMovieResponse
+    ): MovieRemoteResponse
 
     @GET("movie/{movieId}/credits")
     suspend fun getCastByMovieId(
         @Path("movieId") movieId: Long
-    ): RemoteCastAndCrewResponse
+    ): CastAndCrewRemoteResponse
 
     @GET("movie/{movieId}")
     @Headers("X-Require-Session: true")
@@ -56,18 +56,18 @@ interface MovieApiService {
         @Path("movieId") movieId: Long,
         @Query("append_to_response") append: String = "reviews,credits,actors,similar,images,videos,account_states",
         @Query("include_video_language") videoLang: String = "en"
-    ): RemoteMovieDetailsResponse
+    ): MovieDetailsRemoteResponse
 
     @GET("discover/movie")
     suspend fun getMoviesByGenreIds(
         @Query("with_genres") genresIds: List<Long>,
         @Query("page") page: Int
-    ): RemoteMovieResponse
+    ): MovieRemoteResponse
 
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(
         @Query("page") page: Int
-    ): RemoteMovieResponse
+    ): MovieRemoteResponse
 
     @Headers("X-Require-Session: true")
     @FormUrlEncoded
@@ -75,13 +75,13 @@ interface MovieApiService {
     suspend fun postMovieRating(
         @Path("movie_id") movieId: Long,
         @Field("value") rate: Float,
-    ): RatingResponse
+    ): RatingRemoteResponse
 
     @Headers("X-Require-Session: true")
     @GET("account/{account_id}/rated/movies")
     suspend fun getRatedMovies(
         @Path("account_id") accountId: Int = 0,
-    ): RemoteMovieResponse
+    ): MovieRemoteResponse
 
     @Headers("X-Require-Session: true")
     @DELETE("movie/{movie_id}/rating")

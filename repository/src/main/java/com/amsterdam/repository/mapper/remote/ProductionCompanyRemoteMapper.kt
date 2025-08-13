@@ -1,9 +1,9 @@
 package com.amsterdam.repository.mapper.remote
 
 import com.amsterdam.entity.ProductionCompany
-import com.amsterdam.repository.dto.remote.ProductionCompanyDto
+import com.amsterdam.repository.dto.remote.ProductionCompanyRemoteDto
 
-fun ProductionCompanyDto.toEntity(): ProductionCompany {
+fun ProductionCompanyRemoteDto.toEntity(): ProductionCompany {
     return ProductionCompany(
         id = this.id,
         imageUrl = this.fullLogoPath.orEmpty(),
@@ -12,5 +12,5 @@ fun ProductionCompanyDto.toEntity(): ProductionCompany {
     )
 }
 
-fun List<ProductionCompanyDto>.toEntityList(): List<ProductionCompany> =
+fun List<ProductionCompanyRemoteDto>.toEntityList(): List<ProductionCompany> =
     map { it.toEntity() }

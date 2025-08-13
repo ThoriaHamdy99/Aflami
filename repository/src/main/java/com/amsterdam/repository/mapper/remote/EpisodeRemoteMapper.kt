@@ -1,11 +1,11 @@
 package com.amsterdam.repository.mapper.remote
 
 import com.amsterdam.entity.Episode
-import com.amsterdam.repository.dto.remote.EpisodeDto
+import com.amsterdam.repository.dto.remote.EpisodeRemoteDto
 import com.amsterdam.repository.utils.toSafeLocalDate
 
 
-fun EpisodeDto.toEntity(): Episode {
+fun EpisodeRemoteDto.toEntity(): Episode {
     return Episode(
         id = id,
         title = title,
@@ -20,4 +20,4 @@ fun EpisodeDto.toEntity(): Episode {
     )
 }
 
-fun List<EpisodeDto>.toEntityList(): List<Episode> = map { it.toEntity() }
+fun List<EpisodeRemoteDto>.toEntityList(): List<Episode> = map { it.toEntity() }
