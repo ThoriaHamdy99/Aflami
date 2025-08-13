@@ -6,7 +6,7 @@ import com.amsterdam.repository.dto.local.LocalMovieCategoryDto
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
 import javax.inject.Inject
 
-class CategoryLocalDataDataSourceImpl @Inject constructor(
+class CategoryLocalDataSourceImpl @Inject constructor(
     private val dao: CategoryDao
 ) : CategoryLocalDataSource {
     override suspend fun upsertMovieCategories(categories: List<LocalMovieCategoryDto>) {
