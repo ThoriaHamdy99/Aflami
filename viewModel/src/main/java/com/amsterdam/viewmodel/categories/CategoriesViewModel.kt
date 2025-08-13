@@ -21,7 +21,7 @@ class CategoriesViewModel @Inject constructor(
         genreName: String,
     ) {
         sendNewNavigationEffect(
-            CategoriesUiEffect.NavigateToCategoriesDetailsScreen(
+            CategoriesUiEffect.NavigateToCategoriesMoviesDetailsScreen(
                 genreName,
             )
         )
