@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         module: [ localDatasource, viewModel ]
-      fail-fast: false
 
     steps:
       - uses: actions/checkout@v4
