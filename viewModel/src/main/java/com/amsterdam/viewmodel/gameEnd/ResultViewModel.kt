@@ -14,6 +14,9 @@ class ResultViewModel @Inject constructor(
     dispatcherProvider = dispatcherProvider
 ), ResultInteractionListener {
 
+    private val gameType = gameResultArgs.gameType!!
+    private val difficulty = gameResultArgs.gameDifficulty!!
+
     init {
         val points = gameResultArgs.totalCollectedPoints!!
         val time = gameResultArgs.totalSpentSeconds!!
@@ -24,7 +27,14 @@ class ResultViewModel @Inject constructor(
     }
 
     override fun onClickPlayAgain() {
-        sendNewNavigationEffect(ResultSideEffect.NavigateToGame)
+        sendNewNavigationEffect(
+            ResultSideEffect.NavigateToGame(
+                gameType = gameType,
+                difficulty = difficulty,
+                totalCollectedPoints = 0,
+                totalSpentSeconds = 0
+            )
+        )
     }
 
     override fun onClickBackToMenu() {

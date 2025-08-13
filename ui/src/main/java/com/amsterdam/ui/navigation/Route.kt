@@ -89,5 +89,10 @@ sealed interface Route {
 
 
     @Serializable
-    data class ResultScreen (private val totalCollectedPoints: Int , private val totalSpentSeconds: Int): Route
+    data class ResultScreen (
+        private val totalCollectedPoints: Int,
+        private val totalSpentSeconds: Int,
+        private val gameType: String,
+        private val difficulty: String
+    ): Route
 }
