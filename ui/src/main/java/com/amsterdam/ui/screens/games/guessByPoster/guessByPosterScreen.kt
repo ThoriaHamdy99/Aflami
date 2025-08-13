@@ -39,16 +39,21 @@ import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.GuessPicture
 import com.amsterdam.ui.components.guessGame.TimerComponent
 import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
+import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.login.components.LoginBackground
+import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameEffect
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameViewModel
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterInteractionListener
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterUiState
+import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameEffect
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,6 +62,29 @@ fun GuessByPosterGameScreen(
     viewModel: GuessMovieByPosterGameViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val navController = LocalNavController.current
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collectLatest { effect ->
+            when (effect) {
+                is GuessMovieByPosterGameEffect.NavigateBack -> {
+                    navController.popBackStack()
+                }
+
+                is GuessMovieByPosterGameEffect.NavigateToGameResult -> {
+                    val resultScreenData = effect.resultScreenData
+                    navController.navigate(
+                        Route.ResultScreen(
+                            resultScreenData.totalCollectedPoints,
+                            resultScreenData.totalSpentSeconds,
+                            resultScreenData.difficulty,
+                            resultScreenData.gameType
+                        )
+                    )
+                }
+            }
+        }
+    }
 
     GuessByPosterContent(
         state = state,
@@ -149,7 +177,7 @@ private fun GuessByPosterContent(
 
 @Composable
 fun GameQuestion(
-    question: GuessMovieByPosterUiState.QuestionUiState, // Changed to specific UiState
+    question: GuessMovieByPosterUiState.QuestionUiState,
     selectedAnswerIndex: Int?,
     isAnswerCorrect: Boolean?,
     isHintEnabled: Boolean,

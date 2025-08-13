@@ -21,13 +21,7 @@ class DoGuessMovieByPosterHintUseCase(
 
         val choices = moviePosterQuestion.movieNameChoices.toMutableList()
 
-        val wrongChoiceToRemove = choices
-            .filter { it != moviePosterQuestion.correctMovieName }
-            .randomOrNull()
-        wrongChoiceToRemove?.let {
-            choices.remove(it)
-            updatePoints(-REQUIRED_HINT_POINTS)
-        }
+        updatePoints(-REQUIRED_HINT_POINTS)
 
         return moviePosterQuestion.copy(movieNameChoices = choices)
     }
