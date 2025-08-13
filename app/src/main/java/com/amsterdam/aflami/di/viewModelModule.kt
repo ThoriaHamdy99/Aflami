@@ -15,6 +15,7 @@ import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMovieDetailsAr
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgs
 import com.amsterdam.viewmodel.game.whichGenre.GameGenreArgs
 import com.amsterdam.viewmodel.gameEnd.GameResultArgs
+import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameArgs
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameArgs
 import com.amsterdam.viewmodel.listDetails.ListDetailsArgs
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsArgs
@@ -56,6 +57,11 @@ object ViewModelViewModelScope {
     fun provideGuessReleaseYearGameArgs(
         savedStateHandle: SavedStateHandle
     ): GuessReleaseYearGameArgs = GuessReleaseYearGameArgsImpl(savedStateHandle)
+
+    @Provides
+    fun provideGuessCharacterGameArgs(
+        savedStateHandle: SavedStateHandle
+    ): GuessCharacterGameArgs = GuessCharacterGameArgs(savedStateHandle)
 
     @Provides
     fun provideListDetailsArgs(
