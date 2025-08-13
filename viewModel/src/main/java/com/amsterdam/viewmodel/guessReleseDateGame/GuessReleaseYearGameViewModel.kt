@@ -7,6 +7,7 @@ import com.amsterdam.domain.useCase.game.releaseYear.GuessReleaseYearGameUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswerUseCase.AnswerResult
 import com.amsterdam.entity.GameDifficulty.DifficultyType
 import com.amsterdam.viewmodel.shared.BaseViewModel
+import com.amsterdam.viewmodel.sharedGame.GameResultUiState
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,8 @@ class GuessReleaseYearGameViewModel @Inject constructor(
     dispatcherProvider
 ), GuessReleaseYearInteractionListener {
     private val difficultyType = DifficultyType.valueOf(args.difficulty)
-
+    private var spentTimeSeconds : Int = 0
+    private var totalCollectedPoints : Int = 0
     init {
         fetchQuestions()
     }
@@ -44,9 +46,8 @@ class GuessReleaseYearGameViewModel @Inject constructor(
     }
 
     private fun onSuccessGetQuestions(questions: List<MovieReleasedDateQuestion>) {
-
         updateState { it.copy(questions = questions.toQuestionsUiStateUiState()) }
-
+        startTheTimer()
     }
 
     private fun startTheTimer(){
@@ -70,6 +71,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
                 )
             )
         }
+        increaseSpentTimeSecondsByOne()
     }
 
     private fun onTimeFinish() {
@@ -131,6 +133,9 @@ class GuessReleaseYearGameViewModel @Inject constructor(
                 selectedAnswerIndex = selectedAnswerIndex
             )
         }
+        if (answerResult.isCorrect) {
+            totalCollectedPoints += answerResult.earnedPoints
+        }
     }
 
     override fun onMoveToNextQuestion() {
@@ -147,8 +152,16 @@ class GuessReleaseYearGameViewModel @Inject constructor(
             }
             startTheTimer()
         } else {
-            //  sendNewEffect(GameEffect.GameOver)
+            sendNewNavigationEffect(GuessReleaseYearGameEffect.NavigateToGameResult(GameResultUiState(totalCollectedPoints, spentTimeSeconds)))
         }
+    }
+
+    private fun increaseSpentTimeSecondsByOne() {
+        spentTimeSeconds += 1
+    }
+
+    override fun onCloseButtonClicked() {
+        sendNewNavigationEffect(GuessReleaseYearGameEffect.NavigateBack)
     }
 
 }

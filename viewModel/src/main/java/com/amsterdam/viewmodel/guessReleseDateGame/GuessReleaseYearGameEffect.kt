@@ -1,5 +1,9 @@
 package com.amsterdam.viewmodel.guessReleseDateGame
 
-interface GuessReleaseYearGameEffect {
+import com.amsterdam.viewmodel.sharedGame.GameResultUiState
 
+
+interface GuessReleaseYearGameEffect {
+    object NavigateBack : GuessReleaseYearGameEffect
+    data class NavigateToGameResult(val gameResult: GameResultUiState) : GuessReleaseYearGameEffect
 }

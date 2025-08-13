@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -26,23 +27,41 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.ui.R
+import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.GuessTitle
 import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
+import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.game.GameTopBar
 import com.amsterdam.ui.screens.login.components.LoginBackground
+import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameEffect
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameViewModel
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearInteractionListener
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearUiState
+import com.amsterdam.viewmodel.listDetails.ListDetailsEffect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun GuessReleaseYearScreen(guessReleaseYearGameViewModel: GuessReleaseYearGameViewModel = hiltViewModel()) {
-    val state = guessReleaseYearGameViewModel.state.collectAsStateWithLifecycle()
+fun GuessReleaseYearScreen(viewModel: GuessReleaseYearGameViewModel = hiltViewModel()) {
 
-    GameContent(state.value, guessReleaseYearGameViewModel)
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    val navController = LocalNavController.current
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collectLatest { effect ->
+            when (effect) {
+                is GuessReleaseYearGameEffect.NavigateBack -> {
+                    navController.popBackStack()
+                }
+                is GuessReleaseYearGameEffect.NavigateToGameResult -> {
+                    navController.navigate(Route.GameResult.route)
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -105,7 +124,7 @@ private fun GameContent(
                     onSelectAnswer = interactionListener::onSelectAnswer,
                 )
             }
-
+            Spacer(modifier = Modifier.weight(1f))
             ConfirmButton(
                 title = stringResource(com.amsterdam.designsystem.R.string.next),
                 onClick = interactionListener::onMoveToNextQuestion,
