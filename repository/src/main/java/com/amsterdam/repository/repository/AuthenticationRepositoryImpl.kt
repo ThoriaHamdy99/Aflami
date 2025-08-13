@@ -9,6 +9,8 @@ import com.amsterdam.repository.datasource.remote.AuthenticationRemoteDataSource
 import com.amsterdam.repository.mapper.stringToSessionTypeEntity
 import com.amsterdam.repository.mapper.toLocalDto
 import com.amsterdam.repository.security.CryptoManager
+import com.amsterdam.repository.utils.decryptString
+import com.amsterdam.repository.utils.encryptString
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
