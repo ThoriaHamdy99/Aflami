@@ -109,9 +109,9 @@ class MovieRepositoryImplTest {
     }
     @Test
     fun `getMoviesByGenreIds should return movies when remote returns results`() = runTest {
-        coEvery { movieRemoteDataSource.getMoviesByGenreIds(expectedDtoGenres, page) } returns remoteMovieResponse
+        coEvery { movieRemoteDataSource.getMoviesByGenreId(any(),any()) } returns remoteMovieResponse
 
-        val result = movieRepository.getMoviesByGenres(genres, page)
+        val result = movieRepository.getMoviesByGenre(genre, page)
 
         assertThat(result).isEqualTo(remoteMovieResponse.results.toMovieEntityList())
     }
@@ -146,6 +146,6 @@ class MovieRepositoryImplTest {
 
     val genres = listOf(MovieGenre.ALL, MovieGenre.ACTION, MovieGenre.ADVENTURE)
     val expectedDtoGenres = listOf(35L, 28L, 12L)
-
+    val genre = MovieGenre.ADVENTURE
 
 }
