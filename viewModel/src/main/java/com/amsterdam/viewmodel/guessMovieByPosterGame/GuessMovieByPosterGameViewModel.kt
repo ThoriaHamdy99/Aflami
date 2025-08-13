@@ -7,7 +7,6 @@ import com.amsterdam.domain.useCase.game.guessByPoster.MoviePosterQuestion
 import com.amsterdam.domain.useCase.game.guessByPoster.SubmitGuessMovieByPosterAnswerUseCase
 import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.viewmodel.shared.BaseViewModel
-import com.amsterdam.viewmodel.sharedGame.GameResultUiState
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -157,12 +156,12 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
             }
             startTheTimer()
         } else {
-            val gameResult = GameResultUiState(
-                totalCollectedPoints = totalCollectedPoints,
-                totalSpentSeconds = spentTimeSeconds
+            sendNewNavigationEffect(
+                GuessMovieByPosterGameEffect.NavigateToGameResult(
+                    totalCollectedPoints,
+                    spentTimeSeconds
+                )
             )
-
-            sendNewNavigationEffect(GuessMovieByPosterGameEffect.NavigateToGameResult(gameResult))
         }
     }
 
