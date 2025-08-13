@@ -1,6 +1,12 @@
 package com.amsterdam.aflami.di
 
 import androidx.lifecycle.SavedStateHandle
+import com.amsterdam.ui.screens.cast.CastScreenArgsImpl
+import com.amsterdam.ui.screens.categoriesDetails.movies.CategoriesMovieDetailsArgsImpl
+import com.amsterdam.ui.screens.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgsImpl
+import com.amsterdam.ui.screens.listDetails.ListDetailsArgsImpl
+import com.amsterdam.ui.screens.movieDetails.MovieDetailsArgsImpl
+import com.amsterdam.ui.screens.seriesDetails.SeriesDetailsArgsImpl
 import com.amsterdam.viewmodel.cast.CastScreenArgs
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMovieDetailsArgs
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgs
@@ -22,28 +28,28 @@ object ViewModelViewModelScope {
 
     @Provides
     fun provideMovieDetailsArgs(savedStateHandle: SavedStateHandle): MovieDetailsArgs =
-        MovieDetailsArgs(savedStateHandle)
+        MovieDetailsArgsImpl(savedStateHandle)
 
     @Provides
     fun provideCategoriesMoviesDetailsArgs(savedStateHandle: SavedStateHandle): CategoriesMovieDetailsArgs =
-        CategoriesMovieDetailsArgs(savedStateHandle)
+        CategoriesMovieDetailsArgsImpl(savedStateHandle)
 
     @Provides
     fun provideSeriesDetailsArgs(savedStateHandle: SavedStateHandle): SeriesDetailsArgs =
-        SeriesDetailsArgs(savedStateHandle)
+        SeriesDetailsArgsImpl(savedStateHandle)
 
     @Provides
     fun provideCategoriesTvShowsDetailsArgs(savedStateHandle: SavedStateHandle): CategoriesTvShowsDetailsArgs =
-        CategoriesTvShowsDetailsArgs(savedStateHandle)
+        CategoriesTvShowsDetailsArgsImpl(savedStateHandle)
 
     @Provides
     fun provideCastScreenArgs(savedStateHandle: SavedStateHandle): CastScreenArgs =
-        CastScreenArgs(savedStateHandle)
+        CastScreenArgsImpl(savedStateHandle)
 
     @Provides
     fun provideListDetailsArgs(
         savedStateHandle: SavedStateHandle
-    ): ListDetailsArgs = ListDetailsArgs(savedStateHandle)
+    ): ListDetailsArgs = ListDetailsArgsImpl(savedStateHandle)
 }
 
 @Module
