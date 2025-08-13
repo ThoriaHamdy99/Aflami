@@ -1,6 +1,5 @@
 package com.amsterdam.domain.useCase.game.whichGenre
 
-import com.amsterdam.domain.useCase.game.AddGamePointsUseCase
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase.MovieGenreQuestion

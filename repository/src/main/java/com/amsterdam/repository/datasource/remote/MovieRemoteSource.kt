@@ -37,5 +37,4 @@ interface MovieRemoteSource {
     suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<RemoteMovieItemDto>
     suspend fun getMoviesByGenreId(genreId: Long, page: Int): RemoteMovieResponse
 
-    suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<RemoteMovieItemDto>
 }

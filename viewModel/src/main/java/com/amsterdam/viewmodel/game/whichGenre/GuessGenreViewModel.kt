@@ -1,6 +1,5 @@
 package com.amsterdam.viewmodel.game.whichGenre
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.timer.TimerHandler
@@ -21,7 +20,7 @@ class GuessGenreViewModel @Inject constructor(
     private val guessMovieGenreUseCase: GuessMovieGenreUseCase,
     private val timerHandler: TimerHandler,
     private val dispatcherProvider: DispatcherProvider,
-    args: GameArgs,
+    args: GameGenreArgs,
 ): BaseViewModel<GenreGameUiState, GenreGameEffect>(
     GenreGameUiState(),
     dispatcherProvider
