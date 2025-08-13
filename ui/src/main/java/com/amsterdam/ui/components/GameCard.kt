@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -51,6 +52,7 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.modifierExtensions.dropShadow
 import com.amsterdam.designsystem.utils.modifierExtensions.mirroredContent
+import com.amsterdam.designsystem.utils.ripple
 import com.amsterdam.ui.R
 import io.sifr.shaded.blurProcessor.BlurEdgeTreatment
 import io.sifr.shaded.modifiers.blur
@@ -62,11 +64,10 @@ fun GameCard(
     containerColor: Color,
     borderColors: List<Color>,
     shadowColor: Color,
-    onCardClick: () -> Unit,
+    onClick: () -> Unit,
     gameCardImageContentType: GameCardImageContentType,
     modifier: Modifier = Modifier,
     isPlayable: Boolean = true,
-    onPlayClick: () -> Unit = {},
     unlockPrice: String = "",
 ) {
     Column(
@@ -85,7 +86,7 @@ fun GameCard(
                 brush = Brush.horizontalGradient(colors = borderColors),
                 shape = RoundedCornerShape(16.dp),
             )
-            .clickable(enabled = isPlayable) { onCardClick() },
+            .clickable(enabled = isPlayable) { onClick() },
         verticalArrangement = Arrangement.Top,
     ) {
         UnlockPromptContainer(
@@ -126,7 +127,7 @@ fun GameCard(
                     modifier = Modifier.weight(1f),
                 ) {
                     CircularButton(
-                        onClick = onPlayClick,
+                        onClick = onClick,
                         clickable = isPlayable,
                         modifier = Modifier.align(Alignment.Bottom)
                     ) {
@@ -367,6 +368,7 @@ private fun CircularButton(
     Row(
         modifier = modifier
             .wrapContentSize()
+            .clip(CircleShape)
             .background(color = AppTheme.color.onPrimaryButton, shape = CircleShape)
             .border(
                 width = .5.dp,
@@ -378,7 +380,12 @@ private fun CircularButton(
                 ),
                 shape = CircleShape,
             )
-            .clickable(enabled = clickable, onClick = onClick)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(color = AppTheme.color.hint),
+                enabled = clickable,
+                onClick = onClick
+            )
             .padding(4.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -413,7 +420,7 @@ private fun GameCardPreview() {
             containerColor = Color.White,
             borderColors = listOf(Color.Red, Color.Blue),
             shadowColor = Color.White,
-            onCardClick = {},
+            onClick = {},
             gameCardImageContentType = GameCardImageContentType.FUN_CLOWN,
             isPlayable = false,
             unlockPrice = "120",

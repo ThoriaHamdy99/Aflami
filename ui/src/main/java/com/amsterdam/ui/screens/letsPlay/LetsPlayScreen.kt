@@ -99,7 +99,7 @@ private fun LetsPlayScreenContent(
                     containerColor = gameCardData.containerColor,
                     borderColors = gameCardData.borderColors,
                     shadowColor = gameCardData.shadowColor,
-                    onCardClick = { interactionListener.onClickGameCard(it.gameTypeUiState) },
+                    onClick = { interactionListener.onClickGameCard(it.gameTypeUiState) },
                     gameCardImageContentType = gameCardData.gameCardImageContentType,
                     modifier = Modifier.padding(horizontal = 16.dp),
                     isPlayable = state.totalUserPoint >= it.requiredPoints,
