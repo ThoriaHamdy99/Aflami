@@ -72,7 +72,7 @@ class LetsPlayViewModel @Inject constructor(
             state.value.selectedDifficultyLevel?.difficultyLevel?.name ?: return
         val navigateEffect = when (state.value.selectedGameTypeUiState) {
             GameTypeUiState.GUESS_CHARACTER ->
-                LetsPlayEffect.NavigateToGuessMovieByReleaseScreen(difficultyLevelName)
+                LetsPlayEffect.NavigateToGuessCharacterScreen(difficultyLevelName)
 
             GameTypeUiState.GUESS_MOVIE_BY_POSTER ->
                 LetsPlayEffect.NavigateToGuessMovieByPosterScreen(difficultyLevelName)
@@ -81,7 +81,7 @@ class LetsPlayViewModel @Inject constructor(
                 LetsPlayEffect.NavigateToGuessMovieByReleaseScreen(difficultyLevelName)
 
             GameTypeUiState.GUESS_MOVIE_BY_GENRE ->
-                LetsPlayEffect.NavigateToGuessMovieByReleaseScreen(difficultyLevelName)
+                LetsPlayEffect.NavigateToGuessMovieByGenreScreen(difficultyLevelName)
 
             null -> {
                 return
