@@ -230,7 +230,7 @@ fun GameQuestion(
 }
 
 @Composable
-private fun GameTopBar(
+internal fun GameTopBar(
     title: String,
     timerUiState: TimerUiState,
     modifier: Modifier = Modifier,

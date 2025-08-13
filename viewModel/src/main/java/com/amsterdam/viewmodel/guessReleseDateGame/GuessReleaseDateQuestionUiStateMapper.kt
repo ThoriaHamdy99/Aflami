@@ -2,12 +2,22 @@ package com.amsterdam.viewmodel.guessReleseDateGame
 
 import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearUiState.QuestionUiState
-import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearUiState.QuestionUiState.ChoiceUiState
 
 fun MovieReleasedDateQuestion.toQuestionUiStateUiState(): QuestionUiState {
     return QuestionUiState(
         movieName = this.question,
-        releaseYearChoices = this.releaseYearChoices.map { ChoiceUiState(it.toString()) }
+        releaseYearAnswer = this.releaseYearChoices.map { it.toString()},
+        correctAnswer = this.correctChoice.toString(),
+        questionTimeSeconds = questionTimeSeconds
+    )
+}
+
+fun QuestionUiState.toMovieReleasedDateQuestion(): MovieReleasedDateQuestion {
+    return MovieReleasedDateQuestion(
+        question = this.movieName,
+        releaseYearChoices = this.releaseYearAnswer.map { it.toInt() },
+        correctChoice = this.correctAnswer.toInt(),
+        questionTimeSeconds = questionTimeSeconds
     )
 }
 

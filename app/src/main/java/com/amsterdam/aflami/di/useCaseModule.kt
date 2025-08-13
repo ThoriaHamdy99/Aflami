@@ -330,8 +330,8 @@ object UseCaseModule {
 
 
     @Provides
-    fun provideDoGuessReleaseGameHintUseCase(getTotalUserPointsUseCase: GetTotalUserPointsUseCase) =
-        DoGuessReleaseGameHintUseCase(getTotalUserPointsUseCase)
+    fun provideDoGuessReleaseGameHintUseCase(getTotalUserPointsUseCase: GetTotalUserPointsUseCase,updatePoints: UpdateUserGamePointsUseCase) =
+        DoGuessReleaseGameHintUseCase(getTotalUserPointsUseCase,updatePoints)
 
     @Provides
     fun provideSubmitGuessReleaseYearAnswerUseCase(

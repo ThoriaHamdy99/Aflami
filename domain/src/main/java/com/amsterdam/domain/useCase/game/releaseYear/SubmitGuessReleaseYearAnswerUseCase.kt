@@ -18,6 +18,8 @@ class SubmitGuessReleaseYearAnswerUseCase(
         if (correct) {
             updatePoints(gameDifficulty.pointsPerQuestion)
         }
+        updatePoints(gameDifficulty.pointsPerQuestion)
+
         return AnswerResult(correct, gameDifficulty.pointsPerQuestion)
     }
 

@@ -10,8 +10,8 @@ class GenerateMovieReleaseYearQuestionsUseCase(
     private val getGameDifficultyByDifficultyTypeUseCase: GetGameDifficultyByDifficultyTypeUseCase
 ) {
     suspend operator fun invoke(difficultyType: DifficultyType): List<MovieReleasedDateQuestion> {
-      val questionsCounts =  getGameDifficultyByDifficultyTypeUseCase(difficultyType).totalQuestions
-        val movies = gameRepository.getRandomMoviesWithNotNullDate(questionsCounts)
+      val gameDifficulty =  getGameDifficultyByDifficultyTypeUseCase(difficultyType)
+        val movies = gameRepository.getRandomMoviesWithNotNullDate(gameDifficulty.totalQuestions)
 
         return movies.map { movie ->
             val correctYear = movie.releaseDate!!.year
@@ -19,7 +19,8 @@ class GenerateMovieReleaseYearQuestionsUseCase(
             MovieReleasedDateQuestion(
                 question = movie.name,
                 releaseYearChoices = choices,
-                correctChoice = correctYear
+                correctChoice = correctYear,
+                questionTimeSeconds = gameDifficulty.timeLimitSeconds
             )
         }
     }
@@ -38,6 +39,7 @@ class GenerateMovieReleaseYearQuestionsUseCase(
     data class MovieReleasedDateQuestion(
         val question: String,
         val releaseYearChoices: List<Int>,
-        val correctChoice: Int
+        val correctChoice: Int,
+        val questionTimeSeconds: Int
     )
 }

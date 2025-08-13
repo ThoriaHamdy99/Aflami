@@ -1,6 +1,5 @@
 package com.amsterdam.domain.useCase.game.releaseYear
 
-import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswerUseCase
 import com.amsterdam.entity.GameDifficulty
 
 class GuessReleaseYearGameUseCase(
