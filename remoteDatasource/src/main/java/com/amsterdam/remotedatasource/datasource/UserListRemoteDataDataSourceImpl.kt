@@ -2,7 +2,7 @@ package com.amsterdam.remotedatasource.datasource
 
 import com.amsterdam.remotedatasource.api.UserListApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
-import com.amsterdam.repository.datasource.remote.UserListRemoteSource
+import com.amsterdam.repository.datasource.remote.UserListRemoteDataSource
 import com.amsterdam.repository.dto.remote.AddItemToListResponse
 import com.amsterdam.repository.dto.remote.CreateUserListResponse
 import com.amsterdam.repository.dto.remote.RemoteUserListResponse
@@ -11,10 +11,10 @@ import com.amsterdam.repository.dto.remote.authentication.AuthenticationResponse
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-class UserListRemoteDataSourceImpl @Inject constructor(
+class UserListRemoteDataDataSourceImpl @Inject constructor(
     private val userListApiService: UserListApiService,
     private val json: Json
-) : UserListRemoteSource {
+) : UserListRemoteDataSource {
     override suspend fun createNewList(
         listName: String,
         language: String,

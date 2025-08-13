@@ -5,7 +5,7 @@ import com.amsterdam.repository.dto.remote.CreateUserListResponse
 import com.amsterdam.repository.dto.remote.RemoteUserListResponse
 import com.amsterdam.repository.dto.remote.UserListDetailsResponse
 
-interface UserListRemoteSource {
+interface UserListRemoteDataSource {
     suspend fun createNewList(listName: String, language: String, ): CreateUserListResponse
     suspend fun getUserLists(accountId: Int, page: Int): RemoteUserListResponse
     suspend fun deleteList(listId: Long)

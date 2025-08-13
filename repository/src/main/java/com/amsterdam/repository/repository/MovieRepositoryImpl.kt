@@ -10,8 +10,8 @@ import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
 import com.amsterdam.repository.datasource.local.MovieLocalDataSource
-import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
-import com.amsterdam.repository.datasource.remote.MovieRemoteSource
+import com.amsterdam.repository.datasource.remote.CategoryRemoteDataSource
+import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
 import com.amsterdam.repository.dto.local.LocalMovieCategoryDto
 import com.amsterdam.repository.dto.local.LocalMovieDto
 import com.amsterdam.repository.dto.local.relation.MovieWithCategories
@@ -40,8 +40,8 @@ import kotlin.time.Duration.Companion.days
 class MovieRepositoryImpl @Inject constructor(
     private val categoryLocalDataSource: CategoryLocalDataSource,
     private val movieLocalDataSource: MovieLocalDataSource,
-    private val categoryRemoteSource: CategoryRemoteSource,
-    private val movieRemoteDataSource: MovieRemoteSource,
+    private val categoryRemoteDataSource: CategoryRemoteDataSource,
+    private val movieRemoteDataSource: MovieRemoteDataSource,
     private val preferences: AppPreferences,
 ) : MovieRepository {
 
@@ -289,7 +289,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     suspend fun cacheMovieCategoriesIfNotCached() {
         getMovieCategoriesFromLocal().takeIf { it.isNotEmpty() }
-            ?: saveMovieCategoriesToDatabase(categoryRemoteSource.getMovieCategories())
+            ?: saveMovieCategoriesToDatabase(categoryRemoteDataSource.getMovieCategories())
     }
 
     private suspend fun getMovieCategoriesFromLocal(): List<LocalMovieCategoryDto> {

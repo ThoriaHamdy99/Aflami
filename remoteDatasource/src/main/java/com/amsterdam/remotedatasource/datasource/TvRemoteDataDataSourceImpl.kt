@@ -2,7 +2,7 @@ package com.amsterdam.remotedatasource.datasource
 
 import com.amsterdam.remotedatasource.api.TvShowsApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
-import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
+import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
 import com.amsterdam.repository.dto.remote.EpisodeResponse
 import com.amsterdam.repository.dto.remote.RatingResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
@@ -11,9 +11,9 @@ import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.VideoResponse
 import javax.inject.Inject
 
-class TvRemoteDataSourceImpl @Inject constructor(
+class TvRemoteDataDataSourceImpl @Inject constructor(
     private val tvShowsApiService: TvShowsApiService
-) : TvShowsRemoteSource {
+) : TvShowsRemoteDataSource {
     override suspend fun getPopularTvShows(): RemoteTvShowResponse {
         return responseCall { tvShowsApiService.getPopularTvShows() }
     }

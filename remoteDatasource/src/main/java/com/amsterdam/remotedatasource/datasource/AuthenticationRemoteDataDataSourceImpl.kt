@@ -1,18 +1,17 @@
 package com.amsterdam.remotedatasource.datasource
 
-import android.util.Log
 import com.amsterdam.remotedatasource.api.AuthenticationApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
-import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
+import com.amsterdam.repository.datasource.remote.AuthenticationRemoteDataSource
 import com.amsterdam.repository.dto.remote.authentication.AuthenticationResponseDto
 import com.amsterdam.repository.dto.remote.authentication.CreateSessionDto
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-class AuthenticationRemoteDataSourceImpl @Inject constructor(
+class AuthenticationRemoteDataDataSourceImpl @Inject constructor(
     private val json: Json,
     private val authenticationApiService: AuthenticationApiService
-) : AuthenticationRemoteSource {
+) : AuthenticationRemoteDataSource {
     override suspend fun loginWithPassword(
         username: String,
         password: String,

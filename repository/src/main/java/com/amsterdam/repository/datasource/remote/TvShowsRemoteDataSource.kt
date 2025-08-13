@@ -7,7 +7,7 @@ import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.VideoResponse
 
-interface TvShowsRemoteSource {
+interface TvShowsRemoteDataSource {
 
     suspend fun getPopularTvShows(): RemoteTvShowResponse
     suspend fun getTopRatedTvShows(page: Int): RemoteTvShowResponse

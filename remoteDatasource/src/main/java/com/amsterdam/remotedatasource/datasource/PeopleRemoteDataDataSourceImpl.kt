@@ -2,16 +2,16 @@ package com.amsterdam.remotedatasource.datasource
 
 import com.amsterdam.remotedatasource.api.PeopleApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
-import com.amsterdam.repository.datasource.remote.PeopleRemoteSource
+import com.amsterdam.repository.datasource.remote.PeopleRemoteDataSource
 import com.amsterdam.repository.dto.remote.RemotePeopleItemDto
 import com.amsterdam.repository.dto.remote.RemotePeopleResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class PeopleRemoteDataSourceImpl @Inject constructor(
+class PeopleRemoteDataDataSourceImpl @Inject constructor(
     private val peopleApiService: PeopleApiService
-) : PeopleRemoteSource {
+) : PeopleRemoteDataSource {
 
     override suspend fun getTrendingPeople(page: Int): RemotePeopleResponse {
         return responseCall { peopleApiService.getTrendingPeople(page = page) }

@@ -1,6 +1,6 @@
 package com.amsterdam.repository.datasource.remote
 
-interface AuthenticationRemoteSource {
+interface AuthenticationRemoteDataSource {
     suspend fun loginWithPassword(
         username: String,
         password: String,

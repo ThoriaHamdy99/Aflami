@@ -7,8 +7,8 @@ import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.MovieLocalDataSource
 import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
 import com.amsterdam.repository.datasource.local.WatchHistoryLocalDataSource
-import com.amsterdam.repository.datasource.remote.MovieRemoteSource
-import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
+import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
+import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
 import com.amsterdam.repository.dto.local.LocalMovieDto
 import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
@@ -25,9 +25,9 @@ import javax.inject.Inject
 class WatchHistoryRepositoryImpl @Inject constructor(
     private val watchHistoryLocalDataSource : WatchHistoryLocalDataSource,
     private val movieLocalDataSource : MovieLocalDataSource,
-    private val movieRemoteDataSource : MovieRemoteSource,
+    private val movieRemoteDataSource : MovieRemoteDataSource,
     private val tvShowLocalDataSource : TvShowLocalDataSource,
-    private val tvShowRemoteSource : TvShowsRemoteSource,
+    private val tvShowRemoteSource : TvShowsRemoteDataSource,
     private val preferences : AppPreferences,
     private val localTvDataSource : TvShowLocalDataSource
 ) : WatchHistoryRepository {

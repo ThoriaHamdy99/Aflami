@@ -4,7 +4,7 @@ import com.amsterdam.domain.repository.CountryRepository
 import com.amsterdam.entity.Country
 import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.CountryLocalDataSource
-import com.amsterdam.repository.datasource.remote.CountryRemoteSource
+import com.amsterdam.repository.datasource.remote.CountryRemoteDataSource
 import com.amsterdam.repository.dto.local.LocalCountryDto
 import com.amsterdam.repository.dto.remote.RemoteCountryDto
 import com.google.common.truth.Truth.assertThat
@@ -23,7 +23,7 @@ class CountryRepositoryImplTest {
     private lateinit var repository: CountryRepository
 
     private val localDataSource: CountryLocalDataSource = mockk()
-    private val remoteDataSource: CountryRemoteSource = mockk()
+    private val remoteDataSource: CountryRemoteDataSource = mockk()
     private val preferences: AppPreferences = mockk()
     private val testLanguage = "en"
 

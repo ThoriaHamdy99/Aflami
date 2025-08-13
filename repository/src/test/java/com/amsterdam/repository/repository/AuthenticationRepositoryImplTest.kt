@@ -5,7 +5,7 @@ import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
 import com.amsterdam.repository.datasource.local.ProfileLocalDataSource
-import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
+import com.amsterdam.repository.datasource.remote.AuthenticationRemoteDataSource
 import com.amsterdam.repository.mapper.local.toLocalDto
 import com.amsterdam.repository.security.CryptoData
 import com.google.common.truth.Truth.assertThat
@@ -25,7 +25,7 @@ class AuthenticationRepositoryImplTest {
 
     private lateinit var repository: AuthenticationRepository
 
-    private val authenticationRemoteSource: AuthenticationRemoteSource = mockk()
+    private val authenticationRemoteDataSource: AuthenticationRemoteDataSource = mockk()
     private val authenticationLocalDataSource: AuthenticationLocalDataSource = mockk()
     private val profileLocalDataSource: ProfileLocalDataSource = mockk()
     private val cryptoData: CryptoData = mockk()
@@ -39,7 +39,7 @@ class AuthenticationRepositoryImplTest {
     fun setup() {
         clearAllMocks()
         repository = AuthenticationRepositoryImpl(
-            authenticationRemoteSource = authenticationRemoteSource,
+            authenticationRemoteDataSource = authenticationRemoteDataSource,
             authenticationLocalDataSource = authenticationLocalDataSource,
             profileLocalDataSource = profileLocalDataSource,
             cryptoData = cryptoData
@@ -51,7 +51,7 @@ class AuthenticationRepositoryImplTest {
         runTest {
             // Given
             coEvery {
-                authenticationRemoteSource.loginWithPassword(
+                authenticationRemoteDataSource.loginWithPassword(
                     testUsername,
                     testPassword
                 )
@@ -65,7 +65,7 @@ class AuthenticationRepositoryImplTest {
 
             // Then
             coVerify(exactly = 1) {
-                authenticationRemoteSource.loginWithPassword(
+                authenticationRemoteDataSource.loginWithPassword(
                     testUsername,
                     testPassword
                 )
@@ -80,7 +80,7 @@ class AuthenticationRepositoryImplTest {
             // Given
             val expectedException = RuntimeException("Remote login failed")
             coEvery {
-                authenticationRemoteSource.loginWithPassword(
+                authenticationRemoteDataSource.loginWithPassword(
                     any(),
                     any()
                 )
@@ -94,7 +94,7 @@ class AuthenticationRepositoryImplTest {
             // Then
             assertThat(thrownException).isEqualTo(expectedException)
             coVerify(exactly = 1) {
-                authenticationRemoteSource.loginWithPassword(
+                authenticationRemoteDataSource.loginWithPassword(
                     testUsername,
                     testPassword
                 )

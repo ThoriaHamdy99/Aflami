@@ -6,7 +6,7 @@ import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 
-interface MovieRemoteSource {
+interface MovieRemoteDataSource {
 
     suspend fun getMoviesByKeyword(keyword: String, page:Int): RemoteMovieResponse
 

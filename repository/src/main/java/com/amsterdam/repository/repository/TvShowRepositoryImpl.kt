@@ -9,11 +9,10 @@ import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.repository.datasource.local.AppPreferences
-import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
 import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
 import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
-import com.amsterdam.repository.datasource.remote.CategoryRemoteSource
-import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
+import com.amsterdam.repository.datasource.remote.CategoryRemoteDataSource
+import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
 import com.amsterdam.repository.dto.local.LocalTvShowCategoryDto
 import com.amsterdam.repository.dto.local.LocalTvShowDto
 import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
@@ -31,7 +30,6 @@ import com.amsterdam.repository.mapper.remote.toTvShowUserRateEntityList
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalDto
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalDtoList
 import com.amsterdam.repository.mapper.remoteToLocal.toLocalTvShowCategoryDtoList
-import com.amsterdam.repository.security.CryptoData
 import com.amsterdam.repository.utils.getCachedOrRemoteData
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Clock
@@ -40,10 +38,10 @@ import kotlin.time.Duration.Companion.days
 
 class TvShowRepositoryImpl @Inject constructor(
     private val localTvDataSource: TvShowLocalDataSource,
-    private val remoteTvDataSource: TvShowsRemoteSource,
+    private val remoteTvDataSource: TvShowsRemoteDataSource,
     private val preferences: AppPreferences,
     private val categoryLocalDataSource: CategoryLocalDataSource,
-    private val categoryRemoteSource: CategoryRemoteSource
+    private val categoryRemoteDataSource: CategoryRemoteDataSource
 ) : TvShowRepository {
 
     override suspend fun getTvShowByKeyword(
@@ -227,7 +225,7 @@ class TvShowRepositoryImpl @Inject constructor(
 
     suspend fun cacheTvShowCategoriesIfNotCached() {
         getTvShowCategoriesFromLocal().takeIf { it.isNotEmpty() }
-            ?: saveTvShowCategoriesToDatabase(categoryRemoteSource.getTvShowCategories())
+            ?: saveTvShowCategoriesToDatabase(categoryRemoteDataSource.getTvShowCategories())
     }
 
     private suspend fun getTvShowCategoriesFromLocal(): List<LocalTvShowCategoryDto> {

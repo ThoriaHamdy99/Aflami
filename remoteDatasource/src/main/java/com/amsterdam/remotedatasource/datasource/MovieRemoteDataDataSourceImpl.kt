@@ -3,7 +3,7 @@ package com.amsterdam.remotedatasource.datasource
 import android.util.Log
 import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
-import com.amsterdam.repository.datasource.remote.MovieRemoteSource
+import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
 import com.amsterdam.repository.dto.remote.RatingResponse
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
@@ -11,9 +11,9 @@ import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import javax.inject.Inject
 
-class MovieRemoteDataSourceImpl @Inject constructor(
+class MovieRemoteDataDataSourceImpl @Inject constructor(
     private val movieApiService: MovieApiService,
-) : MovieRemoteSource {
+) : MovieRemoteDataSource {
 
     override suspend fun getMoviesByKeyword(keyword: String, page: Int): RemoteMovieResponse {
         return responseCall { movieApiService.getMoviesByKeyword(keyword, page) }

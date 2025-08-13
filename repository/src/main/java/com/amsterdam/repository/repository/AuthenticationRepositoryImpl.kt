@@ -5,20 +5,20 @@ import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
 import com.amsterdam.repository.datasource.local.ProfileLocalDataSource
-import com.amsterdam.repository.datasource.remote.AuthenticationRemoteSource
+import com.amsterdam.repository.datasource.remote.AuthenticationRemoteDataSource
 import com.amsterdam.repository.mapper.local.stringToSessionTypeEntity
 import com.amsterdam.repository.mapper.local.toLocalDto
 import com.amsterdam.repository.security.CryptoData
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
-    private val authenticationRemoteSource: AuthenticationRemoteSource,
+    private val authenticationRemoteDataSource: AuthenticationRemoteDataSource,
     private val authenticationLocalDataSource: AuthenticationLocalDataSource,
     private val profileLocalDataSource: ProfileLocalDataSource,
     val cryptoData: CryptoData,
 ) : AuthenticationRepository {
     override suspend fun loginWithPassword(username: String, password: String, ) {
-        authenticationRemoteSource.loginWithPassword(username, password).let { sessionId ->
+        authenticationRemoteDataSource.loginWithPassword(username, password).let { sessionId ->
         authenticationLocalDataSource.cacheSessionId(cryptoData.encryptString(sessionId)) }
         authenticationLocalDataSource.setSessionType(SessionType.LOGGED_IN.toLocalDto())
     }

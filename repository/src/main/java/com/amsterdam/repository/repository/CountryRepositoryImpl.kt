@@ -4,7 +4,7 @@ import com.amsterdam.domain.repository.CountryRepository
 import com.amsterdam.entity.Country
 import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.CountryLocalDataSource
-import com.amsterdam.repository.datasource.remote.CountryRemoteSource
+import com.amsterdam.repository.datasource.remote.CountryRemoteDataSource
 import com.amsterdam.repository.dto.remote.RemoteCountryDto
 import com.amsterdam.repository.mapper.local.toEntityList
 import com.amsterdam.repository.mapper.remote.toEntityList
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class CountryRepositoryImpl @Inject constructor(
     private val localDataSource: CountryLocalDataSource,
-    private val remoteDataSource: CountryRemoteSource,
+    private val remoteDataSource: CountryRemoteDataSource,
     private val preferences: AppPreferences
 ) : CountryRepository {
     override suspend fun getCountries(): List<Country> {

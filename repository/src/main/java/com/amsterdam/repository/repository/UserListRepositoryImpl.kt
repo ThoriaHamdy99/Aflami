@@ -2,13 +2,10 @@ package com.amsterdam.repository.repository
 
 import com.amsterdam.domain.exceptions.UnknownException
 import com.amsterdam.domain.repository.AppPreferencesRepository
-import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
-import com.amsterdam.entity.Movie
-import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.UserList
-import com.amsterdam.repository.datasource.remote.UserListRemoteSource
+import com.amsterdam.repository.datasource.remote.UserListRemoteDataSource
 import com.amsterdam.repository.mapper.remote.toMovie
 import com.amsterdam.repository.mapper.remote.toTvShow
 import com.amsterdam.repository.mapper.remote.toUserList
@@ -16,7 +13,7 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class UserListRepositoryImpl @Inject constructor(
-    private val userListDataSource: UserListRemoteSource,
+    private val userListDataSource: UserListRemoteDataSource,
     private val preferences: AppPreferencesRepository,
 ) : UserListRepository {
 
