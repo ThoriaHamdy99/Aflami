@@ -45,9 +45,7 @@ class UserListRemoteDataSourceImplTest {
     @Test
     fun `createNewList should return a new user list response on success`() = runTest {
         val listName = "My list"
-        val description = "A list of movies"
         val language = "en"
-        val sessionId = "abc"
         val expectedResponse = CreateUserListResponse(
             listId = 1,
             statusCode = 1,
@@ -55,27 +53,12 @@ class UserListRemoteDataSourceImplTest {
             success = true,
         )
 
-        coEvery {
-            userListApiService.createNewList(
-                sessionId = sessionId,
-                listName = listName,
-                description = description,
-                language = language,
-            )
-        } returns expectedResponse
+        coEvery { userListApiService.createNewList(listName = listName, language = language,) } returns expectedResponse
 
-        val result =
-            userListRemoteDataSourceImpl.createNewList(listName, description, language, sessionId)
+        val result = userListRemoteDataSourceImpl.createNewList(listName, language)
 
         assertThat(result).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) {
-            userListApiService.createNewList(
-                sessionId = sessionId,
-                listName = listName,
-                description = description,
-                language = language,
-            )
-        }
+        coVerify(exactly = 1) { userListApiService.createNewList(listName = listName, language = language,) }
     }
 
     @Test
@@ -83,11 +66,9 @@ class UserListRemoteDataSourceImplTest {
         val listName = "My list"
         val description = "A list of movies"
         val language = "en"
-        val sessionId = "abc"
 
         coEvery {
             userListApiService.createNewList(
-                sessionId = sessionId,
                 listName = listName,
                 description = description,
                 language = language,
@@ -95,7 +76,7 @@ class UserListRemoteDataSourceImplTest {
         } throws NetworkException()
 
         assertThrows<NetworkException> {
-            userListRemoteDataSourceImpl.createNewList(listName, description, language, sessionId)
+            userListRemoteDataSourceImpl.createNewList(listName, language)
         }
     }
 
@@ -103,7 +84,6 @@ class UserListRemoteDataSourceImplTest {
     fun `getUserLists should return remote user list response on success`() = runTest {
         val accountId = 1
         val page = 1
-        val sessionId = "abc"
         val expectedResponse = RemoteUserListResponse(
             results = emptyList(),
             page = 1,
@@ -115,60 +95,60 @@ class UserListRemoteDataSourceImplTest {
             userListApiService.getUserLists(
                 accountId,
                 page,
-                sessionId
             )
         } returns expectedResponse
 
-        val result = userListRemoteDataSourceImpl.getUserLists(accountId, page, sessionId)
+        val result = userListRemoteDataSourceImpl.getUserLists(accountId, page)
 
         assertThat(result).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { userListApiService.getUserLists(accountId, page, sessionId) }
+        coVerify(exactly = 1) { userListApiService.getUserLists(accountId, page) }
     }
 
     @Test
     fun `addMovieToList should return a response on success`() = runTest {
         val listId = 1L
-        val movieId = 1
-        val sessionId = "abc"
+        val movieId = 1L
         val expectedResponse = AddItemToListResponse(1, "success", true)
 
         coEvery {
             userListApiService.addMediaItemToList(
                 listId,
-                sessionId,
                 movieId,
             )
         } returns expectedResponse
 
-        val result = userListRemoteDataSourceImpl.addMovieToList(listId, sessionId, movieId)
+        val result = userListRemoteDataSourceImpl.addMovieToList(listId, movieId)
 
         assertThat(result).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { userListApiService.addMediaItemToList(listId, sessionId, movieId) }
+        coVerify(exactly = 1) { userListApiService.addMediaItemToList(listId, movieId) }
     }
 
     @Test
     fun `addMovieToList should throw NetworkException when api call fails`() = runTest {
         val listId = 1L
-        val movieId = 1
-        val sessionId = "abc"
+        val movieId = 1L
 
         coEvery {
             userListApiService.addMediaItemToList(
                 listId,
-                sessionId,
                 movieId,
             )
         } throws NetworkException()
 
         assertThrows<NetworkException> {
-            userListRemoteDataSourceImpl.addMovieToList(listId, sessionId, movieId)
+            userListRemoteDataSourceImpl.addMovieToList(listId, movieId)
         }
     }
 
     @Test
     fun `getMoviesFromList should return a list of movies and call the api service`() = runTest {
         val listId = 1L
-        coEvery { userListApiService.getMoviesAndTvShowsFromList(listId, 1) } returns remoteListResponse
+        coEvery {
+            userListApiService.getMoviesAndTvShowsFromList(
+                listId,
+                1
+            )
+        } returns remoteListResponse
 
         val result = userListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(listId, 1)
 
@@ -179,32 +159,39 @@ class UserListRemoteDataSourceImplTest {
     @Test
     fun `getMoviesFromList should throw NetworkException when api call fails`() = runTest {
         val listId = 1L
-        coEvery { userListApiService.getMoviesAndTvShowsFromList(listId, 1) } throws NetworkException()
+        coEvery {
+            userListApiService.getMoviesAndTvShowsFromList(
+                listId,
+                1
+            )
+        } throws NetworkException()
 
-        assertThrows<NetworkException> { userListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(listId, 1) }
+        assertThrows<NetworkException> {
+            userListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(
+                listId,
+                1
+            )
+        }
     }
 
     @Test
     fun `deleteList should call api service deleteList`() = runTest {
         val listId = 1L
-        val sessionId = "abc"
-        coEvery { userListApiService.deleteList(listId, sessionId) } returns Unit
+        coEvery { userListApiService.deleteList(listId) } returns Unit
 
-        userListRemoteDataSourceImpl.deleteList(listId, sessionId)
+        userListRemoteDataSourceImpl.deleteList(listId)
 
-        coVerify(exactly = 1) { userListApiService.deleteList(listId, sessionId) }
+        coVerify(exactly = 1) { userListApiService.deleteList(listId) }
     }
 
     @Test
     fun `deleteList should throw NetworkException when api call fails`() = runTest {
         val listId = 1L
-        val sessionId = "abc"
-        coEvery { userListApiService.deleteList(listId, sessionId) } throws NetworkException()
+        coEvery { userListApiService.deleteList(listId) } throws NetworkException()
 
         assertThrows<NetworkException> {
             userListRemoteDataSourceImpl.deleteList(
                 listId,
-                sessionId
             )
         }
     }
@@ -213,29 +200,26 @@ class UserListRemoteDataSourceImplTest {
     fun `removeMovieFromList should call api service removeMovieFromList`() = runTest {
         val listId = 1L
         val movieId = 1L
-        val sessionId = "abc"
-        coEvery { userListApiService.removeMovieFromList(listId, sessionId, movieId) } returns Unit
+        coEvery { userListApiService.removeMovieFromList(listId, movieId) } returns Unit
 
-        userListRemoteDataSourceImpl.deleteMovieFromList(listId, sessionId, movieId)
+        userListRemoteDataSourceImpl.deleteMovieFromList(listId, movieId)
 
-        coVerify(exactly = 1) { userListApiService.removeMovieFromList(listId, sessionId, movieId) }
+        coVerify(exactly = 1) { userListApiService.removeMovieFromList(listId, movieId) }
     }
 
     @Test
     fun `removeMovieFromList should throw NetworkException when api call fails`() = runTest {
         val listId = 1L
         val movieId = 1L
-        val sessionId = "abc"
         coEvery {
             userListApiService.removeMovieFromList(
                 listId,
-                sessionId,
                 movieId
             )
         } throws NetworkException()
 
         assertThrows<NetworkException> {
-            userListRemoteDataSourceImpl.deleteMovieFromList(listId, sessionId, movieId)
+            userListRemoteDataSourceImpl.deleteMovieFromList(listId, movieId)
         }
     }
 }
