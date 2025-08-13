@@ -151,7 +151,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
             }
             startTheTimer()
         } else {
-            sendNewNavigationEffect(GuessReleaseYearGameEffect.NavigateToGameResult(totalCollectedPoints, spentTimeSeconds))
+           // sendNewNavigationEffect(GuessReleaseYearGameEffect.NavigateToGameResult(totalCollectedPoints=totalCollectedPoints, spentTimeSeconds))
         }
     }
 
