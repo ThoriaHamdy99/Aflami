@@ -1,7 +1,6 @@
 package com.amsterdam.viewmodel.guessMovieByPosterGame
 
 import com.amsterdam.domain.useCase.game.guessByPoster.MoviePosterQuestion
-import com.amsterdam.viewmodel.sharedGame.GameResultUiState
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 
 data class GuessMovieByPosterUiState(
@@ -13,7 +12,6 @@ data class GuessMovieByPosterUiState(
     val isHintEnabled: Boolean = true,
     val isNextEnabled: Boolean = false,
     val currentQuestionIndex: Int = 0,
-    val gameResultUiState: GameResultUiState = GameResultUiState(),
     val timerUiState: TimerUiState = TimerUiState()
 ) {
     data class QuestionUiState(
