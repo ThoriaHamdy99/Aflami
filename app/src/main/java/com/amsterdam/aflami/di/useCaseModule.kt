@@ -26,16 +26,20 @@ import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowsByGenreUseCase
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
-import com.amsterdam.domain.useCase.game.releaseYear.DoGuessReleaseGameHintUseCase
-import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.domain.useCase.game.releaseYear.DoGuessReleaseGameHintUseCase
+import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.GuessReleaseYearGameUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswerUseCase
+import com.amsterdam.domain.useCase.game.whichGenre.DoGuessGenreGameHintUseCase
+import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase
+import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreUseCase
+import com.amsterdam.domain.useCase.game.whichGenre.SubmitGuessMovieGenreAnswerUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
@@ -270,6 +274,7 @@ object UseCaseModule {
         userListRepository: UserListRepository,
     ): GetUserListsUseCase =
         GetUserListsUseCase(userListRepository)
+
     @Provides
     fun provideAddMovieToListUseCase(userListRepository: UserListRepository): AddMovieToListUseCase =
         AddMovieToListUseCase(userListRepository)
@@ -362,4 +367,35 @@ object UseCaseModule {
         gameRepository: GameRepository
     ) = GetUserPointsUseCase(gameRepository)
 
+    @Provides
+    fun provideGenerateMovieGenreQuestionsUseCase(
+        getGameDifficultyUseCase: GetGameDifficultyByDifficultyTypeUseCase,
+        gameRepository: GameRepository
+    ) = GenerateMovieGenreQuestionsUseCase(getGameDifficultyUseCase, gameRepository)
+
+    @Provides
+    fun provideDoGuessGenreGameHintUseCase(
+        getTotalUserPointsUseCase: GetTotalUserPointsUseCase,
+        updateUserGamePointsUseCase: UpdateUserGamePointsUseCase
+    ) = DoGuessGenreGameHintUseCase(
+        getTotalUserPointsUseCase,
+        updateUserGamePointsUseCase
+    )
+
+    @Provides
+    fun provideSubmitGuessMovieGenreAnswerUseCase(
+        getDifficultyUseCase: GetGameDifficultyByDifficultyTypeUseCase,
+        updateUserGamePointsUseCase: UpdateUserGamePointsUseCase
+    ) = SubmitGuessMovieGenreAnswerUseCase(getDifficultyUseCase, updateUserGamePointsUseCase)
+
+    @Provides
+    fun provideGuessMovieGenreUseCase(
+        generateMovieGenreQuestionsUseCase: GenerateMovieGenreQuestionsUseCase,
+        submitGuessMovieGenreAnswerUseCase: SubmitGuessMovieGenreAnswerUseCase,
+        doGuessGenreGameHintUseCase: DoGuessGenreGameHintUseCase,
+    ) = GuessMovieGenreUseCase(
+        generateMovieGenreQuestionsUseCase,
+        submitGuessMovieGenreAnswerUseCase,
+        doGuessGenreGameHintUseCase
+    )
 }

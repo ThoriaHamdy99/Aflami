@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,14 +33,18 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.R
+import com.amsterdam.ui.R as R2
 import com.amsterdam.designsystem.components.IconButton
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
+import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.entity.Game
+import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.ui.application.LocalNavController
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.GuessPicture
 import com.amsterdam.ui.components.guessGame.GuessTitle
@@ -47,23 +52,28 @@ import com.amsterdam.ui.components.guessGame.TimerComponent
 import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
 import com.amsterdam.ui.screens.login.components.LoginBackground
-import com.amsterdam.viewmodel.game.GameInteractionListener
-import com.amsterdam.viewmodel.game.GameQuestionUiState
-import com.amsterdam.viewmodel.game.GameUiState
-import com.amsterdam.viewmodel.game.GameViewModel
+import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.uiModel
+import com.amsterdam.viewmodel.game.whichGenre.GenreGameEffect
+import com.amsterdam.viewmodel.game.whichGenre.GenreGameInteractionListener
+import com.amsterdam.viewmodel.game.whichGenre.GameQuestionUiState
+import com.amsterdam.viewmodel.game.whichGenre.GenreGameUiState
+import com.amsterdam.viewmodel.game.whichGenre.GuessGenreViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import kotlinx.coroutines.launch
 
 @Composable
 fun GameScreen(
     modifier: Modifier = Modifier,
-    viewModel: GameViewModel = hiltViewModel(),
+    viewModel: GuessGenreViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val navController = LocalNavController.current
+    val context = LocalContext.current
+
 
     GameScreenContent(
         state = state,
-        gameType = state.gameType,
+        gameType = Game.GameType.GUESS_MOVIE_BY_GENRE,
         interactionListener = viewModel,
         modifier = modifier,
     )
@@ -71,9 +81,9 @@ fun GameScreen(
 
 @Composable
 private fun GameScreenContent(
-    state: GameUiState,
+    state: GenreGameUiState,
     gameType: Game.GameType,
-    interactionListener: GameInteractionListener,
+    interactionListener: GenreGameInteractionListener,
     modifier: Modifier = Modifier,
 ) {
     Box {
@@ -106,6 +116,7 @@ private fun GameScreenContent(
             GameTopBar(
                 title = topBarTitle,
                 timerUiState = state.timerUiState,
+                onCancelGameClick = interactionListener::onCancelGameClick,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
             Row(
@@ -139,7 +150,13 @@ private fun GameScreenContent(
                     selectedAnswerIndex = state.selectedAnswerIndex,
                     isAnswerCorrect = state.isAnswerCorrect,
                     onHintClick = interactionListener::onUseHint,
-                    onSelectAnswer = interactionListener::onChooseAnswerClick,
+                    onSelectAnswer = { answerIndex, answer ->
+                        interactionListener
+                            .onChooseAnswerClick(
+                                answer,
+                                answerIndex,
+                            )
+                    },
                 )
             }
 
@@ -169,7 +186,7 @@ fun GameQuestion(
     isHintEnabled: Boolean,
     modifier: Modifier = Modifier,
     onHintClick: () -> Unit = {},
-    onSelectAnswer: (Int) -> Unit = {},
+    onSelectAnswer: (answerIndex: Int, answer: MovieGenre) -> Unit = { _, _ -> },
 ) {
     Column(
         modifier = modifier,
@@ -217,11 +234,11 @@ fun GameQuestion(
                 }
 
                 AnswerSelectionItem(
-                    text = answer,
+                    text = stringResource(answer.uiModel.displayableName),
                     status = state,
                     onClick = {
                         if (isAnswerCorrect != null) return@AnswerSelectionItem
-                        onSelectAnswer(index)
+                        onSelectAnswer(index, answer)
                     },
                 )
             }
@@ -268,60 +285,18 @@ private fun GameScreenPreview() {
     AflamiTheme {
         GameScreenContent(
             state =
-                GameUiState(
-                    questions =
-                        listOf(
-                            GameQuestionUiState(
-                                questionData = "A",
-                                answers =
-                                    listOf(
-                                        "A",
-                                        "B",
-                                        "C",
-                                        "D",
-                                    ),
-                            ),
-                            GameQuestionUiState(
-                                questionData = "B",
-                                answers =
-                                    listOf(
-                                        "A",
-                                        "B",
-                                        "C",
-                                        "D",
-                                    ),
-                            ),
-                            GameQuestionUiState(
-                                questionData = "C",
-                                answers =
-                                    listOf(
-                                        "A",
-                                        "B",
-                                        "C",
-                                        "D",
-                                    ),
-                            ),
-                            GameQuestionUiState(
-                                questionData = "D",
-                                answers =
-                                    listOf(
-                                        "A",
-                                        "B",
-                                        "C",
-                                        "D",
-                                    ),
-                            ),
-                        ),
+                GenreGameUiState(
+                    questions = emptyList()
                 ),
             gameType = Game.GameType.GUESS_MOVIE_BY_GENRE,
             interactionListener =
-                object : GameInteractionListener {
+                object : GenreGameInteractionListener {
                     override fun onCancelGameClick() {}
-
-                    override fun onChooseAnswerClick(answerIndex: Int) {}
-
+                    override fun onChooseAnswerClick(
+                        answer: MovieGenre,
+                        answerIndex: Int
+                    ) {}
                     override fun onUseHint() {}
-
                     override fun onMoveToNextQuestion() {}
                 },
         )
