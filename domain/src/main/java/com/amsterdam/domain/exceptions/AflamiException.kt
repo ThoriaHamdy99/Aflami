@@ -24,5 +24,4 @@ class AccessDeniedException : AuthenticationException()
 class AccessRestrictedException : AuthenticationException()
 
 open class GameException : AflamiException()
-
-class NoEnoughPointsException : GameException()
+class NotEnoughPointsException : GameException()

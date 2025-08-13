@@ -18,7 +18,7 @@ interface MovieRemoteSource {
 
     suspend fun getCastByMovieId(movieId: Long): RemoteCastAndCrewResponse
 
-    suspend fun getMovieDetailsById(movieId: Long, sessionId: String = ""): RemoteMovieDetailsResponse
+    suspend fun getMovieDetailsById(movieId: Long): RemoteMovieDetailsResponse
 
     suspend fun getPopularMovies(page: Int = 1): RemoteMovieResponse
 
@@ -26,13 +26,14 @@ interface MovieRemoteSource {
 
     suspend fun getTopRatedMovies(page: Int): RemoteMovieResponse
 
-    suspend fun getRatedMovies(sessionId: String): RemoteMovieResponse
+    suspend fun getRatedMovies(): RemoteMovieResponse
 
-    suspend fun setMovieRate(rate: Float, movieId: Long, sessionId: String): RatingResponse?
+    suspend fun setMovieRate(rate: Float, movieId: Long): RatingResponse?
 
-    suspend fun deleteMovieRate(movieId: Long, sessionId: String)
+    suspend fun deleteMovieRate(movieId: Long)
 
     suspend fun getMoviesByGenreIds(genresIds: List<Long>, page: Int): RemoteMovieResponse
 
     suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<RemoteMovieItemDto>
+    suspend fun getMoviesByGenreId(genreId: Long, page: Int): RemoteMovieResponse
 }

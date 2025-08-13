@@ -9,6 +9,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -52,9 +53,9 @@ interface MovieApiService {
     ): RemoteCastAndCrewResponse
 
     @GET("movie/{movieId}")
+    @Headers("X-Require-Session: true")
     suspend fun getMovieDetailsById(
         @Path("movieId") movieId: Long,
-        @Query("session_id") sessionId: String = "",
         @Query("append_to_response") append: String = "reviews,credits,actors,similar,images,videos,account_states",
         @Query("include_video_language") videoLang: String = "en"
     ): RemoteMovieDetailsResponse
@@ -70,23 +71,23 @@ interface MovieApiService {
         @Query("page") page: Int
     ): RemoteMovieResponse
 
+    @Headers("X-Require-Session: true")
     @FormUrlEncoded
     @POST("movie/{movie_id}/rating")
     suspend fun postMovieRating(
         @Path("movie_id") movieId: Long,
         @Field("value") rate: Float,
-        @Query("session_id") sessionId: String
     ): RatingResponse
 
+    @Headers("X-Require-Session: true")
     @GET("account/{account_id}/rated/movies")
     suspend fun getRatedMovies(
         @Path("account_id") accountId: Int = 0,
-        @Query("session_id") sessionId: String
     ): RemoteMovieResponse
 
+    @Headers("X-Require-Session: true")
     @DELETE("movie/{movie_id}/rating")
     suspend fun deleteMovieRate(
         @Path("movie_id") movieId: Long,
-        @Query("session_id") sessionId: String,
     )
 }
