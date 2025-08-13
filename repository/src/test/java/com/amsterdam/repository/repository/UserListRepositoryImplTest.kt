@@ -10,7 +10,7 @@ import com.amsterdam.repository.dto.remote.AddItemToListResponse
 import com.amsterdam.repository.dto.remote.CreateUserListResponse
 import com.amsterdam.repository.dto.remote.RemoteUserListDto
 import com.amsterdam.repository.dto.remote.RemoteUserListResponse
-import com.amsterdam.repository.mapper.remote.toMovie
+import com.amsterdam.repository.mapper.toMovieEntity
 import com.amsterdam.repository.utils.listItems
 import com.amsterdam.repository.utils.remoteListResponse
 import com.google.common.truth.Truth.assertThat
@@ -105,7 +105,7 @@ class UserListRepositoryImplTest {
 
         val result = userListRepository.getMoviesFromList(listId, 1)
 
-        assertThat(result).containsExactlyElementsIn(listItems.map { it.toMovie() })
+        assertThat(result).containsExactlyElementsIn(listItems.map { it.toMovieEntity() })
     }
 
     @Test

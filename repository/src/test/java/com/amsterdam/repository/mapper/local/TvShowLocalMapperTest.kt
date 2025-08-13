@@ -2,6 +2,7 @@ package com.amsterdam.repository.mapper.local
 
 import com.amsterdam.entity.Movie
 import com.amsterdam.repository.dto.local.TvShowLocalDto
+import com.amsterdam.repository.mapper.toEntity
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.Test

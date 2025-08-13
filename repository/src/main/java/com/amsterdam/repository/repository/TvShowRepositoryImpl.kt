@@ -22,14 +22,12 @@ import com.amsterdam.repository.dto.remote.RemoteCategoryResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowItemDto
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
-import com.amsterdam.repository.mapper.local.toDto
-import com.amsterdam.repository.mapper.local.toEntity
-import com.amsterdam.repository.mapper.remote.toEntity
-import com.amsterdam.repository.mapper.remote.toEntityList
-import com.amsterdam.repository.mapper.remote.toTvShowUserRateEntityList
-import com.amsterdam.repository.mapper.remoteToLocal.toLocalDto
-import com.amsterdam.repository.mapper.remoteToLocal.toLocalDtoList
-import com.amsterdam.repository.mapper.remoteToLocal.toLocalTvShowCategoryDtoList
+import com.amsterdam.repository.mapper.toDto
+import com.amsterdam.repository.mapper.toEntity
+import com.amsterdam.repository.mapper.toEntityList
+import com.amsterdam.repository.mapper.toLocalDto
+import com.amsterdam.repository.mapper.toLocalTvShowCategoryDtoList
+import com.amsterdam.repository.mapper.toTvShowUserRateEntityList
 import com.amsterdam.repository.utils.getCachedOrRemoteData
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Clock
@@ -170,7 +168,7 @@ class TvShowRepositoryImpl @Inject constructor(
     private suspend fun savePopularTvShows(remoteTvShows: List<RemoteTvShowItemDto>) {
         saveTvShowWithCategories(remoteTvShows).also {
             localTvDataSource.upsertPopularTvShows(
-                remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
+                remoteTvShows.toLocalTvShowCategoryDtoList(preferences.getAppLanguage().first()),
             )
         }
     }
@@ -195,7 +193,7 @@ class TvShowRepositoryImpl @Inject constructor(
     private suspend fun saveTopRatedTvShows(remoteTvShows: List<RemoteTvShowItemDto>) {
         saveTvShowWithCategories(remoteTvShows).also {
             localTvDataSource.upsertTopRatedTvShows(
-                remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
+                remoteTvShows.toLocalTvShowCategoryDtoList(preferences.getAppLanguage().first()),
             )
         }
     }

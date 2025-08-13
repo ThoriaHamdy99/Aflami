@@ -1,6 +1,8 @@
 package com.amsterdam.repository.mapper.local
 
 import com.amsterdam.repository.dto.local.SearchLocalDto
+import com.amsterdam.repository.mapper.toEntity
+import com.amsterdam.repository.mapper.toEntityList
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

@@ -6,9 +6,9 @@ import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
 import com.amsterdam.entity.UserList
 import com.amsterdam.repository.datasource.remote.UserListRemoteDataSource
-import com.amsterdam.repository.mapper.remote.toMovie
-import com.amsterdam.repository.mapper.remote.toTvShow
-import com.amsterdam.repository.mapper.remote.toUserList
+import com.amsterdam.repository.mapper.toMovieEntity
+import com.amsterdam.repository.mapper.toTvShowEntity
+import com.amsterdam.repository.mapper.toEntity
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
@@ -32,8 +32,8 @@ class UserListRepositoryImpl @Inject constructor(
     override suspend fun getMoviesAndTvShowsFromList(listId: Long, page: Int): GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems {
         val items = userListDataSource.getMoviesAndTvShowsFromList(listId, page).items
 
-        val tvShows = items.filter { it.mediaType == "tv" }.map { it.toTvShow() }
-        val movies = items.filter { it.mediaType == "movie" }.map { it.toMovie() }
+        val tvShows = items.filter { it.mediaType == "tv" }.map { it.toTvShowEntity() }
+        val movies = items.filter { it.mediaType == "movie" }.map { it.toMovieEntity() }
 
         return GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
             listDetailsMovies = movies,
@@ -45,7 +45,7 @@ class UserListRepositoryImpl @Inject constructor(
 
     override suspend fun getUserLists(accountId: Int, page: Int): List<UserList> {
         return userListDataSource.getUserLists(accountId, page).results
-            .map { it.toUserList() }
+            .map { it.toEntity() }
     }
 
     override suspend fun removeMovieFromList(listId: Long, movieId: Long) {

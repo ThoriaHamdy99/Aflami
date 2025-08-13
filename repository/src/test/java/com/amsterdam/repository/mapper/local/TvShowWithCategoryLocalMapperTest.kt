@@ -5,6 +5,7 @@ import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.repository.dto.local.TvShowCategoryLocalDto
 import com.amsterdam.repository.dto.local.TvShowLocalDto
 import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
+import com.amsterdam.repository.mapper.toEntity
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDate
 import org.junit.Test

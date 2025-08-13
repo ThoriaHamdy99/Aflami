@@ -19,18 +19,16 @@ import com.amsterdam.repository.dto.remote.RemoteCategoryDto
 import com.amsterdam.repository.dto.remote.RemoteCategoryResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
-import com.amsterdam.repository.mapper.local.toDto
-import com.amsterdam.repository.mapper.local.toDtoList
-import com.amsterdam.repository.mapper.local.toEntity
-import com.amsterdam.repository.mapper.remote.toEntity
-import com.amsterdam.repository.mapper.remote.toEntityList
-import com.amsterdam.repository.mapper.remote.toMovieDetailsEntity
-import com.amsterdam.repository.mapper.remote.toMovieEntityList
-import com.amsterdam.repository.mapper.remote.toMovieItemDto
-import com.amsterdam.repository.mapper.remote.toMovieUserRateEntityList
-import com.amsterdam.repository.mapper.remoteToLocal.toLocalDto
-import com.amsterdam.repository.mapper.remoteToLocal.toLocalDtoList
-import com.amsterdam.repository.mapper.remoteToLocal.toLocalMovieDtoList
+import com.amsterdam.repository.mapper.toDto
+import com.amsterdam.repository.mapper.toDtoList
+import com.amsterdam.repository.mapper.toEntity
+import com.amsterdam.repository.mapper.toMovieEntityList
+import com.amsterdam.repository.mapper.toLocalTvShowCategoryDtoList
+import com.amsterdam.repository.mapper.toEntityList
+import com.amsterdam.repository.mapper.toLocalDto
+import com.amsterdam.repository.mapper.toLocalMovieDtoList
+import com.amsterdam.repository.mapper.toMovieItemDto
+import com.amsterdam.repository.mapper.toMovieUserRateEntityList
 import com.amsterdam.repository.utils.getCachedOrRemoteData
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Clock
@@ -78,7 +76,7 @@ class MovieRepositoryImpl @Inject constructor(
             .also {
                 incrementUserInterestByMovie(it.genres)
                 cacheWatchedMovie(it.toMovieItemDto())
-            }.toMovieDetailsEntity()
+            }.toEntity()
     }
 
     override suspend fun getUpcomingMovies(): List<Movie> {
@@ -297,7 +295,7 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     private suspend fun saveMovieCategoriesToDatabase(movieCategories: RemoteCategoryResponse) {
-        categoryLocalDataSource.upsertMovieCategories(movieCategories.genres.toLocalDtoList())
+        categoryLocalDataSource.upsertMovieCategories(movieCategories.genres.toLocalTvShowCategoryDtoList())
     }
 
 }

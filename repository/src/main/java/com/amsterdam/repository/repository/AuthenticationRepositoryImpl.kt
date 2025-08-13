@@ -6,8 +6,8 @@ import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
 import com.amsterdam.repository.datasource.local.ProfileLocalDataSource
 import com.amsterdam.repository.datasource.remote.AuthenticationRemoteDataSource
-import com.amsterdam.repository.mapper.local.stringToSessionTypeEntity
-import com.amsterdam.repository.mapper.local.toLocalDto
+import com.amsterdam.repository.mapper.stringToSessionTypeEntity
+import com.amsterdam.repository.mapper.toLocalDto
 import com.amsterdam.repository.security.CryptoData
 import javax.inject.Inject
 

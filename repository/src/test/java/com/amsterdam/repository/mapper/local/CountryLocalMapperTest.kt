@@ -3,6 +3,9 @@ package com.amsterdam.repository.mapper.local
 
 import com.amsterdam.entity.Country
 import com.amsterdam.repository.dto.local.CountryLocalDto
+import com.amsterdam.repository.mapper.toEntity
+import com.amsterdam.repository.mapper.toEntityList
+import com.amsterdam.repository.mapper.toLocalDto
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -35,7 +38,7 @@ class CountryLocalMapperTest {
         )
 
         // When
-        val result = entity.LocalCountryDto("en")
+        val result = entity.toLocalDto("en")
 
         // Then
         assertThat(result.name).isEqualTo("France")

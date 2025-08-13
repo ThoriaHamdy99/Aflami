@@ -6,9 +6,8 @@ import com.amsterdam.repository.datasource.local.AppPreferences
 import com.amsterdam.repository.datasource.local.CountryLocalDataSource
 import com.amsterdam.repository.datasource.remote.CountryRemoteDataSource
 import com.amsterdam.repository.dto.remote.RemoteCountryDto
-import com.amsterdam.repository.mapper.local.toEntityList
-import com.amsterdam.repository.mapper.remote.toEntityList
-import com.amsterdam.repository.mapper.remoteToLocal.toLocalDtoList
+import com.amsterdam.repository.mapper.toEntity
+import com.amsterdam.repository.mapper.toLocalDtoList
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
@@ -27,14 +26,14 @@ class CountryRepositoryImpl @Inject constructor(
         remoteCountries: List<RemoteCountryDto>
     ): List<Country> {
         return saveCountries(remoteCountries).let {
-            remoteCountries.toEntityList()
+            remoteCountries.map { it.toEntity() }
         }
     }
 
     private suspend fun getCountriesFromLocal(): List<Country> {
         return try {
             localDataSource.getCountries(storedLanguage = preferences.getAppLanguage().first())
-                .toEntityList()
+                .map { it.toEntity() }
         } catch (_: Exception) {
             emptyList()
         }
