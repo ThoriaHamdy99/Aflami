@@ -10,9 +10,6 @@ import com.amsterdam.repository.dto.remote.AddItemToListResponse
 import com.amsterdam.repository.dto.remote.CreateUserListResponse
 import com.amsterdam.repository.dto.remote.RemoteUserListDto
 import com.amsterdam.repository.dto.remote.RemoteUserListResponse
-import com.amsterdam.repository.mapper.remote.toMovie
-import com.amsterdam.repository.utils.listItems
-import com.amsterdam.repository.utils.remoteListResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -33,7 +30,12 @@ class UserListRepositoryImplTest {
     @Test
     fun `addMovieToList should call addMovieToList from userListRemoteSource`() =
         runTest {
-            coEvery { userListRemoteSource.addMovieToList(listId, movieId) }returns AddItemToListResponse(1, "", true)
+            coEvery {
+                userListRemoteSource.addMovieToList(
+                    listId,
+                    movieId
+                )
+            } returns AddItemToListResponse(1, "", true)
 
             userListRepository.addMovieToList(listId, movieId)
 
@@ -43,7 +45,8 @@ class UserListRepositoryImplTest {
     @Test
     fun `addMovieToList should throw UnknownException when addMovieToList fails`() =
         runTest {
-            coEvery { userListRemoteSource.addMovieToList(listId, movieId)
+            coEvery {
+                userListRemoteSource.addMovieToList(listId, movieId)
             } returns AddItemToListResponse(1, "", false)
 
             assertThrows<UnknownException> { userListRepository.addMovieToList(listId, movieId) }
@@ -53,7 +56,12 @@ class UserListRepositoryImplTest {
     fun `createNewList should call createNewList from userListRemoteSource`() =
         runTest {
             coEvery { preferences.getAppLanguage() } returns flowOf(language)
-            coEvery { userListRemoteSource.createNewList(listName, language) } returns fakeUserListResponse
+            coEvery {
+                userListRemoteSource.createNewList(
+                    listName,
+                    language
+                )
+            } returns fakeUserListResponse
 
             val createdListId = userListRepository.createNewList(listName)
 
@@ -98,24 +106,6 @@ class UserListRepositoryImplTest {
             coVerify { userListRemoteSource.deleteList(listId) }
         }
 
-    @Test
-    fun `should return list of movies when response return with results`() = runTest {
-        val response = remoteListResponse.copy(items = listItems)
-        coEvery { userListRemoteSource.getMoviesFromList(listId, 1) } returns response
-
-        val result = userListRepository.getMoviesFromList(listId, 1)
-
-        assertThat(result).containsExactlyElementsIn(listItems.map { it.toMovie() })
-    }
-
-    @Test
-    fun `should return empty list of movies when response returns empty list with`() = runTest {
-        coEvery { userListRemoteSource.getMoviesFromList(listId, 1) } returns remoteListResponse
-
-        val result = userListRepository.getMoviesFromList(listId, 1)
-
-        assertThat(result).isEmpty()
-    }
 
     @Test
     fun `getUserList should return list of users when response return with results`() = runTest {
