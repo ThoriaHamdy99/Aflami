@@ -57,7 +57,7 @@ fun GuessReleaseYearScreen(viewModel: GuessReleaseYearGameViewModel = hiltViewMo
                     navController.popBackStack()
                 }
                 is GuessReleaseYearGameEffect.NavigateToGameResult -> {
-                    navController.navigate(Route.GameResult.route)
+              //      navController.navigate(Route.GameResult.route)
                 }
             }
         }
