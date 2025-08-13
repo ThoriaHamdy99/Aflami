@@ -16,8 +16,8 @@ class ResultViewModel @Inject constructor(
 ), ResultInteractionListener {
 
     init {
-        val points = gameResultArgs.totalCollectedPoints!!
-        val time = gameResultArgs.totalSpentSeconds!!
+        val points = gameResultArgs.totalCollectedPoints
+        val time = gameResultArgs.totalSpentSeconds
 
         updateState {
             it.copy(points = points, timeInSeconds = time)

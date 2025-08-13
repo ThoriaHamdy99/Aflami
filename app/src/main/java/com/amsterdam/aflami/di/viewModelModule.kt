@@ -1,6 +1,16 @@
 package com.amsterdam.aflami.di
 
 import androidx.lifecycle.SavedStateHandle
+import com.amsterdam.ui.screens.cast.CastScreenArgsImpl
+import com.amsterdam.ui.screens.categoriesDetails.movies.CategoriesMovieDetailsArgsImpl
+import com.amsterdam.ui.screens.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgsImpl
+import com.amsterdam.ui.screens.games.character.GuessCharacterGameArgsImpl
+import com.amsterdam.ui.screens.games.releaseYear.GuessReleaseYearGameArgsImpl
+import com.amsterdam.ui.screens.games.guessGenre.GameGenreArgsImpl
+import com.amsterdam.ui.screens.letsPlay.GameResultArgsImpl
+import com.amsterdam.ui.screens.listDetails.ListDetailsArgsImpl
+import com.amsterdam.ui.screens.movieDetails.MovieDetailsArgsImpl
+import com.amsterdam.ui.screens.seriesDetails.SeriesDetailsArgsImpl
 import com.amsterdam.viewmodel.cast.CastScreenArgs
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMovieDetailsArgs
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgs
@@ -26,46 +36,47 @@ object ViewModelViewModelScope {
 
     @Provides
     fun provideMovieDetailsArgs(savedStateHandle: SavedStateHandle): MovieDetailsArgs =
-        MovieDetailsArgs(savedStateHandle)
+        MovieDetailsArgsImpl(savedStateHandle)
 
     @Provides
     fun provideCategoriesMoviesDetailsArgs(savedStateHandle: SavedStateHandle): CategoriesMovieDetailsArgs =
-        CategoriesMovieDetailsArgs(savedStateHandle)
+        CategoriesMovieDetailsArgsImpl(savedStateHandle)
 
     @Provides
     fun provideSeriesDetailsArgs(savedStateHandle: SavedStateHandle): SeriesDetailsArgs =
-        SeriesDetailsArgs(savedStateHandle)
+        SeriesDetailsArgsImpl(savedStateHandle)
 
     @Provides
     fun provideCategoriesTvShowsDetailsArgs(savedStateHandle: SavedStateHandle): CategoriesTvShowsDetailsArgs =
-        CategoriesTvShowsDetailsArgs(savedStateHandle)
+        CategoriesTvShowsDetailsArgsImpl(savedStateHandle)
 
     @Provides
     fun provideCastScreenArgs(savedStateHandle: SavedStateHandle): CastScreenArgs =
-        CastScreenArgs(savedStateHandle)
+        CastScreenArgsImpl(savedStateHandle)
 
     @Provides
     fun provideGuessReleaseYearGameArgs(
         savedStateHandle: SavedStateHandle
-    ): GuessReleaseYearGameArgs = GuessReleaseYearGameArgs(savedStateHandle)
+    ): GuessReleaseYearGameArgs = GuessReleaseYearGameArgsImpl(savedStateHandle)
 
     @Provides
     fun provideGuessCharacterGameArgs(
         savedStateHandle: SavedStateHandle
-    ): GuessCharacterGameArgs = GuessCharacterGameArgs(savedStateHandle)
+    ): GuessCharacterGameArgs = GuessCharacterGameArgsImpl(savedStateHandle)
 
     @Provides
     fun provideListDetailsArgs(
         savedStateHandle: SavedStateHandle
-    ): ListDetailsArgs = ListDetailsArgs(savedStateHandle)
+    ): ListDetailsArgs = ListDetailsArgsImpl(savedStateHandle)
 
     @Provides
-    fun provideGameResultArgs(savedStateHandle: SavedStateHandle) = GameResultArgs(savedStateHandle)
+    fun provideGameResultArgs(savedStateHandle: SavedStateHandle
+    ): GameResultArgs = GameResultArgsImpl(savedStateHandle)
 
     @Provides
     fun provideGameArgs(
         savedStateHandle: SavedStateHandle
-    ): GameGenreArgs = GameGenreArgs(savedStateHandle)
+    ): GameGenreArgs = GameGenreArgsImpl(savedStateHandle)
 
 }
 

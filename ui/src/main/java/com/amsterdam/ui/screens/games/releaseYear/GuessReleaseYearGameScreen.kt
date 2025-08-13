@@ -27,13 +27,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.ui.R
-import com.amsterdam.ui.application.LocalNavController
+import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.GameTopBar
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.GuessTitle
 import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
-import com.amsterdam.ui.navigation.Route
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameEffect
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameViewModel
@@ -47,16 +46,16 @@ import kotlinx.coroutines.launch
 fun GuessReleaseYearScreen(viewModel: GuessReleaseYearGameViewModel = hiltViewModel()) {
 
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val navController = LocalNavController.current
+    val navigationManager = LocalNavManager.current
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is GuessReleaseYearGameEffect.NavigateBack -> {
-                    navController.popBackStack()
+                    navigationManager.navigateUp()
                 }
                 is GuessReleaseYearGameEffect.NavigateToGameResult -> {
-                    navController.navigate(Route.ResultScreen(effect.totalCollectedPoints,effect.totalSpentSeconds))
+                    navigationManager.toResultScreen(effect.totalCollectedPoints,effect.totalSpentSeconds)
                 }
             }
         }

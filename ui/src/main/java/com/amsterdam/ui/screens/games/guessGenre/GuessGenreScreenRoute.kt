@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.guessGenre
+package com.amsterdam.ui.screens.games.guessGenre
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
