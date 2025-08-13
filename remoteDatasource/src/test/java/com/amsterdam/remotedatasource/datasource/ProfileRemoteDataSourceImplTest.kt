@@ -24,24 +24,22 @@ class ProfileRemoteDataSourceImplTest {
     @Test
     fun `getAccountDetails should return account details when api call is successful`() = runTest {
         //Given
-        val sessionId = "session_id"
         val expectedAccountDetails = mockk<AccountDetailsRemoteDto>()
-        coEvery { profileApiService.getAccountDetails(any()) } returns expectedAccountDetails
+        coEvery { profileApiService.getAccountDetails() } returns expectedAccountDetails
 
         //when
-        val result = profileDataSourceImpl.getAccountDetails(sessionId)
+        val result = profileDataSourceImpl.getAccountDetails()
 
         //then
         assertThat(result).isEqualTo(expectedAccountDetails)
-        coVerify(exactly = 1) { profileApiService.getAccountDetails(sessionId) }
+        coVerify(exactly = 1) { profileApiService.getAccountDetails() }
     }
     @Test
     fun `getAccountDetails should return null when api call fails`() = runTest {
         //Given
-        val sessionId = "session_id"
-        coEvery { profileApiService.getAccountDetails(any()) } throws Exception()
+        coEvery { profileApiService.getAccountDetails() } throws Exception()
         //When & Then
-        assertThrows <Exception>{ profileDataSourceImpl.getAccountDetails(sessionId) }
+        assertThrows <Exception>{ profileDataSourceImpl.getAccountDetails() }
     }
 
 }
