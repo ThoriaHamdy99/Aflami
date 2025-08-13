@@ -6,6 +6,8 @@ import com.amsterdam.domain.useCase.game.guessByPoster.GuessMovieByPosterGameUse
 import com.amsterdam.domain.useCase.game.guessByPoster.MoviePosterQuestion
 import com.amsterdam.domain.useCase.game.guessByPoster.SubmitGuessMovieByPosterAnswerUseCase
 import com.amsterdam.entity.GameDifficulty
+import com.amsterdam.viewmodel.gameEnd.ResultScreenData
+import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -145,6 +147,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
     override fun onMoveToNextQuestion() {
         val currentQuestionIndex = state.value.currentQuestionIndex
         val nextQuestionIndex = currentQuestionIndex + 1
+
         if (nextQuestionIndex < state.value.questions.size) {
             updateState {
                 it.copy(
@@ -156,11 +159,14 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
             }
             startTheTimer()
         } else {
+            val resultData = ResultScreenData(
+                totalCollectedPoints = totalCollectedPoints,
+                totalSpentSeconds = spentTimeSeconds,
+                difficulty = difficultyType.name,
+                gameType = ResultSideEffect.GameType.GUESS_MOVIE_BY_POSTER.name
+            )
             sendNewNavigationEffect(
-                GuessMovieByPosterGameEffect.NavigateToGameResult(
-                    totalCollectedPoints,
-                    spentTimeSeconds
-                )
+                GuessMovieByPosterGameEffect.NavigateToGameResult(resultData)
             )
         }
     }

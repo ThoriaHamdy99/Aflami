@@ -55,13 +55,22 @@ fun GuessReleaseYearScreen(viewModel: GuessReleaseYearGameViewModel = hiltViewMo
                 is GuessReleaseYearGameEffect.NavigateBack -> {
                     navController.popBackStack()
                 }
+
                 is GuessReleaseYearGameEffect.NavigateToGameResult -> {
-                    navController.navigate(Route.ResultScreen(effect.totalCollectedPoints,effect.totalSpentSeconds))
+                    val resultScreenData = effect.resultScreenData
+                    navController.navigate(
+                        Route.ResultScreen(
+                            resultScreenData.totalCollectedPoints,
+                            resultScreenData.totalSpentSeconds,
+                            resultScreenData.difficulty,
+                            resultScreenData.gameType
+                        )
+                    )
                 }
             }
         }
     }
-    GameContent(state.value,viewModel)
+    GameContent(state.value, viewModel)
 }
 
 @Composable
