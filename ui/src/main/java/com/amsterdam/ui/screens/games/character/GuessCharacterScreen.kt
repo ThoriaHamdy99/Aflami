@@ -60,9 +60,12 @@ fun GuessCharacterScreen(viewModel: GuessCharacterGameViewModel = hiltViewModel(
                 }
 
                 is GuessCharacterGameEffect.NavigateToGameResult -> {
+                    val resultScreenData = effect.resultScreenData
                     navigationManager.toResultScreen(
-                        effect.totalCollectedPoints,
-                        effect.totalSpentSeconds
+                        totalCollectedPoints = resultScreenData.totalCollectedPoints,
+                        totalSpentSeconds = resultScreenData.totalSpentSeconds,
+                        gameType = resultScreenData.gameType,
+                        difficulty = resultScreenData.difficulty
                     )
                 }
             }

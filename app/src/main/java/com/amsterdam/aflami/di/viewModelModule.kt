@@ -5,6 +5,7 @@ import com.amsterdam.ui.screens.cast.CastScreenArgsImpl
 import com.amsterdam.ui.screens.categoriesDetails.movies.CategoriesMovieDetailsArgsImpl
 import com.amsterdam.ui.screens.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgsImpl
 import com.amsterdam.ui.screens.games.character.GuessCharacterGameArgsImpl
+import com.amsterdam.ui.screens.games.guessByPoster.GuessMovieByPosterGameArgsImpl
 import com.amsterdam.ui.screens.games.releaseYear.GuessReleaseYearGameArgsImpl
 import com.amsterdam.ui.screens.games.guessGenre.GameGenreArgsImpl
 import com.amsterdam.ui.screens.letsPlay.GameResultArgsImpl
@@ -17,6 +18,7 @@ import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetails
 import com.amsterdam.viewmodel.game.whichGenre.GameGenreArgs
 import com.amsterdam.viewmodel.gameEnd.GameResultArgs
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameArgs
+import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameArgs
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameArgs
 import com.amsterdam.viewmodel.listDetails.ListDetailsArgs
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsArgs
@@ -72,6 +74,11 @@ object ViewModelViewModelScope {
     @Provides
     fun provideGameResultArgs(savedStateHandle: SavedStateHandle
     ): GameResultArgs = GameResultArgsImpl(savedStateHandle)
+
+    @Provides
+    fun provideGuessMovieByPosterGameArgs(
+        savedStateHandle: SavedStateHandle
+    ): GuessMovieByPosterGameArgs = GuessMovieByPosterGameArgsImpl(savedStateHandle)
 
     @Provides
     fun provideGameArgs(

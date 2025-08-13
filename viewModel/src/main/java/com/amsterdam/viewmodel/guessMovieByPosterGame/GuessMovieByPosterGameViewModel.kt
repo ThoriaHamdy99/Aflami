@@ -1,11 +1,11 @@
-package com.amsterdam.viewmodel.guessCharacterGame
+package com.amsterdam.viewmodel.guessMovieByPosterGame
 
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.timer.TimerHandler
-import com.amsterdam.domain.useCase.game.character.GenerateCharacterQuestionsUseCase.CharacterDataQuestion
-import com.amsterdam.domain.useCase.game.character.GuessCharacterGameUseCase
-import com.amsterdam.domain.useCase.game.character.SubmitCharacterAnswerUseCase.AnswerResult
-import com.amsterdam.entity.GameDifficulty.DifficultyType
+import com.amsterdam.domain.useCase.game.guessByPoster.GuessMovieByPosterGameUseCase
+import com.amsterdam.domain.useCase.game.guessByPoster.MoviePosterQuestion
+import com.amsterdam.domain.useCase.game.guessByPoster.SubmitGuessMovieByPosterAnswerUseCase
+import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.viewmodel.gameEnd.ResultScreenData
 import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -16,16 +16,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GuessCharacterGameViewModel @Inject constructor(
-    private val guessCharacterGameUseCase: GuessCharacterGameUseCase,
-    args: GuessCharacterGameArgs,
+class GuessMovieByPosterGameViewModel @Inject constructor(
+    private val guessMovieByPosterGameUseCase: GuessMovieByPosterGameUseCase,
+    args: GuessMovieByPosterGameArgs,
     private val dispatcherProvider: DispatcherProvider,
     private val timerHandler: TimerHandler
-) : BaseViewModel<GuessCharacterUiState, GuessCharacterGameEffect>(
-    GuessCharacterUiState(),
+) : BaseViewModel<GuessMovieByPosterUiState, GuessMovieByPosterGameEffect>(
+    GuessMovieByPosterUiState(),
     dispatcherProvider
-), GuessCharacterInteractionListener {
-    private val difficultyType = DifficultyType.valueOf(args.difficulty)
+), GuessMovieByPosterInteractionListener {
+
+    private val difficultyType = GameDifficulty.DifficultyType.valueOf(args.difficulty)
     private var spentTimeSeconds: Int = 0
     private var totalCollectedPoints: Int = 0
 
@@ -43,18 +44,17 @@ class GuessCharacterGameViewModel @Inject constructor(
         )
     }
 
-    private suspend fun startTheGame(): List<CharacterDataQuestion> {
-        return guessCharacterGameUseCase.startGame(difficultyType)
+    private suspend fun startTheGame(): List<MoviePosterQuestion> {
+        return guessMovieByPosterGameUseCase.startGame(difficultyType)
     }
 
-    private fun onSuccessGetQuestions(questions: List<CharacterDataQuestion>) {
-        updateState { it.copy(questions = questions.toQuestionsUiStateUiState()) }
+    private fun onSuccessGetQuestions(questions: List<MoviePosterQuestion>) {
+        updateState { it.copy(questions = questions.toQuestionsUiState()) }
         startTheTimer()
     }
 
     private fun startTheTimer() {
-        val currentQuestion =
-            state.value.questions[state.value.currentQuestionIndex]
+        val currentQuestion = state.value.questions[state.value.currentQuestionIndex]
         viewModelScope.launch(dispatcherProvider.Default) {
             timerHandler.startTimer(
                 currentQuestion.questionTimeSeconds,
@@ -65,8 +65,7 @@ class GuessCharacterGameViewModel @Inject constructor(
     }
 
     private fun onTimerUpdate(remainingSeconds: Int) {
-        val currentQuestion =
-            state.value.questions[state.value.currentQuestionIndex]
+        val currentQuestion = state.value.questions[state.value.currentQuestionIndex]
         updateState {
             it.copy(
                 timerUiState = TimerUiState(
@@ -83,11 +82,10 @@ class GuessCharacterGameViewModel @Inject constructor(
         updateState { it.copy(isNextEnabled = true) }
     }
 
-    fun onError(error: Exception) {
-
+    private fun onError(error: Exception) {
     }
 
-    fun onCompletion() {
+    private fun onCompletion() {
         updateState { it.copy(isLoading = false) }
     }
 
@@ -95,7 +93,7 @@ class GuessCharacterGameViewModel @Inject constructor(
         tryToExecute(
             action = {
                 val currentQuestion = state.value.questions[state.value.currentQuestionIndex]
-                guessCharacterGameUseCase.giveHint(currentQuestion.toCharacterDataQuestion())
+                guessMovieByPosterGameUseCase.giveHint(currentQuestion.toMoviePosterQuestion())
             },
             onSuccess = { newQuestion ->
                 updateState {
@@ -103,7 +101,7 @@ class GuessCharacterGameViewModel @Inject constructor(
                         questions = it.questions.toMutableList().apply {
                             set(
                                 state.value.currentQuestionIndex,
-                                newQuestion.toQuestionUiStateUiState()
+                                newQuestion.toQuestionUiState()
                             )
                         }, isHintEnabled = false
                     )
@@ -111,16 +109,16 @@ class GuessCharacterGameViewModel @Inject constructor(
             },
             onError = ::onError
         )
-
     }
 
     override fun onSelectAnswer(selectedAnswerIndex: Int) {
         val question =
-            state.value.questions[state.value.currentQuestionIndex].toCharacterDataQuestion()
-        val selectedAnswer = question.choices[selectedAnswerIndex]
+            state.value.questions[state.value.currentQuestionIndex].toMoviePosterQuestion()
+        val selectedAnswer = question.movieNameChoices[selectedAnswerIndex]
+
         tryToExecute(
             action = {
-                guessCharacterGameUseCase.answer(
+                guessMovieByPosterGameUseCase.answer(
                     question,
                     selectedAnswer,
                     difficultyType
@@ -130,7 +128,10 @@ class GuessCharacterGameViewModel @Inject constructor(
         )
     }
 
-    private fun onSuccessSubmitAnswer(answerResult: AnswerResult, selectedAnswerIndex: Int) {
+    private fun onSuccessSubmitAnswer(
+        answerResult: SubmitGuessMovieByPosterAnswerUseCase.AnswerResult,
+        selectedAnswerIndex: Int
+    ) {
         updateState {
             it.copy(
                 isAnswerCorrect = answerResult.isCorrect,
@@ -146,6 +147,7 @@ class GuessCharacterGameViewModel @Inject constructor(
     override fun onMoveToNextQuestion() {
         val currentQuestionIndex = state.value.currentQuestionIndex
         val nextQuestionIndex = currentQuestionIndex + 1
+
         if (nextQuestionIndex < state.value.questions.size) {
             updateState {
                 it.copy(
@@ -161,12 +163,10 @@ class GuessCharacterGameViewModel @Inject constructor(
                 totalCollectedPoints = totalCollectedPoints,
                 totalSpentSeconds = spentTimeSeconds,
                 difficulty = difficultyType.name,
-                gameType = ResultSideEffect.GameType.GUESS_CHARACTER.name
+                gameType = ResultSideEffect.GameType.GUESS_MOVIE_BY_POSTER.name
             )
             sendNewNavigationEffect(
-                GuessCharacterGameEffect.NavigateToGameResult(
-                    resultData
-                )
+                GuessMovieByPosterGameEffect.NavigateToGameResult(resultData)
             )
         }
     }
@@ -176,11 +176,7 @@ class GuessCharacterGameViewModel @Inject constructor(
     }
 
     override fun onCloseButtonClicked() {
-        sendNewNavigationEffect(GuessCharacterGameEffect.NavigateBack)
+        timerHandler.stopTimer()
+        sendNewNavigationEffect(GuessMovieByPosterGameEffect.NavigateBack)
     }
-
-    override fun onClickClose() {
-        sendNewNavigationEffect(GuessCharacterGameEffect.NavigateToGame)
-    }
-
 }

@@ -55,7 +55,13 @@ fun GuessReleaseYearScreen(viewModel: GuessReleaseYearGameViewModel = hiltViewMo
                     navigationManager.navigateUp()
                 }
                 is GuessReleaseYearGameEffect.NavigateToGameResult -> {
-                    navigationManager.toResultScreen(effect.totalCollectedPoints,effect.totalSpentSeconds)
+                    val resultScreenData = effect.resultScreenData
+                    navigationManager.toResultScreen(
+                        totalCollectedPoints = resultScreenData.totalCollectedPoints,
+                        totalSpentSeconds = resultScreenData.totalSpentSeconds,
+                        gameType = resultScreenData.gameType,
+                        difficulty = resultScreenData.difficulty
+                    )
                 }
             }
         }
