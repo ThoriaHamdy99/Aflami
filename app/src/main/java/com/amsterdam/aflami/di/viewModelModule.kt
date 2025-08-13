@@ -5,6 +5,7 @@ import com.amsterdam.viewmodel.cast.CastScreenArgs
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMovieDetailsArgs
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgs
 import com.amsterdam.viewmodel.game.whichGenre.GameArgs
+import com.amsterdam.viewmodel.gameEnd.GameResultArgs
 import com.amsterdam.viewmodel.listDetails.ListDetailsArgs
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsArgs
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsArgs
@@ -50,6 +51,11 @@ object ViewModelViewModelScope {
     fun provideGameArgs(
         savedStateHandle: SavedStateHandle
     ): GameArgs = GameArgs(savedStateHandle)
+
+    @Provides
+    fun provideGameResultArgs(
+        savedStateHandle: SavedStateHandle
+    ): GameResultArgs = GameResultArgs(savedStateHandle)
 }
 
 @Module

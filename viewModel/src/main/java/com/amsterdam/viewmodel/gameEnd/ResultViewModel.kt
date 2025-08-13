@@ -8,16 +8,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResultViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    dispatcherProvider: DispatcherProvider
+    dispatcherProvider: DispatcherProvider,
+    gameResultArgs: GameResultArgs
 ) : BaseViewModel<ResultUiState, ResultSideEffect>(
     initialState = ResultUiState(),
     dispatcherProvider = dispatcherProvider
 ), ResultInteractionListener {
 
     init {
-        val points = savedStateHandle.get<Int>("points") ?: 0
-        val time = savedStateHandle.get<Int>("time") ?: 0
+        val points = gameResultArgs.totalCollectedPoints!!
+        val time = gameResultArgs.totalSpentSeconds!!
 
         updateState {
             it.copy(points = points, timeInSeconds = time)

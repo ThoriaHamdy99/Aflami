@@ -1,10 +1,11 @@
 package com.amsterdam.viewmodel.game.whichGenre
 
-import com.amsterdam.entity.Game
+import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 
-data class GameUiState(
-    val gameType: Game.GameType = Game.GameType.GUESS_MOVIE_BY_GENRE,
+data class GenreGameUiState(
+    val isLoading: Boolean = false,
     val questions: List<GameQuestionUiState> = emptyList(),
     val currentQuestionIndex: Int = 0,
     val isHintEnabled: Boolean = true,
@@ -12,10 +13,13 @@ data class GameUiState(
     val isNextEnabled: Boolean = false,
     val selectedAnswerIndex: Int? = null,
     val isAnswerCorrect: Boolean? = null,
+    val error: AflamiException? = null
 )
 
 data class GameQuestionUiState(
     val id: Long,
     val questionData: String,
-    val answers: List<String>,
+    val answers: List<MovieGenre>,
+    val correctAnswer: MovieGenre,
+    val questionTime: Int = 0
 )
