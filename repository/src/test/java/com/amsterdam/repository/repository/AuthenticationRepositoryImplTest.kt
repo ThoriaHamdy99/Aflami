@@ -7,7 +7,7 @@ import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
 import com.amsterdam.repository.datasource.local.ProfileLocalDataSource
 import com.amsterdam.repository.datasource.remote.AuthenticationRemoteDataSource
 import com.amsterdam.repository.mapper.toLocalDto
-import com.amsterdam.repository.security.CryptoData
+import com.amsterdam.repository.security.CryptoManager
 import com.google.common.truth.Truth.assertThat
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -28,7 +28,7 @@ class AuthenticationRepositoryImplTest {
     private val authenticationRemoteDataSource: AuthenticationRemoteDataSource = mockk()
     private val authenticationLocalDataSource: AuthenticationLocalDataSource = mockk()
     private val profileLocalDataSource: ProfileLocalDataSource = mockk()
-    private val cryptoData: CryptoData = mockk()
+    private val cryptoManager: CryptoManager = mockk()
 
     private val testUsername = "testUser"
     private val testPassword = "testPassword"
@@ -42,7 +42,7 @@ class AuthenticationRepositoryImplTest {
             authenticationRemoteDataSource = authenticationRemoteDataSource,
             authenticationLocalDataSource = authenticationLocalDataSource,
             profileLocalDataSource = profileLocalDataSource,
-            cryptoData = cryptoData
+            cryptoManager = cryptoManager
         )
     }
 
@@ -56,7 +56,7 @@ class AuthenticationRepositoryImplTest {
                     testPassword
                 )
             } returns testSessionId
-            every { cryptoData.encryptString(testSessionId) } returns encryptedSessionId
+            every { cryptoManager.encryptString(testSessionId) } returns encryptedSessionId
             coJustRun { authenticationLocalDataSource.cacheSessionId(encryptedSessionId) }
             coJustRun { authenticationLocalDataSource.setSessionType(SessionType.LOGGED_IN.toLocalDto()) }
 
@@ -99,7 +99,7 @@ class AuthenticationRepositoryImplTest {
                     testPassword
                 )
             }
-            verify(exactly = 0) { cryptoData.encryptString(any()) }
+            verify(exactly = 0) { cryptoManager.encryptString(any()) }
             coVerify(exactly = 0) { authenticationLocalDataSource.cacheSessionId(any()) }
             coVerify(exactly = 0) { authenticationLocalDataSource.setSessionType(any()) }
         }
@@ -108,7 +108,7 @@ class AuthenticationRepositoryImplTest {
     fun `getSessionId should return decrypted session ID when available`() = runTest {
         // Given
         coEvery { authenticationLocalDataSource.getCachedSessionId() } returns encryptedSessionId
-        every { cryptoData.decryptString(encryptedSessionId) } returns testSessionId
+        every { cryptoManager.decryptString(encryptedSessionId) } returns testSessionId
 
         // When
         val result = repository.getSessionId()
@@ -116,20 +116,20 @@ class AuthenticationRepositoryImplTest {
         // Then
         assertThat(result).isEqualTo(testSessionId)
         coVerify(exactly = 1) { authenticationLocalDataSource.getCachedSessionId() }
-        verify(exactly = 1) { cryptoData.decryptString(encryptedSessionId) }
+        verify(exactly = 1) { cryptoManager.decryptString(encryptedSessionId) }
     }
 
     @Test
     fun `getSessionId should throw UnknownException if decrypted result is null`() = runTest {
         // Given
         coEvery { authenticationLocalDataSource.getCachedSessionId() } returns "invalid_data"
-        every { cryptoData.decryptString("invalid_data") } returns null
+        every { cryptoManager.decryptString("invalid_data") } returns null
 
         // When / Then
         assertThrows<UnknownException> { repository.getSessionId() }
 
         coVerify(exactly = 1) { authenticationLocalDataSource.getCachedSessionId() }
-        verify(exactly = 1) { cryptoData.decryptString("invalid_data") }
+        verify(exactly = 1) { cryptoManager.decryptString("invalid_data") }
     }
 
     @Test
