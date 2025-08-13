@@ -461,6 +461,26 @@ class MovieRemoteDataSourceImplTest {
             movieApiService.deleteMovieRate(movieId)
         }
     }
+
+    @Test
+    fun `getMoviesByGenreId should return movies for given genre ID when successful `() = runTest {
+        // Given
+        val genreId = 28L
+        val page = 1
+        val expectedResponse = RemoteMovieResponse(
+            page = page,
+            results = listOf(remoteMovieItemDto),
+            totalPages = 1,
+            totalResults = 1
+        )
+        coEvery { movieApiService.getMoviesByGenreIds(listOf(genreId), page) } returns expectedResponse
+        // When
+        val movies = movieRemoteDataSourceImpl.getMoviesByGenreId(genreId, page)
+        // Then
+        assertThat(movies).isEqualTo(expectedResponse)
+        coVerify(exactly = 1) { movieApiService.getMoviesByGenreIds(listOf(genreId), page) }
+
+    }
 }
 
 
