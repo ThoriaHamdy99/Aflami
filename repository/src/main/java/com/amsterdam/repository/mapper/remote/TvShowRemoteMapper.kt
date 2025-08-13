@@ -1,11 +1,11 @@
 package com.amsterdam.repository.mapper.remote
 
 import com.amsterdam.entity.TvShow
-import com.amsterdam.repository.dto.remote.TvShowRemoteItemDto
+import com.amsterdam.repository.dto.remote.TvShowItemRemoteDto
 import com.amsterdam.repository.mapper.shared.toTvShowGenre
 import com.amsterdam.repository.utils.toSafeLocalDate
 
-fun TvShowRemoteItemDto.toEntity(
+fun TvShowItemRemoteDto.toEntity(
     isPoster: Boolean = true
 ): TvShow {
     val imageUrl = if (isPoster) fullPosterPath else fullBackdropPath
@@ -23,5 +23,5 @@ fun TvShowRemoteItemDto.toEntity(
     )
 }
 
-fun List<TvShowRemoteItemDto>.toEntityList(isPoster: Boolean = true): List<TvShow> =
+fun List<TvShowItemRemoteDto>.toEntityList(isPoster: Boolean = true): List<TvShow> =
     map { it.toEntity(isPoster) }

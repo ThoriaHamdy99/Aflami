@@ -8,7 +8,7 @@ import com.amsterdam.repository.dto.remote.CategoryRemoteDto
 import com.amsterdam.repository.dto.remote.MovieDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.MovieItemRemoteDto
 import com.amsterdam.repository.dto.remote.MovieRemoteResponse
-import com.amsterdam.repository.dto.remote.TvShowRemoteItemDto
+import com.amsterdam.repository.dto.remote.TvShowItemRemoteDto
 import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.VideoRemoteDto
@@ -87,7 +87,7 @@ val actorSearchItemDto=  ActorSearchItemRemoteDto(
 )
 
 //tv
-val remoteTvShowItemDto =  TvShowRemoteItemDto(
+val remoteTvShowItemDto =  TvShowItemRemoteDto(
     id = 1L,
     title = "Popular Show",
     adult = false,

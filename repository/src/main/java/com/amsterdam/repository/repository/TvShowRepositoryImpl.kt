@@ -19,7 +19,7 @@ import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
 import com.amsterdam.repository.dto.remote.EpisodeRemoteDto
 import com.amsterdam.repository.dto.remote.CategoryRemoteDto
 import com.amsterdam.repository.dto.remote.CategoryRemoteResponse
-import com.amsterdam.repository.dto.remote.TvShowRemoteItemDto
+import com.amsterdam.repository.dto.remote.TvShowItemRemoteDto
 import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.mapper.local.toDto
@@ -53,7 +53,7 @@ class TvShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPopularTvShows(): List<TvShow> {
-        return getCachedOrRemoteData<TvShowWithCategories, TvShowRemoteItemDto, TvShow>(
+        return getCachedOrRemoteData<TvShowWithCategories, TvShowItemRemoteDto, TvShow>(
             deleteExpired = ::deleteExpiredPopularTvShows,
             getFromLocal = ::getPopularTvShowsFromLocal,
             getFromRemote = ::getPopularTvShowsFromRemote,
@@ -64,7 +64,7 @@ class TvShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getTopRatedTvShows(page: Int): List<TvShow> {
-        return getCachedOrRemoteData<LocalTvShowDto, TvShowRemoteItemDto, TvShow>(
+        return getCachedOrRemoteData<LocalTvShowDto, TvShowItemRemoteDto, TvShow>(
             deleteExpired = ::deleteExpiredTopRatedTvShows,
             getFromLocal = ::getTopRatedTvShowsFromLocal,
             getFromRemote = { getTopRatedTvShowsFromRemote(page) },
@@ -163,11 +163,11 @@ class TvShowRepositoryImpl @Inject constructor(
         )
     }
 
-    private suspend fun getPopularTvShowsFromRemote(): List<TvShowRemoteItemDto> {
+    private suspend fun getPopularTvShowsFromRemote(): List<TvShowItemRemoteDto> {
         return remoteTvDataSource.getPopularTvShows().results
     }
 
-    private suspend fun savePopularTvShows(remoteTvShows: List<TvShowRemoteItemDto>) {
+    private suspend fun savePopularTvShows(remoteTvShows: List<TvShowItemRemoteDto>) {
         saveTvShowWithCategories(remoteTvShows).also {
             localTvDataSource.upsertPopularTvShows(
                 remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
@@ -188,11 +188,11 @@ class TvShowRepositoryImpl @Inject constructor(
         )
     }
 
-    private suspend fun getTopRatedTvShowsFromRemote(page: Int): List<TvShowRemoteItemDto> {
+    private suspend fun getTopRatedTvShowsFromRemote(page: Int): List<TvShowItemRemoteDto> {
         return remoteTvDataSource.getTopRatedTvShows(page).results
     }
 
-    private suspend fun saveTopRatedTvShows(remoteTvShows: List<TvShowRemoteItemDto>) {
+    private suspend fun saveTopRatedTvShows(remoteTvShows: List<TvShowItemRemoteDto>) {
         saveTvShowWithCategories(remoteTvShows).also {
             localTvDataSource.upsertTopRatedTvShows(
                 remoteTvShows.toLocalDtoList(preferences.getAppLanguage().first()),
@@ -204,11 +204,11 @@ class TvShowRepositoryImpl @Inject constructor(
         return remoteTvDataSource.getTvShowsByKeyword(keyword, page)
     }
 
-    private suspend fun saveTvShowWithCategories(remoteTvShows: List<TvShowRemoteItemDto>) {
+    private suspend fun saveTvShowWithCategories(remoteTvShows: List<TvShowItemRemoteDto>) {
         remoteTvShows.forEach { onSaveTvShowWithCategories(it) }
     }
 
-    private suspend fun onSaveTvShowWithCategories(remoteTvShow: TvShowRemoteItemDto) {
+    private suspend fun onSaveTvShowWithCategories(remoteTvShow: TvShowItemRemoteDto) {
         cacheTvShowCategoriesIfNotCached()
         localTvDataSource.upsertTvShowWithCategories(
             tvShow = remoteTvShow.toLocalDto(preferences.getAppLanguage().first()),

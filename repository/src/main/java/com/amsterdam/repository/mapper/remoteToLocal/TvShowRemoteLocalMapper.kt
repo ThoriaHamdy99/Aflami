@@ -1,10 +1,10 @@
 package com.amsterdam.repository.mapper.remoteToLocal
 
 import com.amsterdam.repository.dto.local.LocalTvShowDto
-import com.amsterdam.repository.dto.remote.TvShowRemoteItemDto
+import com.amsterdam.repository.dto.remote.TvShowItemRemoteDto
 import com.amsterdam.repository.utils.toSafeLocalDate
 
-fun TvShowRemoteItemDto.toLocalDto(storedLanguage: String): LocalTvShowDto {
+fun TvShowItemRemoteDto.toLocalDto(storedLanguage: String): LocalTvShowDto {
     return LocalTvShowDto(
         tvShowId = id,
         storedLanguage = storedLanguage,
@@ -19,4 +19,4 @@ fun TvShowRemoteItemDto.toLocalDto(storedLanguage: String): LocalTvShowDto {
     )
 }
 
-fun List<TvShowRemoteItemDto>.toLocalDtoList(storedLanguage: String) = map { it.toLocalDto(storedLanguage) }
+fun List<TvShowItemRemoteDto>.toLocalDtoList(storedLanguage: String) = map { it.toLocalDto(storedLanguage) }

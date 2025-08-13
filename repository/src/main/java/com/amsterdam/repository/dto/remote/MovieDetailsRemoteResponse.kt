@@ -30,5 +30,5 @@ data class MovieDetailsRemoteResponse(
     @SerialName("similar") val similar: MovieRemoteResponse,
     @SerialName("images") val images: RemoteGalleryRemoteResponse,
     @SerialName("videos") val videos: VideoRemoteResponse,
-    @SerialName("account_states") val accountStates: RemoteAccountStatesDto? = null
+    @SerialName("account_states") val accountStates: AccountStatesRemoteDto? = null
 )

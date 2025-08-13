@@ -9,7 +9,7 @@ import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
 import com.amsterdam.repository.dto.remote.CastRemoteDto
 import com.amsterdam.repository.dto.remote.MovieItemRemoteDto
 import com.amsterdam.repository.dto.remote.MovieRemoteResponse
-import com.amsterdam.repository.dto.remote.TvShowRemoteItemDto
+import com.amsterdam.repository.dto.remote.TvShowItemRemoteDto
 import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
 import com.amsterdam.repository.dto.remote.SeasonRemoteDto
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
@@ -36,7 +36,7 @@ val remoteMovieItemDto = MovieItemRemoteDto(
     video = false
 )
 
-val remoteTvShowItemDto = TvShowRemoteItemDto(
+val remoteTvShowItemDto = TvShowItemRemoteDto(
     id = 1,
     title = "Breaking Bad",
     overview = "A high school chemistry teacher diagnosed with cancer turns to making meth.",

@@ -1,7 +1,7 @@
 package com.amsterdam.repository.mapper.remoteToLocal.testFactory
 
 import com.amsterdam.repository.dto.remote.ProductionCompanyRemoteDto
-import com.amsterdam.repository.dto.remote.TvShowRemoteItemDto
+import com.amsterdam.repository.dto.remote.TvShowItemRemoteDto
 import com.amsterdam.repository.dto.remote.SeasonRemoteDto
 
 
@@ -24,8 +24,8 @@ fun createRemoteTvShowItemDto(
     seasons: List<SeasonRemoteDto> = emptyList(),
     productionCompanies: List<ProductionCompanyRemoteDto> = emptyList(),
     rating: Float = voteAverage.toFloat()
-): TvShowRemoteItemDto {
-    return TvShowRemoteItemDto(
+): TvShowItemRemoteDto {
+    return TvShowItemRemoteDto(
         id = id,
         title = title,
         overview = overview,

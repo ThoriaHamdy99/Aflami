@@ -1,10 +1,10 @@
 package com.amsterdam.repository.datasource.remote
 
-import com.amsterdam.repository.dto.remote.RatingRemoteResponse
 import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
 import com.amsterdam.repository.dto.remote.MovieDetailsRemoteResponse
-import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
+import com.amsterdam.repository.dto.remote.MovieItemRemoteDto
 import com.amsterdam.repository.dto.remote.MovieRemoteResponse
+import com.amsterdam.repository.dto.remote.RatingRemoteResponse
 
 interface MovieRemoteSource {
 
@@ -34,6 +34,6 @@ interface MovieRemoteSource {
 
     suspend fun getMoviesByGenreIds(genresIds: List<Long>, page: Int): MovieRemoteResponse
 
-    suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<RemoteMovieItemDto>
+    suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<MovieItemRemoteDto>
     suspend fun getMoviesByGenreId(genreId: Long, page: Int): MovieRemoteResponse
 }

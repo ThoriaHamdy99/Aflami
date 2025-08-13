@@ -30,7 +30,7 @@ data class TvShowDetailsRemoteResponse(
     @SerialName("similar") val similar: TvShowRemoteResponse,
     @SerialName("images") val images: RemoteGalleryRemoteResponse,
     @SerialName("videos") val videos: VideoRemoteResponse,
-    @SerialName("account_states") val accountStates: RemoteAccountStatesDto? = null
+    @SerialName("account_states") val accountStates: AccountStatesRemoteDto? = null
 ) {
     val fullPosterPath: String?
         get() = posterPath?.let { BASE_IMAGE_URL_W500 + it }
