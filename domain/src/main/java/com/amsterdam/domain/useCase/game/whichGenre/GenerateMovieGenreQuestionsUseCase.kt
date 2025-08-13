@@ -21,7 +21,7 @@ class GenerateMovieGenreQuestionsUseCase(
             val wrongGenres =
                 MovieGenre
                     .entries
-                    .drop(0)
+                    .drop(1)
                     .filter { !(movie.categories.contains(it)) }
                     .shuffled()
                     .take(WRONG_ANSWER_COUNT)
