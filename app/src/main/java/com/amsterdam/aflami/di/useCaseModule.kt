@@ -25,22 +25,21 @@ import com.amsterdam.domain.useCase.details.GetMoviesByGenreUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowsByGenreUseCase
-import com.amsterdam.domain.useCase.game.AddGamePointsUseCase
-import com.amsterdam.domain.useCase.game.DeductGamePointsUseCase
-import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
-import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
-import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
-import com.amsterdam.domain.useCase.game.releaseYear.DoGuessReleaseGameHintUseCase
-import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
+import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.domain.useCase.game.guessByPoster.DoGuessMovieByPosterHintUseCase
+import com.amsterdam.domain.useCase.game.guessByPoster.GenerateMoviePosterQuestionsUseCase
+import com.amsterdam.domain.useCase.game.guessByPoster.GuessMovieByPosterGameUseCase
+import com.amsterdam.domain.useCase.game.guessByPoster.SubmitGuessMovieByPosterAnswerUseCase
+import com.amsterdam.domain.useCase.game.releaseYear.DoGuessReleaseGameHintUseCase
+import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.GuessReleaseYearGameUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswerUseCase
-import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
@@ -61,19 +60,12 @@ import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
-import com.amsterdam.domain.useCase.list.CreateNewListUseCase
-import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
-import com.amsterdam.domain.useCase.list.DeleteListUseCase
-import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
-import com.amsterdam.domain.useCase.list.GetUserListsUseCase
-import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
-import com.amsterdam.domain.useCase.profile.GetUserPointsUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
@@ -281,6 +273,7 @@ object UseCaseModule {
         userListRepository: UserListRepository,
     ): GetUserListsUseCase =
         GetUserListsUseCase(userListRepository)
+
     @Provides
     fun provideAddMovieToListUseCase(userListRepository: UserListRepository): AddMovieToListUseCase =
         AddMovieToListUseCase(userListRepository)
@@ -324,6 +317,7 @@ object UseCaseModule {
     fun provideGetAccountDetailsUseCase(repo: ProfileRepository): GetAccountDetailsUseCase =
         GetAccountDetailsUseCase(repo)
 
+    // Existing Game Use Cases
     @Provides
     fun provideGetTotalUserPointsUseCase(gameRepository: GameRepository) =
         GetTotalUserPointsUseCase(gameRepository)
@@ -335,24 +329,24 @@ object UseCaseModule {
     fun provideGenerateMovieReleaseYearQuestionsUseCase(
         gameRepository: GameRepository,
         getGameDifficultyByDifficultyType: GetGameDifficultyByDifficultyTypeUseCase
-    ) = GenerateMovieReleaseYearQuestionsUseCase(gameRepository,getGameDifficultyByDifficultyType)
+    ) = GenerateMovieReleaseYearQuestionsUseCase(gameRepository, getGameDifficultyByDifficultyType)
 
     @Provides
-    fun provideGetGameDifficultyByDifficultyTypeUseCase(
-    ) = GetGameDifficultyByDifficultyTypeUseCase()
-
+    fun provideGetGameDifficultyByDifficultyTypeUseCase() =
+        GetGameDifficultyByDifficultyTypeUseCase()
 
     @Provides
     fun provideTimerHandler() = TimerHandler()
 
     @Provides
-    fun provideUpdateUserGamePointsUseCase(gameRepository:GameRepository) =
+    fun provideUpdateUserGamePointsUseCase(gameRepository: GameRepository) =
         UpdateUserGamePointsUseCase(gameRepository)
 
-
     @Provides
-    fun provideDoGuessReleaseGameHintUseCase(getTotalUserPointsUseCase: GetTotalUserPointsUseCase,updatePoints: UpdateUserGamePointsUseCase) =
-        DoGuessReleaseGameHintUseCase(getTotalUserPointsUseCase,updatePoints)
+    fun provideDoGuessReleaseGameHintUseCase(
+        getTotalUserPointsUseCase: GetTotalUserPointsUseCase,
+        updatePoints: UpdateUserGamePointsUseCase
+    ) = DoGuessReleaseGameHintUseCase(getTotalUserPointsUseCase, updatePoints)
 
     @Provides
     fun provideSubmitGuessReleaseYearAnswerUseCase(
@@ -366,23 +360,37 @@ object UseCaseModule {
         doHint: DoGuessReleaseGameHintUseCase,
         submitAnswer: SubmitGuessReleaseYearAnswerUseCase
     ) = GuessReleaseYearGameUseCase(getGameData, doHint, submitAnswer)
-    fun provideGetTotalUserPointsUseCase() = GetTotalUserPointsUseCase()
+
+    // New Game Use Cases: Guess Movie by Poster
+    @Provides
+    fun provideGenerateMoviePosterQuestionsUseCase(
+        gameRepository: GameRepository,
+        getGameDifficultyByDifficultyTypeUseCase: GetGameDifficultyByDifficultyTypeUseCase
+    ): GenerateMoviePosterQuestionsUseCase =
+        GenerateMoviePosterQuestionsUseCase(
+            gameRepository,
+            getGameDifficultyByDifficultyTypeUseCase
+        )
 
     @Provides
-    fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
+    fun provideDoGuessMovieByPosterHintUseCase(
+        getTotalUserPointsUseCase: GetTotalUserPointsUseCase,
+        updatePoints: UpdateUserGamePointsUseCase
+    ): DoGuessMovieByPosterHintUseCase =
+        DoGuessMovieByPosterHintUseCase(getTotalUserPointsUseCase, updatePoints)
 
     @Provides
-    fun provideGetGamePointsUseCase(
-        gameRepository: GamePointsRepository
-    ) = GetUserPointsUseCase(gameRepository)
+    fun provideSubmitGuessMovieByPosterAnswerUseCase(
+        getDifficulty: GetGameDifficultyByDifficultyTypeUseCase,
+        updatePoints: UpdateUserGamePointsUseCase
+    ): SubmitGuessMovieByPosterAnswerUseCase =
+        SubmitGuessMovieByPosterAnswerUseCase(getDifficulty, updatePoints)
 
     @Provides
-    fun provideDeductGamePointsUseCase(
-        gameRepository: GamePointsRepository,
-    ) = DeductGamePointsUseCase(gameRepository)
-
-    @Provides
-    fun provideAddGamePointsUseCase(
-        gameRepository: GamePointsRepository
-    ) = AddGamePointsUseCase(gameRepository)
+    fun provideGuessMovieByPosterGameUseCase(
+        getGameData: GenerateMoviePosterQuestionsUseCase,
+        doHint: DoGuessMovieByPosterHintUseCase,
+        submitAnswer: SubmitGuessMovieByPosterAnswerUseCase
+    ): GuessMovieByPosterGameUseCase =
+        GuessMovieByPosterGameUseCase(getGameData, doHint, submitAnswer)
 }
