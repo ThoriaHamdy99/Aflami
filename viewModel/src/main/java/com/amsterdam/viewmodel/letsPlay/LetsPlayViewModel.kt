@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.letsPlay
 
+import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState.GameDifficultyUiState
@@ -7,6 +8,7 @@ import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState.GameUiState.GameTypeUiSt
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +23,21 @@ class LetsPlayViewModel @Inject constructor(
 
 
     init {
+        getTotalUserPoints()
         updateState { getAvailableGamesUseCase().toLetsPlayUiState() }
+    }
+
+    private fun getTotalUserPoints() {
+        tryToExecute(
+            action = { getTotalUserPointsUseCase() },
+            onSuccess = {
+                viewModelScope.launch {
+                    it.collect { totalPoints ->
+                        updateState { it.copy(totalUserPoint = totalPoints) }
+                    }
+                }
+            }
+        )
     }
 
     override fun onSelectDifficultyLevel(difficultyLevel: GameDifficultyUiState) {

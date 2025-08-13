@@ -25,22 +25,17 @@ import com.amsterdam.domain.useCase.details.GetMoviesByGenreUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowsByGenreUseCase
-import com.amsterdam.domain.useCase.game.AddGamePointsUseCase
-import com.amsterdam.domain.useCase.game.DeductGamePointsUseCase
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
-import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
-import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.DoGuessReleaseGameHintUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase
-import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
+import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.GuessReleaseYearGameUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswerUseCase
-import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
@@ -61,12 +56,6 @@ import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
-import com.amsterdam.domain.useCase.list.CreateNewListUseCase
-import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
-import com.amsterdam.domain.useCase.list.DeleteListUseCase
-import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
-import com.amsterdam.domain.useCase.list.GetUserListsUseCase
-import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.GetOnboardingStatusUseCase
 import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
@@ -328,8 +317,6 @@ object UseCaseModule {
     fun provideGetTotalUserPointsUseCase(gameRepository: GameRepository) =
         GetTotalUserPointsUseCase(gameRepository)
 
-    @Provides
-    fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
 
     @Provides
     fun provideGenerateMovieReleaseYearQuestionsUseCase(
@@ -366,23 +353,13 @@ object UseCaseModule {
         doHint: DoGuessReleaseGameHintUseCase,
         submitAnswer: SubmitGuessReleaseYearAnswerUseCase
     ) = GuessReleaseYearGameUseCase(getGameData, doHint, submitAnswer)
-    fun provideGetTotalUserPointsUseCase() = GetTotalUserPointsUseCase()
 
     @Provides
     fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
 
     @Provides
     fun provideGetGamePointsUseCase(
-        gameRepository: GamePointsRepository
+        gameRepository: GameRepository
     ) = GetUserPointsUseCase(gameRepository)
 
-    @Provides
-    fun provideDeductGamePointsUseCase(
-        gameRepository: GamePointsRepository,
-    ) = DeductGamePointsUseCase(gameRepository)
-
-    @Provides
-    fun provideAddGamePointsUseCase(
-        gameRepository: GamePointsRepository
-    ) = AddGamePointsUseCase(gameRepository)
 }

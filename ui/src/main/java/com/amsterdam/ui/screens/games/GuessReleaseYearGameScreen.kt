@@ -39,7 +39,6 @@ import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameEffect
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameViewModel
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearInteractionListener
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearUiState
-import com.amsterdam.viewmodel.listDetails.ListDetailsEffect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -57,11 +56,12 @@ fun GuessReleaseYearScreen(viewModel: GuessReleaseYearGameViewModel = hiltViewMo
                     navController.popBackStack()
                 }
                 is GuessReleaseYearGameEffect.NavigateToGameResult -> {
-                    navController.navigate(Route.GameResult.route)
+                    navController.navigate(Route.ResultScreen)
                 }
             }
         }
     }
+    GameContent(state.value,viewModel)
 }
 
 @Composable
