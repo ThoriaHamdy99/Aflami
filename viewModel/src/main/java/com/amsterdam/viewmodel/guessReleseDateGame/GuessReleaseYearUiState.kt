@@ -1,6 +1,5 @@
 package com.amsterdam.viewmodel.guessReleseDateGame
 
-import com.amsterdam.viewmodel.sharedGame.GameResultUiState
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 
 data class GuessReleaseYearUiState(
@@ -13,7 +12,6 @@ data class GuessReleaseYearUiState(
     val isHintEnabled : Boolean = true,
     val isNextEnabled : Boolean = false,
     val questionsCounts: Int = 0,
-    val gameResultUiState : GameResultUiState = GameResultUiState(),
     val currentQuestionIndex: Int = 0,
     val timerUiState : TimerUiState = TimerUiState()
 ) {

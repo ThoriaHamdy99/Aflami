@@ -33,8 +33,14 @@ import com.amsterdam.domain.useCase.game.guessByPoster.DoGuessMovieByPosterHintU
 import com.amsterdam.domain.useCase.game.guessByPoster.GenerateMoviePosterQuestionsUseCase
 import com.amsterdam.domain.useCase.game.guessByPoster.GuessMovieByPosterGameUseCase
 import com.amsterdam.domain.useCase.game.guessByPoster.SubmitGuessMovieByPosterAnswerUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.DoGuessReleaseGameHintUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase
+import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
+import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
+import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.GuessReleaseYearGameUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswerUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
@@ -66,6 +72,7 @@ import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
+import com.amsterdam.domain.useCase.profile.GetUserPointsUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
@@ -317,13 +324,10 @@ object UseCaseModule {
     fun provideGetAccountDetailsUseCase(repo: ProfileRepository): GetAccountDetailsUseCase =
         GetAccountDetailsUseCase(repo)
 
-    // Existing Game Use Cases
     @Provides
     fun provideGetTotalUserPointsUseCase(gameRepository: GameRepository) =
         GetTotalUserPointsUseCase(gameRepository)
 
-    @Provides
-    fun provideGetAvailableGamesUseCase() = GetAvailableGamesUseCase()
 
     @Provides
     fun provideGenerateMovieReleaseYearQuestionsUseCase(
@@ -361,7 +365,6 @@ object UseCaseModule {
         submitAnswer: SubmitGuessReleaseYearAnswerUseCase
     ) = GuessReleaseYearGameUseCase(getGameData, doHint, submitAnswer)
 
-    // New Game Use Cases: Guess Movie by Poster
     @Provides
     fun provideGenerateMoviePosterQuestionsUseCase(
         gameRepository: GameRepository,
@@ -373,6 +376,9 @@ object UseCaseModule {
         )
 
     @Provides
+    fun provideGetGamePointsUseCase(
+        gameRepository: GameRepository
+    ) = GetUserPointsUseCase(gameRepository)
     fun provideDoGuessMovieByPosterHintUseCase(
         getTotalUserPointsUseCase: GetTotalUserPointsUseCase,
         updatePoints: UpdateUserGamePointsUseCase

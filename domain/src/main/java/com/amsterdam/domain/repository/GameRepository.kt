@@ -1,6 +1,7 @@
 package com.amsterdam.domain.repository
 
 import com.amsterdam.entity.Movie
+import kotlinx.coroutines.flow.Flow
 
 interface GameRepository {
 
@@ -8,5 +9,5 @@ interface GameRepository {
     suspend fun getRandomMoviesWithNotNullPoster(requiredMoviesNumber: Int): List<Movie>
 
     suspend fun updatePoints(points: Int)
-    suspend fun getUserPoints(): Int
+    fun getUserPoints(): Flow<Int>
 }

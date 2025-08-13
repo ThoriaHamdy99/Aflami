@@ -1,11 +1,12 @@
 package com.amsterdam.domain.useCase.profile
 
-import com.amsterdam.domain.repository.GameRepository // Ensure this is the correct GameRepository
+import com.amsterdam.domain.repository.GameRepository
+import kotlinx.coroutines.flow.Flow
 
 class GetUserPointsUseCase(
     private val gameRepository: GameRepository
 ) {
-    suspend operator fun invoke(): Int {
+    operator fun invoke(): Flow<Int> {
         return gameRepository.getUserPoints()
     }
 }

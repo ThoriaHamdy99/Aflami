@@ -3,6 +3,7 @@ package com.amsterdam.domain.useCase.game.releaseYear
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import kotlinx.coroutines.flow.first
 
 class DoGuessReleaseGameHintUseCase(
     private val getTotalUserPointsUseCase: GetTotalUserPointsUseCase,
@@ -17,7 +18,7 @@ class DoGuessReleaseGameHintUseCase(
         movieReleasedDateQuestion: GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion
     ): GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion {
 
-        val currentPoints = getTotalUserPointsUseCase()
+        val currentPoints = getTotalUserPointsUseCase().first()
 
         if (currentPoints < REQUIRED_HINT_POINTS)
             throw NotEnoughPointsException()
