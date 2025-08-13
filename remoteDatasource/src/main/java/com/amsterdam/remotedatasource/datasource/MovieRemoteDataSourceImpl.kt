@@ -106,6 +106,26 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         return collectedMovies
     }
 
+    override suspend fun getRandomMoviesWithNotNullPoster(requiredMoviesNumber: Int): List<RemoteMovieItemDto> {
+        val totalPages = 500
+        val collectedMovies = mutableListOf<RemoteMovieItemDto>()
+        val usedPages = mutableSetOf<Int>()
+
+        while (collectedMovies.size < requiredMoviesNumber && usedPages.size < totalPages) {
+            val randomPage = (1..totalPages).random().also { usedPages.add(it) }
+            val pageMovies = getPopularMoviesByPage(randomPage)
+                .filter { it.posterPath != null }
+
+            for (movie in pageMovies) {
+                if (!collectedMovies.contains(movie)) {
+                    collectedMovies.add(movie)
+                    if (collectedMovies.size == requiredMoviesNumber) break
+                }
+            }
+        }
+        return collectedMovies
+    }
+
 
     private suspend fun getPopularMoviesByPage(page: Int): List<RemoteMovieItemDto> {
         return getPopularMovies(page = page).results
