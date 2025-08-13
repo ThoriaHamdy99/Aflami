@@ -45,30 +45,6 @@ class NavigationManager(
         }
     }
 
-    fun toLists(clearBackStack: Boolean = false) {
-        navController.navigate(Route.Tab.Lists) {
-            if (clearBackStack) popUpTo(0)
-        }
-    }
-
-    fun toCategories(clearBackStack: Boolean = false) {
-        navController.navigate(Route.Tab.Categories) {
-            if (clearBackStack) popUpTo(0)
-        }
-    }
-
-    fun toLetsPlay(clearBackStack: Boolean = false) {
-        navController.navigate(Route.Tab.LetsPlay) {
-            if (clearBackStack) popUpTo(0)
-        }
-    }
-
-    fun toProfile(clearBackStack: Boolean = false) {
-        navController.navigate(Route.Tab.Profile) {
-            if (clearBackStack) popUpTo(0)
-        }
-    }
-
     // --- Auth & Onboarding ---
     fun toLogin(clearBackStack: Boolean = true) {
         navController.navigate(Route.Login) {
@@ -82,12 +58,6 @@ class NavigationManager(
 
     fun toResetPassword() {
         navController.navigate(Route.ResetPassword)
-    }
-
-    fun toOnboarding() {
-        navController.navigate(Route.Onboarding) {
-            popUpTo(0)
-        }
     }
 
     // --- Search ---
