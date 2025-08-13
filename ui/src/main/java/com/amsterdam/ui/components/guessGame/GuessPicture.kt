@@ -1,20 +1,21 @@
 package com.amsterdam.ui.components.guessGame
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.amsterdam.designsystem.components.ImageErrorIndicator
+import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.imageviewer.classification.SafetyLevel
+import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
+import com.amsterdam.ui.screens.letsPlay.component.GuessCard
 import io.sifr.shaded.blurProcessor.BlurEdgeTreatment
 import io.sifr.shaded.modifiers.blur
 
@@ -23,7 +24,7 @@ import io.sifr.shaded.modifiers.blur
 fun GuessPicture(
     blurRadius: Dp,
     points: Int,
-    painter: Painter,
+    imageUrl: String,
     isHintVisible: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -34,16 +35,18 @@ fun GuessPicture(
         isHintVisible = isHintVisible,
         onClick = onClick,
     ) {
-        Image(
-            painter = painter,
-            contentScale = ContentScale.Crop,
-            contentDescription = null,
+        SafeImageView(
+            model = imageUrl,
+            contentDescription = "",
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .aspectRatio((360 / 160).toFloat())
                     .blur(radius = blurRadius.value, BlurEdgeTreatment.UNBOUNDED)
                     .clip(RoundedCornerShape(20.dp)),
+            onLoading = { ImageLoadingIndicator() },
+            safetyLevel = SafetyLevel.OFF,
+            onError = { ImageErrorIndicator() },
         )
     }
 }
@@ -55,7 +58,7 @@ private fun GuessPictureHintVisiblePreview() {
         GuessPicture(
             blurRadius = 8.dp,
             points = 10,
-            painter = painterResource(R.drawable.bg_children_wearing_3d),
+            imageUrl = "painterResource(R.drawable.bg_children_wearing_3d)",
             isHintVisible = true,
             onClick = {},
         )
@@ -69,7 +72,7 @@ private fun GuessPictureHintNotVisiblePreview() {
         GuessPicture(
             blurRadius = 8.dp,
             points = 10,
-            painter = painterResource(R.drawable.bg_children_wearing_3d),
+            imageUrl = "painterResource(R.drawable.bg_children_wearing_3d)",
             isHintVisible = false,
             onClick = {},
         )

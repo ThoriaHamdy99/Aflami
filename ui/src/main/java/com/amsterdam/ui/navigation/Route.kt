@@ -70,4 +70,8 @@ sealed interface Route {
 
     @Serializable
     data object MyRating: Route
+
+
+    @Serializable
+    data class GuessReleaseYearGame(private val difficulty : String): Route
 }

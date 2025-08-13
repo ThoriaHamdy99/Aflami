@@ -3,6 +3,7 @@ package com.amsterdam.aflami.di
 import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.AuthenticationRepository
 import com.amsterdam.domain.repository.CountryRepository
+import com.amsterdam.domain.repository.GamePointsRepository
 import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.repository.ProfileRepository
@@ -13,6 +14,8 @@ import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.repository.repository.AppPreferencesRepositoryImpl
 import com.amsterdam.repository.repository.AuthenticationRepositoryImpl
 import com.amsterdam.repository.repository.CountryRepositoryImpl
+import com.amsterdam.repository.repository.GamePointsRepositoryImpl
+import com.amsterdam.repository.repository.GameRepositoryImpl
 import com.amsterdam.repository.repository.GameRepositoryImpl
 import com.amsterdam.repository.repository.MovieRepositoryImpl
 import com.amsterdam.repository.repository.ProfileRepositoryImpl
