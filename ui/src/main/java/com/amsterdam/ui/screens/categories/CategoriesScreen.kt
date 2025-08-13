@@ -110,7 +110,7 @@ private fun CategoriesScreenContent(
                 state = lazyState,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(top = 17.dp, bottom = 80.dp),
+                contentPadding = PaddingValues(top = 17.dp, bottom = 89.dp),
                 columns = GridCells.Adaptive(160.dp)
             ) {
                 when (state.selectedTabOption) {
