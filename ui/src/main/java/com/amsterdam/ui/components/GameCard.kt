@@ -223,9 +223,9 @@ private fun getGameCardImageContentByType(
             Image(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
-                    .fillMaxHeight(.95f)
+                    .fillMaxHeight(.9f)
                     .mirroredContent(LocalLayoutDirection.current)
-                    .graphicsLayer { translationX = -16f },
+                    .graphicsLayer { translationX = -30f },
                 painter = painterResource(R.drawable.img_game_funclown),
                 contentScale = ContentScale.Crop,
                 contentDescription = contentDescription,
@@ -247,7 +247,6 @@ private fun getGameCardImageContentByType(
             Image(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomCenter)
-                    .padding(end = 8.dp)
                     .mirroredContent(LocalLayoutDirection.current),
                 painter = painterResource(R.drawable.img_game_chair_with_popcorn),
                 contentScale = ContentScale.Crop,
@@ -263,7 +262,7 @@ private fun BoxScope.RotatedPostersStack(contentDescription: String) {
         modifier = Modifier
             .align(Alignment.BottomEnd)
             .offset(y = 12.dp)
-            .padding(end = 8.dp)
+            .padding(end = 4.dp)
             .mirroredContent(LocalLayoutDirection.current),
     ) {
         RoundedBorderedImage(
