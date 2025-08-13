@@ -6,8 +6,6 @@ import com.amsterdam.ui.navigation.Route
 
 fun NavGraphBuilder.resultScreenRoute() {
     composable<Route.ResultScreen> {
-        ResultScreen(
-            onNavigateToGame = {},
-            onNavigateToMenu = {})
+        ResultScreen()
     }
 }
