@@ -8,6 +8,7 @@ import com.amsterdam.ui.screens.categories.categoriesScreenRoute
 import com.amsterdam.ui.screens.categoriesDetails.movies.categoriesMoviesDetailsScreenRoute
 import com.amsterdam.ui.screens.categoriesDetails.tvShow.categoriesTvShowsDetailsScreen
 import com.amsterdam.ui.screens.continueWatching.continueWatchingScreenRoute
+import com.amsterdam.ui.screens.games.guessByPoster.guessByPosterGameScreenRoute
 import com.amsterdam.ui.screens.games.guessReleaseYearScreenScreenRoute
 import com.amsterdam.ui.screens.home.homeScreenRoute
 import com.amsterdam.ui.screens.letsPlay.letsPlayScreenRoute
@@ -58,5 +59,6 @@ fun NavGraph(
         categoriesTvShowsDetailsScreen()
         resultScreenRoute()
         guessReleaseYearScreenScreenRoute()
+        guessByPosterGameScreenRoute()
     }
 }
