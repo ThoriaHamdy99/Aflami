@@ -23,7 +23,7 @@ import com.amsterdam.repository.mapper.toDto
 import com.amsterdam.repository.mapper.toDtoList
 import com.amsterdam.repository.mapper.toEntity
 import com.amsterdam.repository.mapper.toMovieEntityList
-import com.amsterdam.repository.mapper.toLocalTvShowCategoryDtoList
+import com.amsterdam.repository.mapper.toLocalTvShowDtoList
 import com.amsterdam.repository.mapper.toEntityList
 import com.amsterdam.repository.mapper.toLocalDto
 import com.amsterdam.repository.mapper.toLocalMovieDtoList
@@ -295,7 +295,7 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     private suspend fun saveMovieCategoriesToDatabase(movieCategories: RemoteCategoryResponse) {
-        categoryLocalDataSource.upsertMovieCategories(movieCategories.genres.toLocalTvShowCategoryDtoList())
+        categoryLocalDataSource.upsertMovieCategories(movieCategories.genres.toLocalTvShowDtoList())
     }
 
 }

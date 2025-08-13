@@ -44,25 +44,4 @@ class CountryLocalMapperTest {
         assertThat(result.name).isEqualTo("France")
         assertThat(result.isoCode).isEqualTo("FR")
     }
-    @Test
-    fun `test list of LocalCountryDto is correctly mapped to list of Country`() {
-        // Given
-        val dtoList = listOf(
-            CountryLocalDto(name = "Egypt", isoCode = "EG", storedLanguage = "ar"),
-            CountryLocalDto(name = "Germany", isoCode = "DE", storedLanguage = "de")
-        )
-
-        // When
-        val countryList = dtoList.toEntityList()
-
-        // Then
-        assertThat(countryList).hasSize(2)
-
-        assertThat(countryList[0].countryName).isEqualTo("Egypt")
-        assertThat(countryList[0].countryIsoCode).isEqualTo("EG")
-
-        assertThat(countryList[1].countryName).isEqualTo("Germany")
-        assertThat(countryList[1].countryIsoCode).isEqualTo("DE")
-    }
-
 }

@@ -8,5 +8,5 @@ fun RemoteCategoryDto.toLocalTvShowCategoryDto(storedLanguage: String): TvShowCa
         categoryId = this.id.toLong()
     )
 
-fun List<RemoteCategoryDto>.toLocalTvShowCategoryDtoList(storedLanguage: String): List<TvShowCategoryLocalDto> =
+fun List<RemoteCategoryDto>.toLocalTvShowDtoList(storedLanguage: String): List<TvShowCategoryLocalDto> =
     map { it.toLocalTvShowCategoryDto(storedLanguage) }

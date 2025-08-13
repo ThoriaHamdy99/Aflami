@@ -55,4 +55,4 @@ fun RemoteTvShowItemDto.toLocalDto(storedLanguage: String): TvShowLocalDto {
     )
 }
 
-fun List<RemoteTvShowItemDto>.toLocalTvShowCategoryDtoList(storedLanguage: String) = map { it.toLocalDto(storedLanguage) }
+fun List<RemoteTvShowItemDto>.toLocalTvShowDtoList(storedLanguage: String) = map { it.toLocalDto(storedLanguage) }

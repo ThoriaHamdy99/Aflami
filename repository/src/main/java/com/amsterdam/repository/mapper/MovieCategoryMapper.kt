@@ -8,5 +8,5 @@ fun RemoteCategoryDto.toLocalMovieCategoryDto(): MovieCategoryLocalDto =
         categoryId = id.toLong()
     )
 
-fun List<RemoteCategoryDto>.toLocalTvShowCategoryDtoList(): List<MovieCategoryLocalDto> =
+fun List<RemoteCategoryDto>.toLocalTvShowDtoList(): List<MovieCategoryLocalDto> =
     map { it.toLocalMovieCategoryDto() }
