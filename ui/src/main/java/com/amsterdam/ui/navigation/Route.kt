@@ -91,6 +91,8 @@ sealed interface Route {
     data class GenreGame(
         val difficulty: String
     ) : Route
+
+    @Serializable
     data class GuessMovieByPosterGame(val difficulty: String): Route
 
 
