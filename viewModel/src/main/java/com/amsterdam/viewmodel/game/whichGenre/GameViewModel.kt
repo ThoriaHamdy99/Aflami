@@ -1,8 +1,9 @@
-package com.amsterdam.viewmodel.game
+package com.amsterdam.viewmodel.game.whichGenre
 
 import androidx.lifecycle.viewModelScope
+import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
-import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreGameEngin
+import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreUseCase
 import com.amsterdam.entity.Game
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
@@ -16,7 +17,8 @@ class GameViewModel
 @Inject
 constructor(
     private val getGameDifficultyByDifficultyTypeUseCase: GetGameDifficultyByDifficultyTypeUseCase,
-    private val guessMovieGenreGameEngin: GuessMovieGenreGameEngin,
+    private val guessMovieGenreGameEngin: GuessMovieGenreUseCase,
+    private val timerHandler: TimerHandler,
     private val args: GameArgs,
     dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<GameUiState, GameEffect>(
@@ -25,61 +27,7 @@ constructor(
 ),
     GameInteractionListener {
     init {
-        /*updateState {
-            it.copy(
-                questions =
-                    listOf(
-                        GameQuestionUiState(
-                            questionData = "A",
-                            answers =
-                                listOf(
-                                    "A",
-                                    "B",
-                                    "C",
-                                    "D",
-                                ),
-                        ),
-                        GameQuestionUiState(
-                            questionData = "B",
-                            answers =
-                                listOf(
-                                    "A",
-                                    "B",
-                                    "C",
-                                    "D",
-                                ),
-                        ),
-                        GameQuestionUiState(
-                            questionData = "C",
-                            answers =
-                                listOf(
-                                    "A",
-                                    "B",
-                                    "C",
-                                    "D",
-                                ),
-                        ),
-                        GameQuestionUiState(
-                            questionData = "D",
-                            answers =
-                                listOf(
-                                    "A",
-                                    "B",
-                                    "C",
-                                "D",
-                                ),
-                        ),
-                    ),
-            )
-        }*/
-        when (args.gameType) {
-            Game.GameType.GUESS_CHARACTER -> TODO()
-            Game.GameType.GUESS_MOVIE_BY_POSTER -> TODO()
-            Game.GameType.GUESS_MOVIE_BY_RELEASE -> TODO()
-            Game.GameType.GUESS_MOVIE_BY_GENRE -> {
-                startWhichGenreGame()
-            }
-        }
+        startWhichGenreGame()
     }
 
     private fun startWhichGenreGame() {

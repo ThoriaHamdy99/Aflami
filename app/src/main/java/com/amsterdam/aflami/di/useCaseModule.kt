@@ -27,8 +27,8 @@ import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.whichGenre.DoGuessGenreGameHintUseCase
-import com.amsterdam.domain.useCase.game.whichGenre.GetGenreQuestionsUseCase
-import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreGameEngin
+import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase
+import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
@@ -313,7 +313,7 @@ object UseCaseModule {
     @Provides
     fun provideGetGenreQuestionsUseCase(
         gameRepository: GameRepository
-    ) = GetGenreQuestionsUseCase(gameRepository)
+    ) = GenerateMovieGenreQuestionsUseCase(gameRepository)
 
     @Provides
     fun provideTimerHandler() = TimerHandler()
@@ -323,12 +323,12 @@ object UseCaseModule {
 
     @Provides
     fun provideGuessMovieGenreGameEngin(
-        getGenreQuestionsUseCase: GetGenreQuestionsUseCase,
+        generateMovieGenreQuestionsUseCase: GenerateMovieGenreQuestionsUseCase,
         getGameDifficultyByDifficultyTypeUseCase: GetGameDifficultyByDifficultyTypeUseCase,
         doGuessGenreGameHintUseCase: DoGuessGenreGameHintUseCase,
         timerHandler: TimerHandler
-    ) = GuessMovieGenreGameEngin(
-        getGenreQuestionsUseCase,
+    ) = GuessMovieGenreUseCase(
+        generateMovieGenreQuestionsUseCase,
         getGameDifficultyByDifficultyTypeUseCase,
         doGuessGenreGameHintUseCase,
         timerHandler

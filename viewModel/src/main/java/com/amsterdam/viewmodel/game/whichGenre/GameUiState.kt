@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.game
+package com.amsterdam.viewmodel.game.whichGenre
 
 import com.amsterdam.entity.Game
 import com.amsterdam.viewmodel.sharedGame.TimerUiState

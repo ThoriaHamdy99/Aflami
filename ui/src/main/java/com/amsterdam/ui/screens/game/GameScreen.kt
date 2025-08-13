@@ -50,11 +50,11 @@ import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.uiModel
-import com.amsterdam.viewmodel.game.GameEffect
-import com.amsterdam.viewmodel.game.GameInteractionListener
-import com.amsterdam.viewmodel.game.GameQuestionUiState
-import com.amsterdam.viewmodel.game.GameUiState
-import com.amsterdam.viewmodel.game.GameViewModel
+import com.amsterdam.viewmodel.game.whichGenre.GameEffect
+import com.amsterdam.viewmodel.game.whichGenre.GameInteractionListener
+import com.amsterdam.viewmodel.game.whichGenre.GameQuestionUiState
+import com.amsterdam.viewmodel.game.whichGenre.GameUiState
+import com.amsterdam.viewmodel.game.whichGenre.GameViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import kotlinx.coroutines.launch
 

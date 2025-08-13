@@ -6,7 +6,7 @@ import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.entity.category.MovieGenre
 import kotlin.uuid.ExperimentalUuidApi
 
-class GetGenreQuestionsUseCase(
+class GenerateMovieGenreQuestionsUseCase(
     private val gameRepository: GameRepository,
 ) {
     suspend operator fun invoke(

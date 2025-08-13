@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.game
+package com.amsterdam.viewmodel.game.whichGenre
 
 interface GameInteractionListener {
     fun onCancelGameClick()
