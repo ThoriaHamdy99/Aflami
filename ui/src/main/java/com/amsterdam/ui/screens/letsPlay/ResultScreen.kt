@@ -39,14 +39,24 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun ResultScreen(
     viewModel: ResultViewModel = hiltViewModel()
-
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-   val navController = LocalNavController.current
+    val navController = LocalNavController.current
+
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is ResultSideEffect.NavigateToGame ->{}
+                is ResultSideEffect.NavigateToGame -> {
+                    when (effect.gameType) {
+                        ResultSideEffect.GameType.GUESS_MOVIE_BY_POSTER -> {
+                            navController.navigate(Route.GuessMovieByPosterGame(effect.difficulty.difficultyType.name))
+                        }
+                        ResultSideEffect.GameType.GUESS_RELEASE_YEAR -> {
+                            navController.navigate(Route.GuessReleaseYearGame(effect.difficulty.difficultyType.name))
+                        }
+                    }
+                }
+
                 is ResultSideEffect.NavigateBackToMenu -> navController.navigate(Route.Tab.LetsPlay)
             }
         }
