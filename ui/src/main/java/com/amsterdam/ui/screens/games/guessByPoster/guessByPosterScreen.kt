@@ -51,7 +51,6 @@ import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameEffe
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameViewModel
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterInteractionListener
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterUiState
-import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameEffect
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -64,6 +63,7 @@ fun GuessByPosterGameScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
 
+    // In GuessByPosterGameScreen.kt
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
@@ -75,10 +75,11 @@ fun GuessByPosterGameScreen(
                     val resultScreenData = effect.resultScreenData
                     navController.navigate(
                         Route.ResultScreen(
-                            resultScreenData.totalCollectedPoints,
-                            resultScreenData.totalSpentSeconds,
-                            resultScreenData.difficulty,
-                            resultScreenData.gameType
+                            // Fix this line
+                            totalCollectedPoints = resultScreenData.totalCollectedPoints,
+                            totalSpentSeconds = resultScreenData.totalSpentSeconds,
+                            gameType = resultScreenData.gameType, // The correct game type
+                            difficulty = resultScreenData.difficulty // The correct difficulty
                         )
                     )
                 }
