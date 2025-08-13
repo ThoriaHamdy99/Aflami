@@ -14,10 +14,7 @@ class GenerateMoviePosterQuestionsUseCase(
         val gameDifficulty = getGameDifficultyByDifficultyTypeUseCase(difficultyType)
         val movies = gameRepository.getRandomMoviesWithNotNullPoster(gameDifficulty.totalQuestions)
 
-        if (movies.size < gameDifficulty.totalQuestions) {
-        }
-
-        return movies.mapIndexed { index, movie ->
+        return movies.mapIndexed { _, movie ->
             val correctMovieName = movie.name
             val wrongChoices = movies
                 .filter { it.name != correctMovieName }

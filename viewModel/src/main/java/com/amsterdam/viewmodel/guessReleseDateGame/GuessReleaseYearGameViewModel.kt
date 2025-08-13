@@ -163,7 +163,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
             val resultData = ResultScreenData(
                 totalCollectedPoints = totalCollectedPoints,
                 totalSpentSeconds = spentTimeSeconds,
-                difficulty = difficultyType.name, // Assuming you can get the name from the enum
+                difficulty = difficultyType.name,
                 gameType = ResultSideEffect.GameType.GUESS_RELEASE_YEAR.name
             )
             sendNewNavigationEffect(

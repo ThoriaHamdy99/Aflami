@@ -7,10 +7,11 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
 
 @Immutable
 class NavigationManager(
-    private val navController: NavController
+    private val navController: NavController,
 ) {
 
     fun navigateUp() {
@@ -26,7 +27,7 @@ class NavigationManager(
     }
 
     // --- Tabs ---
-    fun toTab(tab: Route, currentDestination: NavDestination?){
+    fun toTab(tab: Route, currentDestination: NavDestination?) {
         if (currentDestination != tab) {
             navController.navigate(tab) {
                 popUpTo(Route.Tab.Home) {
@@ -130,12 +131,28 @@ class NavigationManager(
         navController.navigate(Route.GuessReleaseYearGame(difficulty = difficulty))
     }
 
-    fun toGuessCharacter(difficulty: String){
+    fun toGuessCharacter(difficulty: String) {
         navController.navigate(Route.GuessCharacter(difficulty = difficulty))
     }
 
-    fun toResultScreen(totalCollectedPoints: Int, totalSpentSeconds: Int) {
-        navController.navigate(Route.ResultScreen(totalCollectedPoints = totalCollectedPoints, totalSpentSeconds = totalSpentSeconds))
+    fun toGuessMovieByPosterGame(difficulty: String) {
+        navController.navigate(Route.GuessMovieByPosterGame(difficulty))
+    }
+
+    fun toResultScreen(
+        totalCollectedPoints: Int,
+        totalSpentSeconds: Int,
+        gameType: String,
+        difficulty: String,
+    ) {
+        navController.navigate(
+            Route.ResultScreen(
+                totalCollectedPoints = totalCollectedPoints,
+                totalSpentSeconds = totalSpentSeconds,
+                gameType = gameType,
+                difficulty = difficulty
+            )
+        )
     }
 
     @Composable

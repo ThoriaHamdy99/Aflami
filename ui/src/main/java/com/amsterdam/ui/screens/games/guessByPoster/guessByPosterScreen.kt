@@ -39,7 +39,7 @@ import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.ui.application.LocalNavController
+import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.GuessPicture
 import com.amsterdam.ui.components.guessGame.TimerComponent
@@ -61,26 +61,22 @@ fun GuessByPosterGameScreen(
     viewModel: GuessMovieByPosterGameViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val navController = LocalNavController.current
+    val navigationManager = LocalNavManager.current
 
-    // In GuessByPosterGameScreen.kt
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is GuessMovieByPosterGameEffect.NavigateBack -> {
-                    navController.popBackStack()
+                    navigationManager.navigateUp()
                 }
 
                 is GuessMovieByPosterGameEffect.NavigateToGameResult -> {
                     val resultScreenData = effect.resultScreenData
-                    navController.navigate(
-                        Route.ResultScreen(
-                            // Fix this line
-                            totalCollectedPoints = resultScreenData.totalCollectedPoints,
-                            totalSpentSeconds = resultScreenData.totalSpentSeconds,
-                            gameType = resultScreenData.gameType, // The correct game type
-                            difficulty = resultScreenData.difficulty // The correct difficulty
-                        )
+                    navigationManager.toResultScreen(
+                        totalCollectedPoints = resultScreenData.totalCollectedPoints,
+                        totalSpentSeconds = resultScreenData.totalSpentSeconds,
+                        gameType = resultScreenData.gameType,
+                        difficulty = resultScreenData.difficulty
                     )
                 }
             }

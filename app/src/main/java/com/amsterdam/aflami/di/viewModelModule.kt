@@ -5,6 +5,7 @@ import com.amsterdam.ui.screens.cast.CastScreenArgsImpl
 import com.amsterdam.ui.screens.categoriesDetails.movies.CategoriesMovieDetailsArgsImpl
 import com.amsterdam.ui.screens.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgsImpl
 import com.amsterdam.ui.screens.games.character.GuessCharacterGameArgsImpl
+import com.amsterdam.ui.screens.games.guessByPoster.GuessMovieByPosterGameArgsImpl
 import com.amsterdam.ui.screens.games.releaseYear.GuessReleaseYearGameArgsImpl
 import com.amsterdam.ui.screens.games.guessGenre.GameGenreArgsImpl
 import com.amsterdam.ui.screens.letsPlay.GameResultArgsImpl
@@ -77,7 +78,7 @@ object ViewModelViewModelScope {
     @Provides
     fun provideGuessMovieByPosterGameArgs(
         savedStateHandle: SavedStateHandle
-    ): GuessMovieByPosterGameArgs = GuessMovieByPosterGameArgs(savedStateHandle)
+    ): GuessMovieByPosterGameArgs = GuessMovieByPosterGameArgsImpl(savedStateHandle)
 
     @Provides
     fun provideGameArgs(

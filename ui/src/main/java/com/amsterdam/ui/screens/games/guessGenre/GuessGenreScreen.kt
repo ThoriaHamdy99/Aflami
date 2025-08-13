@@ -61,9 +61,12 @@ fun GuessGenreScreen(
                 }
 
                 is GenreGameEffect.GameOver -> {
+                    val resultScreenData = effect.resultScreenData
                     navigationManager.toResultScreen(
-                        totalCollectedPoints = effect.totalEarnedPoints,
-                        totalSpentSeconds = effect.answersTotalTime
+                        totalCollectedPoints = resultScreenData.totalCollectedPoints,
+                        totalSpentSeconds = resultScreenData.totalSpentSeconds,
+                        gameType = resultScreenData.gameType,
+                        difficulty = resultScreenData.difficulty
                     )
                 }
 

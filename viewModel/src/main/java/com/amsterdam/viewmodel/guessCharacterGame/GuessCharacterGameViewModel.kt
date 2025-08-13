@@ -6,6 +6,8 @@ import com.amsterdam.domain.useCase.game.character.GenerateCharacterQuestionsUse
 import com.amsterdam.domain.useCase.game.character.GuessCharacterGameUseCase
 import com.amsterdam.domain.useCase.game.character.SubmitCharacterAnswerUseCase.AnswerResult
 import com.amsterdam.entity.GameDifficulty.DifficultyType
+import com.amsterdam.viewmodel.gameEnd.ResultScreenData
+import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -155,10 +157,15 @@ class GuessCharacterGameViewModel @Inject constructor(
             }
             startTheTimer()
         } else {
+            val resultData = ResultScreenData(
+                totalCollectedPoints = totalCollectedPoints,
+                totalSpentSeconds = spentTimeSeconds,
+                difficulty = difficultyType.name,
+                gameType = ResultSideEffect.GameType.GUESS_CHARACTER.name
+            )
             sendNewNavigationEffect(
                 GuessCharacterGameEffect.NavigateToGameResult(
-                    totalCollectedPoints,
-                    spentTimeSeconds
+                    resultData
                 )
             )
         }

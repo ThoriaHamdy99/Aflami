@@ -14,6 +14,8 @@ sealed interface ResultSideEffect : BaseViewModel.BaseUiEffect {
 
     enum class GameType {
         GUESS_MOVIE_BY_POSTER,
-        GUESS_RELEASE_YEAR
+        GUESS_RELEASE_YEAR,
+        GUESS_CHARACTER,
+        GUESS_GENRE
     }
 }
