@@ -7,7 +7,6 @@ import com.amsterdam.domain.useCase.game.releaseYear.GuessReleaseYearGameUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswerUseCase.AnswerResult
 import com.amsterdam.entity.GameDifficulty.DifficultyType
 import com.amsterdam.viewmodel.shared.BaseViewModel
-import com.amsterdam.viewmodel.sharedGame.GameResultUiState
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -152,7 +151,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
             }
             startTheTimer()
         } else {
-            sendNewNavigationEffect(GuessReleaseYearGameEffect.NavigateToGameResult(GameResultUiState(totalCollectedPoints, spentTimeSeconds)))
+            sendNewNavigationEffect(GuessReleaseYearGameEffect.NavigateToGameResult(totalCollectedPoints, spentTimeSeconds))
         }
     }
 
