@@ -136,7 +136,7 @@ fun GameCard(
             }
 
             Box(modifier = Modifier.weight(1f)) {
-                GameCardBackgroundShapes(circleColor = borderColors.first().copy(alpha = .25f))
+                GameCardBackgroundShapes(circleColor = shadowColor)
                 getGameCardImageContentByType(gameCardImageContentType, title).invoke(this)
             }
         }
@@ -174,12 +174,12 @@ private fun GameCardBackgroundShapes(
     circleColor: Color,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
-        BlurredContent(blurRadius = 50.dp, modifier = Modifier.offset(x = 16.dp, y = (-16).dp)) {
+        BlurredContent(blurRadius = 55.dp, modifier = Modifier.offset(x = 20.dp, y = (-20).dp)) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .align(Alignment.TopEnd)
-                    .background(color = circleColor, shape = CircleShape),
+                    .background(color = circleColor.copy(alpha = 0.5f), shape = CircleShape)
             )
         }
 
@@ -187,21 +187,24 @@ private fun GameCardBackgroundShapes(
         val isRtl = remember(layoutDirection) { layoutDirection == LayoutDirection.Rtl }
 
         BlurredContent(
+            blurRadius = 5.dp,
             modifier = Modifier.graphicsLayer {
-                rotationZ = if (isRtl) -45f else 45f
-                scaleY = 4f
-                scaleX = if (isRtl) 3f else 1f
-            },
-        ) { RectangleShapeSoftGlow() }
+                    rotationZ = if (isRtl) -48f else 48f
+                    translationX = -65f
+                    scaleY = 4f
+                    scaleX = if (isRtl) 3f else 1f
+                },
+        ) { RectangleShapeSoftGlow(Modifier.width(22.dp)) }
 
         BlurredContent(
+            blurRadius = 5.dp,
             modifier = Modifier.graphicsLayer {
-                rotationZ = if (isRtl) -45f else 45f
-                translationX = 220f
-                scaleY = 2f
-                scaleX = 1f
-            },
-        ) { RectangleShapeSoftGlow() }
+                    rotationZ = if (isRtl) -48f else 48f
+                    translationX = 150f
+                    scaleY = 2f
+                    scaleX = 1f
+                },
+        ) { RectangleShapeSoftGlow(Modifier.width(52.dp)) }
     }
 }
 
@@ -309,14 +312,13 @@ private fun RoundedBorderedImage(
 fun RectangleShapeSoftGlow(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .width(20.dp)
             .fillMaxHeight()
             .background(
                 shape = RectangleShape,
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        AppTheme.color.softBlue.copy(alpha = 0.04f),
-                        AppTheme.color.softBlue.copy(alpha = 0.04f),
+                        AppTheme.color.softBlue.copy(alpha = 0.05f),
+                        AppTheme.color.softBlue.copy(alpha = 0.02f),
                     ),
                 ),
             ),
