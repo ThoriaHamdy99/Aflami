@@ -8,7 +8,7 @@ import com.amsterdam.repository.mapper.remote.toMovieEntityList
 import javax.inject.Inject
 
 class GameRepositoryImpl @Inject constructor(
-    private val gamePointsLocalDataSource: GameLocalDataSource,
+    private val gameLocalDataSource: GameLocalDataSource,
     private val movieRemoteSource: MovieRemoteSource
 ) : GameRepository {
 
@@ -17,10 +17,10 @@ class GameRepositoryImpl @Inject constructor(
   }
 
     override suspend fun updatePoints(points: Int) {
-        gamePointsLocalDataSource.upsertPoints(points)
+        gameLocalDataSource.upsertPoints(points)
     }
 
     override suspend fun getUserPoints(): Int {
-        return gamePointsLocalDataSource.getPoints()
+        return gameLocalDataSource.getUserPoints()
     }
 }

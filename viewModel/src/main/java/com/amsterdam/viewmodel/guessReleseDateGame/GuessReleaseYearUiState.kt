@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.guessReleseDateGame
 
+import com.amsterdam.viewmodel.sharedGame.AnswerStatusUiState
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 
 data class GuessReleaseYearUiState(
@@ -13,6 +14,11 @@ data class GuessReleaseYearUiState(
 ) {
     data class QuestionUiState(
         val movieName: String = "",
-        val releaseYearChoices: List<String> = emptyList()
-    )
+        val releaseYearChoices: List<ChoiceUiState> = emptyList()
+    ) {
+        data class ChoiceUiState(
+            val choice: String = "",
+            val isSelected: AnswerStatusUiState = AnswerStatusUiState.Unselected
+        )
+    }
 }

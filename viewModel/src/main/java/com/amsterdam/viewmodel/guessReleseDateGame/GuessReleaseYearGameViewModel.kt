@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.guessReleseDateGame
 
+import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion
 import com.amsterdam.domain.useCase.game.GuessReleaseYearForMovieGameEngine
 import com.amsterdam.entity.GameDifficulty.DifficultyType
@@ -12,7 +13,8 @@ import javax.inject.Inject
 class GuessReleaseYearGameViewModel @Inject constructor(
     private val gameEngine: GuessReleaseYearForMovieGameEngine,
     args: GuessReleaseYearGameArgs,
-    dispatcherProvider: DispatcherProvider
+    dispatcherProvider: DispatcherProvider,
+    private val timerHandler: TimerHandler
 ) : BaseViewModel<GuessReleaseYearUiState, GuessReleaseYearGameEffect>(
         GuessReleaseYearUiState(),
         dispatcherProvider

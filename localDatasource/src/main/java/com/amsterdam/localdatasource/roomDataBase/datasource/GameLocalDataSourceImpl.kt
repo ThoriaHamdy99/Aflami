@@ -1,15 +1,18 @@
 package com.amsterdam.localdatasource.roomDataBase.datasource
 
+import com.amsterdam.localdatasource.roomDataBase.daos.GamePointsDao
 import com.amsterdam.repository.datasource.local.GameLocalDataSource
+import com.amsterdam.repository.dto.local.GamePointsDto
 import javax.inject.Inject
 
-class GameLocalDataSourceImpl @Inject constructor(    private val gamePointsDao: GamePointsDao
-) : GamePointsLocalDataSource {
+class GameLocalDataSourceImpl @Inject constructor(private val gamePointsDao: GamePointsDao
+) : GameLocalDataSource {
     override suspend fun upsertPoints(points: Int) {
         gamePointsDao.upsertPoints(GamePointsDto(points = points))
     }
 
-    override fun getPoints(): Flow<Int?> {
+    override suspend fun getUserPoints(): Int {
         return gamePointsDao.getPoints()
     }
+
 }

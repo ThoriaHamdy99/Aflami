@@ -4,11 +4,10 @@ import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion
 import com.amsterdam.entity.GameDifficulty
 
-class GuessReleaseYearForMovieGameEngine(
+class GuessReleaseYearForMovieGameUseCase(
     private val generateMovieReleaseYearQuestionsUseCase: GenerateMovieReleaseYearQuestionsUseCase,
     private val getGameDifficultyByDifficultyTypeUseCase: GetGameDifficultyByDifficultyTypeUseCase,
     private val doGuessReleaseGameHintUseCase: DoGuessReleaseGameHintUseCase,
-    private val timerHandler: TimerHandler
 ) {
 
     suspend fun startGame(
