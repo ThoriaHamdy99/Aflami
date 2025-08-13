@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -51,6 +52,7 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.modifierExtensions.dropShadow
 import com.amsterdam.designsystem.utils.modifierExtensions.mirroredContent
+import com.amsterdam.designsystem.utils.ripple
 import com.amsterdam.ui.R
 import io.sifr.shaded.blurProcessor.BlurEdgeTreatment
 import io.sifr.shaded.modifiers.blur
@@ -62,11 +64,10 @@ fun GameCard(
     containerColor: Color,
     borderColors: List<Color>,
     shadowColor: Color,
-    onCardClick: () -> Unit,
+    onClick: () -> Unit,
     gameCardImageContentType: GameCardImageContentType,
     modifier: Modifier = Modifier,
     isPlayable: Boolean = true,
-    onPlayClick: () -> Unit = {},
     unlockPrice: String = "",
 ) {
     Column(
@@ -85,7 +86,7 @@ fun GameCard(
                 brush = Brush.horizontalGradient(colors = borderColors),
                 shape = RoundedCornerShape(16.dp),
             )
-            .clickable(enabled = isPlayable) { onCardClick() },
+            .clickable(enabled = isPlayable) { onClick() },
         verticalArrangement = Arrangement.Top,
     ) {
         UnlockPromptContainer(
@@ -126,7 +127,7 @@ fun GameCard(
                     modifier = Modifier.weight(1f),
                 ) {
                     CircularButton(
-                        onClick = onPlayClick,
+                        onClick = onClick,
                         clickable = isPlayable,
                         modifier = Modifier.align(Alignment.Bottom)
                     ) {
@@ -136,7 +137,7 @@ fun GameCard(
             }
 
             Box(modifier = Modifier.weight(1f)) {
-                GameCardBackgroundShapes(circleColor = borderColors.first().copy(alpha = .25f))
+                GameCardBackgroundShapes(circleColor = shadowColor)
                 getGameCardImageContentByType(gameCardImageContentType, title).invoke(this)
             }
         }
@@ -174,12 +175,12 @@ private fun GameCardBackgroundShapes(
     circleColor: Color,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
-        BlurredContent(blurRadius = 50.dp, modifier = Modifier.offset(x = 16.dp, y = (-16).dp)) {
+        BlurredContent(blurRadius = 55.dp, modifier = Modifier.offset(x = 20.dp, y = (-20).dp)) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .align(Alignment.TopEnd)
-                    .background(color = circleColor, shape = CircleShape),
+                    .background(color = circleColor.copy(alpha = 0.5f), shape = CircleShape)
             )
         }
 
@@ -187,21 +188,24 @@ private fun GameCardBackgroundShapes(
         val isRtl = remember(layoutDirection) { layoutDirection == LayoutDirection.Rtl }
 
         BlurredContent(
+            blurRadius = 5.dp,
             modifier = Modifier.graphicsLayer {
-                rotationZ = if (isRtl) -45f else 45f
-                scaleY = 4f
-                scaleX = if (isRtl) 3f else 1f
-            },
-        ) { RectangleShapeSoftGlow() }
+                    rotationZ = if (isRtl) -48f else 48f
+                    translationX = if (isRtl) 75f else -65f
+                    scaleY = 4f
+                    scaleX = 1f
+                },
+        ) { RectangleShapeSoftGlow(Modifier.width(22.dp)) }
 
         BlurredContent(
+            blurRadius = 5.dp,
             modifier = Modifier.graphicsLayer {
-                rotationZ = if (isRtl) -45f else 45f
-                translationX = 220f
-                scaleY = 2f
-                scaleX = 1f
-            },
-        ) { RectangleShapeSoftGlow() }
+                    rotationZ = if (isRtl) -48f else 48f
+                    translationX = if (isRtl) -160f else 150f
+                    scaleY = 2f
+                    scaleX = 1f
+                },
+        ) { RectangleShapeSoftGlow(Modifier.width(52.dp)) }
     }
 }
 
@@ -219,9 +223,9 @@ private fun getGameCardImageContentByType(
             Image(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
-                    .fillMaxHeight(.95f)
+                    .fillMaxHeight(.9f)
                     .mirroredContent(LocalLayoutDirection.current)
-                    .graphicsLayer { translationX = -16f },
+                    .graphicsLayer { translationX = -30f },
                 painter = painterResource(R.drawable.img_game_funclown),
                 contentScale = ContentScale.Crop,
                 contentDescription = contentDescription,
@@ -243,7 +247,6 @@ private fun getGameCardImageContentByType(
             Image(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomCenter)
-                    .padding(end = 8.dp)
                     .mirroredContent(LocalLayoutDirection.current),
                 painter = painterResource(R.drawable.img_game_chair_with_popcorn),
                 contentScale = ContentScale.Crop,
@@ -259,7 +262,7 @@ private fun BoxScope.RotatedPostersStack(contentDescription: String) {
         modifier = Modifier
             .align(Alignment.BottomEnd)
             .offset(y = 12.dp)
-            .padding(end = 8.dp)
+            .padding(end = 4.dp)
             .mirroredContent(LocalLayoutDirection.current),
     ) {
         RoundedBorderedImage(
@@ -309,14 +312,13 @@ private fun RoundedBorderedImage(
 fun RectangleShapeSoftGlow(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .width(20.dp)
             .fillMaxHeight()
             .background(
                 shape = RectangleShape,
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        AppTheme.color.softBlue.copy(alpha = 0.04f),
-                        AppTheme.color.softBlue.copy(alpha = 0.04f),
+                        AppTheme.color.softBlue.copy(alpha = 0.05f),
+                        AppTheme.color.softBlue.copy(alpha = 0.02f),
                     ),
                 ),
             ),
@@ -365,6 +367,7 @@ private fun CircularButton(
     Row(
         modifier = modifier
             .wrapContentSize()
+            .clip(CircleShape)
             .background(color = AppTheme.color.onPrimaryButton, shape = CircleShape)
             .border(
                 width = .5.dp,
@@ -376,7 +379,12 @@ private fun CircularButton(
                 ),
                 shape = CircleShape,
             )
-            .clickable(enabled = clickable, onClick = onClick)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(color = AppTheme.color.hint),
+                enabled = clickable,
+                onClick = onClick
+            )
             .padding(4.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -411,7 +419,7 @@ private fun GameCardPreview() {
             containerColor = Color.White,
             borderColors = listOf(Color.Red, Color.Blue),
             shadowColor = Color.White,
-            onCardClick = {},
+            onClick = {},
             gameCardImageContentType = GameCardImageContentType.FUN_CLOWN,
             isPlayable = false,
             unlockPrice = "120",
