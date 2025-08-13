@@ -190,9 +190,9 @@ private fun GameCardBackgroundShapes(
             blurRadius = 5.dp,
             modifier = Modifier.graphicsLayer {
                     rotationZ = if (isRtl) -48f else 48f
-                    translationX = -65f
+                    translationX = if (isRtl) 75f else -65f
                     scaleY = 4f
-                    scaleX = if (isRtl) 3f else 1f
+                    scaleX = 1f
                 },
         ) { RectangleShapeSoftGlow(Modifier.width(22.dp)) }
 
@@ -200,7 +200,7 @@ private fun GameCardBackgroundShapes(
             blurRadius = 5.dp,
             modifier = Modifier.graphicsLayer {
                     rotationZ = if (isRtl) -48f else 48f
-                    translationX = 150f
+                    translationX = if (isRtl) -160f else 150f
                     scaleY = 2f
                     scaleX = 1f
                 },
