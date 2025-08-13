@@ -33,18 +33,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.R
-import com.amsterdam.ui.R as R2
 import com.amsterdam.designsystem.components.IconButton
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
-import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.entity.Game
 import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.ui.application.LocalNavController
+import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.GuessPicture
 import com.amsterdam.ui.components.guessGame.GuessTitle
@@ -53,7 +51,6 @@ import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.uiModel
-import com.amsterdam.viewmodel.game.whichGenre.GenreGameEffect
 import com.amsterdam.viewmodel.game.whichGenre.GenreGameInteractionListener
 import com.amsterdam.viewmodel.game.whichGenre.GameQuestionUiState
 import com.amsterdam.viewmodel.game.whichGenre.GenreGameUiState
@@ -67,7 +64,7 @@ fun GameScreen(
     viewModel: GuessGenreViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val navController = LocalNavController.current
+    val navigationManager = LocalNavManager.current
     val context = LocalContext.current
 
 
