@@ -33,14 +33,8 @@ import com.amsterdam.domain.useCase.game.guessByPoster.DoGuessMovieByPosterHintU
 import com.amsterdam.domain.useCase.game.guessByPoster.GenerateMoviePosterQuestionsUseCase
 import com.amsterdam.domain.useCase.game.guessByPoster.GuessMovieByPosterGameUseCase
 import com.amsterdam.domain.useCase.game.guessByPoster.SubmitGuessMovieByPosterAnswerUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.DoGuessReleaseGameHintUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase
-import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
-import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
-import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.GuessReleaseYearGameUseCase
 import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswerUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
@@ -379,11 +373,6 @@ object UseCaseModule {
     fun provideGetGamePointsUseCase(
         gameRepository: GameRepository
     ) = GetUserPointsUseCase(gameRepository)
-    fun provideDoGuessMovieByPosterHintUseCase(
-        getTotalUserPointsUseCase: GetTotalUserPointsUseCase,
-        updatePoints: UpdateUserGamePointsUseCase
-    ): DoGuessMovieByPosterHintUseCase =
-        DoGuessMovieByPosterHintUseCase(getTotalUserPointsUseCase, updatePoints)
 
     @Provides
     fun provideSubmitGuessMovieByPosterAnswerUseCase(
@@ -399,4 +388,17 @@ object UseCaseModule {
         submitAnswer: SubmitGuessMovieByPosterAnswerUseCase
     ): GuessMovieByPosterGameUseCase =
         GuessMovieByPosterGameUseCase(getGameData, doHint, submitAnswer)
+
+    @Provides
+    fun provideGetAvailableGamesUseCase(): GetAvailableGamesUseCase =
+        GetAvailableGamesUseCase()
+
+
+    @Provides
+    fun provideDoGuessMovieByPosterHintUseCase(
+        getTotalUserPointsUseCase: GetTotalUserPointsUseCase,
+        updatePoints: UpdateUserGamePointsUseCase
+    ): DoGuessMovieByPosterHintUseCase =
+        DoGuessMovieByPosterHintUseCase(getTotalUserPointsUseCase, updatePoints)
+
 }
