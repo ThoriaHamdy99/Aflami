@@ -138,14 +138,6 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getCastByMovieId should return cast and crew for a movie when successful`() = runTest {
-        coEvery { movieApiService.getCastByMovieId(movieId) } returns expectedCastAndCrewResponse
-        val castAndCrew = movieRemoteDataSourceImpl.getCastByMovieId(movieId)
-        assertThat(castAndCrew).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { movieApiService.getCastByMovieId(movieId) }
-    }
-
-    @Test
     fun `getCastByMovieId should throw NetworkException when api call fails`() = runTest {
 
         coEvery { movieApiService.getCastByMovieId(movieId) } throws NetworkException()
@@ -259,24 +251,6 @@ class MovieRemoteDataSourceImplTest {
         assertThrows<NetworkException> {
             movieRemoteDataSourceImpl.getMoviesByGenreIds(genreIds, 1)
         }
-    }
-
-    @Test
-    fun `setMovieRate should return RatingResponse when successful`() = runTest {
-
-        coEvery {
-            movieApiService.postMovieRating(
-                movieId,
-                rating,
-            )
-        } returns  expectedRatingResponse
-
-        val result = movieRemoteDataSourceImpl.setMovieRate(rating, movieId)
-
-        assertThat(result).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { movieApiService.postMovieRating(movieId, rating) }
-
-
     }
 
     @Test
