@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase.profile
+package com.amsterdam.domain.useCase.common
 
 import com.amsterdam.domain.repository.GameRepository
 import com.google.common.truth.Truth.assertThat
@@ -11,16 +11,16 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
-class GetUserPointsUseCaseTest {
+class GetTotalUserPointsUseCaseTest {
 
     private val gamePointsRepository = mockk<GameRepository>()
-    private val getUserPointsUseCase = GetUserPointsUseCase(gamePointsRepository)
+    private val getTotalUserPointsUseCase = GetTotalUserPointsUseCase(gamePointsRepository)
 
     @Test
     fun `should call getPoints from repository`() = runTest {
         coEvery { gamePointsRepository.getUserPoints() } returns flowOf(40)
 
-        getUserPointsUseCase.invoke()
+        getTotalUserPointsUseCase.invoke()
 
         coVerify(exactly = 1) { gamePointsRepository.getUserPoints() }
     }
@@ -29,6 +29,6 @@ class GetUserPointsUseCaseTest {
     fun `should return the same points flow as repository`() = runTest {
         every { gamePointsRepository.getUserPoints() } returns flowOf(40)
 
-        assertThat(getUserPointsUseCase().first()).isEqualTo(40)
+        assertThat(getTotalUserPointsUseCase().first()).isEqualTo(40)
     }
 }

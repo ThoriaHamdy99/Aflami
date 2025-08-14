@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase.game
+package com.amsterdam.domain.useCase.common
 
 import com.amsterdam.domain.repository.GameRepository
 

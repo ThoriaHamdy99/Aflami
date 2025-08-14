@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.game.whichGenre
 
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
-import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
+import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase.MovieGenreQuestion
 import kotlinx.coroutines.flow.first
