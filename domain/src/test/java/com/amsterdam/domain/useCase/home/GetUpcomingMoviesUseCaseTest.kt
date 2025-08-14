@@ -3,15 +3,12 @@ package com.amsterdam.domain.useCase.home
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.useCase.utils.fakeMovieList
-import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.LocalDate
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
