@@ -121,7 +121,7 @@ fun ResultScreenContent(
 
             Column(
                 modifier = Modifier
-                    .fillMaxSize().padding(innerPadding).padding(bottom = 16.dp)
+                    .fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding())
                     .verticalScroll(rememberScrollState())
                     .statusBarsPadding()
                     .navigationBarsPadding()
