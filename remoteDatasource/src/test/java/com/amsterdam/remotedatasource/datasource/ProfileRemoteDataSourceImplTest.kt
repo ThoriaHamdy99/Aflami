@@ -9,8 +9,8 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.Test
 
 class ProfileRemoteDataSourceImplTest {
     private lateinit var profileApiService: ProfileApiService
@@ -23,7 +23,7 @@ class ProfileRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getAccountDetails should return account details when api call is successful`() = runTest {
+    fun `getAccountDetails should return account details when the API call is successful`() = runTest {
         val expectedAccountDetails = mockk<AccountDetailsRemoteDto>()
         coEvery { profileApiService.getAccountDetails() } returns expectedAccountDetails
 
@@ -34,7 +34,7 @@ class ProfileRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getAccountDetails should throw NetworkException when api call throws an exception`() =
+    fun `getAccountDetails should throw NetworkException when the API call fails`() =
         runTest {
             coEvery { profileApiService.getAccountDetails() } throws NetworkException()
 

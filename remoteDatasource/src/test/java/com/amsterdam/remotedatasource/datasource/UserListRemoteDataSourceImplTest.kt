@@ -34,7 +34,7 @@ class UserListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `createNewList should return a new user list response on success`() = runTest {
+    fun `createNewList should return a new user list response when the API call is successful`() = runTest {
         coEvery {
             userListApiService.createNewList(
                 listName = listName,
@@ -52,7 +52,7 @@ class UserListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `createNewList should throw NetworkException when api call fails`() = runTest {
+    fun `createNewList should throw NetworkException when the API call fails`() = runTest {
         coEvery {
             userListApiService.createNewList(
                 listName = listName,
@@ -69,7 +69,7 @@ class UserListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getUserLists should return remote user list response on success`() = runTest {
+    fun `getUserLists should return a remote user list response when the API call is successful`() = runTest {
         coEvery {
             userListApiService.getUserLists(
                 accountId,
@@ -82,7 +82,7 @@ class UserListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `addMovieToList should return a response on success`() = runTest {
+    fun `addMovieToList should return a response when the API call is successful`() = runTest {
         coEvery {
             userListApiService.addMediaItemToList(
                 listId,
@@ -95,7 +95,7 @@ class UserListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `addMovieToList should throw NetworkException when api call fails`() = runTest {
+    fun `addMovieToList should throw NetworkException when the API call fails`() = runTest {
         coEvery { userListApiService.addMediaItemToList(listId, movieId) } throws NetworkException()
         assertThrows<NetworkException> {
             userListRemoteDataSourceImpl.addMovieToList(
@@ -107,7 +107,7 @@ class UserListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getMoviesFromList should return a list of movies and call the api service`() = runTest {
+    fun `getMoviesFromList should return a list of movies when the API call is successful`() = runTest {
         coEvery {
             userListApiService.getMoviesAndTvShowsFromList(
                 listId,
@@ -120,7 +120,7 @@ class UserListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getMoviesFromList should throw NetworkException when api call fails`() = runTest {
+    fun `getMoviesFromList should throw NetworkException when the API call fails`() = runTest {
         coEvery {
             userListApiService.getMoviesAndTvShowsFromList(
                 listId,
@@ -137,28 +137,28 @@ class UserListRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `deleteList should call api service deleteList`() = runTest {
+    fun `deleteList should call the API service to delete the list`() = runTest {
         coEvery { userListApiService.deleteList(listId) } returns Unit
         userListRemoteDataSourceImpl.deleteList(listId)
         coVerify(exactly = 1) { userListApiService.deleteList(listId) }
     }
 
     @Test
-    fun `deleteList should throw NetworkException when api call fails`() = runTest {
+    fun `deleteList should throw NetworkException when the API call fails`() = runTest {
         coEvery { userListApiService.deleteList(listId) } throws NetworkException()
         assertThrows<NetworkException> { userListRemoteDataSourceImpl.deleteList(listId) }
         coVerify(exactly = 1) { userListApiService.deleteList(any()) }
     }
 
     @Test
-    fun `removeMovieFromList should call api service removeMovieFromList`() = runTest {
+    fun `removeMovieFromList should call the API service to remove the movie from the list`() = runTest {
         coEvery { userListApiService.removeMovieFromList(listId, movieId) } returns Unit
         userListRemoteDataSourceImpl.deleteMovieFromList(listId, movieId)
         coVerify(exactly = 1) { userListApiService.removeMovieFromList(listId, movieId) }
     }
 
     @Test
-    fun `removeMovieFromList should throw NetworkException when api call fails`() = runTest {
+    fun `removeMovieFromList should throw NetworkException when the API call fails`() = runTest {
         coEvery {
             userListApiService.removeMovieFromList(
                 listId,

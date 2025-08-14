@@ -30,7 +30,7 @@ class AuthenticationRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `When loginWithPassword and all API calls are successful should return session ID`() =
+    fun `loginWithPassword should return a session ID when all API calls are successful`() =
         runTest {
             coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
             coEvery {
@@ -53,7 +53,7 @@ class AuthenticationRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `When loginWithPassword and createRequestToken API call fails should throw NetworkException`() =
+    fun `loginWithPassword should throw a NetworkException when createRequestToken API call fails`() =
         runTest {
             coEvery { authenticationApiService.createRequestToken() } throws NetworkException()
 
@@ -66,7 +66,7 @@ class AuthenticationRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `When loginWithPassword and createSessionWithLogin API call fails should throw NetworkException`() =
+    fun `loginWithPassword should throw a NetworkException when createSessionWithLogin API call fails`() =
         runTest {
             coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
             coEvery { authenticationApiService.createSessionWithLogin(any()) } throws NetworkException()
@@ -80,7 +80,7 @@ class AuthenticationRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `When loginWithPassword and createSession API call fails should throw NetworkException`() =
+    fun `loginWithPassword should throw a NetworkException when createSession API call fails`() =
         runTest {
             coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
             coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse

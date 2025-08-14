@@ -25,7 +25,7 @@ class CategoryRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getMovieCategories should return a list of movie categories when successful`() = runTest {
+    fun `getMovieCategories should return a list of movie categories when the API call is successful`() = runTest {
         coEvery { categoryApiService.getMovieCategories() } returns movieCategoryResponse
 
         val categories = categoryRemoteDataSourceImpl.getMovieCategories()
@@ -35,7 +35,7 @@ class CategoryRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getTvShowCategories should return a list of TV show categories when successful`() =
+    fun `getTvShowCategories should return a list of TV show categories when the API call is successful`() =
         runTest {
             coEvery { categoryApiService.getTvShowCategories() } returns tvShowCategoryResponse
 
@@ -46,7 +46,7 @@ class CategoryRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getMovieCategories should rethrow NetworkException from service provider`() = runTest {
+    fun `getMovieCategories should rethrow a NetworkException when the service provider throws one`() = runTest {
         coEvery { categoryApiService.getMovieCategories() } throws NetworkException()
 
         assertThrows<NetworkException> {
@@ -56,7 +56,7 @@ class CategoryRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getTvShowCategories should rethrow NetworkException from service provider`() = runTest {
+    fun `getTvShowCategories should rethrow a NetworkException when the service provider throws one`() = runTest {
         coEvery { categoryApiService.getTvShowCategories() } throws NetworkException()
 
         assertThrows<NetworkException> {
@@ -66,7 +66,7 @@ class CategoryRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getMovieCategories should return empty list when API service returns empty list`() =
+    fun `getMovieCategories should return an empty list when the API service returns an empty list`() =
         runTest {
             coEvery { categoryApiService.getMovieCategories() } returns emptyCategoryResponse
 
@@ -77,7 +77,7 @@ class CategoryRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getTvShowCategories should return empty list when API service returns empty list`() =
+    fun `getTvShowCategories should return an empty list when the API service returns an empty list`() =
         runTest {
             coEvery { categoryApiService.getTvShowCategories() } returns emptyCategoryResponse
 

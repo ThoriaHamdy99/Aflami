@@ -24,7 +24,7 @@ class CountryRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getCountries should call CountryApiService`() = runTest {
+    fun `getCountries should call the CountryApiService when executed`() = runTest {
         coEvery { countryApiService.getCountries() } returns emptyList()
 
         countryRemoteDataSourceImpl.getCountries()
@@ -33,7 +33,7 @@ class CountryRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getCountries should return the correct data from CountryApiService`() = runTest {
+    fun `getCountries should return the list of countries from the API service when successful`() = runTest {
         coEvery { countryApiService.getCountries() } returns expectedCountryList
 
         val actualResponse = countryRemoteDataSourceImpl.getCountries()
@@ -43,7 +43,7 @@ class CountryRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getCountries should throw NetworkException when API service throws an exception`() =
+    fun `getCountries should throw NetworkException when the API service call fails`() =
         runTest {
             coEvery { countryApiService.getCountries() } throws NetworkException()
 
@@ -54,7 +54,7 @@ class CountryRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getCountries should return an empty list when API service returns an empty list`() =
+    fun `getCountries should return an empty list when the API service returns an empty list`() =
         runTest {
             val expectedResponse = emptyList<CountryRemoteDto>()
             coEvery { countryApiService.getCountries() } returns expectedResponse
@@ -66,7 +66,7 @@ class CountryRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getCountries should rethrow NetworkException when API service throws Exception`() =
+    fun `getCountries should rethrow a NetworkException when the API service throws an exception`() =
         runTest {
             coEvery { countryApiService.getCountries() } throws NetworkException()
 
