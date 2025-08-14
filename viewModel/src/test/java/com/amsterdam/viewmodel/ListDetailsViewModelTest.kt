@@ -13,7 +13,6 @@ import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.viewmodel.listDetails.ListDetailsArgs
 import com.amsterdam.viewmodel.listDetails.ListDetailsEffect
-import com.amsterdam.viewmodel.listDetails.ListDetailsUiState
 import com.amsterdam.viewmodel.listDetails.ListDetailsViewModel
 import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider

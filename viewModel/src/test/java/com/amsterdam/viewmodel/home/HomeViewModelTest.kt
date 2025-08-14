@@ -35,8 +35,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import kotlin.jvm.java
-
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
@@ -226,7 +224,7 @@ class HomeViewModelTest {
             advanceUntilIdle()
 
             // Then
-            assertThat(viewModel.errorState).isEqualTo(ErrorUiState.NoInternetError)
+            viewModel.errorState.test { assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError) }
         }
 
     @Test

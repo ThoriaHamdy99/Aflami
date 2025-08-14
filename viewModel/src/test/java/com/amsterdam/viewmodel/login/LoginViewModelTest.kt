@@ -5,7 +5,6 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.authentication.LoginAsGuestUseCase
 import com.amsterdam.domain.useCase.authentication.LoginWithPasswordUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
-import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
