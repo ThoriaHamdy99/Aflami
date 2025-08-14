@@ -8,19 +8,14 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class ProfileRemoteDataSourceImplTest {
-    private lateinit var profileApiService: ProfileApiService
-    private lateinit var profileDataSourceImpl: ProfileRemoteDataSourceImpl
 
-    @BeforeEach
-    fun setUp() {
-        profileApiService = mockk()
-        profileDataSourceImpl = ProfileRemoteDataSourceImpl(profileApiService)
-    }
+    private val profileApiService: ProfileApiService = mockk()
+    private val profileDataSourceImpl: ProfileRemoteDataSourceImpl =
+        ProfileRemoteDataSourceImpl(profileApiService)
 
     @Test
     fun `getAccountDetails should return account details on successful API call`() = runTest {

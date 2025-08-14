@@ -24,20 +24,14 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class MovieRemoteDataSourceImplTest {
 
-    private lateinit var movieApiService: MovieApiService
-    private lateinit var movieRemoteDataSourceImpl: MovieRemoteDataSourceImpl
-
-    @BeforeEach
-    fun setUp() {
-        movieApiService = mockk()
-        movieRemoteDataSourceImpl = MovieRemoteDataSourceImpl(movieApiService)
-    }
+    private val movieApiService: MovieApiService = mockk()
+    private val movieRemoteDataSourceImpl: MovieRemoteDataSourceImpl =
+        MovieRemoteDataSourceImpl(movieApiService)
 
     @Test
     fun `getMoviesByKeyword should return a list of movies when the API call is successful`() =

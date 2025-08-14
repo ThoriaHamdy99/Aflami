@@ -9,20 +9,14 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class PeopleRemoteDataSourceImplTest {
 
-    private lateinit var peopleApiService: PeopleApiService
-    private lateinit var peopleRemoteDataSourceImpl: PeopleRemoteDataSourceImpl
-
-    @BeforeEach
-    fun setUp() {
-        peopleApiService = mockk()
-        peopleRemoteDataSourceImpl = PeopleRemoteDataSourceImpl(peopleApiService)
-    }
+    private val peopleApiService: PeopleApiService = mockk()
+    private val peopleRemoteDataSourceImpl: PeopleRemoteDataSourceImpl =
+        PeopleRemoteDataSourceImpl(peopleApiService)
 
     @Test
     fun `getTrendingPeople should return a list of people on successful API call`() = runTest {
