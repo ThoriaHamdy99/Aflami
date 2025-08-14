@@ -38,17 +38,16 @@ kover.reports {
     filters.excludes {
         androidGeneratedClasses()
         packages(
-            "*.repository.dto.remote",
             "*.remotedatasource.api",
             "*.remotedatasource.util",
+            "*.remotedatasource.client",
             "*.generated"
         )
         classes(
-            "*Dto*",
-            "*Response*",
             "*_Factory*",
             "*Hilt*",
-            "*_Impl*"
+            "*_Impl*",
+            "*${'$'}${'$'}inlined${'$'}*",
         )
     }
 

@@ -18,6 +18,7 @@ class CategoryRemoteDataSourceImplTest {
     private lateinit var categoryApiService: CategoryApiService
     private lateinit var categoryRemoteDataSourceImpl: CategoryRemoteDataSourceImpl
 
+
     @BeforeEach
     fun setUp() {
         categoryApiService = mockk()
@@ -25,67 +26,78 @@ class CategoryRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getMovieCategories should return a list of movie categories when the API call is successful`() = runTest {
+    fun `getMovieCategories should return the correct list of movie categories`() = runTest {
         coEvery { categoryApiService.getMovieCategories() } returns movieCategoryResponse
-
         val categories = categoryRemoteDataSourceImpl.getMovieCategories()
-
         assertThat(categories).isEqualTo(movieCategoryResponse)
+    }
+
+    @Test
+    fun `getMovieCategories should call categoryApiService getMovieCategories once`() = runTest {
+        coEvery { categoryApiService.getMovieCategories() } returns movieCategoryResponse
+        categoryRemoteDataSourceImpl.getMovieCategories()
         coVerify(exactly = 1) { categoryApiService.getMovieCategories() }
     }
 
     @Test
-    fun `getTvShowCategories should return a list of TV show categories when the API call is successful`() =
-        runTest {
-            coEvery { categoryApiService.getTvShowCategories() } returns tvShowCategoryResponse
-
-            val categories = categoryRemoteDataSourceImpl.getTvShowCategories()
-
-            assertThat(categories).isEqualTo(tvShowCategoryResponse)
-            coVerify(exactly = 1) { categoryApiService.getTvShowCategories() }
-        }
-
-    @Test
-    fun `getMovieCategories should rethrow a NetworkException when the service provider throws one`() = runTest {
-        coEvery { categoryApiService.getMovieCategories() } throws NetworkException()
-
-        assertThrows<NetworkException> {
-            categoryRemoteDataSourceImpl.getMovieCategories()
-        }
-        coVerify(exactly = 1) { categoryApiService.getMovieCategories() }
+    fun `getTvShowCategories should return the correct list of TV show categories`() = runTest {
+        coEvery { categoryApiService.getTvShowCategories() } returns tvShowCategoryResponse
+        val categories = categoryRemoteDataSourceImpl.getTvShowCategories()
+        assertThat(categories).isEqualTo(tvShowCategoryResponse)
     }
 
     @Test
-    fun `getTvShowCategories should rethrow a NetworkException when the service provider throws one`() = runTest {
-        coEvery { categoryApiService.getTvShowCategories() } throws NetworkException()
-
-        assertThrows<NetworkException> {
-            categoryRemoteDataSourceImpl.getTvShowCategories()
-        }
+    fun `getTvShowCategories should call categoryApiService getTvShowCategories once`() = runTest {
+        coEvery { categoryApiService.getTvShowCategories() } returns tvShowCategoryResponse
+        categoryRemoteDataSourceImpl.getTvShowCategories()
         coVerify(exactly = 1) { categoryApiService.getTvShowCategories() }
     }
 
     @Test
-    fun `getMovieCategories should return an empty list when the API service returns an empty list`() =
+    fun `getMovieCategories should return an empty list when API service returns empty`() =
         runTest {
             coEvery { categoryApiService.getMovieCategories() } returns emptyCategoryResponse
-
             val categories = categoryRemoteDataSourceImpl.getMovieCategories()
-
             assertThat(categories.genres).isEmpty()
-            coVerify(exactly = 1) { categoryApiService.getMovieCategories() }
         }
 
     @Test
-    fun `getTvShowCategories should return an empty list when the API service returns an empty list`() =
+    fun `getMovieCategories should call API service when it returns an empty list`() = runTest {
+        coEvery { categoryApiService.getMovieCategories() } returns emptyCategoryResponse
+        categoryRemoteDataSourceImpl.getMovieCategories()
+        coVerify(exactly = 1) { categoryApiService.getMovieCategories() }
+    }
+
+    @Test
+    fun `getTvShowCategories should return an empty list when API service returns empty`() =
         runTest {
             coEvery { categoryApiService.getTvShowCategories() } returns emptyCategoryResponse
-
             val categories = categoryRemoteDataSourceImpl.getTvShowCategories()
-
             assertThat(categories.genres).isEmpty()
-            coVerify(exactly = 1) { categoryApiService.getTvShowCategories() }
         }
+
+    @Test
+    fun `getTvShowCategories should call API service when it returns an empty list`() = runTest {
+        coEvery { categoryApiService.getTvShowCategories() } returns emptyCategoryResponse
+        categoryRemoteDataSourceImpl.getTvShowCategories()
+        coVerify(exactly = 1) { categoryApiService.getTvShowCategories() }
+    }
+
+    @Test
+    fun `getMovieCategories should rethrow NetworkException from service provider`() = runTest {
+        coEvery { categoryApiService.getMovieCategories() } throws NetworkException()
+        assertThrows<NetworkException> {
+            categoryRemoteDataSourceImpl.getMovieCategories()
+        }
+    }
+
+    @Test
+    fun `getTvShowCategories should rethrow NetworkException from service provider`() = runTest {
+        coEvery { categoryApiService.getTvShowCategories() } throws NetworkException()
+        assertThrows<NetworkException> {
+            categoryRemoteDataSourceImpl.getTvShowCategories()
+        }
+    }
 
     private val movieCategoryResponse = CategoryRemoteResponse(
         genres = listOf(
@@ -102,4 +114,5 @@ class CategoryRemoteDataSourceImplTest {
     )
 
     private val emptyCategoryResponse = CategoryRemoteResponse(genres = emptyList())
+
 }
