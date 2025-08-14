@@ -50,9 +50,8 @@ class HomeViewModel @Inject constructor(
 
     private fun getHomeScreenData() {
         tryToExecute(
-            action = { getHomeScreenDataUseCase() },
+            action = getHomeScreenDataUseCase::invoke,
             onSuccess = ::onGetHomeScreenDataSuccess,
-            onError = ::onError,
             onCompletion = ::onCompletion
         )
     }
@@ -75,7 +74,7 @@ class HomeViewModel @Inject constructor(
 
     private fun onGetHomeScreenDataSuccess(homeScreenData: HomeScreenData) {
         updateState {
-                homeScreenData.toHomeUiState(state.value.continueWatchingMediaSectionUiState.mediaItems)
+            homeScreenData.toHomeUiState(state.value.continueWatchingMediaSectionUiState.mediaItems)
         }
     }
 
@@ -84,7 +83,6 @@ class HomeViewModel @Inject constructor(
         tryToExecute(
             action = { getContinueWatchingScreenDataUseCase(pageSize = 10) },
             onSuccess = ::onGetContinueWatchingScreenDataSuccess,
-            onError = ::onError,
             onCompletion = ::onCompletion
         )
     }
@@ -122,7 +120,6 @@ class HomeViewModel @Inject constructor(
         tryToExecute(
             action = { getUpcomingMoviesUseCase(selectedUpcomingGenre) },
             onSuccess = ::onGetUpcomingMovieSuccess,
-            onError = ::onError,
         )
     }
 
@@ -162,9 +159,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    override fun onClickSearch() {
-        sendNewNavigationEffect(HomeEffect.NavigateToSearchScreenEffect)
-    }
+    override fun onClickSearch() = sendNewNavigationEffect(HomeEffect.NavigateToSearchScreenEffect)
 
     override fun onClickMediaItem(mediaId: Long, mediaType: MediaType) {
         if (mediaType == MediaType.MOVIE)

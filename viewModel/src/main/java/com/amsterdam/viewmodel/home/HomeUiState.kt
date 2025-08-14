@@ -4,6 +4,7 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.models.Mood
 import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.shared.defaultMovieGenres
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.shared.uiStates.MovieGenreItemUiState
@@ -60,7 +61,7 @@ data class HomeUiState(
         val movies: List<MoodPickerItemUiState> = emptyList(),
         val isLoadingMovies: Boolean = false,
         val openMovieDialog: Boolean = false,
-        val error: HomeError? = null
+        val error: ErrorUiState? = null
     )
 
     data class PopularMediaItemUiState(

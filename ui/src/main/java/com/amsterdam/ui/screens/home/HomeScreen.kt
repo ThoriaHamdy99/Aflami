@@ -62,6 +62,8 @@ import com.amsterdam.viewmodel.home.HomeEffect.NavigateToSearchScreenEffect
 import com.amsterdam.viewmodel.home.HomeInteractionListener
 import com.amsterdam.viewmodel.home.HomeUiState
 import com.amsterdam.viewmodel.home.HomeViewModel
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.isNull
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import kotlinx.coroutines.flow.collectLatest
 
@@ -107,7 +109,10 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hil
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 private fun HomeScreenContent(
-    state: HomeUiState, interactionListener: HomeInteractionListener, modifier: Modifier = Modifier
+    state: HomeUiState,
+    errorState: ErrorUiState?,
+    interactionListener: HomeInteractionListener,
+    modifier: Modifier = Modifier
 ) {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
@@ -148,7 +153,7 @@ private fun HomeScreenContent(
             .navigationBarsPadding()
             .windowInsetsPadding(WindowInsets(bottom = LocalScaffoldBottomPadding.current))
     ) {
-        if (state.error == HomeUiState.HomeError.NetworkError) {
+        if (errorState is ErrorUiState.NoInternetError) {
             Column(Modifier.fillMaxSize()) {
                 HomeAppBar(
                     onSearchClicked = interactionListener::onClickSearch,
@@ -258,7 +263,9 @@ private fun calculateUpcomingMoviesSectionHeightDp(
 private fun HomeScreenPreview() {
     AflamiTheme {
         HomeScreenContent(
-            state = HomeUiState(), interactionListener = object : HomeInteractionListener {
+            state = HomeUiState(),
+            errorState = ErrorUiState.UnknownError,
+            interactionListener = object : HomeInteractionListener {
                 override fun onClickRetryLoading() {}
                 override fun onClickSearch() {}
 
