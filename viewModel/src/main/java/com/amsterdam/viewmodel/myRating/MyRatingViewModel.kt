@@ -7,9 +7,9 @@ import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase.Use
 import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
-import com.amsterdam.viewmodel.myRating.MyRatingUiState.MyRatingErrorState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.TabOption
+import com.amsterdam.viewmodel.shared.toErrorUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -39,7 +39,8 @@ class MyRatingViewModel @Inject constructor(
     }
 
     private fun onGetRatedMoviesSuccess(movies: List<UserRatedMovie>) {
-        updateState { it.copy(movies = movies.toRatingMovieUiStates(), error = null) }
+        updateState { it.copy(movies = movies.toRatingMovieUiStates()) }
+        updateErrorState(error = null)
     }
 
     private fun getRatedTvShows() {
@@ -53,11 +54,14 @@ class MyRatingViewModel @Inject constructor(
     }
 
     private fun onGetRatedTvShowsSuccess(tvShows: List<UserRatedTvShow>) {
-        updateState { it.copy(tvShows = tvShows.toRatingTvShowUiStates(), error = null) }
+        updateState { it.copy(tvShows = tvShows.toRatingTvShowUiStates()) }
+        updateErrorState(error = null)
     }
 
     private fun onGetRatedMediaError(exception: AflamiException) {
-        updateState { it.copy(error = MyRatingErrorState.mapToUiState(exception), isRetryLoading = false) }
+        updateState { it.copy(isRetryLoading = false) }
+        updateErrorState(error = exception.toErrorUiState())
+
     }
 
     private fun onCompletion() = updateState { it.copy(isLoading = false, isRetryLoading = false) }
@@ -76,7 +80,8 @@ class MyRatingViewModel @Inject constructor(
 
     override fun onClickDeleteMyMovieRatingIcon(movieId: Long) {
         val updatedMovieList = state.value.movies.filterNot { it.id == movieId }
-        updateState { it.copy(movies = updatedMovieList, error = null) }
+        updateState { it.copy(movies = updatedMovieList) }
+        updateErrorState(error = null)
 
         tryToExecute(
             action = { deleteUserRatedMoviesUseCase.deleteMovieRate(movieId) },
@@ -99,7 +104,8 @@ class MyRatingViewModel @Inject constructor(
 
     override fun onClickDeleteMyTvShowRatingIcon(tvShowId: Long) {
         val updatedTvShowList = state.value.tvShows.filterNot { it.id == tvShowId }
-        updateState { it.copy(tvShows = updatedTvShowList, error = null) }
+        updateState { it.copy(tvShows = updatedTvShowList) }
+        updateErrorState(error = null)
 
         tryToExecute(
             action = { deleteUserRatedTvShowUseCase.deleteTvShowRate(tvShowId) },

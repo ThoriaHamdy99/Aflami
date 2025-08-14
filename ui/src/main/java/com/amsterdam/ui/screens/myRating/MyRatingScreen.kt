@@ -53,8 +53,8 @@ import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.myRating.MyRatingInteractionListener
 import com.amsterdam.viewmodel.myRating.MyRatingUiEffect
 import com.amsterdam.viewmodel.myRating.MyRatingUiState
-import com.amsterdam.viewmodel.myRating.MyRatingUiState.MyRatingErrorState
 import com.amsterdam.viewmodel.myRating.MyRatingViewModel
+import com.amsterdam.viewmodel.shared.BaseErrorUiState
 import com.amsterdam.viewmodel.shared.TabOption
 import kotlinx.coroutines.flow.collectLatest
 
@@ -64,6 +64,7 @@ fun MyRatingScreen(
 ) {
     val navigationManager = LocalNavManager.current
     val state by viewModel.state.collectAsState()
+    val errorState by viewModel.errorState.collectAsState()
 
     val currentBackStackEntry = navigationManager.getCurrentBackStackEntryAsState().value
     val savedStateHandle = currentBackStackEntry?.savedStateHandle
@@ -100,12 +101,13 @@ fun MyRatingScreen(
         }
     }
 
-    MyRatingContent(state = state, interaction = viewModel)
+    MyRatingContent(state = state, interaction = viewModel, errorState = errorState)
 }
 
 @Composable
 private fun MyRatingContent(
     state: MyRatingUiState,
+    errorState: BaseErrorUiState?,
     interaction: MyRatingInteractionListener
 ) {
     val lazyState = rememberLazyGridState()
@@ -208,10 +210,10 @@ private fun MyRatingContent(
                 }
             }
 
-            state.error != null -> {
+            errorState != null -> {
                 getErrorContentByErrorUiState(
                     modifier = Modifier.height(availableHeight),
-                    errorState = state.error ?: MyRatingErrorState.UnknownError,
+                    errorState = errorState,
                     interaction = interaction,
                     showRetryLoading = state.isRetryLoading
 
@@ -256,13 +258,13 @@ private fun calculateAvailableHeight(
 }
 
 private fun LazyGridScope.getErrorContentByErrorUiState(
-    errorState: MyRatingErrorState,
+    errorState: BaseErrorUiState,
     interaction: MyRatingInteractionListener,
     modifier: Modifier = Modifier,
     showRetryLoading: Boolean
 ) {
     return when (errorState) {
-        MyRatingErrorState.NoInternetError -> item(span = { GridItemSpan(maxLineSpan) }) {
+        BaseErrorUiState.NoInternetError -> item(span = { GridItemSpan(maxLineSpan) }) {
             NoNetworkContainer(
                 modifier = modifier,
                 onClickRetry = interaction::onClickRetryRequest,

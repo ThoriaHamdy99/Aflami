@@ -10,7 +10,6 @@ data class MyRatingUiState(
     val tvShows: List<RatingTvShowUiState> = emptyList(),
     val isLoading: Boolean = false,
     val isRetryLoading: Boolean = false,
-    val error: MyRatingErrorState? = null,
 ) {
     data class RatingTvShowUiState(
         val id: Long = 0,
@@ -27,19 +26,4 @@ data class MyRatingUiState(
         val yearOfRelease: String = "",
         val rate: String = ""
     )
-
-    sealed interface MyRatingErrorState {
-        data object RatedMediaFetchError : MyRatingErrorState
-        data object NoInternetError : MyRatingErrorState
-        data object UnknownError : MyRatingErrorState
-
-        companion object {
-            fun mapToUiState(exception: AflamiException): MyRatingErrorState {
-                return when (exception) {
-                    is NetworkException -> NoInternetError
-                    else -> RatedMediaFetchError
-                }
-            }
-        }
-    }
 }
