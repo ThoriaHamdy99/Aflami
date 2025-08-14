@@ -71,7 +71,7 @@ fun GuessGenreScreen(
                 }
 
                 GenreGameEffect.ShowNotEnoughPointsSnackBar -> {
-                    SnackBarManager.showError(context.getString(R2.string.oops_there_are_not_enough_points))
+                    SnackBarManager.showError(context.getString(R2.string.oops_there_are_not_enough_points), duration = 1500L)
                 }
             }
         }

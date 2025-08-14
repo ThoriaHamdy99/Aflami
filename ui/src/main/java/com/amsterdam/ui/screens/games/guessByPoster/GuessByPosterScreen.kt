@@ -22,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,6 +34,7 @@ import com.amsterdam.designsystem.components.IconButton
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
+import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
@@ -43,6 +45,7 @@ import com.amsterdam.ui.components.guessGame.TimerComponent
 import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
 import com.amsterdam.ui.screens.login.components.LoginBackground
+import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameEffect
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameEffect
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameViewModel
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterInteractionListener
@@ -58,6 +61,7 @@ fun GuessByPosterGameScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navigationManager = LocalNavManager.current
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -74,6 +78,10 @@ fun GuessByPosterGameScreen(
                         gameType = resultScreenData.gameType,
                         difficulty = resultScreenData.difficulty
                     )
+                }
+
+                GuessMovieByPosterGameEffect.ShowNotEnoughPointsSnackBar -> {
+                    SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.oops_there_are_not_enough_points), duration = 1500)
                 }
             }
         }

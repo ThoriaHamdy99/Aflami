@@ -21,11 +21,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
+import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.GameTopBar
@@ -34,6 +36,7 @@ import com.amsterdam.ui.components.guessGame.GuessPicture
 import com.amsterdam.ui.components.selection.AnswerSelectionItem
 import com.amsterdam.ui.components.selection.AnswerStatus
 import com.amsterdam.ui.screens.login.components.LoginBackground
+import com.amsterdam.viewmodel.game.whichGenre.GenreGameEffect
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameEffect
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameViewModel
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterUiState
@@ -45,6 +48,7 @@ import kotlinx.coroutines.launch
 fun GuessCharacterScreen(viewModel: GuessCharacterGameViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val navigationManager = LocalNavManager.current
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -61,6 +65,10 @@ fun GuessCharacterScreen(viewModel: GuessCharacterGameViewModel = hiltViewModel(
                         gameType = resultScreenData.gameType,
                         difficulty = resultScreenData.difficulty
                     )
+                }
+
+                GuessCharacterGameEffect.ShowNotEnoughPointsSnackBar -> {
+                    SnackBarManager.showError(context.getString(R.string.oops_there_are_not_enough_points), duration = 1500)
                 }
             }
         }

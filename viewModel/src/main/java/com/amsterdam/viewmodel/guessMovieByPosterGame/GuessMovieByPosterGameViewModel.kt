@@ -1,6 +1,7 @@
 package com.amsterdam.viewmodel.guessMovieByPosterGame
 
 import androidx.lifecycle.viewModelScope
+import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.guessByPoster.GuessMovieByPosterGameUseCase
 import com.amsterdam.domain.useCase.game.guessByPoster.MoviePosterQuestion
@@ -8,6 +9,7 @@ import com.amsterdam.domain.useCase.game.guessByPoster.SubmitGuessMovieByPosterA
 import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.viewmodel.gameEnd.ResultScreenData
 import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
+import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -82,9 +84,6 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
 
     private fun onTimeFinish() {
         updateState { it.copy(isNextEnabled = true) }
-    }
-
-    private fun onError(error: Exception) {
     }
 
     private fun onCompletion() {
@@ -195,5 +194,11 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
     override fun onCloseButtonClicked() {
         timerHandler.stopTimer()
         sendNewNavigationEffect(GuessMovieByPosterGameEffect.NavigateBack)
+    }
+
+    private fun onError(error: Exception) {
+        when(error){
+            is NotEnoughPointsException -> sendNewEffect(GuessMovieByPosterGameEffect.ShowNotEnoughPointsSnackBar)
+        }
     }
 }

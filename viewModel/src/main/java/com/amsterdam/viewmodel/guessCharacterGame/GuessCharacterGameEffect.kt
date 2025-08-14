@@ -5,6 +5,7 @@ import com.amsterdam.viewmodel.gameEnd.ResultScreenData
 
 interface GuessCharacterGameEffect {
     object NavigateBack : GuessCharacterGameEffect
+    object ShowNotEnoughPointsSnackBar : GuessCharacterGameEffect
     data class NavigateToGameResult(val resultScreenData : ResultScreenData) :
         GuessCharacterGameEffect
 }

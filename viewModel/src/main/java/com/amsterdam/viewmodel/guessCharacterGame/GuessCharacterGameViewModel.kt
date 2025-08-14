@@ -1,11 +1,13 @@
 package com.amsterdam.viewmodel.guessCharacterGame
 
 import androidx.lifecycle.viewModelScope
+import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.character.GenerateCharacterQuestionsUseCase.CharacterDataQuestion
 import com.amsterdam.domain.useCase.game.character.GuessCharacterGameUseCase
 import com.amsterdam.domain.useCase.game.character.SubmitCharacterAnswerUseCase.AnswerResult
 import com.amsterdam.entity.GameDifficulty.DifficultyType
+import com.amsterdam.viewmodel.game.whichGenre.GenreGameEffect
 import com.amsterdam.viewmodel.gameEnd.ResultScreenData
 import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -85,11 +87,7 @@ class GuessCharacterGameViewModel @Inject constructor(
         updateState { it.copy(isNextEnabled = true) }
     }
 
-    fun onError(error: Exception) {
-
-    }
-
-    fun onCompletion() {
+    private fun onCompletion() {
         updateState { it.copy(isLoading = false) }
     }
 
@@ -195,5 +193,10 @@ class GuessCharacterGameViewModel @Inject constructor(
         sendNewNavigationEffect(GuessCharacterGameEffect.NavigateBack)
     }
 
+    private fun onError(error: Exception) {
+        when(error){
+            is NotEnoughPointsException -> sendNewEffect(GuessCharacterGameEffect.ShowNotEnoughPointsSnackBar)
+        }
+    }
 
 }

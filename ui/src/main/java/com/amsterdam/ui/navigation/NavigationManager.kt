@@ -45,12 +45,6 @@ class NavigationManager(
         }
     }
 
-    fun toLetsPlay(clearBackStack: Boolean = false) {
-        navController.navigate(Route.Tab.LetsPlay) {
-            if (clearBackStack) popUpTo(0)
-        }
-    }
-
     // --- Auth & Onboarding ---
     fun toLogin(clearBackStack: Boolean = true) {
         navController.navigate(Route.Login) {
