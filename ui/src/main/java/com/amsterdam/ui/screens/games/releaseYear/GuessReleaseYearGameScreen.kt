@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
@@ -86,22 +85,14 @@ private fun GameContent(
             .statusBarsPadding()
             .navigationBarsPadding(),
         bottomBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
                 ConfirmButton(
                     title = stringResource(com.amsterdam.designsystem.R.string.next),
                     onClick = interactionListener::onMoveToNextQuestion,
                     isEnabled = state.isNextEnabled,
                     isLoading = false,
                     isNegative = false,
-                    modifier = Modifier
-                        .width(328.dp)
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
                 )
-            }
         }
     ) { innerPadding ->
         Box {

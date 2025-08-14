@@ -3,7 +3,9 @@ package com.amsterdam.ui.components.guessGame
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.amsterdam.ui.components.selection.AnswerSelectionItem
@@ -47,7 +49,8 @@ fun AdaptiveAnswersColumn(
                         onClick = {
                             if (isChoiceEnabled) return@AnswerSelectionItem
                             onSelectAnswer(index)
-                        }
+                        },
+                        modifier = Modifier.width(screenWidth / itemsPerRow)
                     )
                 }
             }
