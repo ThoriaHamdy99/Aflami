@@ -13,10 +13,65 @@ import org.junit.jupiter.api.assertThrows
 
 class CountryRemoteDataSourceImplTest {
 
-    // Shared data and mocks
     private val countryApiService: CountryApiService = mockk()
     private val countryRemoteDataSourceImpl: CountryRemoteDataSourceImpl =
         CountryRemoteDataSourceImpl(countryApiService)
+
+    @Test
+    fun `getCountries should return the correct list of countries on success`() = runTest {
+        coEvery { countryApiService.getCountries() } returns expectedCountryList
+
+        val actualResponse = countryRemoteDataSourceImpl.getCountries()
+
+        assertThat(actualResponse).isEqualTo(expectedCountryList)
+    }
+
+    @Test
+    fun `getCountries should call the CountryApiService exactly once on success`() = runTest {
+        coEvery { countryApiService.getCountries() } returns expectedCountryList
+
+        countryRemoteDataSourceImpl.getCountries()
+
+        coVerify(exactly = 1) { countryApiService.getCountries() }
+    }
+
+    @Test
+    fun `getCountries should return an empty list when the API service returns one`() = runTest {
+        coEvery { countryApiService.getCountries() } returns emptyList()
+
+        val actualResponse = countryRemoteDataSourceImpl.getCountries()
+
+        assertThat(actualResponse).isEmpty()
+    }
+
+    @Test
+    fun `getCountries should call the API service exactly once when it returns an empty list`() =
+        runTest {
+            coEvery { countryApiService.getCountries() } returns emptyList()
+
+            countryRemoteDataSourceImpl.getCountries()
+
+            coVerify(exactly = 1) { countryApiService.getCountries() }
+        }
+
+    @Test
+    fun `getCountries should throw NetworkException when the API service call fails`() = runTest {
+        coEvery { countryApiService.getCountries() } throws networkException
+
+        assertThrows<NetworkException> {
+            countryRemoteDataSourceImpl.getCountries()
+        }
+    }
+
+    @Test
+    fun `getCountries should rethrow a NetworkException when the API service throws an exception`() =
+        runTest {
+            coEvery { countryApiService.getCountries() } throws networkException
+
+            assertThrows<NetworkException> {
+                countryRemoteDataSourceImpl.getCountries()
+            }
+        }
 
     private val expectedCountryList = listOf(
         CountryRemoteDto(
@@ -28,49 +83,4 @@ class CountryRemoteDataSourceImplTest {
     )
 
     private val networkException = NetworkException()
-
-    @Test
-    fun `getCountries should return the correct list of countries on success`() = runTest {
-        coEvery { countryApiService.getCountries() } returns expectedCountryList
-        val actualResponse = countryRemoteDataSourceImpl.getCountries()
-        assertThat(actualResponse).isEqualTo(expectedCountryList)
-    }
-
-    @Test
-    fun `getCountries should call the CountryApiService exactly once on success`() = runTest {
-        coEvery { countryApiService.getCountries() } returns expectedCountryList
-        countryRemoteDataSourceImpl.getCountries()
-        coVerify(exactly = 1) { countryApiService.getCountries() }
-    }
-
-    @Test
-    fun `getCountries should return an empty list when the API service returns one`() = runTest {
-        coEvery { countryApiService.getCountries() } returns emptyList()
-        val actualResponse = countryRemoteDataSourceImpl.getCountries()
-        assertThat(actualResponse).isEmpty()
-    }
-
-    @Test
-    fun `getCountries should call the API service exactly once when it returns an empty list`() = runTest {
-        coEvery { countryApiService.getCountries() } returns emptyList()
-        countryRemoteDataSourceImpl.getCountries()
-        coVerify(exactly = 1) { countryApiService.getCountries() }
-    }
-
-    @Test
-    fun `getCountries should throw NetworkException when the API service call fails`() = runTest {
-        coEvery { countryApiService.getCountries() } throws networkException
-        assertThrows<NetworkException> {
-            countryRemoteDataSourceImpl.getCountries()
-        }
-    }
-
-    @Test
-    fun `getCountries should rethrow a NetworkException when the API service throws an exception`() =
-        runTest {
-            coEvery { countryApiService.getCountries() } throws networkException
-            assertThrows<NetworkException> {
-                countryRemoteDataSourceImpl.getCountries()
-            }
-        }
 }
