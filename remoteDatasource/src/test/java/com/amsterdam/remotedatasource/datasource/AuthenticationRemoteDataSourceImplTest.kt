@@ -21,7 +21,6 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import retrofit2.HttpException
@@ -30,17 +29,11 @@ import java.net.ConnectException
 
 class AuthenticationRemoteDataSourceImplTest {
 
-    private lateinit var authenticationApiService: AuthenticationApiService
-    private lateinit var json: Json
-    private lateinit var authenticationRemoteDataSourceImpl: AuthenticationRemoteDataSourceImpl
+    private val json: Json = Json { ignoreUnknownKeys = true }
+    private val authenticationApiService: AuthenticationApiService = mockk()
+    private val authenticationRemoteDataSourceImpl: AuthenticationRemoteDataSourceImpl =
+        AuthenticationRemoteDataSourceImpl(json, authenticationApiService)
 
-    @BeforeEach
-    fun setUp() {
-        authenticationApiService = mockk()
-        json = Json { ignoreUnknownKeys = true }
-        authenticationRemoteDataSourceImpl =
-            AuthenticationRemoteDataSourceImpl(json, authenticationApiService)
-    }
 
     @Test
     fun `loginWithPassword should return the correct session ID on success`() = runTest {

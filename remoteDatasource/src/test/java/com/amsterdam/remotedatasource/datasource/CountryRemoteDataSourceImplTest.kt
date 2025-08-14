@@ -8,21 +8,15 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class CountryRemoteDataSourceImplTest {
 
-    private lateinit var countryApiService: CountryApiService
-    private lateinit var countryRemoteDataSourceImpl: CountryRemoteDataSourceImpl
 
-    @BeforeEach
-    fun setUp() {
-        countryApiService = mockk()
-        countryRemoteDataSourceImpl = CountryRemoteDataSourceImpl(countryApiService)
-    }
-
+    private val countryApiService: CountryApiService = mockk()
+    private val countryRemoteDataSourceImpl: CountryRemoteDataSourceImpl =
+        CountryRemoteDataSourceImpl(countryApiService)
 
     @Test
     fun `getCountries should return the correct list of countries on success`() = runTest {

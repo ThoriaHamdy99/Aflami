@@ -9,21 +9,14 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class CategoryRemoteDataSourceImplTest {
 
-    private lateinit var categoryApiService: CategoryApiService
-    private lateinit var categoryRemoteDataSourceImpl: CategoryRemoteDataSourceImpl
-
-
-    @BeforeEach
-    fun setUp() {
-        categoryApiService = mockk()
-        categoryRemoteDataSourceImpl = CategoryRemoteDataSourceImpl(categoryApiService)
-    }
+    private val categoryApiService: CategoryApiService = mockk()
+    private val categoryRemoteDataSourceImpl: CategoryRemoteDataSourceImpl =
+        CategoryRemoteDataSourceImpl(categoryApiService)
 
     @Test
     fun `getMovieCategories should return the correct list of movie categories`() = runTest {
