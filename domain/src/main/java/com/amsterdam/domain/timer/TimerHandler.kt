@@ -1,5 +1,6 @@
 package com.amsterdam.domain.timer
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -9,46 +10,44 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
-class TimerHandler {
+class TimerHandler(
+    dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val nowMillis: () -> Long = { System.currentTimeMillis() }
+) {
 
     private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.Default + job)
+    private val scope = CoroutineScope(dispatcher + job)
 
     private var timerJob: Job? = null
     private var endTimeMillis: Long = 0L
-    private var isTimerStopped = false
 
     fun startTimer(
         totalSeconds: Int,
         onTimerFinish: () -> Unit
     ): StateFlow<Int> {
         timerJob?.cancel()
-        isTimerStopped = false
-        endTimeMillis = System.currentTimeMillis() + totalSeconds * 1000L
+        endTimeMillis = nowMillis() + totalSeconds * 1000L
 
-        val remainingTimeFlow = MutableStateFlow(totalSeconds)
+        val remainingTimeFlow = MutableStateFlow(totalSeconds.coerceAtLeast(0))
 
         timerJob = scope.launch {
             while (true) {
-                val remainingMillis = endTimeMillis - System.currentTimeMillis()
+                val remainingMillis = endTimeMillis - nowMillis()
                 val remainingSeconds = max(0, (remainingMillis / 1000).toInt())
 
                 remainingTimeFlow.value = remainingSeconds
 
-                if (remainingSeconds <= 0 || isTimerStopped) {
+                if (remainingSeconds <= 0) {
                     onTimerFinish()
                     break
                 }
                 delay(1000L)
             }
         }
-
         return remainingTimeFlow
     }
 
     fun stopTimer() {
-        isTimerStopped = true
         timerJob?.cancel()
     }
-
 }
