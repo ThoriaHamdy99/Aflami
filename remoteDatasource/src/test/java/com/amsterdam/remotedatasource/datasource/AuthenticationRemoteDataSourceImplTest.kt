@@ -29,11 +29,277 @@ import java.net.ConnectException
 
 class AuthenticationRemoteDataSourceImplTest {
 
-    // Shared data and mocks
     private val json: Json = Json { ignoreUnknownKeys = true }
     private val authenticationApiService: AuthenticationApiService = mockk()
     private val authenticationRemoteDataSourceImpl: AuthenticationRemoteDataSourceImpl =
         AuthenticationRemoteDataSourceImpl(json, authenticationApiService)
+
+    @Test
+    fun `loginWithPassword should return the correct session ID on success`() = runTest {
+        mockSuccessfulLoginFlow()
+
+        val result = authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+
+        assertThat(result).isEqualTo(sessionId)
+    }
+
+    @Test
+    fun `createRequestToken is called exactly once when logging in with a password`() = runTest {
+        mockSuccessfulLoginFlow()
+
+        authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+
+        coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
+    }
+
+    @Test
+    fun `createSessionWithLogin is called exactly once when logging in with a password`() =
+        runTest {
+            mockSuccessfulLoginFlow()
+
+            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+
+            coVerify(exactly = 1) { authenticationApiService.createSessionWithLogin(any()) }
+        }
+
+    @Test
+    fun `createSession is called exactly once when logging in with a password`() = runTest {
+        mockSuccessfulLoginFlow()
+
+        authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+
+        coVerify(exactly = 1) { authenticationApiService.createSession(any()) }
+    }
+
+    @Test
+    fun `createRequestToken should throw NoInternetException on ConnectException`() = runTest {
+        coEvery { authenticationApiService.createRequestToken() } throws connectException
+
+        assertThrows<NoInternetException> {
+            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+        }
+    }
+
+    @Test
+    fun `createRequestToken should throw ServerErrorException on SerializationException`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } throws serializationException
+
+            assertThrows<ServerErrorException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createRequestToken should throw ServerErrorException on generic HttpException`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } throws httpException500
+
+            assertThrows<ServerErrorException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createRequestToken should throw NetworkException on generic Exception`() = runTest {
+        coEvery { authenticationApiService.createRequestToken() } throws genericException
+
+        assertThrows<NetworkException> {
+            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+        }
+    }
+
+    @Test
+    fun `loginWithPassword should throw a NetworkException and call createRequestToken exactly once if the request token is null`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse.copy(
+                requestToken = null
+            )
+
+            assertThrows<NetworkException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+
+            coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
+        }
+
+    @Test
+    fun `createSessionWithLogin should throw NoInternetException on ConnectException`() = runTest {
+        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+        coEvery { authenticationApiService.createSessionWithLogin(any()) } throws connectException
+
+        assertThrows<NoInternetException> {
+            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+        }
+    }
+
+    @Test
+    fun `createSessionWithLogin should throw ServerErrorException on SerializationException`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws serializationException
+
+            assertThrows<ServerErrorException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createSessionWithLogin should throw InvalidCredentialsException on 401 with code 3`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws invalidCredentialsException
+
+            assertThrows<InvalidCredentialsException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createSessionWithLogin should throw InvalidSessionException on 401 with code 7`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws invalidSessionException
+
+            assertThrows<InvalidSessionException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createSessionWithLogin should throw AccountDisabledException on 401 with code 31`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws accountDisabledException
+
+            assertThrows<AccountDisabledException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createSessionWithLogin should throw VerificationRequiredException on 401 with code 32`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws verificationRequiredException
+
+            assertThrows<VerificationRequiredException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createSessionWithLogin should throw AccessDeniedException on 401 with code 38`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws accessDeniedException
+
+            assertThrows<AccessDeniedException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createSessionWithLogin should throw AccessRestrictedException on 401 with code 45`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws accessRestrictedException
+
+            assertThrows<AccessRestrictedException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createSessionWithLogin should throw NetworkException on 401 with unknown code`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws unknown401Exception
+
+            assertThrows<NetworkException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createSessionWithLogin should throw ServerErrorException on generic HttpException`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws httpException500
+
+            assertThrows<ServerErrorException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+        }
+
+    @Test
+    fun `createSessionWithLogin should throw NetworkException on generic Exception`() = runTest {
+        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+        coEvery { authenticationApiService.createSessionWithLogin(any()) } throws genericException
+
+        assertThrows<NetworkException> {
+            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+        }
+    }
+
+    @Test
+    fun `loginWithPassword should throw a NetworkException and call createRequestToken exactly once if the request token is null after calling createSessionWithLogin`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse.copy(
+                requestToken = null
+            )
+
+            assertThrows<NetworkException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+            }
+
+            coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
+        }
+
+    @Test
+    fun `createSession should throw NoInternetException on ConnectException`() = runTest {
+        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+        coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
+        coEvery { authenticationApiService.createSession(any()) } throws connectException
+
+        assertThrows<NoInternetException> {
+            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+        }
+    }
+
+    @Test
+    fun `createSession should throw ServerErrorException on SerializationException`() = runTest {
+        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+        coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
+        coEvery { authenticationApiService.createSession(any()) } throws serializationException
+
+        assertThrows<ServerErrorException> {
+            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+        }
+    }
+
+    @Test
+    fun `createSession should throw ServerErrorException on generic HttpException`() = runTest {
+        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+        coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
+        coEvery { authenticationApiService.createSession(any()) } throws httpException500
+
+        assertThrows<ServerErrorException> {
+            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+        }
+    }
+
+    @Test
+    fun `createSession should throw NetworkException on generic Exception`() = runTest {
+        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+        coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
+        coEvery { authenticationApiService.createSession(any()) } throws genericException
+
+        assertThrows<NetworkException> {
+            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+        }
+    }
 
     private val username = "testUser"
     private val password = "testPassword"
@@ -64,7 +330,6 @@ class AuthenticationRemoteDataSourceImplTest {
         coEvery { authenticationApiService.createSession(any()) } returns createSessionResponse
     }
 
-    // Common error bodies and exceptions for tests
     private val connectException = ConnectException()
     private val serializationException = SerializationException()
     private val genericException = Exception("Generic error")
@@ -125,246 +390,12 @@ class AuthenticationRemoteDataSourceImplTest {
         )
     )
 
-    private val unknown401ErrorBody = "{\"status_code\": 999, \"status_message\": \"Unknown error\"}"
+    private val unknown401ErrorBody =
+        "{\"status_code\": 999, \"status_message\": \"Unknown error\"}"
     private val unknown401Exception = HttpException(
         Response.error<Any>(
             401,
             unknown401ErrorBody.toResponseBody("application/json".toMediaTypeOrNull())
         )
     )
-
-    @Test
-    fun `loginWithPassword should return the correct session ID on success`() = runTest {
-        mockSuccessfulLoginFlow()
-        val result = authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        assertThat(result).isEqualTo(sessionId)
-    }
-
-    @Test
-    fun `createRequestToken is called exactly once when logging in with a password`() = runTest {
-        mockSuccessfulLoginFlow()
-        authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
-    }
-
-    @Test
-    fun `createSessionWithLogin is called exactly once when logging in with a password`() = runTest {
-        mockSuccessfulLoginFlow()
-        authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        coVerify(exactly = 1) { authenticationApiService.createSessionWithLogin(any()) }
-    }
-
-    @Test
-    fun `createSession is called exactly once when logging in with a password`() = runTest {
-        mockSuccessfulLoginFlow()
-        authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        coVerify(exactly = 1) { authenticationApiService.createSession(any()) }
-    }
-
-    @Test
-    fun `createRequestToken should throw NoInternetException on ConnectException`() = runTest {
-        coEvery { authenticationApiService.createRequestToken() } throws connectException
-        assertThrows<NoInternetException> {
-            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        }
-    }
-
-    @Test
-    fun `createRequestToken should throw ServerErrorException on SerializationException`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } throws serializationException
-            assertThrows<ServerErrorException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createRequestToken should throw ServerErrorException on generic HttpException`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } throws httpException500
-            assertThrows<ServerErrorException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createRequestToken should throw NetworkException on generic Exception`() = runTest {
-        coEvery { authenticationApiService.createRequestToken() } throws genericException
-        assertThrows<NetworkException> {
-            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        }
-    }
-
-    @Test
-    fun `loginWithPassword should throw a NetworkException and call createRequestToken exactly once if the request token is null`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse.copy(
-                requestToken = null
-            )
-            assertThrows<NetworkException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-            coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
-        }
-
-    @Test
-    fun `createSessionWithLogin should throw NoInternetException on ConnectException`() = runTest {
-        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-        coEvery { authenticationApiService.createSessionWithLogin(any()) } throws connectException
-        assertThrows<NoInternetException> {
-            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        }
-    }
-
-    @Test
-    fun `createSessionWithLogin should throw ServerErrorException on SerializationException`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws serializationException
-            assertThrows<ServerErrorException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createSessionWithLogin should throw InvalidCredentialsException on 401 with code 3`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws invalidCredentialsException
-            assertThrows<InvalidCredentialsException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createSessionWithLogin should throw InvalidSessionException on 401 with code 7`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws invalidSessionException
-            assertThrows<InvalidSessionException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createSessionWithLogin should throw AccountDisabledException on 401 with code 31`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws accountDisabledException
-            assertThrows<AccountDisabledException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createSessionWithLogin should throw VerificationRequiredException on 401 with code 32`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws verificationRequiredException
-            assertThrows<VerificationRequiredException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createSessionWithLogin should throw AccessDeniedException on 401 with code 38`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws accessDeniedException
-            assertThrows<AccessDeniedException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createSessionWithLogin should throw AccessRestrictedException on 401 with code 45`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws accessRestrictedException
-            assertThrows<AccessRestrictedException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createSessionWithLogin should throw NetworkException on 401 with unknown code`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws unknown401Exception
-            assertThrows<NetworkException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createSessionWithLogin should throw ServerErrorException on generic HttpException`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-            coEvery { authenticationApiService.createSessionWithLogin(any()) } throws httpException500
-            assertThrows<ServerErrorException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-        }
-
-    @Test
-    fun `createSessionWithLogin should throw NetworkException on generic Exception`() = runTest {
-        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-        coEvery { authenticationApiService.createSessionWithLogin(any()) } throws genericException
-        assertThrows<NetworkException> {
-            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        }
-    }
-
-    @Test
-    fun `loginWithPassword should throw a NetworkException and call createRequestToken exactly once if the request token is null after calling createSessionWithLogin`() =
-        runTest {
-            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-            coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse.copy(
-                requestToken = null
-            )
-            assertThrows<NetworkException> {
-                authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-            }
-            coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
-        }
-
-    @Test
-    fun `createSession should throw NoInternetException on ConnectException`() = runTest {
-        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-        coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
-        coEvery { authenticationApiService.createSession(any()) } throws connectException
-        assertThrows<NoInternetException> {
-            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        }
-    }
-
-    @Test
-    fun `createSession should throw ServerErrorException on SerializationException`() = runTest {
-        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-        coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
-        coEvery { authenticationApiService.createSession(any()) } throws serializationException
-        assertThrows<ServerErrorException> {
-            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        }
-    }
-
-    @Test
-    fun `createSession should throw ServerErrorException on generic HttpException`() = runTest {
-        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-        coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
-        coEvery { authenticationApiService.createSession(any()) } throws httpException500
-        assertThrows<ServerErrorException> {
-            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        }
-    }
-
-    @Test
-    fun `createSession should throw NetworkException on generic Exception`() = runTest {
-        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-        coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
-        coEvery { authenticationApiService.createSession(any()) } throws genericException
-        assertThrows<NetworkException> {
-            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        }
-    }
 }

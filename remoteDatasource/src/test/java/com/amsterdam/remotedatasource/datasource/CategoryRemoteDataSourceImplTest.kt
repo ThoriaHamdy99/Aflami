@@ -14,28 +14,9 @@ import org.junit.jupiter.api.assertThrows
 
 class CategoryRemoteDataSourceImplTest {
 
-    // Shared data and mocks
     private val categoryApiService: CategoryApiService = mockk()
     private val categoryRemoteDataSourceImpl: CategoryRemoteDataSourceImpl =
         CategoryRemoteDataSourceImpl(categoryApiService)
-
-    private val movieCategoryResponse = CategoryRemoteResponse(
-        genres = listOf(
-            CategoryRemoteDto(id = 28, name = "Action"),
-            CategoryRemoteDto(id = 12, name = "Adventure")
-        )
-    )
-
-    private val tvShowCategoryResponse = CategoryRemoteResponse(
-        genres = listOf(
-            CategoryRemoteDto(id = 10759, name = "Action & Adventure"),
-            CategoryRemoteDto(id = 16, name = "Animation")
-        )
-    )
-
-    private val emptyCategoryResponse = CategoryRemoteResponse(genres = emptyList())
-    private val networkException = NetworkException()
-
 
     @Test
     fun `getMovieCategories should return the correct list of movie categories`() = runTest {
@@ -74,11 +55,12 @@ class CategoryRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getMovieCategories should call getMovieCategories exactly once when the API returns an empty list`() = runTest {
-        coEvery { categoryApiService.getMovieCategories() } returns emptyCategoryResponse
-        categoryRemoteDataSourceImpl.getMovieCategories()
-        coVerify(exactly = 1) { categoryApiService.getMovieCategories() }
-    }
+    fun `getMovieCategories should call getMovieCategories exactly once when the API returns an empty list`() =
+        runTest {
+            coEvery { categoryApiService.getMovieCategories() } returns emptyCategoryResponse
+            categoryRemoteDataSourceImpl.getMovieCategories()
+            coVerify(exactly = 1) { categoryApiService.getMovieCategories() }
+        }
 
     @Test
     fun `getTvShowCategories should return an empty list when API service returns empty`() =
@@ -89,11 +71,12 @@ class CategoryRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getTvShowCategories should call getTvShowCategories exactly once when the API returns an empty list`() = runTest {
-        coEvery { categoryApiService.getTvShowCategories() } returns emptyCategoryResponse
-        categoryRemoteDataSourceImpl.getTvShowCategories()
-        coVerify(exactly = 1) { categoryApiService.getTvShowCategories() }
-    }
+    fun `getTvShowCategories should call getTvShowCategories exactly once when the API returns an empty list`() =
+        runTest {
+            coEvery { categoryApiService.getTvShowCategories() } returns emptyCategoryResponse
+            categoryRemoteDataSourceImpl.getTvShowCategories()
+            coVerify(exactly = 1) { categoryApiService.getTvShowCategories() }
+        }
 
     @Test
     fun `getMovieCategories should rethrow NetworkException from service provider`() = runTest {
@@ -110,4 +93,21 @@ class CategoryRemoteDataSourceImplTest {
             categoryRemoteDataSourceImpl.getTvShowCategories()
         }
     }
+
+    private val movieCategoryResponse = CategoryRemoteResponse(
+        genres = listOf(
+            CategoryRemoteDto(id = 28, name = "Action"),
+            CategoryRemoteDto(id = 12, name = "Adventure")
+        )
+    )
+
+    private val tvShowCategoryResponse = CategoryRemoteResponse(
+        genres = listOf(
+            CategoryRemoteDto(id = 10759, name = "Action & Adventure"),
+            CategoryRemoteDto(id = 16, name = "Animation")
+        )
+    )
+
+    private val emptyCategoryResponse = CategoryRemoteResponse(genres = emptyList())
+    private val networkException = NetworkException()
 }
