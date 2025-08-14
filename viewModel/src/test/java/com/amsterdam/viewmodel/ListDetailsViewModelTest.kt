@@ -15,6 +15,7 @@ import com.amsterdam.viewmodel.listDetails.ListDetailsArgs
 import com.amsterdam.viewmodel.listDetails.ListDetailsEffect
 import com.amsterdam.viewmodel.listDetails.ListDetailsUiState
 import com.amsterdam.viewmodel.listDetails.ListDetailsViewModel
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -159,7 +160,7 @@ class ListDetailsViewModelTest {
         advanceUntilIdle()
         job.cancel()
 
-        assertThat(viewModel.state.value.error).isNull()
+        assertThat(viewModel.errorState).isNull()
         assertThat(effects).contains(ListDetailsEffect.ShowRemoveMovieSuccessSnackBar)
     }
 
@@ -251,8 +252,8 @@ class ListDetailsViewModelTest {
         )
         advanceUntilIdle()
 
-        viewModel.state.test {
-            assertThat(awaitItem().error).isEqualTo(ListDetailsUiState.ListDetailsError.NoNetwork)
+        viewModel.errorState.test {
+            assertThat(awaitItem()).isEqualTo(ErrorUiState.UnknownError)
         }
     }
 }

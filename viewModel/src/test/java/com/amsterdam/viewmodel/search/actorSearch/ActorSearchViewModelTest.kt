@@ -9,6 +9,7 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
 import com.amsterdam.viewmodel.utils.entityHelper.createMovie
@@ -196,9 +197,7 @@ class ActorSearchViewModelTest {
         viewModel.onPagingLoadStateChanged(createCombinedLoadStates(LoadState.Error(NetworkException())))
         advanceUntilIdle()
 
-        viewModel.state.test {
-            assertThat(awaitItem().error).isEqualTo(ActorSearchErrorState.NoNetworkConnection)
-        }
+        viewModel.errorState.test { assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError) }
     }
 
     @Test
@@ -208,9 +207,8 @@ class ActorSearchViewModelTest {
         viewModel.onPagingLoadStateChanged(loadStates)
         advanceUntilIdle()
 
-        viewModel.state.test {
-            assertThat(awaitItem().error).isEqualTo(ActorSearchErrorState.UnknownError)
-        }
+        viewModel.errorState.test { assertThat(awaitItem()).isEqualTo(ErrorUiState.UnknownError) }
+
     }
 
     @Test
@@ -241,31 +239,6 @@ class ActorSearchViewModelTest {
         advanceUntilIdle()
 
         assertThat(viewModel.state.value.keyword).isEqualTo(keyword)
-    }
-
-    @Test
-    fun `ActorSearchErrorState should convert NetworkException correctly`() {
-        val networkException = NetworkException()
-
-        val result = ActorSearchErrorState.toActorSearchErrorState(networkException)
-
-        assertThat(result).isEqualTo(ActorSearchErrorState.NoNetworkConnection)
-    }
-
-    @Test
-    fun `ActorSearchErrorState should convert generic exception to UnknownError`() {
-        val result = ActorSearchErrorState.toActorSearchErrorState(Exception())
-
-        assertThat(result).isEqualTo(ActorSearchErrorState.UnknownError)
-    }
-
-    @Test
-    fun `ActorSearchErrorState should convert AflamiException to UnknownError`() {
-        val aflamiException = AflamiException()
-
-        val result = ActorSearchErrorState.toActorSearchErrorState(aflamiException)
-
-        assertThat(result).isEqualTo(ActorSearchErrorState.UnknownError)
     }
 
     private fun createCombinedLoadStates(refreshState: LoadState): CombinedLoadStates {

@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.search.mapper.toSearchMediaItemUiState
@@ -98,7 +99,7 @@ class ActorSearchViewModel @Inject constructor(
 
             is LoadState.Error -> {
                 updateState { it.copy(isLoading = false) }
-                updateErrorStateByException(AflamiException())
+                updateErrorStateByException(NetworkException())
             }
         }
     }

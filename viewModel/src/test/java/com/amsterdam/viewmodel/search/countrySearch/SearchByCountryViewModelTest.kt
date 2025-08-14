@@ -8,6 +8,7 @@ import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.search.GetSuggestedCountriesUseCase
 import com.amsterdam.entity.Country
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
 import com.google.common.truth.Truth.assertThat
@@ -180,9 +181,7 @@ class SearchByCountryViewModelTest {
         viewModel.onPagingLoadStateChanged(createCombinedLoadState(LoadState.Error(NetworkException())))
         advanceUntilIdle()
 
-        viewModel.state.test {
-            assertThat(awaitItem().errorUiState).isEqualTo(CountrySearchErrorState.NoNetworkConnection)
-        }
+        viewModel.errorState.test { assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError) }
     }
 
     @Test
@@ -193,9 +192,7 @@ class SearchByCountryViewModelTest {
         viewModel.onChangeSearchKeyword("Egypt")
         advanceUntilIdle()
 
-        viewModel.state.test {
-            assertThat(awaitItem().errorUiState).isEqualTo(CountrySearchErrorState.NoNetworkConnection)
-        }
+        assertThat(viewModel.errorState).isEqualTo(ErrorUiState.NoInternetError)
     }
 
     @Test
@@ -210,7 +207,7 @@ class SearchByCountryViewModelTest {
     @MethodSource("exceptionToStateProvider")
     fun `should set different error state when throw exception from getSuggestedCountriesUseCase after selecting country`(
         exception: Exception,
-        expectedState: CountrySearchErrorState,
+        expectedState: ErrorUiState,
     ) = runTest {
         coEvery { getSuggestedCountriesUseCase(any()) } throws exception
 
@@ -218,9 +215,9 @@ class SearchByCountryViewModelTest {
         advanceTimeBy(500L)
         advanceUntilIdle()
 
-        viewModel.state.test {
+        viewModel.errorState.test {
             advanceTimeBy(500)
-            assertThat(awaitItem().errorUiState).isEqualTo(expectedState)
+            assertThat(awaitItem()).isEqualTo(expectedState)
         }
     }
 
@@ -230,8 +227,8 @@ class SearchByCountryViewModelTest {
 
         @JvmStatic
         fun exceptionToStateProvider() = listOf(
-            Arguments.of(NoInternetException(), CountrySearchErrorState.NoNetworkConnection),
-            Arguments.of(Exception(), CountrySearchErrorState.UnknownError)
+            Arguments.of(NoInternetException(), ErrorUiState.NoInternetError),
+            Arguments.of(Exception(), ErrorUiState.UnknownError)
         )
 
         fun createCombinedLoadState(loadState: LoadState): CombinedLoadStates =

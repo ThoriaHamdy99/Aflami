@@ -8,7 +8,7 @@ import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Gender
-import com.amsterdam.viewmodel.cast.CastUiState.CastErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
@@ -42,7 +42,6 @@ class CastViewModelTest {
             getMovieCastUseCase,
             getTvShowCastUseCase,
             args,
-            manageLocaleLanguageUseCase,
             TestDispatcherProvider()
         )
     }
@@ -89,7 +88,6 @@ class CastViewModelTest {
                 every { mediaId } returns 456
                 every { mediaType } returns MediaType.TV_SHOW.name
             },
-            manageLocaleLanguageUseCase,
             TestDispatcherProvider()
         )
         viewModel
@@ -108,8 +106,8 @@ class CastViewModelTest {
             viewModel
             advanceUntilIdle()
 
-            viewModel.state.test {
-                assertThat(awaitItem().errorUiState).isEqualTo(CastErrorUiState.NoNetworkConnection)
+            viewModel.errorState.test {
+                assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError)
             }
         }
 

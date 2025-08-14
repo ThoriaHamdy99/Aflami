@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.search.GetSuggestedCountriesUseCase
 import com.amsterdam.entity.Country
 import com.amsterdam.viewmodel.search.mapper.toSearchMediaItemUiState
@@ -124,7 +125,7 @@ class CountrySearchViewModel @Inject constructor(
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
-        when (val refreshState = loadStates.refresh) {
+        when (loadStates.refresh) {
             is LoadState.Loading -> {
                 resetErrorStateToNull()
                 if (state.value.selectedCountryIsoCode.isNotBlank()) {
@@ -138,7 +139,7 @@ class CountrySearchViewModel @Inject constructor(
 
             is LoadState.Error -> {
                 updateState { it.copy(isLoading = false,) }
-                updateErrorStateByException(AflamiException())
+                updateErrorStateByException(NetworkException())
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.home
 
+import app.cash.turbine.test
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.models.Mood
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
@@ -10,9 +11,9 @@ import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToMovieDetailsEffect
-import com.amsterdam.viewmodel.home.HomeUiState.HomeError
 import com.amsterdam.viewmodel.home.HomeUiState.MoodPickerItemUiState
 import com.amsterdam.viewmodel.home.HomeUiState.UpcomingMoviesUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.entityHelper.createMovie
@@ -34,6 +35,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.jvm.java
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -208,7 +210,9 @@ class HomeViewModelTest {
             advanceUntilIdle()
 
             // Then
-            assertThat(viewModel.state.value.error).isInstanceOf(HomeError.NetworkError::class.java)
+            viewModel.errorState.test {
+                assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError)
+            }
         }
 
     @Test
@@ -222,7 +226,7 @@ class HomeViewModelTest {
             advanceUntilIdle()
 
             // Then
-            assertThat(viewModel.state.value.error).isInstanceOf(HomeError.NetworkError::class.java)
+            assertThat(viewModel.errorState).isEqualTo(ErrorUiState.NoInternetError)
         }
 
     @Test
