@@ -40,6 +40,8 @@ import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.screens.home.sections.AnimatedSectionVisibility
 import com.amsterdam.ui.screens.topRated.component.TopRatedBackgroundComponent
 import com.amsterdam.ui.screens.topRated.component.TopRatedMediaItemsGrid
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState.NoInternetError
 import com.amsterdam.viewmodel.topRated.TopRatedEffect
 import com.amsterdam.viewmodel.topRated.TopRatedInteractionListener
 import com.amsterdam.viewmodel.topRated.TopRatedUiState
@@ -50,9 +52,10 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun TopRatedScreen(viewModel: TopRatedViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val errorsState by viewModel.errorState.collectAsStateWithLifecycle()
     val navigationManager = LocalNavManager.current
     val mediaItems = state.mediaItems.collectAsLazyPagingItems()
-    TopRatedContent(state, viewModel, mediaItems)
+    TopRatedContent(state, errorsState, viewModel, mediaItems)
     LaunchedEffect(mediaItems.loadState) {
         viewModel.onPagingLoadStateChanged(mediaItems.loadState)
     }
@@ -78,6 +81,7 @@ fun TopRatedScreen(viewModel: TopRatedViewModel = hiltViewModel()) {
 @Composable
 private fun TopRatedContent(
     state: TopRatedUiState,
+    errorState: ErrorUiState?,
     interactionListener: TopRatedInteractionListener,
     mediaItems: LazyPagingItems<TopRatedMediaItemUiState>,
 ) {
@@ -127,7 +131,7 @@ private fun TopRatedContent(
             }
 
             AnimatedSectionVisibility(
-                visible = state.error == TopRatedUiState.TopRatedError.NetworkError
+                visible = errorState is NoInternetError
             ) {
                 CenterOfScreenContainer(
                     unneededSpace = headerHeight,
