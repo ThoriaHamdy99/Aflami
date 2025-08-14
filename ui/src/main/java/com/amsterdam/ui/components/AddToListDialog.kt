@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.Dialog
 import com.amsterdam.designsystem.components.Icon
-import com.amsterdam.designsystem.components.IconButton
+import com.amsterdam.designsystem.components.buttons.IconButton
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.ButtonDefaults
 import com.amsterdam.designsystem.components.buttons.ConfirmButton

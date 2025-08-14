@@ -1,4 +1,4 @@
-package com.amsterdam.designsystem.components
+package com.amsterdam.designsystem.components.buttons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -19,8 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.amsterdam.designsystem.components.RadioButton
-import com.amsterdam.designsystem.components.RadioState
+import com.amsterdam.designsystem.components.buttons.RadioButton
+import com.amsterdam.designsystem.components.buttons.RadioState
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
