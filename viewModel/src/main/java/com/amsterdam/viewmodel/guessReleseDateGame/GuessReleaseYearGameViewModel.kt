@@ -141,9 +141,8 @@ class GuessReleaseYearGameViewModel @Inject constructor(
                 selectedAnswerIndex = selectedAnswerIndex
             )
         }
-        if (answerResult.isCorrect) {
             totalCollectedPoints += answerResult.earnedPoints
-        }
+
     }
 
     override fun onMoveToNextQuestion() {

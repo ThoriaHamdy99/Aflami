@@ -140,9 +140,7 @@ class GuessCharacterGameViewModel @Inject constructor(
                 selectedAnswerIndex = selectedAnswerIndex
             )
         }
-        if (answerResult.isCorrect) {
             totalCollectedPoints += answerResult.earnedPoints
-        }
     }
 
     override fun onMoveToNextQuestion() {

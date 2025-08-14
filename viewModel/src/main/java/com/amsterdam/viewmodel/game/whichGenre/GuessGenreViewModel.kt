@@ -123,9 +123,6 @@ class GuessGenreViewModel @Inject constructor(
         answerResult: SubmitGuessMovieGenreAnswerUseCase.AnswerResult,
         answerIndex: Int
     ) {
-        if (answerResult.isCorrect) {
-            totalEarnedPoints += answerResult.earnedPoints
-        }
         updateState {
             it.copy(
                 selectedAnswerIndex = answerIndex,
@@ -133,6 +130,7 @@ class GuessGenreViewModel @Inject constructor(
                 isNextEnabled = true
             )
         }
+        totalEarnedPoints += answerResult.earnedPoints
     }
 
     override fun onUseHint() {
