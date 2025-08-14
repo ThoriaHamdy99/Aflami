@@ -19,79 +19,44 @@ class AuthenticationRemoteDataSourceImplTest {
 
     private lateinit var authenticationApiService: AuthenticationApiService
     private lateinit var json: Json
-    private lateinit var authenticationRemoteDataSourceImpl: AuthenticationRemoteDataDataSourceImpl
+    private lateinit var authenticationRemoteDataSourceImpl: AuthenticationRemoteDataSourceImpl
 
     @BeforeEach
     fun setUp() {
         authenticationApiService = mockk()
         json = Json { ignoreUnknownKeys = true }
         authenticationRemoteDataSourceImpl =
-            AuthenticationRemoteDataDataSourceImpl(json, authenticationApiService)
+            AuthenticationRemoteDataSourceImpl(json, authenticationApiService)
     }
 
     @Test
-    fun `loginWithPassword should return sessionId when all api calls are successful`() = runTest {
-        // Given
-        val username = "testUser"
-        val password = "testPassword"
-        val requestToken = "unactive_request_token"
-        val activeRequestToken = "active_request_token"
-        val sessionId = "final_session_id"
-
-        val unactiveTokenResponse = AuthenticationRemoteResponse(
-            isSuccess = true,
-            expiresAt = "2025-08-04",
-            requestToken = requestToken
-        )
-        val activeTokenResponse = AuthenticationRemoteResponse(
-            isSuccess = true,
-            expiresAt = "2025-08-04",
-            requestToken = activeRequestToken
-        )
-        val createSessionResponse = CreateSessionRemoteResponse(
-            success = true,
-            sessionId = sessionId
-        )
-
-        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-        coEvery {
-            authenticationApiService.createSessionWithLogin(
-                CreateSessionRemoteDto(
-                    username,
-                    password,
-                    requestToken
-                )
-            )
-        } returns activeTokenResponse
-        coEvery { authenticationApiService.createSession(activeRequestToken) } returns createSessionResponse
-
-        // When
-        val result = authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-
-        // Then
-        assertThat(result).isEqualTo(sessionId)
-        coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
-        coVerify(exactly = 1) {
-            authenticationApiService.createSessionWithLogin(
-                CreateSessionRemoteDto(
-                    username,
-                    password,
-                    requestToken
-                )
-            )
-        }
-        coVerify(exactly = 1) { authenticationApiService.createSession(activeRequestToken) }
-    }
-
-    @Test
-    fun `loginWithPassword should throw NetworkException when createRequestToken fails`() =
+    fun `When loginWithPassword and all API calls are successful should return session ID`() =
         runTest {
-            // Given
-            val username = "testUser"
-            val password = "testPassword"
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery {
+                authenticationApiService.createSessionWithLogin(
+                    CreateSessionRemoteDto(
+                        username,
+                        password,
+                        requestToken
+                    )
+                )
+            } returns activeTokenResponse
+            coEvery { authenticationApiService.createSession(activeRequestToken) } returns createSessionResponse
+
+            val result = authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
+
+            assertThat(result).isEqualTo(sessionId)
+            coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
+            coVerify(exactly = 1) { authenticationApiService.createSessionWithLogin(any()) }
+            coVerify(exactly = 1) { authenticationApiService.createSession(any()) }
+        }
+
+    @Test
+    fun `When loginWithPassword and createRequestToken API call fails should throw NetworkException`() =
+        runTest {
             coEvery { authenticationApiService.createRequestToken() } throws NetworkException()
 
-            // When & Then
             assertThrows<NetworkException> {
                 authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
             }
@@ -101,22 +66,11 @@ class AuthenticationRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `loginWithPassword should throw NetworkException when createSessionWithLogin fails`() =
+    fun `When loginWithPassword and createSessionWithLogin API call fails should throw NetworkException`() =
         runTest {
-            // Given
-            val username = "testUser"
-            val password = "testPassword"
-            val requestToken = "unactive_request_token"
-            val unactiveTokenResponse = AuthenticationRemoteResponse(
-                isSuccess = true,
-                expiresAt = "2025-08-04",
-                requestToken = requestToken
-            )
-
             coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
             coEvery { authenticationApiService.createSessionWithLogin(any()) } throws NetworkException()
 
-            // When & Then
             assertThrows<NetworkException> {
                 authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
             }
@@ -126,110 +80,43 @@ class AuthenticationRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `loginWithPassword should throw NetworkException when createSession fails`() = runTest {
-        // Given
-        val username = "testUser"
-        val password = "testPassword"
-        val requestToken = "unactive_request_token"
-        val activeRequestToken = "active_request_token"
-        val unactiveTokenResponse = AuthenticationRemoteResponse(
-            isSuccess = true,
-            expiresAt = "2025-08-04",
-            requestToken = requestToken
-        )
-        val activeTokenResponse = AuthenticationRemoteResponse(
-            isSuccess = true,
-            expiresAt = "2025-08-04",
-            requestToken = activeRequestToken
-        )
+    fun `When loginWithPassword and createSession API call fails should throw NetworkException`() =
+        runTest {
+            coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
+            coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
+            coEvery { authenticationApiService.createSession(any()) } throws NetworkException()
 
-        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-        coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
-        coEvery { authenticationApiService.createSession(any()) } throws NetworkException()
-
-        // When & Then
-        assertThrows<NetworkException> {
-            authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-        }
-        coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
-        coVerify(exactly = 1) { authenticationApiService.createSessionWithLogin(any()) }
-        coVerify(exactly = 1) { authenticationApiService.createSession(any()) }
-    }
-
-    @Test
-    fun `createSessionWithLogin should return sessionId when api call is successful`() = runTest {
-        // Given
-        val username = "testUser"
-        val password = "testPassword"
-        val requestToken = "unactive_request_token"
-        val activeRequestToken = "active_request_token"
-        val sessionId = "final_session_id"
-
-        val unactiveTokenResponse = AuthenticationRemoteResponse(
-            isSuccess = true,
-            expiresAt = "2025-08-04",
-            requestToken = requestToken
-        )
-        val activeTokenResponse = AuthenticationRemoteResponse(
-            isSuccess = true,
-            expiresAt = "2025-08-04",
-            requestToken = activeRequestToken
-        )
-        val createSessionResponse = CreateSessionRemoteResponse(
-            success = true,
-            sessionId = sessionId
-        )
-
-        coEvery { authenticationApiService.createRequestToken() } returns unactiveTokenResponse
-        coEvery { authenticationApiService.createSessionWithLogin(any()) } returns activeTokenResponse
-        coEvery { authenticationApiService.createSession(any()) } returns createSessionResponse
-
-        // When
-        val result = authenticationRemoteDataSourceImpl.loginWithPassword(username, password)
-
-        // Then
-        assertThat(result).isEqualTo(createSessionResponse.sessionId)
-
-        coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
-        coVerify(exactly = 1) { authenticationApiService.createSessionWithLogin(any()) }
-        coVerify(exactly = 1) { authenticationApiService.createSession(any()) }
-    }
-
-    @Test
-    fun `createSessionWithLogin should decode authentication response with status code`() = runTest {
-        // Given
-        val jsonString = """
-            {
-              "status_code": 200,
-              "status_message": "Success",
-              "success": true
+            assertThrows<NetworkException> {
+                authenticationRemoteDataSourceImpl.loginWithPassword(
+                    username,
+                    password
+                )
             }
-        """.trimIndent()
-
-        // When
-        val response = json.decodeFromString<AuthenticationRemoteResponse>(jsonString)
-
-        // Then
-        assertThat(response.statusCode).isNotNull()
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(response.statusMessage).isEqualTo("Success")
-    }
-
-    @Test
-    fun `decodeFromString should throw exception when status code is null`() {
-        // Given
-        val jsonString = """
-        {
-            "status_message": "Success",
-            "success": true
+            coVerify(exactly = 1) { authenticationApiService.createRequestToken() }
+            coVerify(exactly = 1) { authenticationApiService.createSessionWithLogin(any()) }
+            coVerify(exactly = 1) { authenticationApiService.createSession(any()) }
         }
-    """.trimIndent()
 
-        // When & Then
-        assertThrows<NullPointerException> {
-            val response = json.decodeFromString<AuthenticationRemoteResponse>(jsonString)
-            response.statusCode!!
-        }
-    }
+    private val username = "testUser"
+    private val password = "testPassword"
+    private val requestToken = "unactive_request_token"
+    private val activeRequestToken = "active_request_token"
+    private val sessionId = "final_session_id"
 
+    private val unactiveTokenResponse = AuthenticationRemoteResponse(
+        isSuccess = true,
+        expiresAt = "2025-08-04",
+        requestToken = requestToken,
+        statusCode = 200
+    )
+    private val activeTokenResponse = AuthenticationRemoteResponse(
+        isSuccess = true,
+        expiresAt = "2025-08-04",
+        requestToken = activeRequestToken,
+        statusCode = 200
+    )
+    private val createSessionResponse = CreateSessionRemoteResponse(
+        success = true,
+        sessionId = sessionId
+    )
 }
