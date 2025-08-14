@@ -23,7 +23,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
 
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should call getMoviesByKeyword exactly one time`() =
+    fun `should call getMoviesByKeyword exactly one time`() =
         runTest {
             coEvery {
                 movieRepository.getMoviesByKeyword(
@@ -43,7 +43,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should return empty list when filters yield an empty list`() =
+    fun `should return empty list when filters yield an empty list`() =
         runTest {
             coEvery {
                 movieRepository.getMoviesByKeyword(
@@ -62,7 +62,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should return filtered movies when a minimum rating is specified`() =
+    fun `should return filtered movies when a minimum rating is specified`() =
         runTest {
             coEvery {
                 movieRepository.getMoviesByKeyword(
@@ -79,7 +79,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should return all movies when rating filter is 0`() =
+    fun `should return all movies when rating filter is 0`() =
         runTest {
             coEvery {
                 movieRepository.getMoviesByKeyword(
@@ -93,7 +93,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should return filtered movies when a genre is specified`() =
+    fun `should return filtered movies when a genre is specified`() =
         runTest {
             coEvery {
                 movieRepository.getMoviesByKeyword(
@@ -114,7 +114,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should return all movies when genre filter is All`() =
+    fun `should return all movies when genre filter is All`() =
         runTest {
             coEvery {
                 movieRepository.getMoviesByKeyword(
@@ -130,7 +130,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should return empty list when no movies match the specified genre`() =
+    fun `should return empty list when no movies match the specified genre`() =
         runTest {
             coEvery {
                 movieRepository.getMoviesByKeyword(
@@ -145,7 +145,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should return empty list when no movies returned`() =
+    fun `should return empty list when no movies returned`() =
         runTest {
             coEvery {
                 movieRepository.getMoviesByKeyword(
@@ -159,7 +159,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should throw AflamiException when an error happens`() =
+    fun `should throw AflamiException when an error happens`() =
         runTest {
             coEvery {
                 movieRepository.getMoviesByKeyword(
@@ -172,7 +172,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should filter by both rating and genre`() = runTest {
+    fun `should filter by both rating and genre`() = runTest {
         coEvery {
             movieRepository.getMoviesByKeyword(
                 any(),
@@ -195,7 +195,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
     }
 
     @Test
-    fun `getAndFilterMoviesByKeywordUseCase should pass correct pagination parameters`() =
+    fun `should pass correct pagination parameters`() =
         runTest {
             val keyword = "test"
             val page = 2

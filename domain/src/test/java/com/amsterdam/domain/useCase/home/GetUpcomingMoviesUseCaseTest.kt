@@ -37,7 +37,7 @@ class GetUpcomingMoviesUseCaseTest {
     }
 
     @Test
-    fun `should return movies that match a specific genre`() = runTest {
+    fun `should return movies that match a specific genre when genre is specified`() = runTest {
         coEvery { movieRepository.getUpcomingMovies() } returns allMovies
 
         val result = getUpcomingMoviesUseCase(MovieGenre.ACTION)

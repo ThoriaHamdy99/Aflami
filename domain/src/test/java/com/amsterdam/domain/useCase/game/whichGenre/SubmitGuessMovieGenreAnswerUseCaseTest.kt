@@ -21,7 +21,7 @@ class SubmitGuessMovieGenreAnswerUseCaseTest {
     }
 
     @Test
-    fun `should return correct answer result and award points`() = runTest {
+    fun `should return correct answer result and award points when called with correct answer`() = runTest {
         every { getGameDifficultyUseCase(difficultyType) } returns gameDifficulty
         coEvery { updateUserGamePointsUseCase(gameDifficulty.pointsPerQuestion) } just Runs
 
@@ -31,7 +31,7 @@ class SubmitGuessMovieGenreAnswerUseCaseTest {
     }
 
     @Test
-    fun `should return incorrect answer result with zero points`() = runTest {
+    fun `should return incorrect answer result with zero points when called with correct answer`() = runTest {
         every { getGameDifficultyUseCase(difficultyType) } returns gameDifficulty
 
         val result = submitGuessMovieGenreAnswerUseCase(movieGenreQuestion, MovieGenre.DRAMA, difficultyType)

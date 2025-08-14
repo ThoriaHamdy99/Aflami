@@ -14,7 +14,7 @@ class UpdateUserGamePointsUseCaseTest {
     private val updateUserGamePointsUseCase by lazy { UpdateUserGamePointsUseCase(gameRepository) }
 
     @Test
-    fun `should update user points`() = runTest {
+    fun `should update user points when called with valid points`() = runTest {
         every { gameRepository.getUserPoints() } returns flowOf(currentPoints)
 
         updateUserGamePointsUseCase(pointsToAdd)

@@ -58,7 +58,7 @@ class GetTvShowCastUseCaseTest {
     }
 
     @Test
-    fun `should handle a negative tv show id and return an empty list`() = runTest {
+    fun `should return an empty list when a negative tv show id is given `() = runTest {
         coEvery { tvShowRepository.getTvShowCast(invalidTvShowId) } returns emptyList()
 
         val result = getTvShowCastUseCase(invalidTvShowId)

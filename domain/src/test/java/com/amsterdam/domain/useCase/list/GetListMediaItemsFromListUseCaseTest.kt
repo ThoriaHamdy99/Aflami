@@ -19,7 +19,7 @@ class GetListMediaItemsFromListUseCaseTest {
     }
 
     @Test
-    fun `should call getMoviesFromList on userListRepository`() = runTest {
+    fun `should call getMoviesFromList when invoked`() = runTest {
         coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyResult
 
         getListMediaItemsFromListUseCase(listId, page)
@@ -28,7 +28,7 @@ class GetListMediaItemsFromListUseCaseTest {
     }
 
     @Test
-    fun `should return empty list userListRepository return empty list`() = runTest {
+    fun `should return empty list when userListRepository return empty list`() = runTest {
         coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyResult
 
         val result = getListMediaItemsFromListUseCase(listId, page)

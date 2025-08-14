@@ -13,7 +13,7 @@ class AddMovieToListUseCaseTest {
     }
 
     @Test
-    fun `should call addMovieToList from userListRepository`() = runTest {
+    fun `should call addMovieToList from userListRepository when invoked`() = runTest {
         addMovieToListUseCase(listId, movieId)
 
         coVerify { userListRepository.addMovieToList(listId, movieId) }

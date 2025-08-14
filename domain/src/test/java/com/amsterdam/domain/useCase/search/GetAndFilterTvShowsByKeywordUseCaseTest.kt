@@ -22,7 +22,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
     }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should call getTvShowByKeyword one time`() = runTest {
+    fun `should call getTvShowByKeyword one time`() = runTest {
         coEvery {
             tvShowRepository.getTvShowByKeyword(
                 any(),
@@ -41,7 +41,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
     }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should return a list of tv shows when there is data returned`() =
+    fun `should return a list of tv shows when there is data returned`() =
         runTest {
             coEvery {
                 tvShowRepository.getTvShowByKeyword(
@@ -55,7 +55,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should return empty list when no data returned`() =
+    fun `should return empty list when no data returned`() =
         runTest {
             coEvery {
                 tvShowRepository.getTvShowByKeyword(
@@ -68,7 +68,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should return empty list when filters yield an empty list`() =
+    fun `should return empty list when filters yield an empty list`() =
         runTest {
             coEvery {
                 tvShowRepository.getTvShowByKeyword(
@@ -87,7 +87,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should return filtered tv shows when a minimum rating is specified`() =
+    fun `should return filtered tv shows when a minimum rating is specified`() =
         runTest {
             coEvery {
                 tvShowRepository.getTvShowByKeyword(
@@ -104,7 +104,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should return all tv shows when rating filter is 0`() =
+    fun `should return all tv shows when rating filter is 0`() =
         runTest {
             coEvery {
                 tvShowRepository.getTvShowByKeyword(
@@ -120,7 +120,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should return filtered tv shows when a genre is specified`() =
+    fun `should return filtered tv shows when a genre is specified`() =
         runTest {
             coEvery {
                 tvShowRepository.getTvShowByKeyword(
@@ -138,7 +138,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should return all tv shows when genre filter is All`() =
+    fun `should return all tv shows when genre filter is All`() =
         runTest {
             coEvery {
                 tvShowRepository.getTvShowByKeyword(
@@ -154,7 +154,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should throw Aflami exception when an error happened`() =
+    fun `should throw Aflami exception when an error happened`() =
         runTest {
             coEvery {
                 tvShowRepository.getTvShowByKeyword(
@@ -167,7 +167,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
         }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should filter by both rating and genre`() = runTest {
+    fun `should filter by both rating and genre`() = runTest {
         coEvery {
             tvShowRepository.getTvShowByKeyword(
                 any(),
@@ -184,7 +184,7 @@ class GetAndFilterTvShowsByKeywordUseCaseTest {
     }
 
     @Test
-    fun `getAndFilterTvShowsByKeywordUseCase should pass correct pagination parameters`() =
+    fun `should pass correct pagination parameters`() =
         runTest {
             val keyword = "test"
             val page = 2

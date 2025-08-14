@@ -60,7 +60,7 @@ class GetMovieDetailsUseCaseTest {
     }
 
     @Test
-    fun `should fetch all movie details and return MovieDetails object`() = runTest {
+    fun `should return MovieDetails object when called with valid movieId`() = runTest {
         val movieId = 1L
 
         val result = getMovieDetailsUseCase(movieId)
@@ -78,7 +78,7 @@ class GetMovieDetailsUseCaseTest {
     }
 
     @Test
-    fun `should not add to watch history if getMovieDetailsById fails`() = runTest {
+    fun `should not add to watch history when getMovieDetailsById fails`() = runTest {
         coEvery { movieRepository.getMovieDetailsById(any()) } throws AflamiException()
 
         assertThrows<AflamiException> { getMovieDetailsUseCase(1L) }
@@ -87,7 +87,7 @@ class GetMovieDetailsUseCaseTest {
     }
 
     @Test
-    fun `should return MovieDetails with empty lists if repository returns empty for collections`() =
+    fun `should return MovieDetails with empty lists when repository returns empty for collections`() =
         runTest {
             coEvery { movieRepository.getMovieDetailsById(any()) } returns fakeEmptyMovieDetails
 

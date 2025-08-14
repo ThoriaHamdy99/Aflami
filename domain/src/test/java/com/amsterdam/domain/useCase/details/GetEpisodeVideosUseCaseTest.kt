@@ -16,7 +16,7 @@ class GetEpisodeVideosUseCaseTest {
 
 
     @Test
-    fun `getEpisodeVideosUseCase should return video url when  `() = runTest {
+    fun `should return video url when called with correct data`() = runTest {
         coEvery {
             tvShowRepository.getEpisodeVideoUrl(
                 tvShowId,

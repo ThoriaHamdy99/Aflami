@@ -13,13 +13,9 @@ import org.junit.jupiter.api.Test
 
 class ManageRestrictionLevelUseCaseTest {
 
-    private lateinit var preferencesRepository: AppPreferencesRepository
-    private lateinit var manageRestrictionLevelUseCase: ManageRestrictionLevelUseCase
-
-    @BeforeEach
-    fun setUp() {
-        preferencesRepository = mockk(relaxed = true)
-        manageRestrictionLevelUseCase = ManageRestrictionLevelUseCase(preferencesRepository)
+    private val preferencesRepository: AppPreferencesRepository = mockk(relaxed = true)
+    private val manageRestrictionLevelUseCase by lazy {
+        ManageRestrictionLevelUseCase(preferencesRepository)
     }
 
     @Test

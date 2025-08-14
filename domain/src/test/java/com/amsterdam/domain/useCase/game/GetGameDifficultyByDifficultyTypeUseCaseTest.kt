@@ -9,21 +9,21 @@ class GetGameDifficultyByDifficultyTypeUseCaseTest {
     private val getGameDifficultyByDifficultyTypeUseCase by lazy { GetGameDifficultyByDifficultyTypeUseCase() }
 
     @Test
-    fun `should return easy difficulty`() {
-        val result = getGameDifficultyByDifficultyTypeUseCase(GameDifficulty.DifficultyType.EASY)
+    fun `should return easy difficulty settings when called with easy option`() {
+        val result = getGameDifficultyByDifficultyTypeUseCase(DifficultyType.EASY)
 
         assertThat(result).isEqualTo(expectedEasyDifficulty)
     }
 
     @Test
-    fun `should return medium difficulty`() {
+    fun `should return medium difficulty settings when called with medium option`() {
         val result = getGameDifficultyByDifficultyTypeUseCase(DifficultyType.MEDIUM)
 
         assertThat(result).isEqualTo(expectedMediumDifficulty)
     }
 
     @Test
-    fun `should return hard difficulty`() {
+    fun `should return hard difficulty settings when called with hard option`() {
         val result = getGameDifficultyByDifficultyTypeUseCase(DifficultyType.HARD)
 
         assertThat(result).isEqualTo(expectedHardDifficulty)

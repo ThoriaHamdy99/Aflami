@@ -18,7 +18,7 @@ class ManageAppThemeUseCaseTest {
     }
 
     @Test
-    fun `setAppTheme should call repository with correct value`() = runTest {
+    fun `should call repository with correct value`() = runTest {
         val isDark = true
         coEvery { preferencesRepository.setAppTheme(isDark) } returns Unit
 
@@ -28,7 +28,7 @@ class ManageAppThemeUseCaseTest {
     }
 
     @Test
-    fun `getAppTheme should return expected theme`() = runTest {
+    fun `should return true when theme is dark`() = runTest {
         val expected = true
         coEvery{ preferencesRepository.getAppTheme() } returns flowOf(expected)
 

@@ -36,7 +36,6 @@ class GetMoviesByCountryUseCaseTest {
         val page = 3
         val moviesPerPage = 50
 
-        // When
         getMoviesByCountryUseCase(country, page, moviesPerPage)
 
         coVerify(exactly = 1) {

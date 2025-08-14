@@ -16,7 +16,7 @@ class RemoveMovieFromListUseCaseTest {
     }
 
     @Test
-    fun `should call removeMovieFromList on userListRepository`() = runTest {
+    fun `should call removeMovieFromList when invoked`() = runTest {
         coEvery { userListRepository.removeMovieFromList(listId, movieId) } returns Unit
 
         removeMovieFromListUseCase(listId, movieId)

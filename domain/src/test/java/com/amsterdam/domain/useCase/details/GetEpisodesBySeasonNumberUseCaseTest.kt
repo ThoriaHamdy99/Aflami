@@ -19,7 +19,7 @@ class GetEpisodesBySeasonNumberUseCaseTest {
     }
 
     @Test
-    fun `should call tvShowRepository with correct tvShowId and seasonNumber`() = runTest {
+    fun `should call tvShowRepository when given valid tvShowId and seasonNumber`() = runTest {
         coEvery {
             tvShowRepository.getEpisodesBySeasonNumber(
                 tvShowId,
@@ -74,7 +74,7 @@ class GetEpisodesBySeasonNumberUseCaseTest {
     }
 
     @Test
-    fun `should handle invalid input gracefully`() = runTest {
+    fun `should fail gracefully when given invalid data`() = runTest {
         coEvery {
             tvShowRepository.getEpisodesBySeasonNumber(
                 invalidTvShowId,

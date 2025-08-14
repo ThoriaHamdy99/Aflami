@@ -17,7 +17,7 @@ class GetUserListsUseCaseTest {
     }
 
     @Test
-    fun `getUserListsUseCase should return list of user lists`() = runTest {
+    fun `should return list of user lists when invoked`() = runTest {
         coEvery { userListRepository.getUserLists(0, page) } returns expectedResult
 
         val result = getUserListsUseCase(page)
@@ -27,7 +27,7 @@ class GetUserListsUseCaseTest {
     }
 
     @Test
-    fun `getUserListsUseCase should use default page value`() = runTest {
+    fun `should use default page value when no page is provided`() = runTest {
         val expectedResult = emptyList<UserList>()
         coEvery { userListRepository.getUserLists(page = 1) } returns expectedResult
 
@@ -38,7 +38,7 @@ class GetUserListsUseCaseTest {
     }
 
     @Test
-    fun `getUserListsUseCase should return empty list when no user lists found`() = runTest {
+    fun `should return empty list when no user lists found`() = runTest {
         val expectedResult = emptyList<UserList>()
         coEvery { userListRepository.getUserLists(0, page) } returns expectedResult
 

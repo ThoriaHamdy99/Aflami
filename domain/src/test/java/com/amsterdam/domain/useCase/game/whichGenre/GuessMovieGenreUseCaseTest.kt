@@ -21,7 +21,7 @@ class GuessMovieGenreUseCaseTest {
     }
 
     @Test
-    fun `startGame should call generateMovieGenreQuestionsUseCase`() = runTest {
+    fun `startGame should call generateMovieGenreQuestionsUseCase when invoked`() = runTest {
         coEvery { generateMovieGenreQuestionsUseCase(difficultyType) } returns listOf(testQuestion)
 
         val result = guessMovieGenreUseCase.startGame(difficultyType)

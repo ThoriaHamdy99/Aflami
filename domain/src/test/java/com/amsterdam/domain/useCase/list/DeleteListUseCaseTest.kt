@@ -17,7 +17,7 @@ class DeleteListUseCaseTest {
     }
 
     @Test
-    fun `should call deleteList on userListRepository`() = runTest {
+    fun `should call deleteList when invoked`() = runTest {
         coEvery { userListRepository.deleteList(listId) } returns Unit
 
         deleteListUseCase(listId)

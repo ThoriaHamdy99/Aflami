@@ -17,7 +17,7 @@ class AddTvShowWatchHistoryUseCaseTest {
     }
 
     @Test
-    fun `should call addTvShowToWatchHistory with the correct tvShowId`() = runTest {
+    fun `should call addTvShowToWatchHistory when tvShowId is valid`() = runTest {
         coJustRun { watchHistoryRepository.addTvShowToWatchHistory(tvShowId) }
 
         addTvShowWatchHistoryUseCase(tvShowId)
@@ -35,7 +35,7 @@ class AddTvShowWatchHistoryUseCaseTest {
     }
 
     @Test
-    fun `should handle a negative tvShowId gracefully`() = runTest {
+    fun `should fail gracefully when given tvShowId`() = runTest {
         coJustRun { watchHistoryRepository.addTvShowToWatchHistory(invalidTvShowId) }
 
         addTvShowWatchHistoryUseCase(invalidTvShowId)

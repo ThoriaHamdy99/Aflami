@@ -14,7 +14,7 @@ class GetUserRatedTvShowsUseCaseTest {
     private val useCase = GetUserRatedTvShowsUseCase(mockRepository)
 
     @Test
-    fun `getRatedTvShows returns sorted list by userRate descending`() = runTest {
+    fun `should return sorted list by userRate descending when called`() = runTest {
         coEvery { mockRepository.getUserRatedTvShows() } returns ratedShows
 
         val result = useCase.getRatedTvShows()

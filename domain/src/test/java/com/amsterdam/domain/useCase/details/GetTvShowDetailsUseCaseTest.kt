@@ -75,7 +75,7 @@ class GetTvShowDetailsUseCaseTest {
     }
 
     @Test
-    fun `should handle empty lists from repository gracefully`() = runTest {
+    fun `should return empty lists when repository returns empty collections`() = runTest {
         coEvery { tvShowRepository.getTvShowDetails(any()) } returns fakeEmptyTvShowDetails
 
         val result = getTvShowDetailsUseCase(tvShowId)

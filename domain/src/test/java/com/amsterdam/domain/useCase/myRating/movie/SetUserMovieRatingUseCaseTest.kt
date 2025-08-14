@@ -16,7 +16,7 @@ class SetUserMovieRatingUseCaseTest {
     }
 
     @Test
-    fun `setUserMovieRate should call repository with correct parameters`() = runTest {
+    fun `should call repository with correct parameters`() = runTest {
         coEvery { movieRepository.setMovieRate(rate = rate, movieId = movieId) } returns Unit
 
         val result = setUserMovieRatingUseCase.setUserMovieRate(rate, movieId)

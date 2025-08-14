@@ -140,7 +140,7 @@ class ManageLocaleLanguageUseCaseTest {
     }
 
     @Test
-    fun `getAppLanguage should call preferencesRepository and get english as default`() = runTest {
+    fun `getAppLanguage should call preferencesRepository and get english as default when device language is not arabic`() = runTest {
         val language = "fr"
         val expectedLanguage = flowOf(language)
 

@@ -45,7 +45,7 @@ class LoginWithUsernamePasswordTest {
         }
 
     @Test
-    fun `should throw InvalidCredentialsException for incorrect credentials`() =
+    fun `should throw InvalidCredentialsException when credentials are incorrect`() =
         runTest {
 
             coEvery {

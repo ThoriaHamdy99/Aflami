@@ -13,7 +13,7 @@ class CreateNewListUseCaseTest {
     }
 
     @Test
-    fun `should call createNewList from userListRepository`() = runTest {
+    fun `should call createNewList from userListRepository when invoked`() = runTest {
         val listName = "My List"
 
         createNewListUseCase(listName)

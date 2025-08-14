@@ -9,7 +9,7 @@ class GetAvailableGamesUseCaseTest {
     private val getAvailableGamesUseCase by lazy { GetAvailableGamesUseCase() }
 
     @Test
-    fun `should return available games and difficulty levels`() {
+    fun `should return available games and difficulty levels when called`() {
         val result = getAvailableGamesUseCase()
 
         assertThat(result).isEqualTo(expectedAvailableGames)

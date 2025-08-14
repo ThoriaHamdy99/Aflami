@@ -18,7 +18,7 @@ class GetMoviesByGenreUseCaseTest {
     }
 
     @Test
-    fun `when getMoviesByGenreUseCase is called, should call getMoviesByGenre from movieRepository`() =
+    fun `should call getMoviesByGenre from movieRepository when invoked`() =
         runTest {
             coEvery { movieRepository.getMoviesByGenre(selectedGenre, page) } returns movies
 
@@ -28,7 +28,7 @@ class GetMoviesByGenreUseCaseTest {
         }
 
     @Test
-    fun ` when getMoviesByGenreUseCase is called, should call getMoviesByGenre from movieRepository`() =
+    fun `should return movies from movieRepository when invoked`() =
         runTest {
             coEvery { movieRepository.getMoviesByGenre(selectedGenre, page) } returns mockk()
             getMoviesByGenreUseCase(selectedGenre, page)

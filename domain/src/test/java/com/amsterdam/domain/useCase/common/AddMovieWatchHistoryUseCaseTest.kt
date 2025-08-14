@@ -17,7 +17,7 @@ class AddMovieWatchHistoryUseCaseTest {
     }
 
     @Test
-    fun `should call addMovieToWatchHistory with the correct movieId`() = runTest {
+    fun `should call addMovieToWatchHistory when movieId is valid`() = runTest {
         coJustRun { watchHistoryRepository.addMovieToWatchHistory(movieId) }
 
         addMovieWatchHistoryUseCase(movieId)
@@ -35,7 +35,7 @@ class AddMovieWatchHistoryUseCaseTest {
     }
 
     @Test
-    fun `should handle a negative movieId gracefully`() = runTest {
+    fun `should fail gracefully when given invalidMovieId`() = runTest {
         coJustRun { watchHistoryRepository.addMovieToWatchHistory(invalidMovieId) }
 
         addMovieWatchHistoryUseCase(invalidMovieId)

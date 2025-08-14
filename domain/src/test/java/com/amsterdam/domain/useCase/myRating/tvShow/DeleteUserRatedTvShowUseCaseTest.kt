@@ -18,7 +18,7 @@ class DeleteUserRatedTvShowUseCaseTest {
     }
 
     @Test
-    fun `deleteTvShowRate should call repository with correct ID`() = runTest {
+    fun `should call repository with correct ID when invoked`() = runTest {
         coEvery { tvShowRepository.deleteTvShowRate(tvShowId) } just Runs
 
         val result = deleteUserRatedTvShowUseCase.deleteTvShowRate(tvShowId)
