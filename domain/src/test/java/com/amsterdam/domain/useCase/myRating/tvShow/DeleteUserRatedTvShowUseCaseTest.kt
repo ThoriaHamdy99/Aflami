@@ -14,26 +14,20 @@ import org.junit.jupiter.api.Test
 
 class DeleteUserRatedTvShowUseCaseTest {
 
-    private lateinit var tvShowRepository: TvShowRepository
-    private lateinit var deleteUserRatedTvShowUseCase: DeleteUserRatedTvShowUseCase
-
-    @BeforeEach
-    fun setUp() {
-        tvShowRepository = mockk()
-        deleteUserRatedTvShowUseCase = DeleteUserRatedTvShowUseCase(tvShowRepository)
+    private val tvShowRepository: TvShowRepository = mockk()
+    private val deleteUserRatedTvShowUseCase by lazy {
+        DeleteUserRatedTvShowUseCase(tvShowRepository)
     }
 
     @Test
     fun `deleteTvShowRate should call repository with correct ID`() = runTest {
-        // Given
-        val tvShowId = 123L
         coEvery { tvShowRepository.deleteTvShowRate(tvShowId) } just Runs
 
-        // When
         val result = deleteUserRatedTvShowUseCase.deleteTvShowRate(tvShowId)
 
-        // Then
         coVerify(exactly = 1) { tvShowRepository.deleteTvShowRate(tvShowId) }
         assertThat(result).isEqualTo(Unit)
     }
+
+    private val tvShowId = 123L
 }

@@ -14,26 +14,21 @@ import org.junit.jupiter.api.Test
 
 class SetUserTvShowRatingUseCaseTest {
 
-    private lateinit var tvShowRepository: TvShowRepository
-    private lateinit var setUserTvShowRatingUseCase: SetUserTvShowRatingUseCase
-
-    @BeforeEach
-    fun setUp() {
-        tvShowRepository = mockk(relaxed = true)
-        setUserTvShowRatingUseCase = SetUserTvShowRatingUseCase(tvShowRepository)
+    private val tvShowRepository: TvShowRepository = mockk(relaxed = true)
+    private val setUserTvShowRatingUseCase by lazy {
+        SetUserTvShowRatingUseCase(tvShowRepository)
     }
 
     @Test
     fun `setUserMovieRate should call setTvShowRate on repository with correct parameters`() = runTest {
-        // Given
-        val rate = 8
-        val tvShowId = 123L
         coEvery { tvShowRepository.setTvShowRate(rate = rate, tvShowId = tvShowId) } just Runs
-        // When
+
         val result = setUserTvShowRatingUseCase.setUserMovieRate(rate, tvShowId)
 
-        // Then
         assertThat(result).isEqualTo(Unit)
         coVerify { tvShowRepository.setTvShowRate(rate = rate, tvShowId = tvShowId) }
     }
+
+    private val rate = 8
+    private val tvShowId = 123L
 }

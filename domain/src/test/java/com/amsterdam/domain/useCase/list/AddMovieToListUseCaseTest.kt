@@ -8,23 +8,19 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class AddMovieToListUseCaseTest {
-    private lateinit var addMovieToListUseCase: AddMovieToListUseCase
-    private lateinit var userListRepository: UserListRepository
-
-    @BeforeEach
-    fun setUp() {
-        userListRepository = mockk(relaxed = true)
-        addMovieToListUseCase = AddMovieToListUseCase(userListRepository)
+    private val userListRepository: UserListRepository = mockk(relaxed = true)
+    private val addMovieToListUseCase by lazy {
+        AddMovieToListUseCase(userListRepository)
     }
 
     @Test
-    fun `should call addMovieToList from userListRepository`() =
-        runTest {
-            val listId = 1L
-            val movieId = 123L
+    fun `should call addMovieToList from userListRepository`() = runTest {
+        addMovieToListUseCase(listId, movieId)
 
-            addMovieToListUseCase(listId, movieId)
+        coVerify { userListRepository.addMovieToList(listId, movieId) }
+    }
 
-            coVerify { userListRepository.addMovieToList(listId, movieId) }
-        }
+    private val listId = 1L
+    private val movieId = 123L
+
 }

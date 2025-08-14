@@ -21,10 +21,6 @@ class GetEpisodeVideosUseCaseTest {
 
     @Test
     fun `getEpisodeVideosUseCase should return video url when  `() = runTest {
-        val tvShowId = 2435L
-        val seasonNumber = 1
-        val episodeNumber = 1
-        val expectedVideoUrl = "efhafjj"
         coEvery {
             tvShowRepository.getEpisodeVideoUrl(
                 tvShowId,
@@ -49,4 +45,9 @@ class GetEpisodeVideosUseCaseTest {
         }
 
     }
+
+    private val tvShowId = 2435L
+    private val seasonNumber = 1
+    private val episodeNumber = 1
+    private val expectedVideoUrl = "efhafjj"
 }

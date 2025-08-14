@@ -15,23 +15,20 @@ class GetUserRatedTvShowsUseCaseTest {
 
     @Test
     fun `getRatedTvShows returns sorted list by userRate descending`() = runTest {
-        // Given
-        val show1 = tvShow1
-        val show2 = tvShow1.copy(2,"Show B")
-        val show3 = tvShow1.copy(3,"Show C")
-
-        val ratedShows = listOf(
-            GetUserRatedTvShowsUseCase.UserRatedTvShow(show1, userRate = 5),
-            GetUserRatedTvShowsUseCase.UserRatedTvShow(show2, userRate = 8),
-            GetUserRatedTvShowsUseCase.UserRatedTvShow(show3, userRate = 7),
-        )
-
         coEvery { mockRepository.getUserRatedTvShows() } returns ratedShows
 
-        // When
         val result = useCase.getRatedTvShows()
 
-        // Then
         assertThat(result).isEqualTo(ratedShows.sortedByDescending { it.userRate })
     }
+
+    private val show1 = tvShow1
+    private val show2 = tvShow1.copy(2,"Show B")
+    private val show3 = tvShow1.copy(3,"Show C")
+
+    private val ratedShows = listOf(
+        GetUserRatedTvShowsUseCase.UserRatedTvShow(show1, userRate = 5),
+        GetUserRatedTvShowsUseCase.UserRatedTvShow(show2, userRate = 8),
+        GetUserRatedTvShowsUseCase.UserRatedTvShow(show3, userRate = 7),
+    )
 }
