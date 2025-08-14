@@ -2,7 +2,7 @@ package com.amsterdam.repository.repository
 
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.entity.Season
-import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
+import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
 import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
 import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
 import com.amsterdam.repository.dto.remote.VideoRemoteResponse
@@ -18,7 +18,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
 class TvShowRepositoryImplTest {
-    private val remoteTvDataSource: TvShowsRemoteSource = mockk()
+    private val remoteTvDataSource: TvShowsRemoteDataSource = mockk()
 
     private val tvShowRepository: TvShowRepository by lazy {
         TvShowRepositoryImpl(
@@ -26,13 +26,18 @@ class TvShowRepositoryImplTest {
             remoteTvDataSource = remoteTvDataSource,
             preferences = mockk(),
             categoryLocalDataSource = mockk(),
-            categoryRemoteSource = mockk()
+            categoryRemoteDataSource = mockk()
         )
     }
 
     @Test
     fun `getTvShowByKeyword should return list of TvShow`() = runTest {
-        coEvery { remoteTvDataSource.getTvShowsByKeyword(any(), any()) } returns remoteTvShowResponse
+        coEvery {
+            remoteTvDataSource.getTvShowsByKeyword(
+                any(),
+                any()
+            )
+        } returns remoteTvShowResponse
 
         val result = tvShowRepository.getTvShowByKeyword(keyword, page, tvShowsPerPage)
 
@@ -41,7 +46,8 @@ class TvShowRepositoryImplTest {
 
     @Test
     fun `getEpisodeVideosUrl should return episode videos url`() = runTest {
-        coEvery { remoteTvDataSource.getEpisodeVideos(tvShowId, seasonNumber, episodeNumber)
+        coEvery {
+            remoteTvDataSource.getEpisodeVideos(tvShowId, seasonNumber, episodeNumber)
         } returns expectedResult
 
         val result = tvShowRepository.getEpisodeVideoUrl(tvShowId, seasonNumber, episodeNumber)
@@ -83,10 +89,10 @@ class TvShowRepositoryImplTest {
         Season(id = 2, title = "Season 2", episodeCount = 12, seasonNumber = 2)
     )
     private val remoteTvShowResponse = TvShowRemoteResponse(
-    page = 1,
-    results = expectedTvShows,
-    totalPages = 1,
-    totalResults = 1
+        page = 1,
+        results = expectedTvShows,
+        totalPages = 1,
+        totalResults = 1
     )
     private val response = CastAndCrewRemoteResponse(cast = remoteCastList)
     private val expectedActors = remoteCastList.toEntityList()

@@ -5,7 +5,7 @@ import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Gender
 import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.repository.datasource.remote.MovieRemoteSource
+import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
 import com.amsterdam.repository.dto.remote.MovieRemoteResponse
 import com.amsterdam.repository.mapper.remote.toMovieEntityList
 import com.amsterdam.repository.utils.remoteCastAndCrewResponse
@@ -21,13 +21,13 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
 class MovieRepositoryImplTest {
-    private val movieRemoteDataSource: MovieRemoteSource = mockk()
+    private val movieRemoteDataSource: MovieRemoteDataSource = mockk()
 
     val movieRepository: MovieRepository by lazy {
         MovieRepositoryImpl(
             categoryLocalDataSource = mockk(),
             movieLocalDataSource = mockk(),
-            categoryRemoteSource = mockk(),
+            categoryRemoteDataSource = mockk(),
             movieRemoteDataSource = movieRemoteDataSource,
             preferences = mockk()
         )
@@ -35,7 +35,12 @@ class MovieRepositoryImplTest {
 
     @Test
     fun `getMoviesByKeyword should return movies when remote returns results`() = runTest {
-        coEvery { movieRemoteDataSource.getMoviesByKeyword(keyword, page) } returns remoteMovieResponse
+        coEvery {
+            movieRemoteDataSource.getMoviesByKeyword(
+                keyword,
+                page
+            )
+        } returns remoteMovieResponse
 
         val result = movieRepository.getMoviesByKeyword(keyword, page, moviesPerPage)
 
@@ -45,7 +50,12 @@ class MovieRepositoryImplTest {
     @Test
     fun `getMoviesByActor should return movies when actor exists`() = runTest {
         coEvery { movieRemoteDataSource.getActorIdsByName(actorName, page) } returns actorIds
-        coEvery { movieRemoteDataSource.getMoviesByActorIds(actorIds, page) } returns remoteMovieResponse
+        coEvery {
+            movieRemoteDataSource.getMoviesByActorIds(
+                actorIds,
+                page
+            )
+        } returns remoteMovieResponse
 
         val result = movieRepository.getMoviesByActor(actorName, page, moviesPerPage)
 
@@ -63,7 +73,12 @@ class MovieRepositoryImplTest {
 
     @Test
     fun `getMoviesByCountry should return movies when remote returns results`() = runTest {
-        coEvery { movieRemoteDataSource.getMoviesByCountryIsoCode(country.countryIsoCode, page) } returns remoteMovieResponse
+        coEvery {
+            movieRemoteDataSource.getMoviesByCountryIsoCode(
+                country.countryIsoCode,
+                page
+            )
+        } returns remoteMovieResponse
 
         val result = movieRepository.getMoviesByCountry(country, page, moviesPerPage)
 
@@ -100,7 +115,8 @@ class MovieRepositoryImplTest {
 
     @Test
     fun `getMoviesByGenres should return movies when remote returns results`() = runTest {
-        coEvery { movieRemoteDataSource.getMoviesByGenreIds(expectedDtoGenres, page)
+        coEvery {
+            movieRemoteDataSource.getMoviesByGenreIds(expectedDtoGenres, page)
         } returns remoteMovieResponse
 
         val result = movieRepository.getMoviesByGenres(genres, page)
