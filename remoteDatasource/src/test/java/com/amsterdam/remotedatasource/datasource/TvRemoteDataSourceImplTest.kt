@@ -26,27 +26,9 @@ import org.junit.jupiter.api.assertThrows
 
 class TvRemoteDataSourceImplTest {
 
-    // Shared data and mocks
     private val tvShowsApiService: TvShowsApiService = mockk()
     private val tvRemoteDataSourceImpl: TvRemoteDataSourceImpl =
         TvRemoteDataSourceImpl(tvShowsApiService)
-
-    private val networkException = NetworkException()
-    private val validTvShowResponse = TvShowRemoteResponse(
-        page = TV_SHOW_TEST_PAGE,
-        results = listOf(tvShowItemRemoteDto),
-        totalPages = 1,
-        totalResults = 1
-    )
-
-    private val emptyTvShowResponse = TvShowRemoteResponse(
-        page = 1,
-        results = emptyList(),
-        totalPages = 1,
-        totalResults = 0
-    )
-
-    private val tvShowVideoResponseWithEmptyResults = tvShowVideoRemoteResponse.copy(results = emptyList())
 
     @Test
     fun `getPopularTvShows should return a list of TV shows and call the API exactly once when successful`() =
@@ -295,22 +277,21 @@ class TvRemoteDataSourceImplTest {
     @Test
     fun `setTvShowRate should return a RatingResponse and call the API exactly once when successful`() =
         runTest {
-            val rate = TV_SHOW_TEST_RATING.toInt()
             coEvery {
                 tvShowsApiService.postTvRating(
                     TV_SHOW_TEST_ID,
-                    rate.toFloat(),
+                    rateInt.toFloat(),
                 )
             } returns tvShowRatingRemoteResponse
 
             val result = tvRemoteDataSourceImpl.setTvShowRate(
-                rate = rate,
+                rate = rateInt,
                 tvShowId = TV_SHOW_TEST_ID,
             )
 
             assertThat(result).isEqualTo(tvShowRatingRemoteResponse)
             coVerify(exactly = 1) {
-                tvShowsApiService.postTvRating(TV_SHOW_TEST_ID, rate.toFloat())
+                tvShowsApiService.postTvRating(TV_SHOW_TEST_ID, rateInt.toFloat())
             }
         }
 
@@ -353,7 +334,6 @@ class TvRemoteDataSourceImplTest {
     @Test
     fun `getTvShowsByGenreId should return a list of TV shows and call the API exactly once when successful`() =
         runTest {
-            val genreList = listOf(TV_SHOW_TEST_GENRE_ID)
             coEvery {
                 tvShowsApiService.getTvShowsByGenreIds(
                     genreList,
@@ -376,9 +356,6 @@ class TvRemoteDataSourceImplTest {
     @Test
     fun `getEpisodeVideos should use season 1 for invalid season numbers and call the API exactly once`() =
         runTest {
-            val invalidSeasonNumber = 0
-            val expectedSeasonNumber = 1
-
             coEvery {
                 tvShowsApiService.getEpisodeVideos(
                     TV_SHOW_TEST_ID,
@@ -403,4 +380,26 @@ class TvRemoteDataSourceImplTest {
                 )
             }
         }
+    private val networkException = NetworkException()
+    private val validTvShowResponse = TvShowRemoteResponse(
+        page = TV_SHOW_TEST_PAGE,
+        results = listOf(tvShowItemRemoteDto),
+        totalPages = 1,
+        totalResults = 1
+    )
+
+    private val emptyTvShowResponse = TvShowRemoteResponse(
+        page = 1,
+        results = emptyList(),
+        totalPages = 1,
+        totalResults = 0
+    )
+
+    private val tvShowVideoResponseWithEmptyResults = tvShowVideoRemoteResponse.copy(results = emptyList())
+
+    private val rateInt = TV_SHOW_TEST_RATING.toInt()
+    private val genreList = listOf(TV_SHOW_TEST_GENRE_ID)
+    private val invalidSeasonNumber = 0
+    private val expectedSeasonNumber = 1
+
 }
