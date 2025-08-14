@@ -1,6 +1,5 @@
 package com.amsterdam.viewmodel.login
 
-import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.authentication.LoginAsGuestUseCase
 import com.amsterdam.domain.useCase.authentication.LoginWithPasswordUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
@@ -19,20 +18,21 @@ class LoginViewModel @Inject constructor(
     LoginInteractionListener {
 
     override fun onUserNameUpdated(username: String) {
+        resetErrorStateToNull()
+
         updateState {
             it.copy(
                 username = username,
-                loginError = null,
                 isLoginButtonEnabled = username.isNotBlank() && state.value.password.isNotBlank()
             )
         }
     }
 
     override fun onPasswordUpdate(password: String) {
+        resetErrorStateToNull()
         updateState {
             it.copy(
                 password = password,
-                loginError = null,
                 isLoginButtonEnabled = password.isNotBlank() && state.value.username.isNotBlank()
             )
         }
@@ -48,10 +48,8 @@ class LoginViewModel @Inject constructor(
     override fun onLoginClicked() {
         tryToExecute(
             action = ::onLoginStart,
-            onSuccess = { onLoginSuccess() },
-            onError = ::onError,
+            onSuccess = ::onLoginSuccess,
             onCompletion = ::onLoginComplete
-
         )
     }
 
@@ -59,7 +57,6 @@ class LoginViewModel @Inject constructor(
         tryToExecute(
             action = { onLoginAsGuestStart() },
             onSuccess = { navigateToHome() },
-            onError = ::onError,
             onCompletion = ::onLoginComplete
         )
     }
@@ -82,33 +79,16 @@ class LoginViewModel @Inject constructor(
         loginWithPasswordUseCase.invoke(state.value.username, state.value.password)
     }
 
-    private fun onLoginSuccess() {
+    private fun onLoginSuccess(unit: Unit) {
         tryToExecute(
-            action = { getAccountDetailsUseCase() },
-            onSuccess = { navigateToHome() },
-            onError = { navigateToHome() },
+            action = getAccountDetailsUseCase::invoke,
+            onCompletion = ::navigateToHome,
         )
     }
 
-    private fun navigateToHome() {
-        sendNewNavigationEffect(LoginEffect.NavigateToHome)
-    }
+    private fun navigateToHome() = sendNewNavigationEffect(LoginEffect.NavigateToHome)
 
-    private fun onError(exception: AflamiException) {
-        updateState {
-            it.copy(
-                loginError = LoginErrorState.toLoginErrorState(exception),
-            )
-        }
-    }
-    fun onLoginErrorHandled() {
-        updateState {
-            it.copy(loginError = null)
-        }
-    }
+    fun onLoginErrorHandled() = resetErrorStateToNull()
 
-
-    private fun onLoginComplete() {
-        updateState { it.copy(isLoginButtonLoading = false) }
-    }
+    private fun onLoginComplete() = updateState { it.copy(isLoginButtonLoading = false) }
 }
