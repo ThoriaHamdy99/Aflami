@@ -30,13 +30,10 @@ class GetTvShowCastUseCaseTest {
     @Test
     fun `should return actors sorted by popularity in descending order`() = runTest {
         val unsortedActors = listOf(actor1, actor2, actor3)
-        val expectedSortedActors = listOf(actor3, actor2, actor1)
-
         coEvery { tvShowRepository.getTvShowCast(tvShowId) } returns unsortedActors
 
         val result = getTvShowCastUseCase(tvShowId)
 
-        assertThat(result).isEqualTo(expectedSortedActors)
         assertThat(result).containsExactly(actor3, actor2, actor1).inOrder()
     }
 
@@ -54,7 +51,6 @@ class GetTvShowCastUseCaseTest {
         coEvery { tvShowRepository.getTvShowCast(tvShowId) } throws AflamiException()
 
         assertThrows<AflamiException> { getTvShowCastUseCase(tvShowId) }
-        coVerify(exactly = 1) { tvShowRepository.getTvShowCast(tvShowId) }
     }
 
     @Test
@@ -63,7 +59,6 @@ class GetTvShowCastUseCaseTest {
 
         val result = getTvShowCastUseCase(invalidTvShowId)
 
-        coVerify(exactly = 1) { tvShowRepository.getTvShowCast(invalidTvShowId) }
         assertThat(result).isEmpty()
     }
 

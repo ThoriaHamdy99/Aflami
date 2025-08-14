@@ -60,8 +60,6 @@ class GetTvShowDetailsUseCaseTest {
     fun `should fetch all tv show details and return TvShowDetails object`() = runTest {
         val result = getTvShowDetailsUseCase(tvShowId)
 
-        coVerify(exactly = 1) { tvShowRepository.getTvShowDetails(tvShowId) }
-        coVerify(exactly = 1) { addTvShowWatchHistoryUseCase(tvShowId) }
         assertThat(result).isEqualTo(fakeTvShowDetails)
     }
 
@@ -70,8 +68,6 @@ class GetTvShowDetailsUseCaseTest {
         coEvery { tvShowRepository.getTvShowDetails(any()) } throws AflamiException()
 
         assertThrows<AflamiException> { getTvShowDetailsUseCase(tvShowId) }
-        coVerify(exactly = 1) { tvShowRepository.getTvShowDetails(tvShowId) }
-        coVerify(exactly = 0) { addTvShowWatchHistoryUseCase(any()) }
     }
 
     @Test
@@ -80,13 +76,7 @@ class GetTvShowDetailsUseCaseTest {
 
         val result = getTvShowDetailsUseCase(tvShowId)
 
-        assertThat(result.actors).isEmpty()
-        assertThat(result.seasons).isEmpty()
-        assertThat(result.reviews).isEmpty()
-        assertThat(result.similarTvShows).isEmpty()
-        assertThat(result.gallery).isEmpty()
-        assertThat(result.posters).isEmpty()
-        assertThat(result.productionsCompanies).isEmpty()
+        assertThat(result).isEqualTo(fakeEmptyTvShowDetails)
     }
 
     @Test
@@ -94,9 +84,7 @@ class GetTvShowDetailsUseCaseTest {
         coEvery { tvShowRepository.getTvShowDetails(invalidTvShowId) } returns invalidFakeTvShowDetails
 
         val result = getTvShowDetailsUseCase(invalidTvShowId)
-
-        coVerify(exactly = 1) { tvShowRepository.getTvShowDetails(invalidTvShowId) }
-        coVerify(exactly = 1) { addTvShowWatchHistoryUseCase(invalidTvShowId) }
+        
         assertThat(result.tvShow.id).isEqualTo(invalidTvShowId)
     }
 

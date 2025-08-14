@@ -74,6 +74,7 @@ class GetMovieDetailsUseCaseTest {
     @Test
     fun `should throw AflamiException when getMovieDetailsById fails`() = runTest {
         coEvery { movieRepository.getMovieDetailsById(any()) } throws AflamiException()
+
         assertThrows<AflamiException> { getMovieDetailsUseCase(1L) }
     }
 
@@ -93,11 +94,7 @@ class GetMovieDetailsUseCaseTest {
 
             val result = getMovieDetailsUseCase(1L)
 
-            assertThat(result.reviews).isEmpty()
-            assertThat(result.actors).isEmpty()
-            assertThat(result.similarMovies).isEmpty()
-            assertThat(result.movieGallery).isEmpty()
-            assertThat(result.moviePosters).isEmpty()
+            assertThat(result).isEqualTo(fakeEmptyMovieDetails)
         }
 
     @Test
@@ -105,9 +102,7 @@ class GetMovieDetailsUseCaseTest {
         coEvery { movieRepository.getMovieDetailsById(any()) } returns fakeEmptyMovieDetails
         val result = getMovieDetailsUseCase(1L)
 
-        assertThat(result.reviews).isEmpty()
-        assertThat(result.actors).isEmpty()
-        assertThat(result.similarMovies).isEmpty()
+        assertThat(result).isEqualTo(fakeEmptyMovieDetails)
     }
 
     private val fakeEmptyMovieDetails = GetMovieDetailsUseCase.MovieDetails(
