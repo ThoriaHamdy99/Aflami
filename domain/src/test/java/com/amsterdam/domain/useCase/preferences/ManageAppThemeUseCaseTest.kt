@@ -13,13 +13,9 @@ import org.junit.jupiter.api.Test
 
 class ManageAppThemeUseCaseTest {
 
-    private lateinit var preferencesRepository: AppPreferencesRepository
-    private lateinit var manageAppThemeUseCase: ManageAppThemeUseCase
-
-    @BeforeEach
-    fun setUp() {
-        preferencesRepository = mockk(relaxed = true)
-        manageAppThemeUseCase = ManageAppThemeUseCase(preferencesRepository)
+    private val preferencesRepository: AppPreferencesRepository = mockk(relaxed = true)
+    private val manageAppThemeUseCase: ManageAppThemeUseCase by lazy {
+        ManageAppThemeUseCase(preferencesRepository)
     }
 
     @Test

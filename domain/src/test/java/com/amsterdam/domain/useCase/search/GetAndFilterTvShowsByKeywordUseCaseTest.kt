@@ -12,18 +12,13 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class GetAndFilterTvShowsByKeywordUseCaseTest {
-    private lateinit var tvShowRepository: TvShowRepository
-    private lateinit var getAndFilterTvShowsByKeywordUseCase: GetAndFilterTvShowsByKeywordUseCase
-
-    @BeforeEach
-    fun setUp() {
-        tvShowRepository = mockk(relaxed = true)
-        getAndFilterTvShowsByKeywordUseCase = GetAndFilterTvShowsByKeywordUseCase(tvShowRepository)
+    private val tvShowRepository: TvShowRepository = mockk(relaxed = true)
+    private val getAndFilterTvShowsByKeywordUseCase by lazy {
+        GetAndFilterTvShowsByKeywordUseCase(tvShowRepository)
     }
 
     @Test

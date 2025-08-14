@@ -31,5 +31,4 @@ class GetUserPointsUseCaseTest {
 
         assertThat(getUserPointsUseCase().first()).isEqualTo(40)
     }
-
 }

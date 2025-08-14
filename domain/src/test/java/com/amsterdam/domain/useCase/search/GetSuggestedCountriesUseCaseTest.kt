@@ -4,26 +4,18 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.CountryRepository
 import com.amsterdam.domain.useCase.utils.countriesWithDifferentCases
 import com.amsterdam.domain.useCase.utils.fakeCountryList
-import com.amsterdam.entity.Country
 import com.google.common.truth.Truth
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class GetSuggestedCountriesUseCaseTest {
-    private lateinit var countryRepository: CountryRepository
-    private lateinit var getSuggestedCountriesUseCase: GetSuggestedCountriesUseCase
-    private lateinit var country: Country
-
-    @BeforeEach
-    fun setUp() {
-        countryRepository = mockk(relaxed = true)
-        country = Country("EGYPT", "EG")
-        getSuggestedCountriesUseCase = GetSuggestedCountriesUseCase(countryRepository)
+    private val countryRepository: CountryRepository = mockk(relaxed = true)
+    private val getSuggestedCountriesUseCase by lazy {
+        GetSuggestedCountriesUseCase(countryRepository)
     }
 
     @Test
@@ -65,13 +57,10 @@ class GetSuggestedCountriesUseCaseTest {
 
     @Test
     fun `should return filtered countries with partial match`() = runTest {
-        // Given
         coEvery { countryRepository.getCountries() } returns countriesWithDifferentCases
 
-        // When
         val result = getSuggestedCountriesUseCase("a")
 
-        // Then
         Truth.assertThat(result).containsExactly(
             countriesWithDifferentCases[0],
             countriesWithDifferentCases[1],

@@ -12,20 +12,15 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class GetAndFilterMoviesByKeywordUseCaseTest {
-    private lateinit var movieRepository: MovieRepository
-    private lateinit var getAndFilterMoviesByKeywordUseCase: GetAndFilterMoviesByKeywordUseCase
-
-
-    @BeforeEach
-    fun setUp() {
-        movieRepository = mockk(relaxed = true)
-        getAndFilterMoviesByKeywordUseCase = GetAndFilterMoviesByKeywordUseCase(movieRepository)
+    private val movieRepository: MovieRepository = mockk(relaxed = true)
+    private val getAndFilterMoviesByKeywordUseCase by lazy {
+        GetAndFilterMoviesByKeywordUseCase(movieRepository)
     }
+
 
     @Test
     fun `getAndFilterMoviesByKeywordUseCase should call getMoviesByKeyword exactly one time`() =

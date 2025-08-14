@@ -16,15 +16,10 @@ import org.junit.jupiter.api.Test
 
 class ManageLocaleLanguageUseCaseTest {
 
-    private lateinit var manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase
-    private lateinit var preferencesRepository: AppPreferencesRepository
-
-    @BeforeEach
-    fun setUp() {
-        preferencesRepository = mockk(relaxed = true)
-        manageLocaleLanguageUseCase = ManageLocaleLanguageUseCase(preferencesRepository)
+    private val preferencesRepository: AppPreferencesRepository = mockk(relaxed = true)
+    private val manageLocaleLanguageUseCase by lazy {
+        ManageLocaleLanguageUseCase(preferencesRepository)
     }
-
 
     @Test
     fun `initAppLanguage should set english when preferences return null`() = runTest {

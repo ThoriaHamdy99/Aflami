@@ -10,12 +10,9 @@ import org.junit.jupiter.api.Test
 
 class GetOnboardingStatusUseCaseTest {
 
-    private lateinit var getOnboardingStatusUseCase: GetOnboardingStatusUseCase
     private val preferencesRepository: AppPreferencesRepository = mockk(relaxed = true)
-
-    @BeforeEach
-    fun setUp() {
-        getOnboardingStatusUseCase = GetOnboardingStatusUseCase(preferencesRepository)
+    private val getOnboardingStatusUseCase by lazy {
+        GetOnboardingStatusUseCase(preferencesRepository)
     }
 
     @Test
