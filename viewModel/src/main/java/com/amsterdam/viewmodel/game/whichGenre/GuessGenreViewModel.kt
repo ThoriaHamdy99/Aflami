@@ -94,12 +94,12 @@ class GuessGenreViewModel @Inject constructor(
         sendNewEffect(GenreGameEffect.CancelGame)
     }
 
-    override fun onChooseAnswerClick(answer: MovieGenre, answerIndex: Int) {
+    override fun onChooseAnswerClick(answerIndex: Int) {
         timerHandler.stopTimer()
         val currentQuestion =  state.value.questions[state.value.currentQuestionIndex]
         tryToExecute(
             action = { guessMovieGenreUseCase.checkAnswer(
-                answer = answer,
+                answer = currentQuestion.answers[answerIndex],
                 question = currentQuestion.toQuestion(),
                 difficultyType = difficultyType
             ) },

@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.IconButton
+import com.amsterdam.designsystem.components.Scaffold
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
@@ -40,12 +41,10 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.PageIndicator
+import com.amsterdam.ui.components.guessGame.AdaptiveAnswersColumn
 import com.amsterdam.ui.components.guessGame.GuessPicture
 import com.amsterdam.ui.components.guessGame.TimerComponent
-import com.amsterdam.ui.components.selection.AnswerSelectionItem
-import com.amsterdam.ui.components.selection.AnswerStatus
 import com.amsterdam.ui.screens.login.components.LoginBackground
-import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameEffect
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameEffect
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameViewModel
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterInteractionListener
@@ -67,7 +66,7 @@ fun GuessByPosterGameScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is GuessMovieByPosterGameEffect.NavigateBack -> {
-                    navigationManager.navigateUp()
+                    navigationManager.toLetsPlay(clearBackStack = true)
                 }
 
                 is GuessMovieByPosterGameEffect.NavigateToGameResult -> {
@@ -81,7 +80,10 @@ fun GuessByPosterGameScreen(
                 }
 
                 GuessMovieByPosterGameEffect.ShowNotEnoughPointsSnackBar -> {
-                    SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.oops_there_are_not_enough_points), duration = 1500)
+                    SnackBarManager.showError(
+                        context.getString(com.amsterdam.ui.R.string.oops_there_are_not_enough_points),
+                        duration = 1500
+                    )
                 }
             }
         }
@@ -100,79 +102,92 @@ private fun GuessByPosterContent(
     interactionListener: GuessMovieByPosterInteractionListener,
     modifier: Modifier = Modifier,
 ) {
-    Box {
-        LoginBackground()
-        Column(
-            modifier =
-                modifier
-                    .fillMaxSize()
-                    .statusBarsPadding()
-                    .padding(bottom = 16.dp)
-                    .navigationBarsPadding(),
-        ) {
-            val pagerState = rememberPagerState(pageCount = { state.questions.size })
-            val scope = rememberCoroutineScope()
-            val topBarTitle = stringResource(com.amsterdam.ui.R.string.guess_by_poster)
+    val pagerState = rememberPagerState(pageCount = { state.questions.size })
+    val scope = rememberCoroutineScope()
+    val topBarTitle = stringResource(com.amsterdam.ui.R.string.guess_by_poster)
 
-            LaunchedEffect(state.currentQuestionIndex) {
-                scope.launch { pagerState.animateScrollToPage(state.currentQuestionIndex) }
-            }
+    LaunchedEffect(state.currentQuestionIndex) {
+        scope.launch { pagerState.animateScrollToPage(state.currentQuestionIndex) }
+    }
 
-            GameTopBar(
-                title = topBarTitle,
-                timerUiState = state.timerUiState,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                onCancelGameClick = interactionListener::onCloseButtonClicked
-            )
-
-            Row(
-                Modifier
-                    .wrapContentHeight()
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding(),
+        bottomBar = {
+            Box(
+                modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.Center,
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
             ) {
-                PageIndicator(
-                    pageCount = pagerState.pageCount,
-                    currentPage = pagerState.currentPage,
+                ConfirmButton(
+                    title = stringResource(R.string.next),
+                    onClick = interactionListener::onMoveToNextQuestion,
+                    isEnabled = state.isNextEnabled,
+                    isLoading = false,
+                    isNegative = false,
+                    modifier = Modifier
+                        .width(328.dp)
                 )
             }
+        }
+    ) { innerPadding ->
 
-            HorizontalPager(
-                state = pagerState,
-                userScrollEnabled = false,
-                contentPadding = PaddingValues(horizontal = 12.dp),
-                pageSpacing = 12.dp,
+        Box {
+            LoginBackground()
+            LazyColumn(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 20.dp),
-            ) { page ->
-                GameQuestion(
-                    question = state.questions[page],
-                    isHintEnabled = state.isHintEnabled,
-                    selectedAnswerIndex = state.selectedAnswerIndex,
-                    isAnswerCorrect = state.isAnswerCorrect,
-                    isChoiceEnabled = state.isNextEnabled,
-                    onHintClick = interactionListener::onHintClicked,
-                    onSelectAnswer = interactionListener::onSelectAnswer,
-                )
+                    modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+            ) {
+                item {
+                    GameTopBar(
+                        title = topBarTitle,
+                        timerUiState = state.timerUiState,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        onCancelGameClick = interactionListener::onCloseButtonClicked
+                    )
+
+                    Row(
+                        Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        PageIndicator(
+                            pageCount = pagerState.pageCount,
+                            currentPage = pagerState.currentPage,
+                        )
+                    }
+                }
+                item {
+                    HorizontalPager(
+                        state = pagerState,
+                        userScrollEnabled = false,
+                        contentPadding = PaddingValues(horizontal = 12.dp),
+                        pageSpacing = 12.dp,
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(top = 20.dp),
+                    ) { page ->
+                        GameQuestion(
+                            question = state.questions[page],
+                            isHintEnabled = state.isHintEnabled,
+                            selectedAnswerIndex = state.selectedAnswerIndex,
+                            isAnswerCorrect = state.isAnswerCorrect,
+                            isChoiceEnabled = state.isNextEnabled,
+                            onHintClick = interactionListener::onHintClicked,
+                            onSelectAnswer = interactionListener::onSelectAnswer,
+                        )
+                    }
+                }
             }
-
-            Box(modifier = Modifier.weight(1f))
-
-            ConfirmButton(
-                title = stringResource(R.string.next),
-                onClick = interactionListener::onMoveToNextQuestion,
-                isEnabled = state.isNextEnabled,
-                isLoading = state.isLoading,
-                isNegative = false,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-            )
         }
     }
 }
@@ -202,32 +217,13 @@ fun GameQuestion(
                 onHintClick()
             },
         )
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            itemsIndexed(question.movieNameChoices) { index, answer ->
-                val status =
-                    if (selectedAnswerIndex == index) {
-                        when (isAnswerCorrect) {
-                            true -> AnswerStatus.Correct
-                            false -> AnswerStatus.Wrong
-                            null -> AnswerStatus.Unselected
-                        }
-                    } else {
-                        AnswerStatus.Unselected
-                    }
-
-                AnswerSelectionItem(
-                    text = answer,
-                    status = status,
-                    onClick = {
-                        if (isChoiceEnabled) return@AnswerSelectionItem
-                        onSelectAnswer(index)
-                    },
-                )
-            }
-        }
+        AdaptiveAnswersColumn(
+            question.movieNameChoices,
+            selectedAnswerIndex,
+            isAnswerCorrect,
+            isChoiceEnabled,
+            onSelectAnswer
+        )
     }
 }
 

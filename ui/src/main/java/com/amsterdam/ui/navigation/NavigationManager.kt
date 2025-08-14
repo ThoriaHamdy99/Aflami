@@ -38,7 +38,13 @@ class NavigationManager(
             }
         }
     }
-
+    fun toLetsPlay(clearBackStack: Boolean = false) {
+        navController.navigate(Route.Tab.LetsPlay) {
+            if (clearBackStack) popUpTo(Route.Tab.Home){
+                inclusive = false
+            }
+        }
+    }
     fun toHome(clearBackStack: Boolean = false) {
         navController.navigate(Route.Tab.Home) {
             if (clearBackStack) popUpTo(0)
