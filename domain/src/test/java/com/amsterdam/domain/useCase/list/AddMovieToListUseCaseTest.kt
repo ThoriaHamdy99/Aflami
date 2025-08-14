@@ -21,7 +21,7 @@ class AddMovieToListUseCaseTest {
     fun `should call addMovieToList from userListRepository`() =
         runTest {
             val listId = 1L
-            val movieId = 123
+            val movieId = 123L
 
             addMovieToListUseCase(listId, movieId)
 
