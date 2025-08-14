@@ -3,28 +3,28 @@ package com.amsterdam.remotedatasource.datasource
 import com.amsterdam.remotedatasource.api.TvShowsApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
-import com.amsterdam.repository.dto.remote.EpisodeResponse
-import com.amsterdam.repository.dto.remote.RatingResponse
-import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
-import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
+import com.amsterdam.repository.dto.remote.EpisodeRemoteResponse
+import com.amsterdam.repository.dto.remote.RatingRemoteResponse
+import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
+import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
-import com.amsterdam.repository.dto.remote.VideoResponse
+import com.amsterdam.repository.dto.remote.VideoRemoteResponse
 import javax.inject.Inject
 
-class TvRemoteDataDataSourceImpl @Inject constructor(
+class TvRemoteDataSourceImpl @Inject constructor(
     private val tvShowsApiService: TvShowsApiService
 ) : TvShowsRemoteDataSource {
-    override suspend fun getPopularTvShows(): RemoteTvShowResponse {
+    override suspend fun getPopularTvShows(): TvShowRemoteResponse {
         return responseCall { tvShowsApiService.getPopularTvShows() }
     }
 
     override suspend fun getTopRatedTvShows(
         page: Int
-    ): RemoteTvShowResponse {
+    ): TvShowRemoteResponse {
         return responseCall { tvShowsApiService.getTopRatedTvShows(page) }
     }
 
-    override suspend fun getTvShowsByKeyword(keyword: String, page: Int): RemoteTvShowResponse {
+    override suspend fun getTvShowsByKeyword(keyword: String, page: Int): TvShowRemoteResponse {
         return responseCall {
             tvShowsApiService.getTvShowsByKeyword(keyword, page)
         }
@@ -34,14 +34,14 @@ class TvRemoteDataDataSourceImpl @Inject constructor(
         return responseCall { tvShowsApiService.getTvShowDetailsById(tvShowId) }
     }
 
-    override suspend fun getTvShowCast(tvShowId: Long): RemoteCastAndCrewResponse {
+    override suspend fun getTvShowCast(tvShowId: Long): CastAndCrewRemoteResponse {
         return responseCall { tvShowsApiService.getTvShowCast(tvShowId) }
     }
 
     override suspend fun getEpisodesBySeasonNumber(
         tvShowId: Long,
         seasonNumber: Int
-    ): EpisodeResponse {
+    ): EpisodeRemoteResponse {
         return responseCall {
             tvShowsApiService.getEpisodesBySeasonNumber(
                 tvShowId,
@@ -50,14 +50,14 @@ class TvRemoteDataDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getRatedTvShows(): RemoteTvShowResponse {
+    override suspend fun getRatedTvShows(): TvShowRemoteResponse {
         return responseCall { tvShowsApiService.getRatedTvShows() }
     }
 
     override suspend fun setTvShowRate(
         rate: Int,
         tvShowId: Long,
-    ): RatingResponse? {
+    ): RatingRemoteResponse? {
         return responseCall {
             tvShowsApiService.postTvRating(
                 tvId = tvShowId,
@@ -74,7 +74,7 @@ class TvRemoteDataDataSourceImpl @Inject constructor(
         tvShowId: Long,
         seasonNumber: Int,
         episodeNumber: Int
-    ): VideoResponse {
+    ): VideoRemoteResponse {
         val actualSeasonNumber = if (seasonNumber <= 0) 1 else seasonNumber
         return responseCall {
             tvShowsApiService.getEpisodeVideos(
@@ -88,7 +88,7 @@ class TvRemoteDataDataSourceImpl @Inject constructor(
     override suspend fun getTvShowsByGenreId(
         genreId: Long,
         page: Int
-    ): RemoteTvShowResponse {
+    ): TvShowRemoteResponse {
         return responseCall { tvShowsApiService.getTvShowsByGenreIds(listOf(genreId), page) }
     }
 }

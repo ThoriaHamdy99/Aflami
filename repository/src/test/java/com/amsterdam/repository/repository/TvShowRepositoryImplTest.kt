@@ -3,10 +3,10 @@ package com.amsterdam.repository.repository
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.entity.Season
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
-import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
-import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
-import com.amsterdam.repository.dto.remote.VideoResponse
-import com.amsterdam.repository.mapper.toEntityList
+import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
+import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
+import com.amsterdam.repository.dto.remote.VideoRemoteResponse
+import com.amsterdam.repository.mapper.remote.toEntityList
 import com.amsterdam.repository.utils.remoteCastDto
 import com.amsterdam.repository.utils.remoteTvShowItemDto
 import com.amsterdam.repository.utils.tvShowDetailsRemoteResponse
@@ -32,7 +32,12 @@ class TvShowRepositoryImplTest {
 
     @Test
     fun `getTvShowByKeyword should return list of TvShow`() = runTest {
-        coEvery { remoteTvDataSource.getTvShowsByKeyword(any(), any()) } returns remoteTvShowResponse
+        coEvery {
+            remoteTvDataSource.getTvShowsByKeyword(
+                any(),
+                any()
+            )
+        } returns remoteTvShowResponse
 
         val result = tvShowRepository.getTvShowByKeyword(keyword, page, tvShowsPerPage)
 
@@ -41,7 +46,8 @@ class TvShowRepositoryImplTest {
 
     @Test
     fun `getEpisodeVideosUrl should return episode videos url`() = runTest {
-        coEvery { remoteTvDataSource.getEpisodeVideos(tvShowId, seasonNumber, episodeNumber)
+        coEvery {
+            remoteTvDataSource.getEpisodeVideos(tvShowId, seasonNumber, episodeNumber)
         } returns expectedResult
 
         val result = tvShowRepository.getEpisodeVideoUrl(tvShowId, seasonNumber, episodeNumber)
@@ -75,20 +81,20 @@ class TvShowRepositoryImplTest {
     private val tvShowId = 1L
     private val seasonNumber = 1
     private val episodeNumber = 1
-    private val expectedResult = VideoResponse(results = listOf(videoDto))
+    private val expectedResult = VideoRemoteResponse(results = listOf(videoDto))
     private val episodeVideosUrl = "https://www.youtube.com/watch?v=someKey"
     private val remoteCastList = listOf(remoteCastDto)
     private val expectedSeasons = listOf(
         Season(id = 1, title = "Season 1", episodeCount = 10, seasonNumber = 1),
         Season(id = 2, title = "Season 2", episodeCount = 12, seasonNumber = 2)
     )
-    private val remoteTvShowResponse = RemoteTvShowResponse(
-    page = 1,
-    results = expectedTvShows,
-    totalPages = 1,
-    totalResults = 1
+    private val remoteTvShowResponse = TvShowRemoteResponse(
+        page = 1,
+        results = expectedTvShows,
+        totalPages = 1,
+        totalResults = 1
     )
-    private val response = RemoteCastAndCrewResponse(cast = remoteCastList)
+    private val response = CastAndCrewRemoteResponse(cast = remoteCastList)
     private val expectedActors = remoteCastList.toEntityList()
 
 }

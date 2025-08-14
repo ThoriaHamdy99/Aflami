@@ -6,10 +6,10 @@ import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.entity.UserList
 import com.amsterdam.repository.datasource.remote.UserListRemoteDataSource
-import com.amsterdam.repository.dto.remote.AddItemToListResponse
-import com.amsterdam.repository.dto.remote.CreateUserListResponse
-import com.amsterdam.repository.dto.remote.RemoteUserListDto
-import com.amsterdam.repository.dto.remote.RemoteUserListResponse
+import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
+import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
+import com.amsterdam.repository.dto.remote.UserListRemoteDto
+import com.amsterdam.repository.dto.remote.UserListRemoteResponse
 import com.amsterdam.repository.mapper.toMovieEntity
 import com.amsterdam.repository.utils.listItems
 import com.amsterdam.repository.utils.remoteListResponse
@@ -33,7 +33,12 @@ class UserListRepositoryImplTest {
     @Test
     fun `addMovieToList should call addMovieToList from userListRemoteSource`() =
         runTest {
-            coEvery { userListRemoteDataSource.addMovieToList(listId, movieId) }returns AddItemToListResponse(1, "", true)
+            coEvery {
+                userListRemoteDataSource.addMovieToList(
+                    listId,
+                    movieId
+                )
+            } returns AddItemToListRemoteResponse(1, "", true)
 
             userListRepository.addMovieToList(listId, movieId)
 
@@ -43,8 +48,9 @@ class UserListRepositoryImplTest {
     @Test
     fun `addMovieToList should throw UnknownException when addMovieToList fails`() =
         runTest {
-            coEvery { userListRemoteDataSource.addMovieToList(listId, movieId)
-            } returns AddItemToListResponse(1, "", false)
+            coEvery {
+                userListRemoteDataSource.addMovieToList(listId, movieId)
+            } returns AddItemToListRemoteResponse(1, "", false)
 
             assertThrows<UnknownException> { userListRepository.addMovieToList(listId, movieId) }
         }
@@ -53,7 +59,12 @@ class UserListRepositoryImplTest {
     fun `createNewList should call createNewList from userListRemoteSource`() =
         runTest {
             coEvery { preferences.getAppLanguage() } returns flowOf(language)
-            coEvery { userListRemoteDataSource.createNewList(listName, language) } returns fakeUserListResponse
+            coEvery {
+                userListRemoteDataSource.createNewList(
+                    listName,
+                    language
+                )
+            } returns fakeUserListResponse
 
             val createdListId = userListRepository.createNewList(listName)
 
@@ -142,10 +153,10 @@ class UserListRepositoryImplTest {
         )
     )
 
-    private val expectedResult = RemoteUserListResponse(
+    private val expectedResult = UserListRemoteResponse(
         page = 1,
         results = listOf(
-            RemoteUserListDto(
+            UserListRemoteDto(
                 id = 1,
                 name = "List 1",
                 description = "Description 1",
@@ -158,5 +169,5 @@ class UserListRepositoryImplTest {
 
     private val page = 1
 
-    val fakeUserListResponse = CreateUserListResponse(1, 1, "", true)
+    val fakeUserListResponse = CreateUserListRemoteResponse(1, 1, "", true)
 }
