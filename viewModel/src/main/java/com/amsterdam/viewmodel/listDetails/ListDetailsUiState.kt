@@ -1,7 +1,6 @@
 package com.amsterdam.viewmodel.listDetails
 
 import androidx.paging.PagingData
-import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow

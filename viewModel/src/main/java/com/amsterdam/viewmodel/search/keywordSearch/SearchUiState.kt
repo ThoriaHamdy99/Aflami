@@ -1,7 +1,6 @@
 package com.amsterdam.viewmodel.search.keywordSearch
 
 import androidx.paging.PagingData
-import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.viewmodel.search.uiState.SearchMediaItemUiState
 import com.amsterdam.viewmodel.shared.Selectable

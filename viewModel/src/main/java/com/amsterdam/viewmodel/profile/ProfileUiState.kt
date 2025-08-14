@@ -1,6 +1,4 @@
 package com.amsterdam.viewmodel.profile
-
-import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language
 
