@@ -50,7 +50,7 @@ import com.amsterdam.viewmodel.cast.CastInteractionListener
 import com.amsterdam.viewmodel.cast.CastUiEffect
 import com.amsterdam.viewmodel.cast.CastUiState
 import com.amsterdam.viewmodel.cast.CastViewModel
-import com.amsterdam.viewmodel.shared.BaseErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -73,7 +73,7 @@ fun CastScreen(viewModel: CastViewModel = hiltViewModel()) {
 @Composable
 private fun CastContent(
     state: CastUiState,
-    errorState: BaseErrorUiState?,
+    errorState: ErrorUiState?,
     interaction: CastInteractionListener,
     modifier: Modifier = Modifier,
 ) {
@@ -113,7 +113,7 @@ private fun CastContent(
                     )
                 }
 
-                errorState == BaseErrorUiState.NoInternetError -> {
+                errorState == ErrorUiState.NoInternetError -> {
                     NoNetworkContainer(
                         modifier = Modifier.fillMaxSize(),
                         onClickRetry = interaction::onClickRetrySearch,
