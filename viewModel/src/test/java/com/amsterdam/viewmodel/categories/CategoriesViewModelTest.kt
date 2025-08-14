@@ -16,7 +16,6 @@ import kotlin.test.Test
 
 class CategoriesViewModelTest {
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase = mockk(relaxed = true)
-
     private val viewModel by lazy {
         CategoriesViewModel(
             dispatcherProvider = TestDispatcherProvider()
@@ -31,7 +30,6 @@ class CategoriesViewModelTest {
     @Test
     fun `onClickMovieGenreCard should send NavigateToCategoriesMoviesDetailsScreenEffect`() =
         runTest {
-            val genreName = "action"
             viewModel.effect.test {
                 viewModel.onClickMovieGenreCard(genreName)
                 advanceUntilIdle()
@@ -44,7 +42,6 @@ class CategoriesViewModelTest {
     @Test
     fun `onClickTvShowGenreCard should send NavigateToCategoriesTvShowsDetailsScreenEffect`() =
         runTest {
-            val genreName = "action"
             viewModel.effect.test {
                 viewModel.onClickTvShowGenreCard(genreName)
                 advanceUntilIdle()
@@ -56,10 +53,12 @@ class CategoriesViewModelTest {
 
     @Test
     fun `onChangeTabOption should update selectedTabOption in state`() = runTest {
-        val tabOption = TabOption.MOVIES
         viewModel.onChangeTabOption(tabOption)
         advanceUntilIdle()
         assertThat(viewModel.state.value.selectedTabOption).isEqualTo(tabOption)
 
     }
+    private val genreName = "action"
+    private val tabOption = TabOption.MOVIES
+
 }

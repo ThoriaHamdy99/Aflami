@@ -142,7 +142,6 @@ class TvRemoteDataSourceImplTest {
 
     @Test
     fun `getTvShowCast should rethrow NetworkException from service provider`() = runTest {
-        val tvShowId = 1399L
         coEvery { tvShowsApiService.getTvShowCast(tvShowId) } throws NetworkException()
 
         assertThrows<NetworkException> {
@@ -152,15 +151,12 @@ class TvRemoteDataSourceImplTest {
 
     @Test
     fun `getEpisodesBySeasonNumber should return a list of episodes when successful`() = runTest {
-        val tvShowId = 1399L
-        val seasonNumber = 1
-        val expectedResponse = episodeResponse
         coEvery {
             tvShowsApiService.getEpisodesBySeasonNumber(
                 tvShowId,
                 seasonNumber
             )
-        } returns expectedResponse
+        } returns expectedEpisodeResponse
 
         val episodes = tvRemoteDataSourceImpl.getEpisodesBySeasonNumber(tvShowId, seasonNumber)
 
@@ -176,8 +172,6 @@ class TvRemoteDataSourceImplTest {
     @Test
     fun `getEpisodesBySeasonNumber should rethrow NetworkException from service provider`() =
         runTest {
-            val tvShowId = 1399L
-            val seasonNumber = 1
             coEvery {
                 tvShowsApiService.getEpisodesBySeasonNumber(
                     tvShowId,
@@ -192,21 +186,13 @@ class TvRemoteDataSourceImplTest {
 
     @Test
     fun `getEpisodeVideos should return a VideoResponse object when successful`() = runTest {
-        val tvShowId = 1399L
-        val seasonNumber = 1
-        val episodeNumber = 1
-        val expectedResponse = VideoResponse(
-            results = listOf(
-                videoDto
-            )
-        )
         coEvery {
             tvShowsApiService.getEpisodeVideos(
                 tvShowId,
                 seasonNumber,
                 episodeNumber
             )
-        } returns expectedResponse
+        } returns expectedVideoResponse
 
         val videoResponse = tvRemoteDataSourceImpl.getEpisodeVideos(
             tvShowId,
@@ -255,13 +241,6 @@ class TvRemoteDataSourceImplTest {
     @Test
     fun `getTvShowByGenreIds should return TV shows for given genre IDs when successful`() =
         runTest {
-            val genreIds = listOf(28L)
-            val expectedResponse = RemoteTvShowResponse(
-                page = 1,
-                results = listOf(remoteTvShowItemDto),
-                totalPages = 1,
-                totalResults = 1
-            )
             coEvery {
                 tvShowsApiService.getTvShowsByGenreIds(
                     genreIds,
@@ -276,12 +255,20 @@ class TvRemoteDataSourceImplTest {
 
         }
 
-    val keyword = "Game of Thrones"
-    val page = 1
-    val tvShowId = 1399L
-    val expectedDetailsResponse = remoteTvShowDetailsResponse
-    val expectedRatingResponse = RatingResponse(statusCode = 1, statusMessage = "Success")
-    val expectedResponse = RemoteTvShowResponse(
+    private val keyword = "Game of Thrones"
+    private val page = 1
+    private val tvShowId = 1399L
+    private val seasonNumber = 1
+    private val episodeNumber = 1
+    private val expectedVideoResponse = VideoResponse(
+        results = listOf(
+            videoDto
+        )
+    )
+    private val expectedDetailsResponse = remoteTvShowDetailsResponse
+    private val expectedEpisodeResponse = episodeResponse
+    private val expectedRatingResponse = RatingResponse(statusCode = 1, statusMessage = "Success")
+    private val expectedResponse = RemoteTvShowResponse(
         page = 1,
         results = listOf(
             remoteTvShowItemDto
@@ -289,16 +276,18 @@ class TvRemoteDataSourceImplTest {
         totalPages = 1,
         totalResults = 1
     )
-    val expectedEmptyResponse = RemoteTvShowResponse(
+    private val expectedEmptyResponse = RemoteTvShowResponse(
         page = 1,
         results = emptyList(),
         totalPages = 1,
         totalResults = 1
     )
-    val expectedCastAndCrewResponse = RemoteCastAndCrewResponse(
+    private val expectedCastAndCrewResponse = RemoteCastAndCrewResponse(
         id = tvShowId,
         cast = emptyList(),
         crew = emptyList()
     )
+    private val genreIds = listOf(28L)
+
 
 }

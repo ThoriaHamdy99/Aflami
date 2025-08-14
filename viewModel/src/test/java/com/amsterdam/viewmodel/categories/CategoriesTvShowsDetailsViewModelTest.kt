@@ -23,13 +23,8 @@ class CategoriesTvShowsDetailsViewModelTest {
 
     private val getTvShowsByGenreUseCase: GetTvShowsByGenreUseCase = mockk(relaxed = true)
     private val args: CategoriesTvShowsDetailsArgs = mockk(relaxed = true)
-
-    private lateinit var viewModel: CategoriesTvShowsDetailsViewModel
-
-    @BeforeEach
-    fun setUp() {
-        every { args.genreName } returns TvShowGenre.COMEDY.name
-        viewModel = CategoriesTvShowsDetailsViewModel(
+    private val viewModel by lazy {
+        CategoriesTvShowsDetailsViewModel(
             getTvShowsByGenreIdUseCase = getTvShowsByGenreUseCase,
             categoriesTvShowsDetailsArgs = args,
             dispatcherProvider = TestDispatcherProvider()
@@ -53,7 +48,6 @@ class CategoriesTvShowsDetailsViewModelTest {
 
     @Test
     fun `onClickTvShowCard should send NavigateToTvShowDetails effect`() = runTest {
-        val tvShowId = 123L
         viewModel.effect.test {
             launch { viewModel.onClickTvShowCard(tvShowId) }
             advanceUntilIdle()
@@ -73,7 +67,6 @@ class CategoriesTvShowsDetailsViewModelTest {
 
     @Test
     fun `onClickGenre with same genre should not change selectedGenre`() = runTest {
-        val initialGenre = viewModel.state.value.selectedGenre
         viewModel.onClickGenre(initialGenre)
         advanceUntilIdle()
         assertThat(viewModel.state.value.selectedGenre).isEqualTo(initialGenre)
@@ -94,5 +87,7 @@ class CategoriesTvShowsDetailsViewModelTest {
         viewModel.onPagingLoadStateChanged(loadStates)
         assertThat(viewModel.state.value.isLoading).isFalse()
     }
+    private val tvShowId = 123L
+    private val initialGenre = viewModel.state.value.selectedGenre
 
 }

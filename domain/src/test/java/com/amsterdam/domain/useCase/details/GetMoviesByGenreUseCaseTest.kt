@@ -13,28 +13,30 @@ import org.junit.jupiter.api.Test
 
 class GetMoviesByGenreUseCaseTest {
     private val movieRepository: MovieRepository = mockk()
-    val getMoviesByGenreUseCase by lazy {
+    private val getMoviesByGenreUseCase by lazy {
         GetMoviesByGenreUseCase(movieRepository)
     }
 
     @Test
-    fun `invoke should call getMoviesByGenre from movieRepository`() = runTest {
+    fun `when getMoviesByGenreUseCase is called, should call getMoviesByGenre from movieRepository`() =
+        runTest {
+            coEvery { movieRepository.getMoviesByGenre(selectedGenre, page) } returns movies
 
-        coEvery { movieRepository.getMoviesByGenre(selectedGenre, page) } returns movies
+            val result = getMoviesByGenreUseCase(selectedGenre, page)
 
-        val result = getMoviesByGenreUseCase(selectedGenre, page)
-
-        assertThat(result).isEqualTo(movies)
-    }
+            assertThat(result).isEqualTo(movies)
+        }
 
     @Test
-    fun `should call getMoviesByGenre from movieRepository`() = runTest {
-        coEvery { movieRepository.getMoviesByGenre(selectedGenre, page) } returns mockk()
-        getMoviesByGenreUseCase(selectedGenre, page)
-        coVerify(exactly = 1) { movieRepository.getMoviesByGenre(selectedGenre, page) }
-    }
+    fun ` when getMoviesByGenreUseCase is called, should call getMoviesByGenre from movieRepository`() =
+        runTest {
+            coEvery { movieRepository.getMoviesByGenre(selectedGenre, page) } returns mockk()
+            getMoviesByGenreUseCase(selectedGenre, page)
 
-    val selectedGenre = MovieGenre.ACTION
-    val page = 1
-    val movies = fakeMovieListWithCategories
+            coVerify(exactly = 1) { movieRepository.getMoviesByGenre(selectedGenre, page) }
+        }
+
+    private val selectedGenre = MovieGenre.ACTION
+    private val page = 1
+    private val movies = fakeMovieListWithCategories
 }

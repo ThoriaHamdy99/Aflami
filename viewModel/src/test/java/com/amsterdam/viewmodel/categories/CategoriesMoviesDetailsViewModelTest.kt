@@ -50,7 +50,6 @@ class CategoriesMoviesDetailsViewModelTest {
 
     @Test
     fun `onClickMovieCard should send NavigateToMovieDetails effect`() = runTest {
-        val movieId = 42L
         viewModel.effect.test {
             launch { viewModel.onClickMovieCard(movieId) }
             assertThat(awaitItem()).isEqualTo(
@@ -61,14 +60,12 @@ class CategoriesMoviesDetailsViewModelTest {
 
     @Test
     fun `onClickGenre with same genre should not reload`() = runTest {
-        val initialState = viewModel.state.value
         viewModel.onClickGenre(initialState.selectedGenre)
         assertThat(viewModel.state.value).isEqualTo(initialState)
     }
 
     @Test
     fun `onClickGenre with different genre should update state and reload movies`() = runTest {
-        val newGenre = MovieGenre.COMEDY
         viewModel.onClickGenre(newGenre)
         advanceUntilIdle()
         assertThat(viewModel.state.value.selectedGenre).isEqualTo(newGenre)
@@ -120,4 +117,7 @@ class CategoriesMoviesDetailsViewModelTest {
         advanceUntilIdle()
         assertThat(viewModel.state.value.isLoading).isTrue()
     }
+    private val movieId = 42L
+    private val newGenre = MovieGenre.COMEDY
+    private val initialState = viewModel.state.value
 }

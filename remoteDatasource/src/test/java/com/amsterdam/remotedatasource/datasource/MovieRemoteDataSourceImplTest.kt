@@ -5,9 +5,7 @@ import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.util.actorSearchItemDto
 import com.amsterdam.remotedatasource.util.remoteMovieDetailsResponse
 import com.amsterdam.remotedatasource.util.remoteMovieItemDto
-import com.amsterdam.repository.dto.remote.RatingResponse
 import com.amsterdam.repository.dto.remote.RemoteActorSearchResponse
-import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteMovieResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -85,7 +83,12 @@ class MovieRemoteDataSourceImplTest {
     @Test
     fun `getActorIdsByName should return an empty list when no actors are found`() = runTest {
 
-        coEvery { movieApiService.getActorIdByName(name, page) } returns expectedEmptyActorSearchResponse
+        coEvery {
+            movieApiService.getActorIdByName(
+                name,
+                page
+            )
+        } returns expectedEmptyActorSearchResponse
 
         val actorIds = movieRemoteDataSourceImpl.getActorIdsByName(name, page)
 
@@ -306,28 +309,21 @@ class MovieRemoteDataSourceImplTest {
 
     }
 
-    val movieId = 1399L
-    val genreId = 28L
-    val page = 1
-    val rating = 5.0f
-    val genreIds = listOf(28L)
-    val countryIsoCode = "US"
-    val name = "test"
-    val actorIds = listOf(6193)
-    val keyword = "Inception"
-    val expectedRatingResponse = RatingResponse(statusCode = 12, statusMessage = "success")
-    val expectedResponse = RemoteMovieResponse(
+    private val movieId = 1399L
+    private val genreId = 28L
+    private val page = 1
+    private val genreIds = listOf(28L)
+    private val countryIsoCode = "US"
+    private val name = "test"
+    private val actorIds = listOf(6193)
+    private val keyword = "Inception"
+    private val expectedResponse = RemoteMovieResponse(
         page = page,
         results = listOf(remoteMovieItemDto),
         totalPages = 1,
         totalResults = 1
     )
-    val expectedCastAndCrewResponse = RemoteCastAndCrewResponse(
-        id = movieId,
-        cast = emptyList(),
-        crew = emptyList()
-    )
-    val expectedActorSearchResponse = RemoteActorSearchResponse(
+    private val expectedActorSearchResponse = RemoteActorSearchResponse(
         page = 1,
         totalPages = 1,
         totalResults = 1,
@@ -335,7 +331,7 @@ class MovieRemoteDataSourceImplTest {
             actorSearchItemDto
         )
     )
-    val expectedEmptyActorSearchResponse = RemoteActorSearchResponse(
+    private val expectedEmptyActorSearchResponse = RemoteActorSearchResponse(
         page = 1,
         totalPages = 1,
         totalResults = 1,

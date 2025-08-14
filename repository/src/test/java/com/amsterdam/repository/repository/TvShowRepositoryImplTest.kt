@@ -21,7 +21,6 @@ import kotlin.test.Test
 
 class TvShowRepositoryImplTest {
     private val tvShowRemoteDataSource: TvShowsRemoteDataSource = mockk()
-
     private val tvShowRepository: TvShowRepository by lazy {
         TvShowRepositoryImpl(
             localTvDataSource = mockk(),
@@ -111,7 +110,5 @@ class TvShowRepositoryImplTest {
     )
     private val response = RemoteCastAndCrewResponse(cast = remoteCastList)
     private val expectedActors = remoteCastList.toEntityList()
-    val expectedDtoGenres = listOf(35L, 28L, 12L)
     val genre =  TvShowGenre.COMEDY
-
 }

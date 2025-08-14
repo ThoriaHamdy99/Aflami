@@ -18,19 +18,25 @@ class GetTvShowsByGenreUseCaseTest {
     }
 
     @Test
-    fun `invoke should call getTvShowsByGenre from tvShowRepository`() = runTest {
-        coEvery { tvShowRepository.getTvShowsByGenre(selectedGenre, page) } returns tvShows
-        val result = getTvShowsByGenreUseCase(selectedGenre, page)
-        assertThat(result).isEqualTo(tvShows)
-    }
-    @Test
-    fun ` should call getTvShowsByGenre from tvShowRepository`() = runTest {
-        coEvery { tvShowRepository.getTvShowsByGenre(selectedGenre, page) } returns mockk()
-         getTvShowsByGenreUseCase(selectedGenre, page)
-        coVerify { tvShowRepository.getTvShowsByGenre(selectedGenre, page) }
+    fun `when getTvShowsByGenreUseCase is called, should call getTvShowsByGenre from tvShowRepository`() =
+        runTest {
+            coEvery { tvShowRepository.getTvShowsByGenre(selectedGenre, page) } returns tvShows
 
-    }
-    val selectedGenre = TvShowGenre.COMEDY
-    val page = 1
-    val tvShows = fakeTvShowListWithCategories
+            val result = getTvShowsByGenreUseCase(selectedGenre, page)
+
+            assertThat(result).isEqualTo(tvShows)
+        }
+
+    @Test
+    fun ` when getTvShowsByGenreUseCase is called, should call getTvShowsByGenre from tvShowRepository`() =
+        runTest {
+            coEvery { tvShowRepository.getTvShowsByGenre(selectedGenre, page) } returns mockk()
+            getTvShowsByGenreUseCase(selectedGenre, page)
+            coVerify { tvShowRepository.getTvShowsByGenre(selectedGenre, page) }
+
+        }
+
+    private val selectedGenre = TvShowGenre.COMEDY
+    private val page = 1
+    private val tvShows = fakeTvShowListWithCategories
 }
