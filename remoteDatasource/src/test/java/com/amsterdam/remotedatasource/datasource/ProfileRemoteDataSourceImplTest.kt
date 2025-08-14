@@ -23,22 +23,30 @@ class ProfileRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getAccountDetails should return account details when the API call is successful`() = runTest {
+    fun `getAccountDetails should return account details on successful API call`() = runTest {
         val expectedAccountDetails = mockk<AccountDetailsRemoteDto>()
         coEvery { profileApiService.getAccountDetails() } returns expectedAccountDetails
 
         val result = profileDataSourceImpl.getAccountDetails()
 
         assertThat(result).isEqualTo(expectedAccountDetails)
-        coVerify(exactly = 1) { profileApiService.getAccountDetails() }
     }
 
     @Test
-    fun `getAccountDetails should throw NetworkException when the API call fails`() =
+    fun `getAccountDetails should call profileApiService getAccountDetails once on success`() =
         runTest {
-            coEvery { profileApiService.getAccountDetails() } throws NetworkException()
+            val expectedAccountDetails = mockk<AccountDetailsRemoteDto>()
+            coEvery { profileApiService.getAccountDetails() } returns expectedAccountDetails
 
-            assertThrows<NetworkException> { profileDataSourceImpl.getAccountDetails() }
+            profileDataSourceImpl.getAccountDetails()
+
             coVerify(exactly = 1) { profileApiService.getAccountDetails() }
         }
+
+    @Test
+    fun `getAccountDetails should throw NetworkException when the API call fails`() = runTest {
+        coEvery { profileApiService.getAccountDetails() } throws NetworkException()
+
+        assertThrows<NetworkException> { profileDataSourceImpl.getAccountDetails() }
+    }
 }
