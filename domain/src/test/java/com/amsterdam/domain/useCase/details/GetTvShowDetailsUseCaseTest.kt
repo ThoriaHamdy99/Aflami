@@ -84,7 +84,7 @@ class GetTvShowDetailsUseCaseTest {
         coEvery { tvShowRepository.getTvShowDetails(invalidTvShowId) } returns invalidFakeTvShowDetails
 
         val result = getTvShowDetailsUseCase(invalidTvShowId)
-        
+
         assertThat(result.tvShow.id).isEqualTo(invalidTvShowId)
     }
 
