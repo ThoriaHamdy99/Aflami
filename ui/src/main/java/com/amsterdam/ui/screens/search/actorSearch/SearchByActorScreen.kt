@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,11 +48,12 @@ import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.screens.search.countrySearch.components.MoviesVerticalGrid
 import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchEffect
-import com.amsterdam.viewmodel.search.actorSearch.ActorSearchErrorState
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchInteractionListener
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchUiState
 import com.amsterdam.viewmodel.search.actorSearch.ActorSearchViewModel
 import com.amsterdam.viewmodel.search.uiState.SearchMediaItemUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState.NoInternetError
 import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
@@ -59,8 +61,9 @@ fun SearchByActorScreen(
     modifier: Modifier = Modifier,
     viewModel: ActorSearchViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.state.collectAsStateWithLifecycle()
-    val movies = uiState.value.movies.collectAsLazyPagingItems()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsState()
+    val movies = state.movies.collectAsLazyPagingItems()
     val navigationManager = LocalNavManager.current
 
     LaunchedEffect(movies.loadState) {
@@ -80,7 +83,8 @@ fun SearchByActorScreen(
 
     SearchByActorContent(
         modifier = modifier,
-        state = uiState.value,
+        state = state,
+        errorState = errorState,
         movies = movies,
         interactionListener = viewModel,
     )
@@ -89,6 +93,7 @@ fun SearchByActorScreen(
 @Composable
 private fun SearchByActorContent(
     state: ActorSearchUiState,
+    errorState: ErrorUiState?,
     interactionListener: ActorSearchInteractionListener,
     movies: LazyPagingItems<SearchMediaItemUiState>,
     modifier: Modifier = Modifier,
@@ -129,7 +134,7 @@ private fun SearchByActorContent(
         if (
             state.keyword.isNotBlank() &&
             !state.isLoading &&
-            state.error == null &&
+            errorState == null &&
             movies.itemCount != 0
         ) {
             MoviesVerticalGrid(
@@ -149,7 +154,7 @@ private fun SearchByActorContent(
                     when {
                         state.isLoading -> LoadingContainer(modifier = Modifier)
 
-                        state.error == ActorSearchErrorState.NoNetworkConnection -> {
+                        errorState is NoInternetError -> {
                             NoNetworkContainer(interactionListener::onClickRetrySearch)
                         }
 
@@ -198,6 +203,7 @@ private fun SearchByActorContentPreview() {
         SearchByActorContent(
             state = ActorSearchUiState(),
             movies = emptyFlow<PagingData< SearchMediaItemUiState>>().collectAsLazyPagingItems(),
+            errorState = null,
             interactionListener = object : ActorSearchInteractionListener {
                 override fun onUserSearchChange(keyword: String) {}
                 override fun onClickNavigateBack() {}

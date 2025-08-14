@@ -42,15 +42,18 @@ import com.amsterdam.viewmodel.search.keywordSearch.FilterInteractionListener
 import com.amsterdam.viewmodel.search.keywordSearch.SearchInteractionListener
 import com.amsterdam.viewmodel.search.keywordSearch.SearchUiEffect
 import com.amsterdam.viewmodel.search.keywordSearch.SearchUiState
-import com.amsterdam.viewmodel.search.keywordSearch.SearchUiState.SearchErrorState
 import com.amsterdam.viewmodel.search.keywordSearch.SearchViewModel
 import com.amsterdam.viewmodel.search.uiState.SearchMediaItemUiState
 import com.amsterdam.viewmodel.shared.TabOption
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState.NoInternetError
+import com.amsterdam.viewmodel.shared.errorUiState.isNull
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 internal fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
     val movieFlow = state.movies.collectAsLazyPagingItems()
     val tvShowFlow = state.tvShows.collectAsLazyPagingItems()
     val navigationManager = LocalNavManager.current
@@ -95,6 +98,7 @@ internal fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
 
     SearchContent(
         state = state,
+        errorState = errorState,
         movies = movieFlow,
         tvShows = tvShowFlow,
         interaction = viewModel,
@@ -106,6 +110,7 @@ internal fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
 @Composable
 private fun SearchContent(
     state: SearchUiState,
+    errorState: ErrorUiState?,
     movies: LazyPagingItems<SearchMediaItemUiState>,
     tvShows: LazyPagingItems<SearchMediaItemUiState>,
     interaction: SearchInteractionListener,
@@ -177,7 +182,7 @@ private fun SearchContent(
                 } else {
                     tvShows.itemSnapshotList.isEmpty()
                 }
-                AnimatedVisibility(state.isLoading || state.errorUiState != null || isSelectedTabHasNoData) {
+                AnimatedVisibility(state.isLoading || !errorState.isNull() || isSelectedTabHasNoData) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -190,17 +195,15 @@ private fun SearchContent(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             when {
-                                state.isLoading && state.errorUiState == null -> {
+                                state.isLoading && errorState.isNull() -> {
                                     LoadingContainer()
                                 }
 
-                                state.errorUiState is SearchErrorState.NoNetworkConnection -> {
-                                    NoNetworkContainer(
-                                        onClickRetry = interaction::onClickRetryRequest
-                                    )
+                                errorState is NoInternetError -> {
+                                    NoNetworkContainer(onClickRetry = interaction::onClickRetryRequest)
                                 }
 
-                                !state.isLoading && state.errorUiState == null && isSelectedTabHasNoData -> {
+                                !state.isLoading && errorState.isNull() && isSelectedTabHasNoData -> {
                                     NoDataContainer(
                                         imageRes = painterResource(com.amsterdam.ui.R.drawable.placeholder_no_result_found),
                                         title = stringResource(R.string.no_search_result),

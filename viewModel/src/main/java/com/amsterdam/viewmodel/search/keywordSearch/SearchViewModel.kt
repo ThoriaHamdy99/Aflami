@@ -17,7 +17,6 @@ import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.search.keywordSearch.SearchUiState.FilterItemUiState
-import com.amsterdam.viewmodel.search.keywordSearch.SearchUiState.SearchErrorState
 import com.amsterdam.viewmodel.search.mapper.getSelectedGenreType
 import com.amsterdam.viewmodel.search.mapper.selectByMovieGenre
 import com.amsterdam.viewmodel.search.mapper.selectByTvGenre
@@ -50,28 +49,32 @@ class SearchViewModel @Inject constructor(
     FilterInteractionListener {
     private val _keyword = MutableStateFlow("")
 
-
     init {
         manageLocaleLanguageUseCase.getAppLanguage()
             .onEach {
                 observeSearchKeywordChanges()
             }.launchIn(viewModelScope)
 
-        fetchRecentSearches()
+        getRecentSearches()
         observeSearchKeywordChanges()
     }
 
-    private fun fetchRecentSearches(startLoading: Boolean = true) {
+    private fun getRecentSearches(startLoading: Boolean = true) {
         startLoading(startLoading)
         tryToExecute(
-            action = { recentSearchesUseCase.getRecentSearches() },
-            onSuccess = ::onLoadRecentSearchesSuccess,
-            onError = ::onFetchError,
+            action = recentSearchesUseCase::getRecentSearches,
+            onSuccess = ::onGetRecentSearchesSuccess,
+            onCompletion = ::onGetCompletion
         )
     }
 
-    private fun onLoadRecentSearchesSuccess(recentSearches: List<String>) {
-        updateState { it.copy(recentSearches = recentSearches, errorUiState = null, isLoading = false) }
+    private fun onGetRecentSearchesSuccess(recentSearches: List<String>) {
+        resetErrorStateToNull()
+        updateState { it.copy(recentSearches = recentSearches, isLoading = false) }
+    }
+
+    private fun onGetCompletion() {
+        updateState { it.copy(isLoading = false) }
     }
 
     private fun observeSearchKeywordChanges() {
@@ -209,7 +212,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun onFetchError(exception: AflamiException) {
-        updateState { it.copy(errorUiState = SearchErrorState.toSearchErrorState(exception), isLoading = false) }
+        updateState { it.copy(isLoading = false) }
     }
 
     private fun resetFilterState() {
@@ -228,7 +231,8 @@ class SearchViewModel @Inject constructor(
             _keyword.update { keyword }
         }
         if (keyword.isBlank()) {
-            updateState { it.copy(movies = emptyFlow(), tvShows = emptyFlow(), errorUiState = null, isLoading = false) }
+            resetErrorStateToNull()
+            updateState { it.copy(movies = emptyFlow(), tvShows = emptyFlow(), isLoading = false) }
         }
         updateState { it.copy(keyword = keyword) }
     }
@@ -238,7 +242,7 @@ class SearchViewModel @Inject constructor(
         if (keyword.isBlank()) return
         tryToExecute(
             action = { recentSearchesUseCase.addRecentSearch(keyword) },
-            onSuccess = { fetchRecentSearches() },
+            onSuccess = { getRecentSearches() },
             onError = ::onFetchError,
         )
     }
@@ -277,7 +281,7 @@ class SearchViewModel @Inject constructor(
     override fun onClickClearRecentSearch(keyword: String) {
         tryToExecute(
             action = { recentSearchesUseCase.deleteRecentSearch(searchKeyword = keyword) },
-            onSuccess = { fetchRecentSearches(startLoading = false)},
+            onSuccess = { getRecentSearches(startLoading = false)},
             onError = ::onFetchError,
         )
     }
@@ -314,7 +318,8 @@ class SearchViewModel @Inject constructor(
         when (val refreshState = loadStates.refresh) {
             is LoadState.Loading -> {
                 if (state.value.keyword.isNotBlank()) {
-                    updateState { it.copy(isLoading = true, errorUiState = null) }
+                    resetErrorStateToNull()
+                    updateState { it.copy(isLoading = true) }
                 }
             }
 
@@ -323,21 +328,14 @@ class SearchViewModel @Inject constructor(
             }
 
             is LoadState.Error -> {
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        errorUiState = SearchErrorState.toSearchErrorState(
-                            refreshState.error
-                        ),
-                    )
-                }
+                updateErrorStateByException(AflamiException())
+                updateState { it.copy(isLoading = false,) }
             }
         }
     }
 
     override fun onClickMovieCard(movieId: Long) {
         sendNewNavigationEffect(SearchUiEffect.NavigateToMovieDetails(movieId))
-
     }
 
     override fun onClickTvShowCard(tvShowId: Long) {
@@ -424,5 +422,4 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun onClickClear() = resetFilterState()
-
 }
