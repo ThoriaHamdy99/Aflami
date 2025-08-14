@@ -183,7 +183,7 @@ class TimerHandlerTest {
     }
 
     @Test
-    fun `timer works with default nowMillis and dispatcher`() {
+    fun `timer works with default nowMillis and dispatcher`() = runTest {
         val handler = TimerHandler()
         val flow = handler.startTimer(totalSeconds = 1) {}
         assertThat(flow.value).isEqualTo(1)
