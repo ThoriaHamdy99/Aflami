@@ -5,10 +5,10 @@ import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.util.actorSearchItemDto
 import com.amsterdam.remotedatasource.util.remoteMovieDetailsResponse
 import com.amsterdam.remotedatasource.util.remoteMovieItemDto
-import com.amsterdam.repository.dto.remote.RatingResponse
-import com.amsterdam.repository.dto.remote.RemoteActorSearchResponse
-import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
-import com.amsterdam.repository.dto.remote.RemoteMovieResponse
+import com.amsterdam.repository.dto.remote.RatingRemoteResponse
+import com.amsterdam.repository.dto.remote.ActorSearchRemoteResponse
+import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
+import com.amsterdam.repository.dto.remote.MovieRemoteResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -34,7 +34,7 @@ class MovieRemoteDataSourceImplTest {
         // Given
         val keyword = "Inception"
         val page = 1
-        val expectedResponse = RemoteMovieResponse(
+        val expectedResponse = MovieRemoteResponse(
             page = 1,
             results = listOf(
                 remoteMovieItemDto
@@ -69,7 +69,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getMoviesByActorIds should return movies for a given actor when successful`() = runTest {
         // Given
         val actorIds = listOf(6193)
-        val expectedResponse = RemoteMovieResponse(
+        val expectedResponse = MovieRemoteResponse(
             page = 1,
             results = listOf(
                 remoteMovieItemDto
@@ -105,7 +105,7 @@ class MovieRemoteDataSourceImplTest {
         // Given
         val name = "Leonardo DiCaprio"
         val page = 1
-        val expectedResponse = RemoteActorSearchResponse(
+        val expectedResponse = ActorSearchRemoteResponse(
             page = 1,
             totalPages = 1,
             totalResults = 1,
@@ -128,7 +128,7 @@ class MovieRemoteDataSourceImplTest {
         // Given
         val name = "No Actor"
         val page = 1
-        val expectedResponse = RemoteActorSearchResponse(
+        val expectedResponse = ActorSearchRemoteResponse(
             page = 1,
             totalPages = 1,
             totalResults = 0,
@@ -162,7 +162,7 @@ class MovieRemoteDataSourceImplTest {
             // Given
             val countryIsoCode = "US"
             val page = 1
-            val expectedResponse = RemoteMovieResponse(
+            val expectedResponse = MovieRemoteResponse(
                 page = 1,
                 results = listOf(
                     remoteMovieItemDto
@@ -213,7 +213,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getCastByMovieId should return cast and crew for a movie when successful`() = runTest {
         // Given
         val movieId = 550L
-        val expectedResponse = RemoteCastAndCrewResponse(
+        val expectedResponse = CastAndCrewRemoteResponse(
             id = movieId,
             cast = emptyList(),
             crew = emptyList()
@@ -271,7 +271,7 @@ class MovieRemoteDataSourceImplTest {
     @Test
     fun `getPopularMovies should return popular movies when successful`() = runTest {
         // Given
-        val expectedResponse = RemoteMovieResponse(
+        val expectedResponse = MovieRemoteResponse(
             page = 1,
             results = listOf(remoteMovieItemDto),
             totalPages = 1,
@@ -301,7 +301,7 @@ class MovieRemoteDataSourceImplTest {
     @Test
     fun `getUpcomingMovies should return upcoming movies when successful`() = runTest {
         // Given
-        val expectedResponse = RemoteMovieResponse(
+        val expectedResponse = MovieRemoteResponse(
             page = 1,
             results = listOf(remoteMovieItemDto),
             totalPages = 1,
@@ -332,7 +332,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getTopRatedMovies should return top rated movies when successful`() = runTest {
         // Given
         val page = 1
-        val expectedResponse = RemoteMovieResponse(
+        val expectedResponse = MovieRemoteResponse(
             page = page,
             results = listOf(remoteMovieItemDto),
             totalPages = 1,
@@ -364,7 +364,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getMoviesByGenreIds should return movies for given genre IDs when successful`() = runTest {
         // Given
         val genreIds = listOf(28L, 53L)
-        val expectedResponse = RemoteMovieResponse(
+        val expectedResponse = MovieRemoteResponse(
             page = 1,
             results = listOf(
                 remoteMovieItemDto
@@ -399,7 +399,7 @@ class MovieRemoteDataSourceImplTest {
         // Given
         val movieId = 550L
         val rating = 5.0f
-        val expectedResponse = RatingResponse(statusCode = 12, statusMessage = "success")
+        val expectedResponse = RatingRemoteResponse(statusCode = 12, statusMessage = "success")
 
         coEvery {
             movieApiService.postMovieRating(
@@ -421,7 +421,7 @@ class MovieRemoteDataSourceImplTest {
     @Test
     fun `getRatedMovie should return Unit when successful`() = runTest {
         //Given
-        val expectedResponse = RemoteMovieResponse(
+        val expectedResponse = MovieRemoteResponse(
             page = 1,
             results = listOf(remoteMovieItemDto),
             totalPages = 1,

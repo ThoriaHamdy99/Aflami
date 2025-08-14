@@ -1,6 +1,6 @@
 package com.amsterdam.repository.mapper.remote
 
-import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
+import com.amsterdam.repository.dto.remote.MovieItemRemoteDto
 import com.amsterdam.repository.mapper.toEntity
 import com.amsterdam.repository.mapper.toMovieEntityList
 import com.google.common.truth.Truth.assertThat
@@ -10,7 +10,7 @@ class MovieRemoteMapperTest {
     @Test
     fun `given valid RemoteMovieItemDto when mapped then return correct Movie entity`() {
         // Given
-        val dto = RemoteMovieItemDto(
+        val dto = MovieItemRemoteDto(
             id = 123,
             title = "Test Movie",
             overview = "This is a test movie",
@@ -50,7 +50,7 @@ class MovieRemoteMapperTest {
     fun `given list of RemoteMovieItemDto when mapped then return list of Movie entities`() {
         // Given
         val dtoList = listOf(
-            RemoteMovieItemDto(
+            MovieItemRemoteDto(
                 id = 1,
                 title = "Movie 1",
                 genreIds = listOf(1),
@@ -70,7 +70,7 @@ class MovieRemoteMapperTest {
                 voteCount = 0,
                 genres = emptyList()
             ),
-            RemoteMovieItemDto(
+            MovieItemRemoteDto(
                 id = 2,
                 title = "Movie 2",
                 genreIds = listOf(2),

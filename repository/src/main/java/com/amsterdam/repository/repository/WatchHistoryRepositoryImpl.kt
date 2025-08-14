@@ -13,7 +13,7 @@ import com.amsterdam.repository.dto.local.MovieLocalDto
 import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
 import com.amsterdam.repository.dto.local.TvShowLocalDto
 import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
-import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
+import com.amsterdam.repository.dto.remote.MovieDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.mapper.toEntity
 import com.amsterdam.repository.mapper.toLocalDto
@@ -63,7 +63,7 @@ class WatchHistoryRepositoryImpl @Inject constructor(
             .toLocalDto(language)
     }
 
-    private suspend fun cacheWatchedMovie(remoteMovieDetailsResponse: RemoteMovieDetailsResponse) {
+    private suspend fun cacheWatchedMovie(remoteMovieDetailsResponse: MovieDetailsRemoteResponse) {
         movieLocalDataSource.upsertMovie(
             remoteMovieDetailsResponse.toLocalDto(preferences.getAppLanguage().first())
         )
