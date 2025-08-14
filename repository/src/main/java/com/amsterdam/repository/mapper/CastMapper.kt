@@ -2,10 +2,9 @@ package com.amsterdam.repository.mapper
 
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Gender
-import com.amsterdam.repository.dto.remote.RemoteCastDto
+import com.amsterdam.repository.dto.remote.CastRemoteDto
 
-fun RemoteCastDto.toEntity(): Actor =
-    Actor(
+fun CastRemoteDto.toEntity(): Actor = Actor(
         id = id,
         name = name,
         imageUrl = fullProfilePath.orEmpty(),
@@ -14,4 +13,4 @@ fun RemoteCastDto.toEntity(): Actor =
     )
 
 
-fun List<RemoteCastDto>.toEntityList(): List<Actor> = map { it.toEntity() }
+fun List<CastRemoteDto>.toEntityList(): List<Actor> = map { it.toEntity() }

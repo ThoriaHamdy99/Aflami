@@ -8,7 +8,7 @@ import com.amsterdam.repository.dto.local.TvShowLocalDto
 import com.amsterdam.repository.dto.local.PopularTvShowDto
 import com.amsterdam.repository.dto.local.TopRatedTvShowDto
 import com.amsterdam.repository.dto.local.TvShowCategoryCrossRefDto
-import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
+import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
 import kotlinx.datetime.Instant
 import javax.inject.Inject
 
@@ -48,7 +48,7 @@ class TvShowLocalDataSourceImpl @Inject constructor(
         return tvShowDao.getTvShowById(tvShowId, storedLanguage)
     }
 
-    override suspend fun getPopularTvShows(storedLanguage: String): List<TvShowWithCategory> {
+    override suspend fun getPopularTvShows(storedLanguage: String): List<TvShowWithCategories> {
         return tvShowDao.getPopularTvShows(storedLanguage)
     }
 

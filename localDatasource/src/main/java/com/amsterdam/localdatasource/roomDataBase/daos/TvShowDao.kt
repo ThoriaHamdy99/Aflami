@@ -7,7 +7,7 @@ import com.amsterdam.repository.dto.local.TvShowLocalDto
 import com.amsterdam.repository.dto.local.PopularTvShowDto
 import com.amsterdam.repository.dto.local.TopRatedTvShowDto
 import com.amsterdam.repository.dto.local.TvShowCategoryCrossRefDto
-import com.amsterdam.repository.dto.local.relation.TvShowWithCategory
+import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
 import com.amsterdam.repository.dto.local.utils.DatabaseConstants
 import kotlinx.datetime.Instant
 
@@ -36,7 +36,7 @@ interface TvShowDao {
         AND tv.storedLanguage = :storedLanguage
     """
     )
-    suspend fun getPopularTvShows(storedLanguage: String): List<TvShowWithCategory>
+    suspend fun getPopularTvShows(storedLanguage: String): List<TvShowWithCategories>
 
 
     @Query(

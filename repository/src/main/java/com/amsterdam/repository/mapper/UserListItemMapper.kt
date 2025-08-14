@@ -2,18 +2,18 @@ package com.amsterdam.repository.mapper
 
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.TvShow
-import com.amsterdam.repository.dto.remote.UserListItemDto
+import com.amsterdam.repository.dto.remote.UserListItemRemoteDto
 import com.amsterdam.repository.utils.toSafeLocalDate
 import kotlinx.datetime.LocalDate
 
-fun UserListItemDto.toMovieEntity(isPoster: Boolean = true): Movie {
+fun UserListItemRemoteDto.toMovieEntity(isPoster: Boolean = true): Movie {
     val imageUrl = if (isPoster) fullPosterUrl else fullBackdropUrl
     return Movie(
         id = id,
         name = title.orEmpty(),
         description = overview,
         posterUrl = imageUrl.orEmpty(),
-        releaseDate = releaseDate?.toSafeLocalDate() ?: LocalDate.fromEpochDays(0) ,
+        releaseDate = releaseDate?.toSafeLocalDate() ?: LocalDate.fromEpochDays(0),
         rating = voteAverage?.toFloat() ?: 0f,
         categories = genreIds?.map { toMovieGenre(it.toLong()) } ?: emptyList(),
         popularity = popularity ?: 0.0,
@@ -22,7 +22,7 @@ fun UserListItemDto.toMovieEntity(isPoster: Boolean = true): Movie {
     )
 }
 
-fun UserListItemDto.toTvShowEntity(isPoster: Boolean = true): TvShow{
+fun UserListItemRemoteDto.toTvShowEntity(isPoster: Boolean = true): TvShow {
     val imageUrl = if (isPoster) fullPosterUrl else fullBackdropUrl
     return TvShow(
         id = id,

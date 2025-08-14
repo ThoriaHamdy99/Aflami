@@ -2,7 +2,7 @@ package com.amsterdam.repository.mapper
 
 import com.amsterdam.entity.Country
 import com.amsterdam.repository.dto.local.CountryLocalDto
-import com.amsterdam.repository.dto.remote.RemoteCountryDto
+import com.amsterdam.repository.dto.remote.CountryRemoteDto
 
 fun CountryLocalDto.toEntity(): Country =
     Country(
@@ -17,18 +17,18 @@ fun Country.toLocalDto(storedLanguage: String): CountryLocalDto =
         isoCode = countryIsoCode
     )
 
-fun RemoteCountryDto.toEntity(): Country =
+fun CountryRemoteDto.toEntity(): Country =
     Country(
         countryName = nativeName,
         countryIsoCode = isoCode
     )
 
-fun RemoteCountryDto.toLocalDto(storedLanguage: String): CountryLocalDto =
+fun CountryRemoteDto.toLocalDto(storedLanguage: String): CountryLocalDto =
     CountryLocalDto(
         name = nativeName,
         storedLanguage = storedLanguage,
         isoCode = isoCode
     )
 
-fun List<RemoteCountryDto>.toLocalDtoList(storedLanguage: String): List<CountryLocalDto> =
+fun List<CountryRemoteDto>.toLocalDtoList(storedLanguage: String): List<CountryLocalDto> =
     map { it.toLocalDto(storedLanguage) }
