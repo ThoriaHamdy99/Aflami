@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components.details
+package com.amsterdam.ui.components.movieAndTvShowDetails
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -18,7 +18,6 @@ import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalRestrictionLevel
-import com.amsterdam.ui.screens.movieDetails.components.PageIndicator
 import com.amsterdam.ui.utils.toSafetyLevel
 
 

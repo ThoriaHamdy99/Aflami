@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.movieDetails.components
+package com.amsterdam.ui.components.movieAndTvShowDetails
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

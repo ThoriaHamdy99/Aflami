@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.letsPlay.component
+package com.amsterdam.ui.screens.gameResult.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

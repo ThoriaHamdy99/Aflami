@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.movieDetails.components
+package com.amsterdam.ui.components.movieAndTvShowDetails
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -18,13 +18,17 @@ import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.imageviewer.classification.SafetyLevel
 import com.amsterdam.imageviewer.ui.SafeImageView
-import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.ActorMovieUiState
-
-
+import com.amsterdam.ui.application.LocalRestrictionLevel
+import com.amsterdam.ui.utils.toSafetyLevel
 @Composable
-fun ActorCard(modifier: Modifier = Modifier, actor: ActorMovieUiState) {
+fun ActorCard(
+    name: String,
+    photoUrl: String,
+    modifier: Modifier = Modifier
+) {
+    val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
+
     Column(modifier = modifier.width(78.dp)) {
         SafeImageView(
             modifier = Modifier
@@ -35,15 +39,15 @@ fun ActorCard(modifier: Modifier = Modifier, actor: ActorMovieUiState) {
                     shape = RoundedCornerShape(16.dp)
                 )
                 .clip(RoundedCornerShape(16.dp)),
-            model = actor.photo,
-            contentDescription = actor.name,
-            safetyLevel = SafetyLevel.OFF,
+            model = photoUrl,
+            contentDescription = name,
+            safetyLevel = safetyLevel,
             onLoading = { ImageLoadingIndicator() },
             onError = { ImageErrorIndicator() },
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = actor.name,
+            text = name,
             style = AppTheme.textStyle.label.small,
             color = AppTheme.color.body,
             maxLines = 1,
@@ -57,10 +61,8 @@ fun ActorCard(modifier: Modifier = Modifier, actor: ActorMovieUiState) {
 private fun ActorCardPreview() {
     AflamiTheme {
         ActorCard(
-            actor = ActorMovieUiState(
-                name = "Emma Watson",
-                photo = "https://example.com/emma_watson.jpg"
-            )
+            name = "Emma Watson",
+            photoUrl = "https://example.com/emma_watson.jpg"
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.letsPlay
+package com.amsterdam.ui.screens.gameResult
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable

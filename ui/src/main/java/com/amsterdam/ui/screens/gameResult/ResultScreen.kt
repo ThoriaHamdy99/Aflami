@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.letsPlay
+package com.amsterdam.ui.screens.gameResult
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,8 +25,8 @@ import com.amsterdam.designsystem.components.buttons.OutlinedButton
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
-import com.amsterdam.ui.screens.letsPlay.component.CompletionCard
-import com.amsterdam.ui.screens.letsPlay.component.GameResultAppBar
+import com.amsterdam.ui.screens.gameResult.component.CompletionCard
+import com.amsterdam.ui.screens.gameResult.component.GameResultAppBar
 import com.amsterdam.ui.screens.letsPlay.component.StatCard
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.viewmodel.gameEnd.ResultInteractionListener

@@ -1,5 +1,4 @@
-package com.amsterdam.ui.screens.seriesDetails.component
-
+package com.amsterdam.ui.components.movieAndTvShowDetails
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,105 +32,88 @@ import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ReviewTvShowUiState
 
 @Composable
-fun ReviewTvShowCard(
-    review: ReviewTvShowUiState,
-    modifier: Modifier = Modifier,
-    onToggleExpansion: () -> Unit = {}
+fun ReviewCard(
+    author: String,
+    username: String,
+    rating: String,
+    content: String,
+    date: String,
+    imageUrl: String?,
+    isExpanded: Boolean,
+    onToggleExpansion: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val strokeColor = AppTheme.color.stroke
     val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
+
     Column(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .drawBehind {
-                    val strokeWidth = 1.dp.toPx()
-                    val y = size.height - strokeWidth / 2
-                    drawLine(
-                        color = strokeColor,
-                        start = Offset(0f, y),
-                        end = Offset(size.width, y),
-                        strokeWidth = strokeWidth,
-                        cap = Stroke.DefaultCap,
-                    )
-                }
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .drawBehind {
+                val strokeWidth = 1.dp.toPx()
+                val y = size.height - strokeWidth / 2
+                drawLine(
+                    color = strokeColor,
+                    start = Offset(0f, y),
+                    end = Offset(size.width, y),
+                    strokeWidth = strokeWidth,
+                    cap = Stroke.DefaultCap,
+                )
+            }
+            .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             SafeImageView(
-                modifier =
-                    Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .border(
-                            width = 1.dp,
-                            color = strokeColor,
-                            shape = RoundedCornerShape(12.dp),
-                        ),
-                contentDescription = review.author,
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .border(
+                        width = 1.dp,
+                        color = strokeColor,
+                        shape = RoundedCornerShape(12.dp),
+                    ),
+                contentDescription = author,
                 safetyLevel = safetyLevel,
-                model =
-                    review.imageUrl
-                        ?: "android.resource://com.amsterdam.ui/${R.drawable.img_empty_user_pic}",
+                model = imageUrl ?: "android.resource://com.amsterdam.ui/${R.drawable.img_empty_user_pic}",
                 contentScale = ContentScale.Crop,
                 onLoading = { ImageLoadingIndicator() },
                 onError = { ImageErrorIndicator() },
             )
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp),
             ) {
                 Text(
-                    text = review.author,
+                    text = author,
                     maxLines = 1,
-                    style =
-                        AppTheme.textStyle.title.medium,
+                    style = AppTheme.textStyle.title.medium,
                     overflow = TextOverflow.Ellipsis,
                     color = AppTheme.color.title,
                     lineHeight = 28.sp,
                 )
                 Text(
-                    text = review.username,
+                    text = username,
                     style = AppTheme.textStyle.label.small,
                     color = AppTheme.color.hint,
                     lineHeight = 16.sp,
                 )
             }
-            RatingChip(review.rating)
+            RatingChip(rating)
         }
         ExpandableText(
-            text = review.content,
+            text = content,
             textColor = AppTheme.color.body,
             modifier = Modifier.padding(top = 12.dp),
-            isExpanded = review.isExpanded,
+            isExpanded = isExpanded,
             onToggleExpansion = onToggleExpansion,
         )
         Text(
-            text = review.date,
+            text = date,
             style = AppTheme.textStyle.label.small,
             color = AppTheme.color.hint,
             modifier = Modifier.padding(top = 12.dp),
-        )
-    }
-}
-
-@ThemeAndLocalePreviews
-@Composable
-private fun ReviewCardPreview() {
-    AflamiTheme {
-        ReviewTvShowCard(
-            review =
-                ReviewTvShowUiState(
-                    author = "Mohamed Ahmed",
-                    username = "HamadaGanzabil",
-                    rating = "5",
-                    content = "While watching Disney’s new live-action version of Lilo & Stitch.",
-                    date = "05-21-2014",
-                    imageUrl = null,
-                ),
         )
     }
 }

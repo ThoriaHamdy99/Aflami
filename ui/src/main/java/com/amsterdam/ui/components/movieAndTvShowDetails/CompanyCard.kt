@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.movieDetails.components
+package com.amsterdam.ui.components.movieAndTvShowDetails
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -25,55 +25,54 @@ import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.imageviewer.classification.SafetyLevel
 import com.amsterdam.imageviewer.ui.SafeImageView
-import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.ProductionMovieCompanyUiState
-
 
 @Composable
-fun CompanyCard(productionCompany: ProductionMovieCompanyUiState, modifier: Modifier = Modifier) {
+fun CompanyCard(
+    name: String,
+    country: String,
+    image: String,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
             .height(145.dp)
             .clip(RoundedCornerShape(16.dp))
             .border(width = 1.dp, color = AppTheme.color.stroke, shape = RoundedCornerShape(16.dp))
-
     ) {
         SafeImageView(
             modifier = Modifier
                 .fillMaxSize()
                 .fillMaxHeight(),
-            contentDescription = productionCompany.name,
-            model = productionCompany.image,
+            contentDescription = name,
+            model = image,
             contentScale = ContentScale.FillWidth,
             onLoading = { ImageLoadingIndicator() },
             onError = { ImageErrorIndicator() },
             safetyLevel = SafetyLevel.OFF,
         )
+
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .zIndex(2f)
-                .padding(
-                    start = 8.dp, end = 8.dp, bottom =
-                        8.dp
-                )
+                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
         ) {
-
-
             Text(
-                modifier = Modifier.fillMaxWidth(), text =
-                    productionCompany.name,
+                modifier = Modifier.fillMaxWidth(),
+                text = name,
                 maxLines = 1,
                 style = AppTheme.textStyle.label.large,
                 overflow = TextOverflow.Ellipsis,
                 color = AppTheme.color.onPrimary
             )
             Text(
-                text = productionCompany.country,
+                text = country,
                 style = AppTheme.textStyle.label.small,
                 color = AppTheme.color.onPrimaryBody
             )
         }
+
         val overlayDarkColor = AppTheme.color.overlayDark
         Box(
             modifier = Modifier
@@ -92,4 +91,3 @@ fun CompanyCard(productionCompany: ProductionMovieCompanyUiState, modifier: Modi
         )
     }
 }
-

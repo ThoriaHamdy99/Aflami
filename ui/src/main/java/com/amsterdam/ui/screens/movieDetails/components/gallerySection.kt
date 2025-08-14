@@ -16,6 +16,7 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalRestrictionLevel
+import com.amsterdam.ui.components.EmptyStateText
 import com.amsterdam.ui.components.adaptiveGrid
 import com.amsterdam.ui.utils.toSafetyLevel
 
