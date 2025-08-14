@@ -10,12 +10,7 @@ import kotlinx.datetime.Instant
 data class ContinueWatchingUiState(
     val continueMediaItemUiStates: Flow<PagingData<ContinueWatchingItemUiState>> = emptyFlow(),
     val isLoading: Boolean = false,
-    val error: ContinueWatchingError? = null
 ) {
-    sealed class ContinueWatchingError {
-        data object NetworkError : ContinueWatchingError()
-    }
-
     data class ContinueWatchingItemUiState(
         val id: Long = 0,
         val name: String = "",

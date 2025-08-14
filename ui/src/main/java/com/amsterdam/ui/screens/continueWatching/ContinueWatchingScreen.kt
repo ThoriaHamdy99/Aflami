@@ -37,8 +37,9 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun ContinueWatchingScreen(viewModel: ContinueWatchingViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
     val navigationManager = LocalNavManager.current
-    ContinueWatchingContent(state, viewModel)
+    ContinueWatchingContent(state, errorState, viewModel)
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
@@ -61,6 +62,7 @@ fun ContinueWatchingScreen(viewModel: ContinueWatchingViewModel = hiltViewModel(
 @Composable
 fun ContinueWatchingContent(
     state: ContinueWatchingUiState,
+    errorState: ErrorUiState?,
     interactionListener: ContinueWatchingInteractionListener
 ) {
     val gridState = rememberLazyGridState()
@@ -92,7 +94,7 @@ fun ContinueWatchingContent(
         }
 
         AnimatedSectionVisibility(
-            visible = state.error == ContinueWatchingUiState.ContinueWatchingError.NetworkError
+            visible = errorState == ErrorUiState.NoInternetError
         ) {
             Box(
                 modifier = Modifier

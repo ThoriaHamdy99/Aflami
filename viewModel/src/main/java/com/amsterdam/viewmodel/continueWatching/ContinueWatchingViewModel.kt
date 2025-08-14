@@ -6,13 +6,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.entity.MovieWatchHistory
 import com.amsterdam.entity.TvShowWatchHistory
 import com.amsterdam.paging.PagingSource
-import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiState.ContinueWatchingError
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiState.ContinueWatchingItemUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
@@ -80,18 +78,6 @@ class ContinueWatchingViewModel @Inject constructor(
             currentState.copy(
                 continueMediaItemUiStates = mediaItems
             )
-        }
-    }
-
-    private fun onError(exception: AflamiException) {
-        when (exception) {
-            is NoInternetException -> updateState {
-                it.copy(
-                    error = ContinueWatchingError.NetworkError
-                )
-            }
-
-            else -> {}
         }
     }
 
