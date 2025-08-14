@@ -7,7 +7,6 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
 
 @Immutable
 class NavigationManager(

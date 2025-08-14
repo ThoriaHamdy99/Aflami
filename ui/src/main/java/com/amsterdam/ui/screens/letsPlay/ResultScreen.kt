@@ -62,7 +62,8 @@ fun ResultScreen(
                         }
                     }
                 }
-                is ResultSideEffect.NavigateBackToMenu -> navigationManager.toLetsPlay(clearBackStack = true)
+                is ResultSideEffect.NavigateBackToMenu -> navigationManager.navigateUp()
+
             }
         }
     }
