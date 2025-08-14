@@ -3,7 +3,7 @@ package com.amsterdam.viewmodel.cast
 data class CastUiState(
     val cast: List<ActorUiState> = emptyList(),
     val isLoading: Boolean = false,
-    val errorUiState: CastErrorUiState? = null
+    //val errorUiState: CastErrorUiState? = null
 ) {
 
     data class ActorUiState(
@@ -11,8 +11,8 @@ data class CastUiState(
         val actorName: String = ""
     )
 
-    sealed interface CastErrorUiState {
-        object NoNetworkConnection : CastErrorUiState
-    }
+//    sealed interface CastErrorUiState {
+//        object NoNetworkConnection : CastErrorUiState
+//    }
 
 }

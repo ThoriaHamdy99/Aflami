@@ -49,13 +49,14 @@ import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.cast.CastInteractionListener
 import com.amsterdam.viewmodel.cast.CastUiEffect
 import com.amsterdam.viewmodel.cast.CastUiState
-import com.amsterdam.viewmodel.cast.CastUiState.CastErrorUiState
 import com.amsterdam.viewmodel.cast.CastViewModel
+import com.amsterdam.viewmodel.shared.BaseErrorUiState
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun CastScreen(viewModel: CastViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
+    val errorState by viewModel.errorState.collectAsState()
     val navigationManager = LocalNavManager.current
 
     LaunchedEffect(Unit) {
@@ -66,12 +67,13 @@ fun CastScreen(viewModel: CastViewModel = hiltViewModel()) {
         }
     }
 
-    CastContent(state = state, interaction = viewModel)
+    CastContent(state = state, errorState = errorState, interaction = viewModel)
 }
 
 @Composable
 private fun CastContent(
     state: CastUiState,
+    errorState: BaseErrorUiState?,
     interaction: CastInteractionListener,
     modifier: Modifier = Modifier,
 ) {
@@ -93,7 +95,7 @@ private fun CastContent(
 
         AnimatedContent(
             modifier = Modifier.fillMaxSize(),
-            targetState = Triple(state.isLoading, state.errorUiState, state.cast),
+            targetState = Triple(state.isLoading, errorState, state.cast),
             transitionSpec = {
                 fadeIn(tween(700)) togetherWith fadeOut(tween(700))
             },
@@ -102,7 +104,7 @@ private fun CastContent(
             when {
                 isLoading -> LoadingContainer()
 
-                state.cast.isEmpty() -> {
+                state.cast.isEmpty() && errorState == null-> {
                     NoDataContainer(
                         modifier = Modifier.fillMaxSize(),
                         title = stringResource(R.string.cast_not_available),
@@ -111,7 +113,7 @@ private fun CastContent(
                     )
                 }
 
-                errorState == CastErrorUiState.NoNetworkConnection -> {
+                errorState == BaseErrorUiState.NoInternetError -> {
                     NoNetworkContainer(
                         modifier = Modifier.fillMaxSize(),
                         onClickRetry = interaction::onClickRetrySearch,

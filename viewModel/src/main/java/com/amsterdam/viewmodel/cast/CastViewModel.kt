@@ -1,19 +1,14 @@
 package com.amsterdam.viewmodel.cast
 
-import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.details.GetMovieCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
-import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.entity.Actor
-import com.amsterdam.viewmodel.cast.CastUiState.CastErrorUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
+import com.amsterdam.viewmodel.shared.toErrorUiState
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,31 +16,25 @@ class CastViewModel @Inject constructor(
     private val getMovieCastUseCase: GetMovieCastUseCase,
     private val getTvShowCastUseCase: GetTvShowCastUseCase,
     private val args: CastScreenArgs,
-    manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<CastUiState, CastUiEffect>(CastUiState(), dispatcherProvider),
     CastInteractionListener {
 
     init {
-        manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach {
-                fetchCast()
-            }.launchIn(viewModelScope)
-
-        fetchCast()
+        getCast()
     }
 
-    private fun fetchCast() {
+    private fun getCast() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            action = ::executeFetchCast,
+            action = ::getCastList,
             onSuccess = ::onGetCastSuccess,
             onError = ::onGetCastError,
             onCompletion = ::onGetCastCompletion,
         )
     }
 
-    private suspend fun executeFetchCast(): List<Actor> {
+    private suspend fun getCastList(): List<Actor> {
         return when(MediaType.valueOf(args.mediaType)) {
             MediaType.MOVIE -> getMovieCastUseCase(args.mediaId)
             MediaType.TV_SHOW -> getTvShowCastUseCase(args.mediaId)
@@ -53,22 +42,18 @@ class CastViewModel @Inject constructor(
     }
 
     private fun onGetCastSuccess(cast: List<Actor>) {
-        updateState { it.copy(cast = cast.toActorsUiState() , errorUiState = null) }
+        updateState { it.copy(cast = cast.toActorsUiState()) }
+        updateErrorStateByException(null)
     }
 
     private fun onGetCastError(exception: AflamiException) {
-        val errorUiState = when (exception) {
-            is NoInternetException -> CastErrorUiState.NoNetworkConnection
-            else -> null
-        }
-
-        updateState { it.copy(errorUiState = errorUiState) }
+        updateErrorStateByException(exception)
     }
 
     private fun onGetCastCompletion() = updateState { it.copy(isLoading = false) }
 
     override fun onClickNavigateBack() = sendNewNavigationEffect(CastUiEffect.NavigateBack)
 
-    override fun onClickRetrySearch() = fetchCast()
+    override fun onClickRetrySearch() = getCast()
 
 }
