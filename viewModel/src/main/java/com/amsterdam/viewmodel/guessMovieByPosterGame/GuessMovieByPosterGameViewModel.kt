@@ -158,6 +158,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
                 }
             )
         }
+        timerHandler.stopTimer()
     }
 
     override fun onMoveToNextQuestion() {

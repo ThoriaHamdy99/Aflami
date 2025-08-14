@@ -8,7 +8,6 @@ import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswe
 import com.amsterdam.entity.GameDifficulty.DifficultyType
 import com.amsterdam.viewmodel.gameEnd.ResultScreenData
 import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
-import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -130,7 +129,8 @@ class GuessReleaseYearGameViewModel @Inject constructor(
                     difficultyType
                 )
             },
-            onSuccess = { onSuccessSubmitAnswer(it, selectedAnswerIndex) }
+            onSuccess = { onSuccessSubmitAnswer(it, selectedAnswerIndex) },
+            onCompletion = timerHandler::stopTimer
         )
     }
 

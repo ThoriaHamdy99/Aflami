@@ -115,7 +115,9 @@ class GuessGenreViewModel @Inject constructor(
                 question = currentQuestion.toQuestion(),
                 difficultyType = difficultyType
             ) },
-            onSuccess = { answer -> onAnswerCorrect(answer, answerIndex) }
+            onSuccess = { answer -> onAnswerCorrect(answer, answerIndex) },
+           onCompletion = timerHandler::stopTimer
+
         )
     }
 

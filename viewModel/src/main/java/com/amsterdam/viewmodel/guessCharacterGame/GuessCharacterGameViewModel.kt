@@ -156,6 +156,7 @@ class GuessCharacterGameViewModel @Inject constructor(
                 }
             )
         }
+        timerHandler.stopTimer()
     }
 
     override fun onMoveToNextQuestion() {
@@ -194,8 +195,5 @@ class GuessCharacterGameViewModel @Inject constructor(
         sendNewNavigationEffect(GuessCharacterGameEffect.NavigateBack)
     }
 
-    override fun onClickClose() {
-        sendNewNavigationEffect(GuessCharacterGameEffect.NavigateToGame)
-    }
 
 }

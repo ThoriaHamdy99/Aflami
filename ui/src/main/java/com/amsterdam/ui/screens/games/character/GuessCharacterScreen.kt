@@ -53,10 +53,6 @@ fun GuessCharacterScreen(viewModel: GuessCharacterGameViewModel = hiltViewModel(
                     navigationManager.navigateUp()
                 }
 
-                is GuessCharacterGameEffect.NavigateToGame -> {
-                    navigationManager.toLetsPlay()
-                }
-
                 is GuessCharacterGameEffect.NavigateToGameResult -> {
                     val resultScreenData = effect.resultScreenData
                     navigationManager.toResultScreen(
@@ -95,7 +91,7 @@ private fun GameContent(
             GameTopBar(
                 title = stringResource(R.string.guess_character_game_title),
                 timerUiState = state.timerUiState,
-                onCancelGameClick = interactionListener::onClickClose,
+                onCancelGameClick = interactionListener::onCloseButtonClicked,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
 

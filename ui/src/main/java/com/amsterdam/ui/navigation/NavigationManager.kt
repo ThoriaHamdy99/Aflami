@@ -152,7 +152,9 @@ class NavigationManager(
                 gameType = gameType,
                 difficulty = difficulty
             )
-        )
+        ) {
+            popUpTo(Route.Tab.LetsPlay) { inclusive = false }
+        }
     }
 
     @Composable
