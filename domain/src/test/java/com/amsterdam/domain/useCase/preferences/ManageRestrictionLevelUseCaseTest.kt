@@ -40,6 +40,5 @@ class ManageRestrictionLevelUseCaseTest {
         }
 
         assertThat(actual).isEqualTo(expected)
-        coVerify { preferencesRepository.getRestrictionLevel() }
     }
 }

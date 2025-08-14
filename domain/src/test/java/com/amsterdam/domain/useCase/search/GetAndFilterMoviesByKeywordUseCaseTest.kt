@@ -7,7 +7,7 @@ import com.amsterdam.domain.useCase.utils.fakeMovieListWithCategories
 import com.amsterdam.domain.useCase.utils.fakeMovieListWithRatings
 import com.amsterdam.domain.useCase.utils.specificMovieList
 import com.amsterdam.entity.category.MovieGenre
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -58,7 +58,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
                 page = 1,
                 movieGenre = MovieGenre.ANIMATION
             )
-            Truth.assertThat(result).isEmpty()
+            assertThat(result).isEmpty()
         }
 
     @Test
@@ -74,8 +74,8 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
 
             val result = getAndFilterMoviesByKeywordUseCase("keyword", rating = 6)
 
-            Truth.assertThat(result).hasSize(1)
-            Truth.assertThat(result[0].id).isEqualTo(1)
+            assertThat(result).hasSize(1)
+            assertThat(result[0].id).isEqualTo(1)
         }
 
     @Test
@@ -89,7 +89,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
                 )
             } returns fakeMovieListWithRatings
             val result = getAndFilterMoviesByKeywordUseCase("keyword", rating = 0)
-            Truth.assertThat(result).isEqualTo(fakeMovieListWithRatings)
+            assertThat(result).isEqualTo(fakeMovieListWithRatings)
         }
 
     @Test
@@ -106,8 +106,8 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
             val result =
                 getAndFilterMoviesByKeywordUseCase("keyword", movieGenre = MovieGenre.ACTION)
 
-            Truth.assertThat(result).hasSize(2)
-            Truth.assertThat(result).containsExactly(
+            assertThat(result).hasSize(2)
+            assertThat(result).containsExactly(
                 fakeMovieListWithCategories[0],
                 fakeMovieListWithCategories[2]
             )
@@ -126,7 +126,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
 
             val result = getAndFilterMoviesByKeywordUseCase("keyword", movieGenre = MovieGenre.ALL)
 
-            Truth.assertThat(result).isEqualTo(fakeMovieListWithCategories)
+            assertThat(result).isEqualTo(fakeMovieListWithCategories)
         }
 
     @Test
@@ -141,7 +141,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
             } returns fakeMovieListWithCategories
             val result =
                 getAndFilterMoviesByKeywordUseCase("keyword", movieGenre = MovieGenre.TV_MOVIE)
-            Truth.assertThat(result).isEmpty()
+            assertThat(result).isEmpty()
         }
 
     @Test
@@ -155,7 +155,7 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
                 )
             } returns emptyList()
             val result = getAndFilterMoviesByKeywordUseCase("keyword")
-            Truth.assertThat(result).isEmpty()
+            assertThat(result).isEmpty()
         }
 
     @Test
@@ -187,8 +187,8 @@ class GetAndFilterMoviesByKeywordUseCaseTest {
             movieGenre = MovieGenre.ACTION
         )
 
-        Truth.assertThat(result).hasSize(2)
-        Truth.assertThat(result).containsExactly(
+        assertThat(result).hasSize(2)
+        assertThat(result).containsExactly(
             fakeMovieListWithCategories[0],
             fakeMovieListWithCategories[2]
         ).inOrder()

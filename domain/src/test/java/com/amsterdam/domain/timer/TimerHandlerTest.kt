@@ -28,7 +28,7 @@ class TimerHandlerTest {
     }
 
     @Test
-    fun `startTimer remaining time should go down by one when one real second passes`() = runTest {
+    fun `startTime should decrease remaining time go down by one when one real second passes`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
 

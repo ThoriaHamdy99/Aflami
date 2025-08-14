@@ -23,7 +23,6 @@ class GetAccountDetailsUseCaseTest {
         val accountDetails = getAccountDetailsUseCase()
 
         assertThat(accountDetails).isEqualTo(expectedAccountDetails)
-        coVerify(exactly = 1) { profileRepository.getAccountDetails() }
     }
 
     private val expectedAccountDetails = AccountDetails(

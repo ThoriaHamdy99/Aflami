@@ -31,8 +31,9 @@ class GetUserRatedMoviesUseCaseTest {
 
         val result = useCase.getRatedMovies()
 
-        assertThat(result).hasSize(2)
-        assertThat(result[0].userRate).isGreaterThan(result[1].userRate)
-        assertThat(result[0].movie.name).isEqualTo("Movie Two")
+        assertThat(result).containsExactly(
+            UserRatedMovie(movie = fakeMovieList.last().copy(name = "Movie Two"), userRate = 9),
+            UserRatedMovie(movie = fakeMovieList.first(), userRate = 5)
+        ).inOrder()
     }
 }

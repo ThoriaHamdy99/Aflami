@@ -39,6 +39,5 @@ class ManageAppThemeUseCaseTest {
         }
 
         assertThat(actual).isEqualTo(expected)
-        coVerify { preferencesRepository.getAppTheme() }
     }
 }

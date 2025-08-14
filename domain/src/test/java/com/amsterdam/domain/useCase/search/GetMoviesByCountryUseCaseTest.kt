@@ -4,7 +4,7 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.useCase.utils.fakeMovieList
 import com.amsterdam.entity.Country
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -59,7 +59,7 @@ class GetMoviesByCountryUseCaseTest {
 
         val result = getMoviesByCountryUseCase(country)
 
-        Truth.assertThat(result).isEqualTo(fakeMovieList)
+        assertThat(result).isEqualTo(fakeMovieList)
     }
 
     @Test
@@ -74,7 +74,7 @@ class GetMoviesByCountryUseCaseTest {
 
         val result = getMoviesByCountryUseCase(country)
 
-        Truth.assertThat(result).isEmpty()
+        assertThat(result).isEmpty()
     }
 
     @Test
