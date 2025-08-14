@@ -83,7 +83,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
     }
 
     private fun onTimeFinish() {
-        updateState { it.copy(isNextEnabled = true) }
+        onMoveToNextQuestion()
     }
 
     private fun onCompletion() {
