@@ -38,14 +38,14 @@ class MyRatingViewModel @Inject constructor(
     }
 
     private fun onGetRatedMoviesSuccess(movies: List<UserRatedMovie>) {
-        updateState { it.copy(movies = movies.toRatingMovieUiStates()) }
         updateErrorStateByException(null)
+        updateState { it.copy(movies = movies.toRatingMovieUiStates()) }
     }
 
     private fun getRatedTvShows() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            action = { getUserRatedTvShowsUseCase.getRatedTvShows() },
+            action = getUserRatedTvShowsUseCase::getRatedTvShows,
             onSuccess = ::onGetRatedTvShowsSuccess,
             onError = ::onGetRatedMediaError,
             onCompletion = ::onCompletion
@@ -59,8 +59,6 @@ class MyRatingViewModel @Inject constructor(
 
     private fun onGetRatedMediaError(exception: AflamiException) {
         updateState { it.copy(isRetryLoading = false) }
-        updateErrorStateByException(exception)
-
     }
 
     private fun onCompletion() = updateState { it.copy(isLoading = false, isRetryLoading = false) }
@@ -86,6 +84,7 @@ class MyRatingViewModel @Inject constructor(
             action = { deleteUserRatedMoviesUseCase.deleteMovieRate(movieId) },
             onSuccess = ::onDeleteMovieRateSuccess,
             onError = ::onDeleteMovieRateError,
+            withAutoUpdateErrorState = false
         )
     }
 
@@ -110,6 +109,7 @@ class MyRatingViewModel @Inject constructor(
             action = { deleteUserRatedTvShowUseCase.deleteTvShowRate(tvShowId) },
             onSuccess = ::onDeleteTvShowRateSuccess,
             onError = ::onDeleteTvShowRateError,
+            withAutoUpdateErrorState = false
         )
     }
 

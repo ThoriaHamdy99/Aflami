@@ -9,7 +9,6 @@ data class ProfileUiState(
     val isLoading: Boolean = false,
     val userInfo: UserInfoUiState = UserInfoUiState(),
     val settingsState: SettingsMenuState = SettingsMenuState(),
-    val profileErrorState: ProfileErrorState? = null,
     val language: Language = Language.ENGLISH,
     val isDarkTheme: Boolean = false,
     val updatedLanguage: Language = Language.ENGLISH,
@@ -32,17 +31,4 @@ data class ProfileUiState(
         val isContentRestrictionSaveButtonLoading: Boolean = false,
         val contentRestrictionLevel: RestrictionLevel = RestrictionLevel.STRICT
     )
-}
-
-sealed interface ProfileErrorState{
-    data object UnknownError: ProfileErrorState
-
-    companion object{
-        fun toProfileErrorState(exception: AflamiException): ProfileErrorState{
-            return when (exception){
-                is AflamiException -> UnknownError
-                else -> UnknownError
-            }
-        }
-    }
 }

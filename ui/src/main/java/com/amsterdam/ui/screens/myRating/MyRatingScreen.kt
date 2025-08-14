@@ -54,7 +54,7 @@ import com.amsterdam.viewmodel.myRating.MyRatingInteractionListener
 import com.amsterdam.viewmodel.myRating.MyRatingUiEffect
 import com.amsterdam.viewmodel.myRating.MyRatingUiState
 import com.amsterdam.viewmodel.myRating.MyRatingViewModel
-import com.amsterdam.viewmodel.shared.BaseErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.shared.TabOption
 import kotlinx.coroutines.flow.collectLatest
 
@@ -107,7 +107,7 @@ fun MyRatingScreen(
 @Composable
 private fun MyRatingContent(
     state: MyRatingUiState,
-    errorState: BaseErrorUiState?,
+    errorState: ErrorUiState?,
     interaction: MyRatingInteractionListener
 ) {
     val lazyState = rememberLazyGridState()
@@ -258,13 +258,13 @@ private fun calculateAvailableHeight(
 }
 
 private fun LazyGridScope.getErrorContentByErrorUiState(
-    errorState: BaseErrorUiState,
+    errorState: ErrorUiState,
     interaction: MyRatingInteractionListener,
     modifier: Modifier = Modifier,
     showRetryLoading: Boolean
 ) {
     return when (errorState) {
-        BaseErrorUiState.NoInternetError -> item(span = { GridItemSpan(maxLineSpan) }) {
+        ErrorUiState.NoInternetError -> item(span = { GridItemSpan(maxLineSpan) }) {
             NoNetworkContainer(
                 modifier = modifier,
                 onClickRetry = interaction::onClickRetryRequest,

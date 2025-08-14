@@ -6,6 +6,7 @@ import com.amsterdam.domain.useCase.list.CreateNewListUseCase
 import com.amsterdam.domain.useCase.list.GetUserListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
+import com.amsterdam.entity.UserList
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,11 +35,10 @@ class UserListsViewModel @Inject constructor(
                     updateState { it.copy(isUserLoggedIn = true) }
                     manageLocaleLanguageUseCase
                         .getAppLanguage()
-                        .onEach {
-                            loadCustomLists()
-                        }.launchIn(viewModelScope)
+                        .onEach { getCustomLists() }
+                        .launchIn(viewModelScope)
 
-                    loadCustomLists()
+                    getCustomLists()
                 },
                 onGuest = {
                     updateState { it.copy(isUserLoggedIn = false, isLoading = false) }
@@ -47,29 +47,26 @@ class UserListsViewModel @Inject constructor(
         }
     }
 
-    fun loadCustomLists(startLoading: Boolean = true) {
+    fun getCustomLists(startLoading: Boolean = true) {
         startLoading(startLoading)
         tryToExecute(
-            action = { getUserListsUseCase() },
-            onSuccess = { customLists ->
-                updateState {
-                    it.copy(
-                        userLists = customLists.map { it.toUserListItemUiState() },
-                        isLoading = false,
-                        errorUiState = null
-                    )
-                }
-            },
-            onError = { exception ->
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        errorUiState = ListsUiState.ListsErrorState.toListsErrorState(exception),
-                    )
-                }
-            }
+            action = getUserListsUseCase::invoke,
+            onSuccess = ::onGetCustomListsSuccess,
+            onCompletion = ::onGetCustomListsCompletion
         )
     }
+
+    private fun onGetCustomListsSuccess(customLists: List<UserList>){
+        resetErrorStateToNull()
+        updateState {
+            it.copy(
+                userLists = customLists.map { it.toUserListItemUiState() },
+                isLoading = false,
+            )
+        }
+    }
+
+    private fun onGetCustomListsCompletion() = startLoading(start = false)
 
     private fun startLoading(start: Boolean = true) = updateState { it.copy(isLoading = start) }
 
@@ -90,10 +87,7 @@ class UserListsViewModel @Inject constructor(
             runIfLoggedIn(
                 onLoggedIn = {
                     updateState {
-                        it.copy(
-                            isCreateNewListDialogVisible = true,
-                            isUserLoggedIn = true
-                        )
+                        it.copy(isCreateNewListDialogVisible = true, isUserLoggedIn = true)
                     }
                 },
                 onGuest = {
@@ -110,12 +104,10 @@ class UserListsViewModel @Inject constructor(
     override fun onCreateNewListClick() {
         updateState { it.copy(isCreateListLoading = true) }
         tryToExecute(
-            action = {
-                createListUseCase(state.value.listName)
-            },
+            action = { createListUseCase(state.value.listName) },
             onSuccess = {
                 sendNewEffect(ListsEffect.ListCreatedSuccessfully)
-                loadCustomLists()
+                getCustomLists()
             },
             onError = {
                 sendNewEffect(ListsEffect.FailedToCreateList)
@@ -133,15 +125,12 @@ class UserListsViewModel @Inject constructor(
     }
 
 
-    override fun onListClick(
-        listId: Long,
-        listName: String,
-    ) {
+    override fun onListClick(listId: Long, listName: String, ) {
         sendNewEffect(ListsEffect.NavigateToListDetails(listId, listName))
     }
 
     override fun onClickRetryFetchList() {
-        loadCustomLists()
+        getCustomLists()
     }
 
     override fun onDismiss() {
@@ -151,6 +140,4 @@ class UserListsViewModel @Inject constructor(
     override fun onNavigateToLoginClicked() {
         sendNewEffect(ListsEffect.NavigateToLogin)
     }
-
-
 }

@@ -36,9 +36,8 @@ class ContinueWatchingViewModel @Inject constructor(
 
     init {
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach {
-                getContinueWatchingData()
-            }.launchIn(viewModelScope)
+            .onEach { getContinueWatchingData() }
+            .launchIn(viewModelScope)
     }
 
     private fun getContinueWatchingData() {
@@ -68,16 +67,13 @@ class ContinueWatchingViewModel @Inject constructor(
                 ).flow.cachedIn(viewModelScope)
             },
             onSuccess = ::onGetContinueWatchingScreenDataSuccess,
-            onError = ::onError,
             onCompletion = ::onCompletion
         )
     }
 
     fun onGetContinueWatchingScreenDataSuccess(mediaItems: Flow<PagingData<ContinueWatchingItemUiState>>) {
         updateState { currentState ->
-            currentState.copy(
-                continueMediaItemUiStates = mediaItems
-            )
+            currentState.copy(continueMediaItemUiStates = mediaItems)
         }
     }
 
@@ -88,13 +84,9 @@ class ContinueWatchingViewModel @Inject constructor(
             sendNewNavigationEffect(ContinueWatchingEffect.NavigateToTvShowDetailsEffect(mediaId))
     }
 
-    override fun onClickRetryLoading() {
-        getContinueWatchingData()
-    }
+    override fun onClickRetryLoading() = getContinueWatchingData()
 
-    override fun onClickBack() {
-        sendNewNavigationEffect(ContinueWatchingEffect.NavigateBack)
-    }
+    override fun onClickBack() = sendNewNavigationEffect(ContinueWatchingEffect.NavigateBack)
 
     private fun onCompletion() = updateState { it.copy(isLoading = false) }
 }

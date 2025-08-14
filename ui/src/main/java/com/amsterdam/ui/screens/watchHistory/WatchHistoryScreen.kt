@@ -41,6 +41,8 @@ import com.amsterdam.ui.components.grids.SuccessMovieMediaItemsSection
 import com.amsterdam.ui.components.grids.SuccessTvShowMediaItemsSection
 import com.amsterdam.ui.screens.home.sections.AnimatedSectionVisibility
 import com.amsterdam.viewmodel.shared.TabOption
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState.NoInternetError
 import com.amsterdam.viewmodel.watchHistory.WatchHistoryEffect
 import com.amsterdam.viewmodel.watchHistory.WatchHistoryInteractionListener
 import com.amsterdam.viewmodel.watchHistory.WatchHistoryUiState
@@ -50,8 +52,9 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun WatchHistoryScreen(viewModel: WatchHistoryViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
     val navigationManager = LocalNavManager.current
-    WatchHistoryContent(state, viewModel, viewModel::onClickTabOption)
+    WatchHistoryContent(state, errorState, viewModel, viewModel::onClickTabOption)
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
@@ -74,6 +77,7 @@ fun WatchHistoryScreen(viewModel: WatchHistoryViewModel = hiltViewModel()) {
 @Composable
 fun WatchHistoryContent(
     state: WatchHistoryUiState,
+    errorState: ErrorUiState?,
     interactionListener: WatchHistoryInteractionListener,
     onTabOptionClicked: (TabOption) -> Unit,
 ) {
@@ -143,9 +147,7 @@ fun WatchHistoryContent(
             }
         }
 
-        AnimatedSectionVisibility(
-            visible = state.error == WatchHistoryUiState.WatchHistoryError.NetworkError
-        ) {
+        AnimatedSectionVisibility(visible = errorState is NoInternetError) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()

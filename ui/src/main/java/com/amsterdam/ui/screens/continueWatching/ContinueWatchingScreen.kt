@@ -32,6 +32,7 @@ import com.amsterdam.viewmodel.continueWatching.ContinueWatchingEffect
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingInteractionListener
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiState
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingViewModel
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

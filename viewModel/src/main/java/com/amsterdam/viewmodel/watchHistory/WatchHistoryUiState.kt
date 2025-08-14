@@ -10,7 +10,6 @@ data class WatchHistoryUiState(
     val tvShows: Flow<PagingData<WatchHistoryTvShowUiState>> = emptyFlow(),
     val selectedTabOption: TabOption = TabOption.MOVIES,
     val isLoading: Boolean = false,
-    val error: WatchHistoryError? = null
 ) {
     data class WatchHistoryMovieUiState(
         val id: Long = 0,
@@ -27,7 +26,4 @@ data class WatchHistoryUiState(
         val yearOfRelease: String = "",
         val rate: String = "",
     )
-    sealed class WatchHistoryError {
-        data object NetworkError : WatchHistoryError()
-    }
 }
