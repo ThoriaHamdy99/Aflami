@@ -40,31 +40,32 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getMoviesByKeyword should return a list of movies when the API call is successful`() = runTest {
-        val expectedResponse = MovieRemoteResponse(
-            page = MOVIE_TEST_PAGE,
-            results = listOf(movieItemRemoteDto),
-            totalPages = 1,
-            totalResults = 1
-        )
-        coEvery {
-            movieApiService.getMoviesByKeyword(
-                MOVIE_TEST_KEYWORD,
-                MOVIE_TEST_PAGE
+    fun `getMoviesByKeyword should return a list of movies when the API call is successful`() =
+        runTest {
+            val expectedResponse = MovieRemoteResponse(
+                page = MOVIE_TEST_PAGE,
+                results = listOf(movieItemRemoteDto),
+                totalPages = 1,
+                totalResults = 1
             )
-        } returns expectedResponse
+            coEvery {
+                movieApiService.getMoviesByKeyword(
+                    MOVIE_TEST_KEYWORD,
+                    MOVIE_TEST_PAGE
+                )
+            } returns expectedResponse
 
-        val movies =
-            movieRemoteDataSourceImpl.getMoviesByKeyword(MOVIE_TEST_KEYWORD, MOVIE_TEST_PAGE)
+            val movies =
+                movieRemoteDataSourceImpl.getMoviesByKeyword(MOVIE_TEST_KEYWORD, MOVIE_TEST_PAGE)
 
-        assertThat(movies).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) {
-            movieApiService.getMoviesByKeyword(
-                MOVIE_TEST_KEYWORD,
-                MOVIE_TEST_PAGE
-            )
+            assertThat(movies).isEqualTo(expectedResponse)
+            coVerify(exactly = 1) {
+                movieApiService.getMoviesByKeyword(
+                    MOVIE_TEST_KEYWORD,
+                    MOVIE_TEST_PAGE
+                )
+            }
         }
-    }
 
     @Test
     fun `getMoviesByKeyword should throw NetworkException when the API call fails`() = runTest {
@@ -87,21 +88,22 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getMoviesByActorIds should return movies for a given actor when the API call is successful`() = runTest {
-        val actorIds = listOf(MOVIE_TEST_ACTOR_ID)
-        val expectedResponse = MovieRemoteResponse(
-            page = MOVIE_TEST_PAGE,
-            results = listOf(movieItemRemoteDto),
-            totalPages = 1,
-            totalResults = 1
-        )
-        coEvery { movieApiService.getMoviesByActorId(MOVIE_TEST_ACTOR_ID.toString()) } returns expectedResponse
+    fun `getMoviesByActorIds should return movies for a given actor when the API call is successful`() =
+        runTest {
+            val actorIds = listOf(MOVIE_TEST_ACTOR_ID)
+            val expectedResponse = MovieRemoteResponse(
+                page = MOVIE_TEST_PAGE,
+                results = listOf(movieItemRemoteDto),
+                totalPages = 1,
+                totalResults = 1
+            )
+            coEvery { movieApiService.getMoviesByActorId(MOVIE_TEST_ACTOR_ID.toString()) } returns expectedResponse
 
-        val movies = movieRemoteDataSourceImpl.getMoviesByActorIds(actorIds, MOVIE_TEST_PAGE)
+            val movies = movieRemoteDataSourceImpl.getMoviesByActorIds(actorIds, MOVIE_TEST_PAGE)
 
-        assertThat(movies).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { movieApiService.getMoviesByActorId(MOVIE_TEST_ACTOR_ID.toString()) }
-    }
+            assertThat(movies).isEqualTo(expectedResponse)
+            coVerify(exactly = 1) { movieApiService.getMoviesByActorId(MOVIE_TEST_ACTOR_ID.toString()) }
+        }
 
     @Test
     fun `getMoviesByActorIds should throw NetworkException when the API call fails`() = runTest {
@@ -205,42 +207,44 @@ class MovieRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getMoviesByCountryIsoCode should throw NetworkException when the API call fails`() = runTest {
-        coEvery {
-            movieApiService.getMoviesByCountryIsoCode(
-                MOVIE_TEST_COUNTRY_ISO_CODE,
-                MOVIE_TEST_PAGE
-            )
-        } throws NetworkException()
+    fun `getMoviesByCountryIsoCode should throw NetworkException when the API call fails`() =
+        runTest {
+            coEvery {
+                movieApiService.getMoviesByCountryIsoCode(
+                    MOVIE_TEST_COUNTRY_ISO_CODE,
+                    MOVIE_TEST_PAGE
+                )
+            } throws NetworkException()
 
-        assertThrows<NetworkException> {
-            movieRemoteDataSourceImpl.getMoviesByCountryIsoCode(
-                MOVIE_TEST_COUNTRY_ISO_CODE,
-                MOVIE_TEST_PAGE
-            )
+            assertThrows<NetworkException> {
+                movieRemoteDataSourceImpl.getMoviesByCountryIsoCode(
+                    MOVIE_TEST_COUNTRY_ISO_CODE,
+                    MOVIE_TEST_PAGE
+                )
+            }
+            coVerify(exactly = 1) {
+                movieApiService.getMoviesByCountryIsoCode(
+                    MOVIE_TEST_COUNTRY_ISO_CODE,
+                    MOVIE_TEST_PAGE
+                )
+            }
         }
-        coVerify(exactly = 1) {
-            movieApiService.getMoviesByCountryIsoCode(
-                MOVIE_TEST_COUNTRY_ISO_CODE,
-                MOVIE_TEST_PAGE
-            )
-        }
-    }
 
     @Test
-    fun `getCastByMovieId should return cast and crew for a movie when the API call is successful`() = runTest {
-        val expectedResponse = CastAndCrewRemoteResponse(
-            id = MOVIE_TEST_ID,
-            cast = emptyList(),
-            crew = emptyList()
-        )
-        coEvery { movieApiService.getCastByMovieId(MOVIE_TEST_ID) } returns expectedResponse
+    fun `getCastByMovieId should return cast and crew for a movie when the API call is successful`() =
+        runTest {
+            val expectedResponse = CastAndCrewRemoteResponse(
+                id = MOVIE_TEST_ID,
+                cast = emptyList(),
+                crew = emptyList()
+            )
+            coEvery { movieApiService.getCastByMovieId(MOVIE_TEST_ID) } returns expectedResponse
 
-        val castAndCrew = movieRemoteDataSourceImpl.getCastByMovieId(MOVIE_TEST_ID)
+            val castAndCrew = movieRemoteDataSourceImpl.getCastByMovieId(MOVIE_TEST_ID)
 
-        assertThat(castAndCrew).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { movieApiService.getCastByMovieId(MOVIE_TEST_ID) }
-    }
+            assertThat(castAndCrew).isEqualTo(expectedResponse)
+            coVerify(exactly = 1) { movieApiService.getCastByMovieId(MOVIE_TEST_ID) }
+        }
 
     @Test
     fun `getCastByMovieId should throw NetworkException when the API call fails`() = runTest {
@@ -275,20 +279,21 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getPopularMovies should return popular movies when the API call is successful`() = runTest {
-        val expectedResponse = MovieRemoteResponse(
-            page = MOVIE_TEST_PAGE,
-            results = listOf(movieItemRemoteDto),
-            totalPages = 1,
-            totalResults = 1
-        )
-        coEvery { movieApiService.getPopularMovies(MOVIE_TEST_PAGE) } returns expectedResponse
+    fun `getPopularMovies should return popular movies when the API call is successful`() =
+        runTest {
+            val expectedResponse = MovieRemoteResponse(
+                page = MOVIE_TEST_PAGE,
+                results = listOf(movieItemRemoteDto),
+                totalPages = 1,
+                totalResults = 1
+            )
+            coEvery { movieApiService.getPopularMovies(MOVIE_TEST_PAGE) } returns expectedResponse
 
-        val popularMovies = movieRemoteDataSourceImpl.getPopularMovies(MOVIE_TEST_PAGE)
+            val popularMovies = movieRemoteDataSourceImpl.getPopularMovies(MOVIE_TEST_PAGE)
 
-        assertThat(popularMovies).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { movieApiService.getPopularMovies(MOVIE_TEST_PAGE) }
-    }
+            assertThat(popularMovies).isEqualTo(expectedResponse)
+            coVerify(exactly = 1) { movieApiService.getPopularMovies(MOVIE_TEST_PAGE) }
+        }
 
     @Test
     fun `getPopularMovies should throw NetworkException when the API call fails`() = runTest {
@@ -301,20 +306,21 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getUpcomingMovies should return upcoming movies when the API call is successful`() = runTest {
-        val expectedResponse = MovieRemoteResponse(
-            page = MOVIE_TEST_PAGE,
-            results = listOf(movieItemRemoteDto),
-            totalPages = 1,
-            totalResults = 1
-        )
-        coEvery { movieApiService.getUpcomingMovies() } returns expectedResponse
+    fun `getUpcomingMovies should return upcoming movies when the API call is successful`() =
+        runTest {
+            val expectedResponse = MovieRemoteResponse(
+                page = MOVIE_TEST_PAGE,
+                results = listOf(movieItemRemoteDto),
+                totalPages = 1,
+                totalResults = 1
+            )
+            coEvery { movieApiService.getUpcomingMovies() } returns expectedResponse
 
-        val upcomingMovies = movieRemoteDataSourceImpl.getUpcomingMovies()
+            val upcomingMovies = movieRemoteDataSourceImpl.getUpcomingMovies()
 
-        assertThat(upcomingMovies).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { movieApiService.getUpcomingMovies() }
-    }
+            assertThat(upcomingMovies).isEqualTo(expectedResponse)
+            coVerify(exactly = 1) { movieApiService.getUpcomingMovies() }
+        }
 
     @Test
     fun `getUpcomingMovies should throw NetworkException when the API call fails`() = runTest {
@@ -327,20 +333,21 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getTopRatedMovies should return top rated movies when the API call is successful`() = runTest {
-        val expectedResponse = MovieRemoteResponse(
-            page = MOVIE_TEST_PAGE,
-            results = listOf(movieItemRemoteDto),
-            totalPages = 1,
-            totalResults = 1
-        )
-        coEvery { movieApiService.getTopRatedMovies(MOVIE_TEST_PAGE) } returns expectedResponse
+    fun `getTopRatedMovies should return top rated movies when the API call is successful`() =
+        runTest {
+            val expectedResponse = MovieRemoteResponse(
+                page = MOVIE_TEST_PAGE,
+                results = listOf(movieItemRemoteDto),
+                totalPages = 1,
+                totalResults = 1
+            )
+            coEvery { movieApiService.getTopRatedMovies(MOVIE_TEST_PAGE) } returns expectedResponse
 
-        val topRatedMovies = movieRemoteDataSourceImpl.getTopRatedMovies(MOVIE_TEST_PAGE)
+            val topRatedMovies = movieRemoteDataSourceImpl.getTopRatedMovies(MOVIE_TEST_PAGE)
 
-        assertThat(topRatedMovies).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { movieApiService.getTopRatedMovies(MOVIE_TEST_PAGE) }
-    }
+            assertThat(topRatedMovies).isEqualTo(expectedResponse)
+            coVerify(exactly = 1) { movieApiService.getTopRatedMovies(MOVIE_TEST_PAGE) }
+        }
 
     @Test
     fun `getTopRatedMovies should throw NetworkException when the API call fails`() = runTest {
@@ -353,26 +360,27 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getMoviesByGenreIds should return movies for given genre IDs when the API call is successful`() = runTest {
-        val genreIds = listOf(MOVIE_TEST_GENRE_ID)
-        val expectedResponse = MovieRemoteResponse(
-            page = MOVIE_TEST_PAGE,
-            results = listOf(movieItemRemoteDto),
-            totalPages = 1,
-            totalResults = 1
-        )
-        coEvery {
-            movieApiService.getMoviesByGenreIds(
-                genreIds,
-                MOVIE_TEST_PAGE
+    fun `getMoviesByGenreIds should return movies for given genre IDs when the API call is successful`() =
+        runTest {
+            val genreIds = listOf(MOVIE_TEST_GENRE_ID)
+            val expectedResponse = MovieRemoteResponse(
+                page = MOVIE_TEST_PAGE,
+                results = listOf(movieItemRemoteDto),
+                totalPages = 1,
+                totalResults = 1
             )
-        } returns expectedResponse
+            coEvery {
+                movieApiService.getMoviesByGenreIds(
+                    genreIds,
+                    MOVIE_TEST_PAGE
+                )
+            } returns expectedResponse
 
-        val movies = movieRemoteDataSourceImpl.getMoviesByGenreIds(genreIds, MOVIE_TEST_PAGE)
+            val movies = movieRemoteDataSourceImpl.getMoviesByGenreIds(genreIds, MOVIE_TEST_PAGE)
 
-        assertThat(movies).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { movieApiService.getMoviesByGenreIds(genreIds, MOVIE_TEST_PAGE) }
-    }
+            assertThat(movies).isEqualTo(expectedResponse)
+            coVerify(exactly = 1) { movieApiService.getMoviesByGenreIds(genreIds, MOVIE_TEST_PAGE) }
+        }
 
     @Test
     fun `getMoviesByGenreIds should throw NetworkException when the API call fails`() = runTest {
@@ -388,6 +396,33 @@ class MovieRemoteDataSourceImplTest {
             movieRemoteDataSourceImpl.getMoviesByGenreIds(genreIds, MOVIE_TEST_PAGE)
         }
         coVerify(exactly = 1) { movieApiService.getMoviesByGenreIds(genreIds, MOVIE_TEST_PAGE) }
+    }
+
+    @Test
+    fun `getMoviesByGenreId should call the API with a single genre ID`() = runTest {
+        val genreId = MOVIE_TEST_GENRE_ID
+        val expectedResponse = MovieRemoteResponse(
+            page = MOVIE_TEST_PAGE,
+            results = listOf(movieItemRemoteDto),
+            totalPages = 1,
+            totalResults = 1
+        )
+        coEvery {
+            movieApiService.getMoviesByGenreIds(
+                listOf(genreId),
+                MOVIE_TEST_PAGE
+            )
+        } returns expectedResponse
+
+        val movies = movieRemoteDataSourceImpl.getMoviesByGenreId(genreId, MOVIE_TEST_PAGE)
+
+        assertThat(movies).isEqualTo(expectedResponse)
+        coVerify(exactly = 1) {
+            movieApiService.getMoviesByGenreIds(
+                listOf(genreId),
+                MOVIE_TEST_PAGE
+            )
+        }
     }
 
     @Test
@@ -408,21 +443,22 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getRatedMovies should return movies with user ratings when the API call is successful`() = runTest {
-        val expectedResponse = MovieRemoteResponse(
-            page = MOVIE_TEST_PAGE,
-            results = listOf(movieItemRemoteDto),
-            totalPages = 1,
-            totalResults = 1
-        )
+    fun `getRatedMovies should return movies with user ratings when the API call is successful`() =
+        runTest {
+            val expectedResponse = MovieRemoteResponse(
+                page = MOVIE_TEST_PAGE,
+                results = listOf(movieItemRemoteDto),
+                totalPages = 1,
+                totalResults = 1
+            )
 
-        coEvery { movieApiService.getRatedMovies() } returns expectedResponse
+            coEvery { movieApiService.getRatedMovies() } returns expectedResponse
 
-        val result = movieRemoteDataSourceImpl.getRatedMovies()
+            val result = movieRemoteDataSourceImpl.getRatedMovies()
 
-        assertThat(result).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { movieApiService.getRatedMovies() }
-    }
+            assertThat(result).isEqualTo(expectedResponse)
+            coVerify(exactly = 1) { movieApiService.getRatedMovies() }
+        }
 
     @Test
     fun `getRatedMovies should throw NetworkException when the API call fails`() = runTest {
@@ -435,26 +471,77 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `deleteMovieRate should call the deleteMovieRate API method with the correct movie ID`() = runTest {
-        coEvery { movieApiService.deleteMovieRate(MOVIE_TEST_ID) } returns Unit
+    fun `deleteMovieRate should call the deleteMovieRate API method with the correct movie ID`() =
+        runTest {
+            coEvery { movieApiService.deleteMovieRate(MOVIE_TEST_ID) } returns Unit
 
-        movieRemoteDataSourceImpl.deleteMovieRate(MOVIE_TEST_ID)
+            movieRemoteDataSourceImpl.deleteMovieRate(MOVIE_TEST_ID)
 
-        coVerify(exactly = 1) { movieApiService.deleteMovieRate(MOVIE_TEST_ID) }
-    }
+            coVerify(exactly = 1) { movieApiService.deleteMovieRate(MOVIE_TEST_ID) }
+        }
 
     @Test
-    fun `getRandomMoviesWithNotNullDate should return the required number of movies with non-null dates`() = runTest {
+    fun `getRandomMoviesWithNotNullDate should return the required number of movies, handling null dates and duplicates`() =
+        runTest {
+            val requiredMoviesNumber = 3
+            val moviesWithoutDate = listOf(movieItemRemoteDtoWithNullDate)
+            val moviesWithDate = listOf(
+                movieItemRemoteDto,
+                movieItemRemoteDto.copy(id = 2),
+                movieItemRemoteDto.copy(id = 3),
+                movieItemRemoteDto.copy(id = 4)
+            )
+
+            coEvery { movieApiService.getPopularMovies(any()) } returns MovieRemoteResponse(
+                1,
+                moviesWithoutDate,
+                1,
+                10
+            ) andThen
+                    MovieRemoteResponse(2, moviesWithDate, 2, 10)
+
+            val result =
+                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullDate(requiredMoviesNumber)
+
+            assertThat(result.size).isEqualTo(requiredMoviesNumber)
+            assertThat(result).containsNoDuplicates()
+            coVerify(atLeast = 2) { movieApiService.getPopularMovies(any()) }
+        }
+
+    @Test
+    fun `getRandomMoviesWithNotNullDate should break the loop when enough movies are collected`() =
+        runTest {
+            val requiredMoviesNumber = 2
+            val moviesWithDate = listOf(
+                movieItemRemoteDto,
+                movieItemRemoteDto.copy(id = 2),
+                movieItemRemoteDto.copy(id = 3)
+            )
+
+            coEvery { movieApiService.getPopularMovies(any()) } returns MovieRemoteResponse(
+                1,
+                moviesWithDate,
+                1,
+                10
+            )
+
+            val result =
+                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullDate(requiredMoviesNumber)
+
+            assertThat(result.size).isEqualTo(requiredMoviesNumber)
+            coVerify(exactly = 1) { movieApiService.getPopularMovies(any()) }
+        }
+
+    @Test
+    fun `getRandomMoviesWithNotNullDate should handle duplicates correctly`() = runTest {
         val requiredMoviesNumber = 2
-        val moviesWithoutDate = List(10) { movieItemRemoteDtoWithNullDate }
-        val moviesWithDate = List(10) { movieItemRemoteDto }
+        val moviesWithDate = listOf(
+            movieItemRemoteDto,
+            movieItemRemoteDto.copy(id = 2),
+            movieItemRemoteDto.copy(id = 2)
+        )
 
         coEvery { movieApiService.getPopularMovies(any()) } returns MovieRemoteResponse(
-            1,
-            moviesWithoutDate,
-            1,
-            10
-        ) andThen MovieRemoteResponse(1, moviesWithDate, 1, 10) andThen MovieRemoteResponse(
             1,
             moviesWithDate,
             1,
@@ -465,21 +552,69 @@ class MovieRemoteDataSourceImplTest {
 
         assertThat(result.size).isEqualTo(requiredMoviesNumber)
         assertThat(result).containsNoDuplicates()
-        coVerify(atLeast = 2) { movieApiService.getPopularMovies(any()) }
     }
 
     @Test
-    fun `getRandomMoviesWithNotNullPoster should return the required number of movies with non-null posters`() = runTest {
-        val requiredMoviesNumber = 1
-        val moviesWithoutPoster = List(10) { movieItemRemoteDtoWithNullPoster }
-        val moviesWithPoster = List(10) { movieItemRemoteDto }
+    fun `getRandomMoviesWithNotNullPoster should return the required number of movies, handling null posters`() =
+        runTest {
+            val requiredMoviesNumber = 3
+            val moviesWithoutPoster = listOf(movieItemRemoteDtoWithNullPoster)
+            val moviesWithPoster = listOf(
+                movieItemRemoteDto,
+                movieItemRemoteDto.copy(id = 2),
+                movieItemRemoteDto.copy(id = 3),
+                movieItemRemoteDto.copy(id = 4)
+            )
+
+            coEvery { movieApiService.getPopularMovies(any()) } returns MovieRemoteResponse(
+                1,
+                moviesWithoutPoster,
+                1,
+                10
+            ) andThen
+                    MovieRemoteResponse(2, moviesWithPoster, 2, 10)
+
+            val result =
+                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullPoster(requiredMoviesNumber)
+
+            assertThat(result.size).isEqualTo(requiredMoviesNumber)
+            coVerify(atLeast = 2) { movieApiService.getPopularMovies(any()) }
+        }
+
+    @Test
+    fun `getRandomMoviesWithNotNullPoster should break the loop when enough movies are collected`() =
+        runTest {
+            val requiredMoviesNumber = 2
+            val moviesWithPoster = listOf(
+                movieItemRemoteDto,
+                movieItemRemoteDto.copy(id = 2),
+                movieItemRemoteDto.copy(id = 3)
+            )
+
+            coEvery { movieApiService.getPopularMovies(any()) } returns MovieRemoteResponse(
+                1,
+                moviesWithPoster,
+                1,
+                10
+            )
+
+            val result =
+                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullPoster(requiredMoviesNumber)
+
+            assertThat(result.size).isEqualTo(requiredMoviesNumber)
+            coVerify(exactly = 1) { movieApiService.getPopularMovies(any()) }
+        }
+
+    @Test
+    fun `getRandomMoviesWithNotNullPoster should handle duplicates correctly`() = runTest {
+        val requiredMoviesNumber = 2
+        val moviesWithPoster = listOf(
+            movieItemRemoteDto,
+            movieItemRemoteDto.copy(id = 2),
+            movieItemRemoteDto.copy(id = 2)
+        )
 
         coEvery { movieApiService.getPopularMovies(any()) } returns MovieRemoteResponse(
-            1,
-            moviesWithoutPoster,
-            1,
-            10
-        ) andThen MovieRemoteResponse(1, moviesWithPoster, 1, 10) andThen MovieRemoteResponse(
             1,
             moviesWithPoster,
             1,
@@ -489,8 +624,6 @@ class MovieRemoteDataSourceImplTest {
         val result =
             movieRemoteDataSourceImpl.getRandomMoviesWithNotNullPoster(requiredMoviesNumber)
 
-        assertThat(result.size).isEqualTo(requiredMoviesNumber)
         assertThat(result).containsNoDuplicates()
-        coVerify(atLeast = 2) { movieApiService.getPopularMovies(any()) }
     }
 }

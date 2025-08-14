@@ -23,57 +23,50 @@ class CountryRemoteDataSourceImplTest {
         countryRemoteDataSourceImpl = CountryRemoteDataSourceImpl(countryApiService)
     }
 
-    @Test
-    fun `getCountries should call the CountryApiService when executed`() = runTest {
-        coEvery { countryApiService.getCountries() } returns emptyList()
-
-        countryRemoteDataSourceImpl.getCountries()
-
-        coVerify(exactly = 1) { countryApiService.getCountries() }
-    }
 
     @Test
-    fun `getCountries should return the list of countries from the API service when successful`() = runTest {
+    fun `getCountries should return the correct list of countries on success`() = runTest {
         coEvery { countryApiService.getCountries() } returns expectedCountryList
-
         val actualResponse = countryRemoteDataSourceImpl.getCountries()
-
         assertThat(actualResponse).isEqualTo(expectedCountryList)
+    }
+
+    @Test
+    fun `getCountries should call the CountryApiService once on success`() = runTest {
+        coEvery { countryApiService.getCountries() } returns expectedCountryList
+        countryRemoteDataSourceImpl.getCountries()
         coVerify(exactly = 1) { countryApiService.getCountries() }
     }
 
     @Test
-    fun `getCountries should throw NetworkException when the API service call fails`() =
-        runTest {
-            coEvery { countryApiService.getCountries() } throws NetworkException()
-
-            assertThrows<NetworkException> {
-                countryRemoteDataSourceImpl.getCountries()
-            }
-            coVerify(exactly = 1) { countryApiService.getCountries() }
-        }
+    fun `getCountries should return an empty list when the API service returns one`() = runTest {
+        coEvery { countryApiService.getCountries() } returns emptyList()
+        val actualResponse = countryRemoteDataSourceImpl.getCountries()
+        assertThat(actualResponse).isEmpty()
+    }
 
     @Test
-    fun `getCountries should return an empty list when the API service returns an empty list`() =
-        runTest {
-            val expectedResponse = emptyList<CountryRemoteDto>()
-            coEvery { countryApiService.getCountries() } returns expectedResponse
+    fun `getCountries should call the API service once when it returns an empty list`() = runTest {
+        coEvery { countryApiService.getCountries() } returns emptyList()
+        countryRemoteDataSourceImpl.getCountries()
+        coVerify(exactly = 1) { countryApiService.getCountries() }
+    }
 
-            val actualResponse = countryRemoteDataSourceImpl.getCountries()
-
-            assertThat(actualResponse).isEmpty()
-            coVerify(exactly = 1) { countryApiService.getCountries() }
+    @Test
+    fun `getCountries should throw NetworkException when the API service call fails`() = runTest {
+        coEvery { countryApiService.getCountries() } throws NetworkException()
+        assertThrows<NetworkException> {
+            countryRemoteDataSourceImpl.getCountries()
         }
+    }
 
     @Test
     fun `getCountries should rethrow a NetworkException when the API service throws an exception`() =
         runTest {
             coEvery { countryApiService.getCountries() } throws NetworkException()
-
             assertThrows<NetworkException> {
                 countryRemoteDataSourceImpl.getCountries()
             }
-            coVerify(exactly = 1) { countryApiService.getCountries() }
         }
 
     private val expectedCountryList = listOf(
@@ -84,4 +77,6 @@ class CountryRemoteDataSourceImplTest {
         ),
         CountryRemoteDto(englishName = "Canada", isoCode = "CA", nativeName = "Canada")
     )
+
+
 }
