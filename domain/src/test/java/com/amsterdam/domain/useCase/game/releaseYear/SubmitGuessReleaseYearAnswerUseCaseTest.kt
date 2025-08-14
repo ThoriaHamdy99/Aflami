@@ -2,9 +2,7 @@ package com.amsterdam.domain.useCase.game.releaseYear
 
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
-import com.amsterdam.domain.useCase.game.whichGenre.SubmitGuessMovieGenreAnswerUseCase
 import com.amsterdam.entity.GameDifficulty
-import com.amsterdam.entity.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery

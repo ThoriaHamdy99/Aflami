@@ -1,8 +1,8 @@
 package com.amsterdam.domain.repository
 
 import com.amsterdam.entity.Movie
-import kotlinx.coroutines.flow.Flow
 import com.amsterdam.entity.People
+import kotlinx.coroutines.flow.Flow
 
 
 interface GameRepository {

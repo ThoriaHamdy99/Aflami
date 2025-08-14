@@ -1,6 +1,5 @@
 package com.amsterdam.domain.useCase.game.releaseYear
 
-import com.amsterdam.domain.useCase.game.guessByPoster.SubmitGuessMovieByPosterAnswerUseCase
 import com.amsterdam.entity.GameDifficulty
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery

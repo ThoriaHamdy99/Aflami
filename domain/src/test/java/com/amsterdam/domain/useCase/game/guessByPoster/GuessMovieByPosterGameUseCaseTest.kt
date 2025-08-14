@@ -1,9 +1,6 @@
 package com.amsterdam.domain.useCase.game.guessByPoster
 
-import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase
-import com.amsterdam.domain.useCase.game.whichGenre.SubmitGuessMovieGenreAnswerUseCase
 import com.amsterdam.entity.GameDifficulty
-import com.amsterdam.entity.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk

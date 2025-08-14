@@ -5,7 +5,6 @@ import com.amsterdam.domain.utils.SessionType
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class LoginAsGuestUseCaseTest {

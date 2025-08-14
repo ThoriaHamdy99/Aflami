@@ -3,7 +3,6 @@ package com.amsterdam.domain.useCase.game.character
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
-import com.amsterdam.domain.useCase.game.guessByPoster.DoGuessMovieByPosterHintUseCase
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.just

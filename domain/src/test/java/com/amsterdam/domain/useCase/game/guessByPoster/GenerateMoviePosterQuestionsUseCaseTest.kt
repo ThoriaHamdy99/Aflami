@@ -2,7 +2,6 @@ package com.amsterdam.domain.useCase.game.guessByPoster
 
 import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
-import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase
 import com.amsterdam.domain.useCase.utils.generateFakeMoviesByCount
 import com.amsterdam.entity.GameDifficulty
 import com.google.common.truth.Truth.assertThat

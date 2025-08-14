@@ -3,9 +3,7 @@ package com.amsterdam.domain.useCase.home
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.utils.fakeMovieList
 import com.amsterdam.domain.useCase.utils.fakeTvShowList
-import com.amsterdam.entity.Movie
 import com.amsterdam.entity.MovieWatchHistory
-import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.TvShowWatchHistory
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -16,8 +14,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
