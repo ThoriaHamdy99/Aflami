@@ -96,6 +96,9 @@ import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsViewModel
 import com.amsterdam.viewmodel.movieDetails.UserListUiState
 import com.amsterdam.viewmodel.myRating.RateDialogInteractionListener
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState.NoInternetError
+import com.amsterdam.viewmodel.shared.errorUiState.isNull
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -105,7 +108,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
     val navigationManager = LocalNavManager.current
 
     val successRateMessage = stringResource(R.string.your_rating_has_been_saved)
@@ -123,7 +127,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                 }
 
                 MovieDetailsEffect.NavigateToCastsScreenEffect -> {
-                    navigationManager.toCast(mediaType = MediaType.MOVIE.name, mediaId = state.value.movieId)
+                    navigationManager.toCast(mediaType = MediaType.MOVIE.name, mediaId = state.movieId)
                 }
 
                 MovieDetailsEffect.NavigateToLoginScreenEffect -> navigationManager.toLogin()
@@ -170,7 +174,8 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
     }
 
     MovieContent(
-        state = state.value,
+        state = state,
+        errorState = errorState,
         movieDetailsInteractionListener = viewModel,
         rateDialogInteractionListener = viewModel
     )
@@ -180,6 +185,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
 @Composable
 fun MovieContent(
     state: MovieDetailsUiState,
+    errorState: ErrorUiState?,
     movieDetailsInteractionListener: MovieDetailsInteractionListener,
     rateDialogInteractionListener: RateDialogInteractionListener
 ) {
@@ -263,7 +269,7 @@ fun MovieContent(
         }
 
         AnimatedVisibility(
-            state.networkError,
+            visible = errorState is NoInternetError,
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration)),
         ) {
@@ -337,7 +343,7 @@ fun MovieContent(
             }
         }
         AnimatedVisibility(
-            !state.isLoading && !state.networkError,
+            !state.isLoading && errorState.isNull(),
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration)),
         ) {
@@ -506,7 +512,8 @@ fun MovieContent(
 private fun SearchByActorContentPreview() {
     AflamiTheme {
         MovieContent(
-            MovieDetailsUiState(),
+            errorState = null,
+            state = MovieDetailsUiState(),
             movieDetailsInteractionListener = object : MovieDetailsInteractionListener {
                 override fun onClickMovieExtras(movieExtras: MovieExtras) {}
                 override fun onClickShowAllCast() {}
@@ -544,6 +551,7 @@ private fun SearchByActorContentPreview() {
                 override fun onClickSubmit() {}
                 override fun onChangeRating(newRate: Int) {}
 
-            })
+            },
+        )
     }
 }
