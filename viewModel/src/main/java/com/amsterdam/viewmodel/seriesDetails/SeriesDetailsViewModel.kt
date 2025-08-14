@@ -45,27 +45,25 @@ class SeriesDetailsViewModel @Inject constructor(
         updateState { it.copy(tvShowId = tvShowId, isLoading = true) }
 
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach {
-                loadTvShowDetails()
-            }.launchIn(viewModelScope)
+            .onEach { getTvShowDetails() }
+            .launchIn(viewModelScope)
     }
 
-    private fun loadTvShowDetails() {
-        updateState { it.copy(isLoading = true, networkError = false) }
+    private fun getTvShowDetails() {
+        resetErrorStateToNull()
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
-            action = ::getTvShowDetails,
+            action = { getTvShowDetailsUseCase(state.value.tvShowId) },
             onSuccess = ::onGetTvShowDetailsSuccess,
-            onError = ::onError,
+            onCompletion = ::onCompletion
         )
-    }
-
-    private suspend fun getTvShowDetails(): TvShowDetails {
-        return getTvShowDetailsUseCase(state.value.tvShowId)
     }
 
     private fun onGetTvShowDetailsSuccess(tvShowDetails: TvShowDetails) {
         updateState { tvShowDetails.toUiState() }
     }
+
+    private fun onCompletion() = updateState { it.copy(isLoading = false) }
 
     override fun onClickSeriesExtraItem(seriesExtras: SeriesExtras) {
         updateState { state ->
@@ -82,7 +80,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     override fun onClickRetryButton() {
-        loadTvShowDetails()
+        getTvShowDetails()
     }
 
     override fun onClickShowAllCast() {
@@ -114,7 +112,7 @@ class SeriesDetailsViewModel @Inject constructor(
         tryToExecute(
             action = { getEpisodesForSeason(seasonNumber) },
             onSuccess = { episodes -> onGetEpisodesSuccess(seasonNumber, episodes) },
-            onError = ::onError,
+            onCompletion = ::onCompletion
         )
     }
 
@@ -211,25 +209,6 @@ class SeriesDetailsViewModel @Inject constructor(
         updateState { it.copy(isLoginDialogVisible = true, dialogType = dialogType) }
     }
 
-    private fun onError(exception: AflamiException) {
-        when (exception) {
-            is NoInternetException -> updateState {
-                it.copy(
-                    isLoading = false,
-                    networkError = true
-                )
-            }
-
-            is NetworkException -> updateState {
-                it.copy(
-                    isLoading = false,
-                    networkError = true
-                )
-            }
-
-            else -> {}
-        }
-    }
 
     override fun onClickCancelRateDialog() {
         updateState {
