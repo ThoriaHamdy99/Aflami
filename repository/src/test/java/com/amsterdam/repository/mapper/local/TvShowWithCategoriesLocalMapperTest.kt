@@ -10,7 +10,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDate
 import org.junit.Test
 
-class TvShowWithCategoryLocalMapperTest {
+class TvShowWithCategoriesLocalMapperTest {
 
 
     @Test
