@@ -7,7 +7,7 @@ import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
 import com.amsterdam.repository.dto.remote.SeasonRemoteDto
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.VideoRemoteResponse
-import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryRemoteResponse
+import com.amsterdam.repository.dto.remote.movieGallery.GalleryRemoteResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsRemoteResponse
 
 fun createTvShowDetailsRemoteResponse(
@@ -43,7 +43,7 @@ fun createTvShowDetailsRemoteResponse(
         totalPages = 1,
         totalResults = 0
     ),
-    images: RemoteGalleryRemoteResponse = RemoteGalleryRemoteResponse(
+    images: GalleryRemoteResponse = GalleryRemoteResponse(
         backdrops = emptyList(),
         posters = emptyList(),
         id = id,

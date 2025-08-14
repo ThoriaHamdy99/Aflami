@@ -14,7 +14,7 @@ import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.VideoRemoteDto
 import com.amsterdam.repository.dto.remote.VideoRemoteResponse
 import com.amsterdam.repository.dto.remote.authentication.AuthenticationRemoteResponse
-import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryRemoteResponse
+import com.amsterdam.repository.dto.remote.movieGallery.GalleryRemoteResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsRemoteResponse
 
 val remoteMovieItemDto = MovieItemRemoteDto(
@@ -66,7 +66,7 @@ val remoteMovieDetailsResponse = MovieDetailsRemoteResponse(
         totalPages = 1,
         totalResults = 0
     ),
-    images = RemoteGalleryRemoteResponse(
+    images = GalleryRemoteResponse(
         id = movieId,
         backdrops = emptyList(),
         logos = emptyList(),
@@ -138,7 +138,7 @@ val remoteTvShowDetailsResponse = TvShowDetailsRemoteResponse(
         totalPages = 1,
         totalResults = 0
     ),
-    images = RemoteGalleryRemoteResponse(
+    images = GalleryRemoteResponse(
         id = tvShowId,
         backdrops = emptyList(),
         logos = emptyList(),

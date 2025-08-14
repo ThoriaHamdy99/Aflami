@@ -1,6 +1,6 @@
 package com.amsterdam.repository.dto.remote
 
-import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryRemoteResponse
+import com.amsterdam.repository.dto.remote.movieGallery.GalleryRemoteResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsRemoteResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -28,7 +28,7 @@ data class MovieDetailsRemoteResponse(
     @SerialName("reviews") val reviews: ReviewsRemoteResponse,
     @SerialName("credits") val credits: CastAndCrewRemoteResponse,
     @SerialName("similar") val similar: MovieRemoteResponse,
-    @SerialName("images") val images: RemoteGalleryRemoteResponse,
+    @SerialName("images") val images: GalleryRemoteResponse,
     @SerialName("videos") val videos: VideoRemoteResponse,
     @SerialName("account_states") val accountStates: AccountStatesRemoteDto? = null
 )

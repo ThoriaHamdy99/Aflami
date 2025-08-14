@@ -6,7 +6,7 @@ import com.amsterdam.repository.dto.remote.CategoryRemoteDto
 import com.amsterdam.repository.dto.remote.MovieDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.MovieRemoteResponse
 import com.amsterdam.repository.dto.remote.VideoRemoteResponse
-import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryRemoteResponse
+import com.amsterdam.repository.dto.remote.movieGallery.GalleryRemoteResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsRemoteResponse
 
 fun createRemoteMovieDetailsResponse(
@@ -44,7 +44,7 @@ fun createRemoteMovieDetailsResponse(
         totalPages = 1,
         totalResults = 0
     ),
-    images: RemoteGalleryRemoteResponse = RemoteGalleryRemoteResponse(
+    images: GalleryRemoteResponse = GalleryRemoteResponse(
         backdrops = emptyList(),
         posters = emptyList(),
         id = id,

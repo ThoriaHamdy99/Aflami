@@ -1,6 +1,6 @@
 package com.amsterdam.repository.dto.remote
 
-import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryRemoteResponse
+import com.amsterdam.repository.dto.remote.movieGallery.GalleryRemoteResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsRemoteResponse
 import com.amsterdam.repository.utils.ImageBaseUrlsConstant.BASE_IMAGE_URL_W300
 import com.amsterdam.repository.utils.ImageBaseUrlsConstant.BASE_IMAGE_URL_W500
@@ -28,7 +28,7 @@ data class TvShowDetailsRemoteResponse(
     @SerialName("reviews") val reviews: ReviewsRemoteResponse,
     @SerialName("credits") val credits: CastAndCrewRemoteResponse,
     @SerialName("similar") val similar: TvShowRemoteResponse,
-    @SerialName("images") val images: RemoteGalleryRemoteResponse,
+    @SerialName("images") val images: GalleryRemoteResponse,
     @SerialName("videos") val videos: VideoRemoteResponse,
     @SerialName("account_states") val accountStates: AccountStatesRemoteDto? = null
 ) {

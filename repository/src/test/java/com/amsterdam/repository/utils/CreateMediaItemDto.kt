@@ -15,7 +15,7 @@ import com.amsterdam.repository.dto.remote.SeasonRemoteDto
 import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.VideoRemoteDto
 import com.amsterdam.repository.dto.remote.VideoRemoteResponse
-import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryRemoteResponse
+import com.amsterdam.repository.dto.remote.movieGallery.GalleryRemoteResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsRemoteResponse
 import kotlinx.datetime.LocalDate
 
@@ -132,7 +132,7 @@ val tvShowDetailsRemoteResponse =
             totalPages = 1,
             totalResults = 1,
         ),
-        images = RemoteGalleryRemoteResponse(
+        images = GalleryRemoteResponse(
             id = 1,
             backdrops = emptyList(),
             posters = emptyList(),
