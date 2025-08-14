@@ -14,7 +14,7 @@ import com.amsterdam.ui.screens.games.releaseYear.guessReleaseYearScreenScreenRo
 import com.amsterdam.ui.screens.games.guessGenre.guessGenreScreenRoute
 import com.amsterdam.ui.screens.home.homeScreenRoute
 import com.amsterdam.ui.screens.letsPlay.letsPlayScreenRoute
-import com.amsterdam.ui.screens.letsPlay.resultScreenRoute
+import com.amsterdam.ui.screens.gameResult.resultScreenRoute
 import com.amsterdam.ui.screens.listDetails.listDetailsScreenRoute
 import com.amsterdam.ui.screens.lists.listsScreenRoute
 import com.amsterdam.ui.screens.login.loginScreenRoute
