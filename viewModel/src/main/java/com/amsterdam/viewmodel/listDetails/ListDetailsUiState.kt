@@ -13,9 +13,7 @@ data class ListDetailsUiState(
     val listItems: Flow<PagingData<ListDetailsItemsUiState>> = emptyFlow(),
     val showDeleteListDialog: Boolean = false,
     val isDeleteLoading: Boolean = false,
-    val error: ListDetailsError? = null
 ) {
-
     data class ListDetailsItemsUiState(
         val id: Long = 0,
         val name: String = "",
@@ -24,17 +22,4 @@ data class ListDetailsUiState(
         val yearOfRelease: String = "",
         val mediaType: MediaType = MediaType.MOVIE
     )
-
-sealed interface ListDetailsError {
-    data object NoNetwork : ListDetailsError
-    data object UnknownError : ListDetailsError
-
-    companion object {
-        fun toListDetailsError(exception: Throwable): ListDetailsError {
-            return when (exception) {
-                is NetworkException -> NoNetwork
-                else -> UnknownError
-            }
-        }
-    }
-}}
+}

@@ -55,6 +55,8 @@ import com.amsterdam.viewmodel.lists.ListsEffect
 import com.amsterdam.viewmodel.lists.ListsInteractionListener
 import com.amsterdam.viewmodel.lists.ListsUiState
 import com.amsterdam.viewmodel.lists.UserListsViewModel
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState.NoInternetError
 import com.amsterdam.viewmodel.shared.uiStates.UserListItemUiState
 
 @Composable
@@ -63,11 +65,12 @@ fun ListsScreen(
     viewModel: UserListsViewModel = hiltViewModel(),
 ) {
     val navigationManager = LocalNavManager.current
-    val uiState = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        viewModel.loadCustomLists(startLoading = false)
+        viewModel.getCustomLists(startLoading = false)
     }
 
     LaunchedEffect(Unit) {
@@ -100,7 +103,8 @@ fun ListsScreen(
 
     ListsScreenContent(
         modifier = modifier,
-        state = uiState.value,
+        state = state,
+        errorState = errorState,
         interaction = viewModel,
     )
 }
@@ -109,6 +113,7 @@ fun ListsScreen(
 private fun ListsScreenContent(
     modifier: Modifier = Modifier,
     state: ListsUiState,
+    errorState: ErrorUiState?,
     interaction: ListsInteractionListener,
 ) {
     val animationDuration by remember { mutableIntStateOf(1000) }
@@ -168,18 +173,16 @@ private fun ListsScreenContent(
                     modifier =
                         Modifier
                             .fillMaxSize(),
-                    targetState = Triple(state.isLoading, state.errorUiState, state.userLists),
+                    targetState = Triple(state.isLoading, errorState, state.userLists),
                     transitionSpec = {
                         fadeIn(tween(700)) togetherWith fadeOut(tween(700))
                     },
                 ) { (isLoading, errorState, lists) ->
 
                     when {
-                        isLoading -> {
-                            LoadingContainer()
-                        }
+                        isLoading -> { LoadingContainer() }
 
-                        errorState == ListsUiState.ListsErrorState.NoNetworkConnection -> {
+                        errorState is NoInternetError -> {
                             NoNetworkContainer(
                                 modifier =
                                     Modifier
@@ -236,6 +239,7 @@ private fun ListsScreenPreview_Loading() {
     AflamiTheme {
         ListsScreenContent(
             state = ListsUiState(isLoading = true),
+            errorState = null,
             interaction =
                 object : ListsInteractionListener {
                     override fun onClickAddList() {
@@ -270,6 +274,7 @@ private fun ListsScreenPreview_Loading() {
 private fun ListsScreenPreview_Empty() {
     AflamiTheme {
         ListsScreenContent(
+            errorState = null,
             state =
                 ListsUiState(
                     isLoading = false,
@@ -309,6 +314,7 @@ private fun ListsScreenPreview_Empty() {
 private fun ListsScreenPreview_WithData() {
     AflamiTheme {
         ListsScreenContent(
+            errorState = null,
             state =
                 ListsUiState(
                     isLoading = false,
@@ -374,11 +380,11 @@ private fun ListsScreenPreview_WithData() {
 private fun ListsScreenPreview_Error() {
     AflamiTheme {
         ListsScreenContent(
+            errorState = null,
             state =
                 ListsUiState(
                     isLoading = false,
                     userLists = emptyList(),
-                    errorUiState = ListsUiState.ListsErrorState.NoNetworkConnection,
                 ),
             interaction =
                 object : ListsInteractionListener {

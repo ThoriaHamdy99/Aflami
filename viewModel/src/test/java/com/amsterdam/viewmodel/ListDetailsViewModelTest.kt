@@ -181,7 +181,7 @@ class ListDetailsViewModelTest {
         advanceUntilIdle()
         job.cancel()
 
-        assertThat(effects.any { it is ListDetailsEffect.ShowErrorSnackbar })
+        assertThat(effects.any { it is ListDetailsEffect.ShowErrorSnackBar })
     }
 
     @Test
@@ -194,7 +194,7 @@ class ListDetailsViewModelTest {
         advanceUntilIdle()
         job.cancel()
 
-        assertThat(effects.any { it is ListDetailsEffect.ShowErrorSnackbar })
+        assertThat(effects.any { it is ListDetailsEffect.ShowErrorSnackBar })
     }
 
     @Test
