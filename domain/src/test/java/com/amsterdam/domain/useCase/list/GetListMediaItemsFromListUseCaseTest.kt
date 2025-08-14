@@ -8,29 +8,18 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class GetListMediaItemsFromListUseCaseTest {
 
-    private lateinit var getListMediaItemsFromListUseCase: GetListMediaItemsFromListUseCase
-    private lateinit var userListRepository: UserListRepository
-
-    @BeforeEach
-    fun setup() {
-        userListRepository = mockk()
-        getListMediaItemsFromListUseCase = GetListMediaItemsFromListUseCase(userListRepository)
+    private val userListRepository: UserListRepository = mockk()
+    private val getListMediaItemsFromListUseCase by lazy {
+        GetListMediaItemsFromListUseCase(userListRepository)
     }
 
     @Test
-    fun `should call getMoviesFromList on userListRepository`() = runTest {
-        val listId = 1L
-        val page = 1
-        val emptyResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
-            emptyList(),
-            emptyList()
-        )
+    fun `should call getMoviesFromList when invoked`() = runTest {
         coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyResult
 
         getListMediaItemsFromListUseCase(listId, page)
@@ -39,13 +28,7 @@ class GetListMediaItemsFromListUseCaseTest {
     }
 
     @Test
-    fun `should return empty list userListRepository return empty list`() = runTest {
-        val listId = 1L
-        val page = 1
-        val emptyResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
-            emptyList(),
-            emptyList()
-        )
+    fun `should return empty list when userListRepository return empty list`() = runTest {
         coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns emptyResult
 
         val result = getListMediaItemsFromListUseCase(listId, page)
@@ -55,12 +38,6 @@ class GetListMediaItemsFromListUseCaseTest {
 
     @Test
     fun `should return list of movies when userListRepository return list successfully`() = runTest {
-        val listId = 1L
-        val page = 1
-        val repositoryResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
-            specificMovieList,
-            emptyList()
-        )
         coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } returns repositoryResult
 
         val result = getListMediaItemsFromListUseCase(listId, page)
@@ -70,10 +47,19 @@ class GetListMediaItemsFromListUseCaseTest {
 
     @Test
     fun `should throw exception when getMoviesFromList failed`() = runTest {
-        val listId = 1L
-        val page = 1
         coEvery { userListRepository.getMoviesAndTvShowsFromList(listId, page) } throws AflamiException()
 
         assertThrows<AflamiException> { getListMediaItemsFromListUseCase(listId, page) }
     }
+
+    private val listId = 1L
+    private val page = 1
+    private val emptyResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
+        emptyList(),
+        emptyList()
+    )
+    private val repositoryResult = GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems(
+        specificMovieList,
+        emptyList()
+    )
 }

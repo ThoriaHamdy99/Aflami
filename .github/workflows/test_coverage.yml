@@ -13,7 +13,8 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        module: [ localDatasource, viewModel, remoteDatasource ]
+        module: [ localDatasource, viewModel, remoteDatasource, domain ]
+
       fail-fast: false
 
     steps:
@@ -98,6 +99,8 @@ jobs:
             coverage-reports/localDatasource-coverage-report/report.xml
             coverage-reports/viewModel-coverage-report/report.xml
             coverage-reports/remoteDatasource-coverage-report/report.xml
+            coverage-reports/domain-coverage-report/report.xml
+
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "🛡️ Total Code Coverage Report"
           update-comment: true

@@ -36,14 +36,14 @@ import com.amsterdam.ui.components.GameTopBar
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.AdaptiveAnswersColumn
 import com.amsterdam.ui.components.guessGame.GuessTitle
-import com.amsterdam.ui.screens.letsPlay.component.NotEnoughPointsDialog
+import com.amsterdam.ui.screens.games.component.NotEnoughPointsDialog
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.uiModel
-import com.amsterdam.viewmodel.game.whichGenre.GameQuestionUiState
-import com.amsterdam.viewmodel.game.whichGenre.GenreGameEffect
-import com.amsterdam.viewmodel.game.whichGenre.GenreGameInteractionListener
-import com.amsterdam.viewmodel.game.whichGenre.GenreGameUiState
-import com.amsterdam.viewmodel.game.whichGenre.GuessGenreViewModel
+import com.amsterdam.viewmodel.guessWhichGenre.GameQuestionUiState
+import com.amsterdam.viewmodel.guessWhichGenre.GenreGameEffect
+import com.amsterdam.viewmodel.guessWhichGenre.GenreGameInteractionListener
+import com.amsterdam.viewmodel.guessWhichGenre.GenreGameUiState
+import com.amsterdam.viewmodel.guessWhichGenre.GuessGenreViewModel
 import kotlinx.coroutines.launch
 
 @Composable

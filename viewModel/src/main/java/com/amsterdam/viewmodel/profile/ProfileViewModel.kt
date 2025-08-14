@@ -9,7 +9,7 @@ import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
-import com.amsterdam.domain.useCase.profile.GetUserPointsUseCase
+import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
 import com.amsterdam.domain.utils.AppVersionProvider
 import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.domain.utils.SessionType
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val getSessionTypeUseCase: GetsSessionType,
     private val getAccountDetailsUseCase: GetAccountDetailsUseCase,
-    private val getUserPointsUseCase: GetUserPointsUseCase,
+    private val getTotalUserPointsUseCase: GetTotalUserPointsUseCase,
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     private val manageAppThemeUseCase: ManageAppThemeUseCase,
     private val logoutUseCase: LogoutUseCase,
@@ -141,7 +141,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getUserPoints() {
         viewModelScope.launch {
-            getUserPointsUseCase().collect { points ->
+            getTotalUserPointsUseCase().collect { points ->
                 updateState { uiState ->
                     uiState.copy(
                         userInfo = state.value.userInfo.copy(userPoints = points)
