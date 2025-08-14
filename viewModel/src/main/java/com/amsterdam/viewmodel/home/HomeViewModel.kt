@@ -14,12 +14,11 @@ import com.amsterdam.entity.Movie
 import com.amsterdam.entity.MovieWatchHistory
 import com.amsterdam.entity.TvShowWatchHistory
 import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.viewmodel.home.HomeUiState.HomeError
 import com.amsterdam.viewmodel.home.HomeUiState.MoodPickerItemUiState
 import com.amsterdam.viewmodel.search.mapper.selectByMovieGenre
 import com.amsterdam.viewmodel.shared.BaseViewModel
+import com.amsterdam.viewmodel.shared.errorUiState.toErrorUiState
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
-
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import com.amsterdam.viewmodel.utils.getLinearItemsList
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -150,7 +149,8 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onClickRetryLoading() {
-        updateState { it.copy(error = null) }
+        resetErrorStateToNull()
+
         with(state.value) {
             if (popularMediaSectionUiState.mediaItems.isEmpty()) getHomeScreenData()
             if (topRatedMediaSectionUiState.mediaItems.isEmpty()) getHomeScreenData()
@@ -224,7 +224,7 @@ class HomeViewModel @Inject constructor(
         updateState {
             it.copy(
                 moodPickerUiState = it.moodPickerUiState.copy(
-                    error = HomeError.toHomeErrorUiState(exception),
+                    error = exception.toErrorUiState(),
                     isLoadingMovies = false,
                     openMovieDialog = false,
                     selectedMood = null
@@ -270,14 +270,6 @@ class HomeViewModel @Inject constructor(
 
     override fun onClickUpcomingMovieCard(id: Long) {
         sendNewNavigationEffect(HomeEffect.NavigateToMovieDetailsEffect(movieId = id))
-    }
-
-    private fun onError(exception: AflamiException) {
-        updateState {
-            it.copy(
-                error = HomeError.NetworkError,
-            )
-        }
     }
 
     private fun onCompletion() = updateState { it.copy(isLoading = false) }
