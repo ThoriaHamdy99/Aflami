@@ -21,15 +21,12 @@ import com.amsterdam.designsystem.components.ExpandableText
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.designsystem.components.Text
-import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
-import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.utils.toSafetyLevel
-import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ReviewTvShowUiState
 
 @Composable
 fun ReviewCard(

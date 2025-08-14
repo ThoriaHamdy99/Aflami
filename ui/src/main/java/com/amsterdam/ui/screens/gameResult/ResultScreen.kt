@@ -30,17 +30,17 @@ import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.screens.gameResult.component.CompletionCard
 import com.amsterdam.ui.screens.gameResult.component.GameResultAppBar
-import com.amsterdam.ui.screens.letsPlay.component.StatCard
+import com.amsterdam.ui.screens.gameResult.component.StatCard
 import com.amsterdam.ui.screens.login.components.LoginBackground
-import com.amsterdam.viewmodel.gameEnd.ResultInteractionListener
-import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
-import com.amsterdam.viewmodel.gameEnd.ResultUiState
-import com.amsterdam.viewmodel.gameEnd.ResultViewModel
+import com.amsterdam.viewmodel.gameResult.ResultInteractionListener
+import com.amsterdam.viewmodel.gameResult.ResultSideEffect
+import com.amsterdam.viewmodel.gameResult.ResultUiState
+import com.amsterdam.viewmodel.gameResult.GameResultViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ResultScreen(
-    viewModel: ResultViewModel = hiltViewModel()
+    viewModel: GameResultViewModel = hiltViewModel()
 
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

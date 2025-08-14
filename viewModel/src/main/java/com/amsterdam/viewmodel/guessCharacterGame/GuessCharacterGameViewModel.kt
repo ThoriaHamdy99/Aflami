@@ -8,8 +8,8 @@ import com.amsterdam.domain.useCase.game.character.GenerateCharacterQuestionsUse
 import com.amsterdam.domain.useCase.game.character.GuessCharacterGameUseCase
 import com.amsterdam.domain.useCase.game.character.SubmitCharacterAnswerUseCase.AnswerResult
 import com.amsterdam.entity.GameDifficulty.DifficultyType
-import com.amsterdam.viewmodel.gameEnd.ResultScreenData
-import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
+import com.amsterdam.viewmodel.gameResult.ResultScreenData
+import com.amsterdam.viewmodel.gameResult.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider

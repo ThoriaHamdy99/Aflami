@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.game.whichGenre
+package com.amsterdam.viewmodel.guessWhichGenre
 
 interface GenreGameInteractionListener {
     fun onCancelGameClick()

@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.game.whichGenre
+package com.amsterdam.viewmodel.guessWhichGenre
 
 import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase.MovieGenreQuestion
 

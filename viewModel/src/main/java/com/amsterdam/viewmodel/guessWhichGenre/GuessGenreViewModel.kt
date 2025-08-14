@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.game.whichGenre
+package com.amsterdam.viewmodel.guessWhichGenre
 
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
@@ -8,8 +8,8 @@ import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsU
 import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreUseCase
 import com.amsterdam.domain.useCase.game.whichGenre.SubmitGuessMovieGenreAnswerUseCase
 import com.amsterdam.entity.GameDifficulty.DifficultyType
-import com.amsterdam.viewmodel.gameEnd.ResultScreenData
-import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
+import com.amsterdam.viewmodel.gameResult.ResultScreenData
+import com.amsterdam.viewmodel.gameResult.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider

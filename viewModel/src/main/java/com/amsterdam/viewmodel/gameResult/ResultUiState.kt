@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.gameEnd
+package com.amsterdam.viewmodel.gameResult
 
 data class ResultUiState(
     val points: Int = 0,

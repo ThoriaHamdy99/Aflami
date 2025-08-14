@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.gameEnd
+package com.amsterdam.viewmodel.gameResult
 
 
 interface GameResultArgs {

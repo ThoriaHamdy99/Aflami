@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.gameEnd
+package com.amsterdam.viewmodel.gameResult
 
 import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ResultViewModel @Inject constructor(
+class GameResultViewModel @Inject constructor(
     gameResultArgs: GameResultArgs,
     dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<ResultUiState, ResultSideEffect>(

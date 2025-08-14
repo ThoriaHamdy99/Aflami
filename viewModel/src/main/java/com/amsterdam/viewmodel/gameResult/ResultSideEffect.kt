@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.gameEnd
+package com.amsterdam.viewmodel.gameResult
 
 import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.viewmodel.shared.BaseViewModel
