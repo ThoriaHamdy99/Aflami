@@ -1,7 +1,7 @@
 package com.amsterdam.repository.mapper
 
-import com.amsterdam.repository.dto.remote.movieGallery.RemoteGalleryResponse
+import com.amsterdam.repository.dto.remote.movieGallery.GalleryRemoteResponse
 
-fun RemoteGalleryResponse.toEntityList(): List<String> {
+fun GalleryRemoteResponse.toEntityList(): List<String> {
     return this.backdrops.map { it.fullFilePath.orEmpty() }
 }

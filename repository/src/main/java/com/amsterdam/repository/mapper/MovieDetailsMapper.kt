@@ -2,13 +2,13 @@ package com.amsterdam.repository.mapper
 
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.repository.dto.local.MovieLocalDto
+import com.amsterdam.repository.dto.remote.MovieDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.MovieItemRemoteDto
 import com.amsterdam.repository.dto.remote.Rated
-import com.amsterdam.repository.dto.remote.RemoteMovieDetailsResponse
-import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
 import com.amsterdam.repository.utils.toSafeLocalDate
 
-fun RemoteMovieDetailsResponse.toEntity(): MovieDetails {
-    val movieItemDto = RemoteMovieItemDto(
+fun MovieDetailsRemoteResponse.toEntity(): MovieDetails {
+    val movieItemDto = MovieItemRemoteDto(
         adult = adult,
         backdropPath = backdropPath,
         genreIds = genreIds,
@@ -30,19 +30,19 @@ fun RemoteMovieDetailsResponse.toEntity(): MovieDetails {
     )
 
     return MovieDetails(
-        movie = movieItemDto.toEntity(videoUrl = videos.results.firstOrNull()?.fullVideoUrl?:""),
+        movie = movieItemDto.toEntity(videoUrl = videos.results.firstOrNull()?.fullVideoUrl ?: ""),
         reviews = reviews.results.toEntityList(),
         actors = credits.cast.toEntityList(),
         similarMovies = similar.results.toMovieEntityList(isPoster = false),
         movieGallery = images.toEntityList(),
         moviePosters = images.toEntityList(),
         productionCompanies = productionCompanies.toEntityList(),
-        userRate = if(accountStates?.rated is Rated.RatedValue) accountStates.rated.value.toInt() else null
+        userRate = if (accountStates?.rated is Rated.RatedValue) accountStates.rated.value.toInt() else null
     )
 }
 
-fun RemoteMovieDetailsResponse.toMovieItemDto(): RemoteMovieItemDto {
-    return RemoteMovieItemDto(
+fun MovieDetailsRemoteResponse.toMovieItemDto(): MovieItemRemoteDto {
+    return MovieItemRemoteDto(
         adult = adult,
         backdropPath = backdropPath,
         genreIds = genreIds,
@@ -64,7 +64,7 @@ fun RemoteMovieDetailsResponse.toMovieItemDto(): RemoteMovieItemDto {
     )
 }
 
-fun RemoteMovieDetailsResponse.toLocalDto(storedLanguage: String): MovieLocalDto {
+fun MovieDetailsRemoteResponse.toLocalDto(storedLanguage: String): MovieLocalDto {
     return MovieLocalDto(
         movieId = id,
         storedLanguage = storedLanguage,

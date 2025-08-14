@@ -1,9 +1,9 @@
 package com.amsterdam.repository.mapper
 
 import com.amsterdam.entity.Season
-import com.amsterdam.repository.dto.remote.SeasonDto
+import com.amsterdam.repository.dto.remote.SeasonRemoteDto
 
-fun SeasonDto.toEntity(): Season {
+fun SeasonRemoteDto.toEntity(): Season {
     return Season(
         id = id,
         seasonNumber = seasonNumber,
@@ -12,4 +12,4 @@ fun SeasonDto.toEntity(): Season {
     )
 }
 
-fun List<SeasonDto>.toEntityList(): List<Season>  = map { it.toEntity() }
+fun List<SeasonRemoteDto>.toEntityList(): List<Season>  = map { it.toEntity() }

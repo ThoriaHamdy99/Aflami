@@ -2,10 +2,10 @@ package com.amsterdam.remotedatasource.datasource
 
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.remotedatasource.api.UserListApiService
-import com.amsterdam.repository.dto.remote.AddItemToListResponse
-import com.amsterdam.repository.dto.remote.CreateUserListResponse
-import com.amsterdam.repository.dto.remote.RemoteUserListResponse
-import com.amsterdam.repository.dto.remote.UserListDetailsResponse
+import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
+import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
+import com.amsterdam.repository.dto.remote.UserListRemoteResponse
+import com.amsterdam.repository.dto.remote.UserListDetailsRemoteResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,7 +21,7 @@ class UserListRemoteDataSourceImplTest {
     private lateinit var userListRemoteDataSourceImpl: UserListRemoteDataDataSourceImpl
     private lateinit var userListApiService: UserListApiService
 
-    private val remoteListResponse = UserListDetailsResponse(
+    private val remoteListResponse = UserListDetailsRemoteResponse(
         id = 1L,
         name = "Test List",
         description = "Test description",
@@ -46,7 +46,7 @@ class UserListRemoteDataSourceImplTest {
     fun `createNewList should return a new user list response on success`() = runTest {
         val listName = "My list"
         val language = "en"
-        val expectedResponse = CreateUserListResponse(
+        val expectedResponse = CreateUserListRemoteResponse(
             listId = 1,
             statusCode = 1,
             statusMessage = "Success",
@@ -84,7 +84,7 @@ class UserListRemoteDataSourceImplTest {
     fun `getUserLists should return remote user list response on success`() = runTest {
         val accountId = 1
         val page = 1
-        val expectedResponse = RemoteUserListResponse(
+        val expectedResponse = UserListRemoteResponse(
             results = emptyList(),
             page = 1,
             totalPages = 1,
@@ -108,7 +108,7 @@ class UserListRemoteDataSourceImplTest {
     fun `addMovieToList should return a response on success`() = runTest {
         val listId = 1L
         val movieId = 1L
-        val expectedResponse = AddItemToListResponse(1, "success", true)
+        val expectedResponse = AddItemToListRemoteResponse(1, "success", true)
 
         coEvery {
             userListApiService.addMediaItemToList(

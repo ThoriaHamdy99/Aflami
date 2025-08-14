@@ -2,7 +2,7 @@ package com.amsterdam.repository.mapper
 
 import com.amsterdam.entity.Movie
 import com.amsterdam.repository.dto.local.MovieLocalDto
-import com.amsterdam.repository.dto.remote.RemoteMovieItemDto
+import com.amsterdam.repository.dto.remote.MovieItemRemoteDto
 import com.amsterdam.repository.utils.toSafeLocalDate
 
 fun MovieLocalDto.toEntity(): Movie =
@@ -19,7 +19,7 @@ fun MovieLocalDto.toEntity(): Movie =
         originCountry = originCountry
     )
 
-fun RemoteMovieItemDto.toEntity(
+fun MovieItemRemoteDto.toEntity(
     isPoster: Boolean = true,
     videoUrl: String = ""
 ): Movie {
@@ -42,11 +42,11 @@ fun RemoteMovieItemDto.toEntity(
 }
 
 
-fun List<RemoteMovieItemDto>.toMovieEntityList(isPoster: Boolean = true): List<Movie> =
+fun List<MovieItemRemoteDto>.toMovieEntityList(isPoster: Boolean = true): List<Movie> =
     map { it.toEntity(isPoster) }
 
 
-fun RemoteMovieItemDto.toLocalDto(isPoster : Boolean = true, storedLanguage: String): MovieLocalDto {
+fun MovieItemRemoteDto.toLocalDto(isPoster: Boolean = true, storedLanguage: String): MovieLocalDto {
     val imageUrl = if (isPoster) fullPosterUrl else fullBackdropUrl
 
     return MovieLocalDto(
@@ -63,5 +63,5 @@ fun RemoteMovieItemDto.toLocalDto(isPoster : Boolean = true, storedLanguage: Str
     )
 }
 
-fun List<RemoteMovieItemDto>.toLocalMovieDtoList(isPoster : Boolean = true,storedLanguage: String) =
-    map { it.toLocalDto(isPoster,storedLanguage) }
+fun List<MovieItemRemoteDto>.toLocalMovieDtoList(isPoster: Boolean = true, storedLanguage: String) =
+    map { it.toLocalDto(isPoster, storedLanguage) }

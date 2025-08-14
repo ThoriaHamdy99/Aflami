@@ -5,8 +5,10 @@ import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.util.actorSearchItemDto
 import com.amsterdam.remotedatasource.util.remoteMovieDetailsResponse
 import com.amsterdam.remotedatasource.util.remoteMovieItemDto
-import com.amsterdam.repository.dto.remote.RemoteActorSearchResponse
-import com.amsterdam.repository.dto.remote.RemoteMovieResponse
+import com.amsterdam.repository.dto.remote.RatingRemoteResponse
+import com.amsterdam.repository.dto.remote.ActorSearchRemoteResponse
+import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
+import com.amsterdam.repository.dto.remote.MovieRemoteResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

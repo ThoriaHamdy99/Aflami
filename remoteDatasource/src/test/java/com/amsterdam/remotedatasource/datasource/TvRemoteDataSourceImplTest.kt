@@ -6,10 +6,10 @@ import com.amsterdam.remotedatasource.util.episodeResponse
 import com.amsterdam.remotedatasource.util.remoteTvShowDetailsResponse
 import com.amsterdam.remotedatasource.util.remoteTvShowItemDto
 import com.amsterdam.remotedatasource.util.videoDto
-import com.amsterdam.repository.dto.remote.RatingResponse
-import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
-import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
-import com.amsterdam.repository.dto.remote.VideoResponse
+import com.amsterdam.repository.dto.remote.RatingRemoteResponse
+import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
+import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
+import com.amsterdam.repository.dto.remote.VideoRemoteResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

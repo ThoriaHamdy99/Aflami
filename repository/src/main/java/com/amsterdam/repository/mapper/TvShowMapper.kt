@@ -2,7 +2,7 @@ package com.amsterdam.repository.mapper
 
 import com.amsterdam.entity.TvShow
 import com.amsterdam.repository.dto.local.TvShowLocalDto
-import com.amsterdam.repository.dto.remote.RemoteTvShowItemDto
+import com.amsterdam.repository.dto.remote.TvShowItemRemoteDto
 import com.amsterdam.repository.utils.toSafeLocalDate
 
 fun TvShowLocalDto.toEntity(): TvShow =
@@ -19,7 +19,7 @@ fun TvShowLocalDto.toEntity(): TvShow =
         originCountry = originCountry
     )
 
-fun RemoteTvShowItemDto.toEntity(
+fun TvShowItemRemoteDto.toEntity(
     isPoster: Boolean = true
 ): TvShow {
     val imageUrl = if (isPoster) fullPosterPath else fullBackdropPath
@@ -37,10 +37,10 @@ fun RemoteTvShowItemDto.toEntity(
     )
 }
 
-fun List<RemoteTvShowItemDto>.toEntityList(isPoster: Boolean = true): List<TvShow> =
+fun List<TvShowItemRemoteDto>.toEntityList(isPoster: Boolean = true): List<TvShow> =
     map { it.toEntity(isPoster) }
 
-fun RemoteTvShowItemDto.toLocalDto(storedLanguage: String): TvShowLocalDto {
+fun TvShowItemRemoteDto.toLocalDto(storedLanguage: String): TvShowLocalDto {
     return TvShowLocalDto(
         tvShowId = id,
         storedLanguage = storedLanguage,
@@ -55,4 +55,5 @@ fun RemoteTvShowItemDto.toLocalDto(storedLanguage: String): TvShowLocalDto {
     )
 }
 
-fun List<RemoteTvShowItemDto>.toLocalTvShowDtoList(storedLanguage: String) = map { it.toLocalDto(storedLanguage) }
+fun List<TvShowItemRemoteDto>.toLocalTvShowDtoList(storedLanguage: String) =
+    map { it.toLocalDto(storedLanguage) }

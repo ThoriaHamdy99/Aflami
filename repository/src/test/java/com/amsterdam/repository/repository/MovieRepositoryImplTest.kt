@@ -6,8 +6,8 @@ import com.amsterdam.entity.Country
 import com.amsterdam.entity.Gender
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
-import com.amsterdam.repository.dto.remote.RemoteMovieResponse
-import com.amsterdam.repository.mapper.toMovieEntityList
+import com.amsterdam.repository.dto.remote.MovieRemoteResponse
+import com.amsterdam.repository.mapper.remote.toMovieEntityList
 import com.amsterdam.repository.utils.remoteCastAndCrewResponse
 import com.amsterdam.repository.utils.remoteMovieItemDto
 import com.amsterdam.repository.utils.remoteUserRatedMovie
@@ -138,7 +138,7 @@ class MovieRepositoryImplTest {
     }
 
     private val expectedRemoteMovies = listOf(remoteMovieItemDto)
-    private val remoteMovieResponse = RemoteMovieResponse(
+    private val remoteMovieResponse = MovieRemoteResponse(
         page = 1,
         results = expectedRemoteMovies,
         totalPages = 1,
