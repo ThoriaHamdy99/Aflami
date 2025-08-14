@@ -1,5 +1,6 @@
 package com.amsterdam.remotedatasource.datasource
 
+import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.remotedatasource.api.ProfileApiService
 import com.amsterdam.repository.dto.remote.profile.AccountDetailsRemoteDto
 import com.google.common.truth.Truth.assertThat
@@ -23,26 +24,21 @@ class ProfileRemoteDataSourceImplTest {
 
     @Test
     fun `getAccountDetails should return account details when api call is successful`() = runTest {
-        //Given
-        val sessionId = "session_id"
         val expectedAccountDetails = mockk<AccountDetailsRemoteDto>()
-        coEvery { profileApiService.getAccountDetails(any()) } returns expectedAccountDetails
+        coEvery { profileApiService.getAccountDetails() } returns expectedAccountDetails
 
-        //when
-        val result = profileDataSourceImpl.getAccountDetails(sessionId)
+        val result = profileDataSourceImpl.getAccountDetails()
 
-        //then
         assertThat(result).isEqualTo(expectedAccountDetails)
-        coVerify(exactly = 1) { profileApiService.getAccountDetails(sessionId) }
+        coVerify(exactly = 1) { profileApiService.getAccountDetails() }
     }
+
     @Test
-    fun `getAccountDetails should return null when api call fails`() = runTest {
-        //Given
-        val sessionId = "session_id"
-        coEvery { profileApiService.getAccountDetails(any()) } throws Exception()
-        //When & Then
-        assertThrows <Exception>{ profileDataSourceImpl.getAccountDetails(sessionId) }
-    }
+    fun `getAccountDetails should throw NetworkException when api call throws an exception`() =
+        runTest {
+            coEvery { profileApiService.getAccountDetails() } throws NetworkException()
 
+            assertThrows<NetworkException> { profileDataSourceImpl.getAccountDetails() }
+            coVerify(exactly = 1) { profileApiService.getAccountDetails() }
+        }
 }
-
