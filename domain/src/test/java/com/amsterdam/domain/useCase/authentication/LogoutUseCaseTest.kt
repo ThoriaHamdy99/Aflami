@@ -11,24 +11,17 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class LogoutUseCaseTest {
-    private lateinit var authenticationRepository: AuthenticationRepository
-    private lateinit var logoutUseCase: LogoutUseCase
-    @BeforeEach
-    fun setUp() {
-        authenticationRepository = mockk()
-        logoutUseCase = LogoutUseCase(authenticationRepository)
+    private val authenticationRepository: AuthenticationRepository = mockk()
+    private val logoutUseCase by lazy {
+        LogoutUseCase(authenticationRepository)
     }
+
     @Test
     fun `should call logout on authentication repository`() = runTest {
-        // Given
         coEvery { authenticationRepository.logout() } just Runs
 
-        // When
         logoutUseCase()
 
-        // Then
         coVerify(exactly = 1) { authenticationRepository.logout() }
     }
-
-
 }
