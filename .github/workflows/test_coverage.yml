@@ -51,7 +51,7 @@ jobs:
 
       - name: Run Test And Kover Verification for ${{ matrix.module }}
         run: ./gradlew :${{ matrix.module }}:koverVerify --build-cache
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Generate coverage report for ${{ matrix.module }}
         run: ./gradlew :${{ matrix.module }}:koverXmlReport
