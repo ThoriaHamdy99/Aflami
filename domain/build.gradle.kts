@@ -52,7 +52,6 @@ kover.reports{
             "*.exceptions",
             "*.logger",
             "*.models",
-            "*.useCase.game"
         )
 
         classes("*${'$'}${'$'}inlined${'$'}*")
