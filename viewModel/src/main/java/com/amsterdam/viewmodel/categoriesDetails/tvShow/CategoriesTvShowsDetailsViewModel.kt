@@ -57,7 +57,7 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
         when (val refreshState = loadStates.refresh) {
             is LoadState.Loading -> {
-                updateErrorStateByException(null)
+                resetErrorStateToNull()
                 updateState { it.copy(isLoading = true) }
             }
             is LoadState.NotLoading -> updateState { it.copy(isLoading = false) }

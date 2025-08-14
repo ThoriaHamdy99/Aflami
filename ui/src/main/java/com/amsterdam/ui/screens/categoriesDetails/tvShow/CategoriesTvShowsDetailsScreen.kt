@@ -46,7 +46,7 @@ import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetails
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsUiState
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsViewModel
-import com.amsterdam.viewmodel.shared.BaseErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 
 @Composable
 fun CategoriesTvShowsDetailsScreen(
@@ -87,7 +87,7 @@ fun CategoriesTvShowsDetailsScreen(
 @Composable
 private fun CategoriesTvShowsDetailsContent(
     state: CategoriesTvShowsDetailsUiState,
-    errorState: BaseErrorUiState?,
+    errorState: ErrorUiState?,
     interactionListener: CategoriesTvShowsDetailsInteractionListener,
     tvShows: LazyPagingItems<CategoriesTvShowsDetailsUiState.TvShowsUiState>
 ) {
@@ -137,7 +137,7 @@ private fun CategoriesTvShowsDetailsContent(
                         }
                     }
 
-                    errorState is BaseErrorUiState.NoInternetError -> {
+                    errorState is ErrorUiState.NoInternetError -> {
                         CenterOfScreenContainer(unneededSpace = 0.dp) {
                             NoNetworkContainer(onClickRetry = interactionListener::onClickRetryRequest)
                         }
