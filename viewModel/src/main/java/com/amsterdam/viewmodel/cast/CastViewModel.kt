@@ -1,11 +1,9 @@
 package com.amsterdam.viewmodel.cast
 
-import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.details.GetMovieCastUseCase
 import com.amsterdam.domain.useCase.details.GetTvShowCastUseCase
 import com.amsterdam.entity.Actor
 import com.amsterdam.viewmodel.shared.BaseViewModel
-import com.amsterdam.viewmodel.shared.toErrorUiState
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +27,6 @@ class CastViewModel @Inject constructor(
         tryToExecute(
             action = ::getCastList,
             onSuccess = ::onGetCastSuccess,
-            onError = ::onGetCastError,
             onCompletion = ::onGetCastCompletion,
         )
     }
@@ -43,11 +40,7 @@ class CastViewModel @Inject constructor(
 
     private fun onGetCastSuccess(cast: List<Actor>) {
         updateState { it.copy(cast = cast.toActorsUiState()) }
-        updateErrorStateByException(null)
-    }
-
-    private fun onGetCastError(exception: AflamiException) {
-        updateErrorStateByException(exception)
+        resetErrorStateToNull()
     }
 
     private fun onGetCastCompletion() = updateState { it.copy(isLoading = false) }
@@ -55,5 +48,4 @@ class CastViewModel @Inject constructor(
     override fun onClickNavigateBack() = sendNewNavigationEffect(CastUiEffect.NavigateBack)
 
     override fun onClickRetrySearch() = getCast()
-
 }
