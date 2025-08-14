@@ -34,6 +34,28 @@ dependencies {
     injectDependencies()
 }
 
+kover.reports {
+    filters.excludes {
+        androidGeneratedClasses()
+        packages(
+            "*.remotedatasource.api",
+            "*.remotedatasource.util",
+            "*.remotedatasource.client",
+            "*.generated"
+        )
+        classes(
+            "*_Factory*",
+            "*Hilt*",
+            "*_Impl*",
+            "*${'$'}${'$'}inlined${'$'}*",
+        )
+    }
+
+    verify.rule {
+        minBound(80)
+    }
+}
+
 private fun DependencyHandlerScope.modulesDependencies() {
     implementation(projects.repository)
 }
