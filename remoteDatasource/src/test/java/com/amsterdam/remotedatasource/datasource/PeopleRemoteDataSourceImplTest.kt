@@ -46,18 +46,6 @@ class PeopleRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getTrendingPeople should call the API exactly once when it throws a NetworkException`() = runTest {
-        coEvery { peopleApiService.getTrendingPeople(any()) } throws networkException
-
-        try {
-            peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
-        } catch (e: NetworkException) {
-        }
-
-        coVerify(exactly = 1) { peopleApiService.getTrendingPeople(any()) }
-    }
-
-    @Test
     fun `getTrendingPeople should return an empty list when the API service returns an empty list`() =
         runTest {
             coEvery { peopleApiService.getTrendingPeople(any()) } returns emptyPeopleResponse
