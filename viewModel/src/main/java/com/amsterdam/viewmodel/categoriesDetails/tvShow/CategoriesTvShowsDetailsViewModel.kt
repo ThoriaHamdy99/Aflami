@@ -56,7 +56,10 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
         when (val refreshState = loadStates.refresh) {
-            is LoadState.Loading -> updateState { it.copy(isLoading = true, errorUiState = null) }
+            is LoadState.Loading -> {
+                updateErrorStateByException(null)
+                updateState { it.copy(isLoading = true) }
+            }
             is LoadState.NotLoading -> updateState { it.copy(isLoading = false) }
             is LoadState.Error -> {
                 updateState { it.copy(isLoading = false) }
@@ -66,13 +69,8 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     }
 
     private fun onFetchError(exception: AflamiException) {
-        updateState {
-            it.copy(
-                errorUiState = CategoriesTvShowsDetailsUiState.CategoriesTvShowsDetailsErrorState
-                    .toCategoriesTvShowsDetailsErrorState(exception),
-                isLoading = false
-            )
-        }
+        updateErrorStateByException(exception)
+        updateState { it.copy(isLoading = false) }
     }
 
     private fun updateUiStateForSelectedGenre(tvShowGenre: TvShowGenre) {

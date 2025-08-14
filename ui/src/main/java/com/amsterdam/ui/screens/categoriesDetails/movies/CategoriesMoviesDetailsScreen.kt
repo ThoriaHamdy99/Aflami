@@ -46,12 +46,14 @@ import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsI
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiState
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsViewModel
+import com.amsterdam.viewmodel.shared.BaseErrorUiState
 
 @Composable
 fun CategoriesMoviesDetailsScreen(
     viewModel: CategoriesMoviesDetailsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val errorState by viewModel.errorState.collectAsState()
     val navigationManager = LocalNavManager.current
     val movies = state.movies.collectAsLazyPagingItems()
     LaunchedEffect(
@@ -77,6 +79,7 @@ fun CategoriesMoviesDetailsScreen(
     }
     CategoriesMoviesDetailsContent(
         state = state,
+        errorState = errorState,
         interaction = viewModel,
         movies = movies
 
@@ -86,6 +89,7 @@ fun CategoriesMoviesDetailsScreen(
 @Composable
 private fun CategoriesMoviesDetailsContent(
     state: CategoriesMoviesDetailsUiState,
+    errorState: BaseErrorUiState?,
     interaction: CategoriesMoviesDetailsInteractionListener,
     movies: LazyPagingItems<CategoriesMoviesDetailsUiState.MoviesUiState>
 ) {
@@ -136,15 +140,9 @@ private fun CategoriesMoviesDetailsContent(
                             }
                         }
                     }
-                    state.errorUiState != null && state.errorUiState is CategoriesMoviesDetailsUiState.CategoriesDetailsErrorState.NoNetworkConnection -> {
-                        CenterOfScreenContainer(
-                            unneededSpace = 0.dp
-                        ) {
-                            NoNetworkContainer(
-                                onClickRetry = {
-                                    interaction.onClickRetryRequest()
-                                }
-                            )
+                    errorState is BaseErrorUiState.NoInternetError -> {
+                        CenterOfScreenContainer(unneededSpace = 0.dp) {
+                            NoNetworkContainer(onClickRetry = interaction::onClickRetryRequest )
                         }
                     }
 
@@ -179,9 +177,7 @@ private fun CategoriesMoviesDetailsContent(
                                     movieRating = movie.rate,
                                     onClick = { interaction.onClickMovieCard(movie.id) }
                                 )
-
                             }
-
                         }
                     }
                 }

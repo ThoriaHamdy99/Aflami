@@ -38,7 +38,7 @@ open class BaseViewModel<S, E>(
 
     protected fun updateErrorStateByException(exception: AflamiException?) {
         viewModelScope.launch(dispatcherProvider.MainImmediate) {
-            _errorState.value = exception.toErrorUiState()
+            _errorState.value = exception?.toErrorUiState()
         }
     }
 

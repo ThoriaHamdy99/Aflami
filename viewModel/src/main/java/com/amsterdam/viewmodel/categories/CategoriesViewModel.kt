@@ -13,13 +13,10 @@ class CategoriesViewModel @Inject constructor(
     (CategoriesUiState(), dispatcherProvider), CategoriesInteractionListener {
 
     override fun onChangeTabOption(tabOption: TabOption) {
-        updateState {
-            it.copy(selectedTabOption = tabOption)
-        }
+        updateState { it.copy(selectedTabOption = tabOption) }
     }
-    override fun onClickMovieGenreCard(
-        genreName: String,
-    ) {
+
+    override fun onClickMovieGenreCard(genreName: String, ) {
         sendNewNavigationEffect(
             CategoriesUiEffect.NavigateToCategoriesDetailsScreen(
                 genreName,

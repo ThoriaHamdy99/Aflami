@@ -13,21 +13,7 @@ data class CategoriesTvShowsDetailsUiState(
     val tvShowGenres: List<TvShowGenreItemUiState> = defaultTvShowGenres,
     val tvShows: Flow<PagingData<TvShowsUiState>> = emptyFlow(),
     val isLoading: Boolean = false,
-    val errorUiState: CategoriesTvShowsDetailsErrorState? = null,
 ) {
-    sealed interface CategoriesTvShowsDetailsErrorState {
-        data object NoNetworkConnection : CategoriesTvShowsDetailsErrorState
-        data object UnknownError : CategoriesTvShowsDetailsErrorState
-        companion object {
-            fun toCategoriesTvShowsDetailsErrorState(exception: Throwable): CategoriesTvShowsDetailsErrorState =
-                when (exception) {
-                    is NetworkException -> NoNetworkConnection
-                    else -> UnknownError
-                }
-        }
-    }
-
-
     data class TvShowsUiState(
         val id: Long = 0,
         val name: String = "",
