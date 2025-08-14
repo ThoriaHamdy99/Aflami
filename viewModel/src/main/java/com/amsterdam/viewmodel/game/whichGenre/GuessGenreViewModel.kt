@@ -8,10 +8,8 @@ import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsU
 import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreUseCase
 import com.amsterdam.domain.useCase.game.whichGenre.SubmitGuessMovieGenreAnswerUseCase
 import com.amsterdam.entity.GameDifficulty.DifficultyType
-import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.gameEnd.ResultScreenData
 import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
-import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -173,7 +171,7 @@ class GuessGenreViewModel @Inject constructor(
         }
     }
 
-    private fun onError(error: Exception) {
+    private fun onError(error: AflamiException) {
         when(error){
             is NotEnoughPointsException -> sendNewEffect(GenreGameEffect.ShowNotEnoughPointsSnackBar)
         }

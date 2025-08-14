@@ -128,7 +128,7 @@ private fun GameScreenContent(
                 item {
                     GameTopBar(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        title = stringResource(com.amsterdam.ui.R.string.genre_game_title),
+                        title = stringResource(R.string.genre_game_title),
                         timerUiState = state.timerUiState,
                         onCancelGameClick = interactionListener::onCancelGameClick
                     )

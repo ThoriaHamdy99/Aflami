@@ -1,6 +1,7 @@
 package com.amsterdam.viewmodel.guessReleseDateGame
 
 import androidx.lifecycle.viewModelScope
+import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion
@@ -181,7 +182,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
         sendNewNavigationEffect(GuessReleaseYearGameEffect.NavigateBack)
     }
 
-    private fun onError(error: Exception) {
+    private fun onError(error: AflamiException) {
         when(error){
             is NotEnoughPointsException -> sendNewEffect(GuessReleaseYearGameEffect.ShowNotEnoughPointsSnackBar)
         }
