@@ -22,12 +22,12 @@ import org.junit.jupiter.api.assertThrows
 class TvRemoteDataSourceImplTest {
 
     private lateinit var tvShowsApiService: TvShowsApiService
-    private lateinit var tvRemoteDataSourceImpl: TvRemoteDataDataSourceImpl
+    private lateinit var tvRemoteDataSourceImpl: TvRemoteDataSourceImpl
 
     @BeforeEach
     fun setUp() {
         tvShowsApiService = mockk()
-        tvRemoteDataSourceImpl = TvRemoteDataDataSourceImpl(tvShowsApiService)
+        tvRemoteDataSourceImpl = TvRemoteDataSourceImpl(tvShowsApiService)
     }
 
     @Test
@@ -260,15 +260,15 @@ class TvRemoteDataSourceImplTest {
     private val tvShowId = 1399L
     private val seasonNumber = 1
     private val episodeNumber = 1
-    private val expectedVideoResponse = VideoResponse(
+    private val expectedVideoResponse = VideoRemoteResponse(
         results = listOf(
             videoDto
         )
     )
     private val expectedDetailsResponse = remoteTvShowDetailsResponse
     private val expectedEpisodeResponse = episodeResponse
-    private val expectedRatingResponse = RatingResponse(statusCode = 1, statusMessage = "Success")
-    private val expectedResponse = RemoteTvShowResponse(
+    private val expectedRatingResponse = RatingRemoteResponse(statusCode = 1, statusMessage = "Success")
+    private val expectedResponse = TvShowRemoteResponse(
         page = 1,
         results = listOf(
             remoteTvShowItemDto
@@ -276,13 +276,13 @@ class TvRemoteDataSourceImplTest {
         totalPages = 1,
         totalResults = 1
     )
-    private val expectedEmptyResponse = RemoteTvShowResponse(
+    private val expectedEmptyResponse = TvShowRemoteResponse(
         page = 1,
         results = emptyList(),
         totalPages = 1,
         totalResults = 1
     )
-    private val expectedCastAndCrewResponse = RemoteCastAndCrewResponse(
+    private val expectedCastAndCrewResponse =CastAndCrewRemoteResponse(
         id = tvShowId,
         cast = emptyList(),
         crew = emptyList()
