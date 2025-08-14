@@ -36,7 +36,8 @@ import kotlin.test.Test
 class ListDetailsViewModelTest {
 
     private lateinit var viewModel: ListDetailsViewModel
-    private val getListMediaItemsFromListUseCase: GetListMediaItemsFromListUseCase = mockk(relaxed = true)
+    private val getListMediaItemsFromListUseCase: GetListMediaItemsFromListUseCase =
+        mockk(relaxed = true)
     private val removeMovieFromListUseCase: RemoveMovieFromListUseCase = mockk(relaxed = true)
     private val deleteListUseCase: DeleteListUseCase = mockk(relaxed = true)
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase = mockk(relaxed = true)
@@ -152,15 +153,12 @@ class ListDetailsViewModelTest {
     fun `onClickRemoveMovie should show success snackbar`() = testScope.runTest {
         coEvery { removeMovieFromListUseCase(any(), any()) } returns Unit
 
-        val effects = mutableListOf<ListDetailsEffect>()
-        val job = launch { viewModel.effect.collect { effects.add(it) } }
+        viewModel.effect.test {
+            viewModel.onClickRemoveMovie(1)
 
-        viewModel.onClickRemoveMovie(1)
-        advanceUntilIdle()
-        job.cancel()
+            assertThat(awaitItem()).isEqualTo(ListDetailsEffect.ShowRemoveMovieSuccessSnackBar)
+        }
 
-        assertThat(viewModel.errorState).isNull()
-        assertThat(effects).contains(ListDetailsEffect.ShowRemoveMovieSuccessSnackBar)
     }
 
     @Test

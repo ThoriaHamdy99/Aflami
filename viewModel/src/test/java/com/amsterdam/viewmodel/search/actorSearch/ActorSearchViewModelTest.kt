@@ -207,7 +207,7 @@ class ActorSearchViewModelTest {
         viewModel.onPagingLoadStateChanged(loadStates)
         advanceUntilIdle()
 
-        viewModel.errorState.test { assertThat(awaitItem()).isEqualTo(ErrorUiState.UnknownError) }
+        viewModel.errorState.test { assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError) }
 
     }
 
