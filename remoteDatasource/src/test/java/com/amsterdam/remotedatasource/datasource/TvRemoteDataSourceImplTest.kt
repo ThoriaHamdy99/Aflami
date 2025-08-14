@@ -2,14 +2,20 @@ package com.amsterdam.remotedatasource.datasource
 
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.remotedatasource.api.TvShowsApiService
-import com.amsterdam.remotedatasource.util.episodeResponse
-import com.amsterdam.remotedatasource.util.remoteTvShowDetailsResponse
-import com.amsterdam.remotedatasource.util.remoteTvShowItemDto
-import com.amsterdam.remotedatasource.util.videoDto
-import com.amsterdam.repository.dto.remote.RatingRemoteResponse
-import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
+import com.amsterdam.remotedatasource.util.TV_SHOW_TEST_EPISODE_NUMBER
+import com.amsterdam.remotedatasource.util.TV_SHOW_TEST_GENRE_ID
+import com.amsterdam.remotedatasource.util.TV_SHOW_TEST_ID
+import com.amsterdam.remotedatasource.util.TV_SHOW_TEST_KEYWORD
+import com.amsterdam.remotedatasource.util.TV_SHOW_TEST_PAGE
+import com.amsterdam.remotedatasource.util.TV_SHOW_TEST_RATING
+import com.amsterdam.remotedatasource.util.TV_SHOW_TEST_SEASON_NUMBER
+import com.amsterdam.remotedatasource.util.episodeRemoteResponse
+import com.amsterdam.remotedatasource.util.tvShowCastAndCrewRemoteResponse
+import com.amsterdam.remotedatasource.util.tvShowDetailsRemoteResponse
+import com.amsterdam.remotedatasource.util.tvShowItemRemoteDto
+import com.amsterdam.remotedatasource.util.tvShowRatingRemoteResponse
+import com.amsterdam.remotedatasource.util.tvShowVideoRemoteResponse
 import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
-import com.amsterdam.repository.dto.remote.VideoRemoteResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -22,49 +28,42 @@ import org.junit.jupiter.api.assertThrows
 class TvRemoteDataSourceImplTest {
 
     private lateinit var tvShowsApiService: TvShowsApiService
-    private lateinit var tvRemoteDataSourceImpl: TvRemoteDataDataSourceImpl
+    private lateinit var tvRemoteDataSourceImpl: TvRemoteDataSourceImpl
 
     @BeforeEach
     fun setUp() {
         tvShowsApiService = mockk()
-        tvRemoteDataSourceImpl = TvRemoteDataDataSourceImpl(tvShowsApiService)
+        tvRemoteDataSourceImpl = TvRemoteDataSourceImpl(tvShowsApiService)
     }
 
     @Test
     fun `getPopularTvShows should return a list of TV shows when successful`() = runTest {
-        // Given
         val expectedResponse = TvShowRemoteResponse(
-            page = 1,
-            results = listOf(
-                remoteTvShowItemDto
-            ),
+            page = TV_SHOW_TEST_PAGE,
+            results = listOf(tvShowItemRemoteDto),
             totalPages = 1,
             totalResults = 1
         )
         coEvery { tvShowsApiService.getPopularTvShows() } returns expectedResponse
 
-        // When
         val popularTvShows = tvRemoteDataSourceImpl.getPopularTvShows()
 
-        // Then
         assertThat(popularTvShows).isEqualTo(expectedResponse)
         coVerify(exactly = 1) { tvShowsApiService.getPopularTvShows() }
     }
 
     @Test
     fun `getPopularTvShows should rethrow NetworkException from service provider`() = runTest {
-        // Given
         coEvery { tvShowsApiService.getPopularTvShows() } throws NetworkException()
 
-        // When & Then
         assertThrows<NetworkException> {
             tvRemoteDataSourceImpl.getPopularTvShows()
         }
+        coVerify(exactly = 1) { tvShowsApiService.getPopularTvShows() }
     }
 
     @Test
     fun `getPopularTvShows should return an empty list when API response is empty`() = runTest {
-        // Given
         val expectedResponse = TvShowRemoteResponse(
             page = 1,
             results = emptyList(),
@@ -73,174 +72,149 @@ class TvRemoteDataSourceImplTest {
         )
         coEvery { tvShowsApiService.getPopularTvShows() } returns expectedResponse
 
-        // When
         val popularTvShows = tvRemoteDataSourceImpl.getPopularTvShows()
 
-        // Then
         assertThat(popularTvShows.results).isEmpty()
+        coVerify(exactly = 1) { tvShowsApiService.getPopularTvShows() }
     }
 
 
     @Test
     fun `getTopRatedTvShows should return a list of top rated TV shows when successful`() =
         runTest {
-            // Given
-            val page = 1
             val expectedResponse = TvShowRemoteResponse(
-                page = page,
-                results = listOf(
-                    remoteTvShowItemDto
-                ),
+                page = TV_SHOW_TEST_PAGE,
+                results = listOf(tvShowItemRemoteDto),
                 totalPages = 1,
                 totalResults = 1
             )
-            coEvery { tvShowsApiService.getTopRatedTvShows(page) } returns expectedResponse
+            coEvery { tvShowsApiService.getTopRatedTvShows(TV_SHOW_TEST_PAGE) } returns expectedResponse
 
-            // When
-            val topRatedTvShows = tvRemoteDataSourceImpl.getTopRatedTvShows(page)
+            val topRatedTvShows = tvRemoteDataSourceImpl.getTopRatedTvShows(TV_SHOW_TEST_PAGE)
 
-            // Then
             assertThat(topRatedTvShows).isEqualTo(expectedResponse)
-            coVerify(exactly = 1) { tvShowsApiService.getTopRatedTvShows(page) }
+            coVerify(exactly = 1) { tvShowsApiService.getTopRatedTvShows(TV_SHOW_TEST_PAGE) }
         }
 
     @Test
     fun `getTopRatedTvShows should rethrow NetworkException from service provider`() = runTest {
-        // Given
-        val page = 1
-        coEvery { tvShowsApiService.getTopRatedTvShows(page) } throws NetworkException()
+        coEvery { tvShowsApiService.getTopRatedTvShows(TV_SHOW_TEST_PAGE) } throws NetworkException()
 
-        // When & Then
         assertThrows<NetworkException> {
-            tvRemoteDataSourceImpl.getTopRatedTvShows(page)
+            tvRemoteDataSourceImpl.getTopRatedTvShows(TV_SHOW_TEST_PAGE)
         }
+        coVerify(exactly = 1) { tvShowsApiService.getTopRatedTvShows(TV_SHOW_TEST_PAGE) }
     }
 
 
     @Test
     fun `getTvShowsByKeyword should return a list of TV shows when successful`() = runTest {
-        // Given
-        val keyword = "Game of Thrones"
-        val page = 1
         val expectedResponse = TvShowRemoteResponse(
-            page = page,
-            results = listOf(
-                remoteTvShowItemDto
-            ),
+            page = TV_SHOW_TEST_PAGE,
+            results = listOf(tvShowItemRemoteDto),
             totalPages = 1,
             totalResults = 1
         )
-        coEvery { tvShowsApiService.getTvShowsByKeyword(keyword, page) } returns expectedResponse
+        coEvery {
+            tvShowsApiService.getTvShowsByKeyword(
+                TV_SHOW_TEST_KEYWORD,
+                TV_SHOW_TEST_PAGE
+            )
+        } returns expectedResponse
 
-        // When
-        val tvShows = tvRemoteDataSourceImpl.getTvShowsByKeyword(keyword, page)
+        val tvShows =
+            tvRemoteDataSourceImpl.getTvShowsByKeyword(TV_SHOW_TEST_KEYWORD, TV_SHOW_TEST_PAGE)
 
-        // Then
         assertThat(tvShows).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { tvShowsApiService.getTvShowsByKeyword(keyword, page) }
+        coVerify(exactly = 1) {
+            tvShowsApiService.getTvShowsByKeyword(
+                TV_SHOW_TEST_KEYWORD,
+                TV_SHOW_TEST_PAGE
+            )
+        }
     }
 
     @Test
-    fun `getTvShowsByKeyword should rethrow NetworkException from service provider when exception occurs`() =
-        runTest {
-            // Given
-            val keyword = "test"
-            val page = 1
-            coEvery {
-                tvShowsApiService.getTvShowsByKeyword(
-                    keyword,
-                    page
-                )
-            } throws NetworkException()
+    fun `getTvShowsByKeyword should rethrow NetworkException from service provider`() = runTest {
+        coEvery {
+            tvShowsApiService.getTvShowsByKeyword(
+                TV_SHOW_TEST_KEYWORD,
+                TV_SHOW_TEST_PAGE
+            )
+        } throws NetworkException()
 
-            // When & Then
-            assertThrows<NetworkException> {
-                tvRemoteDataSourceImpl.getTvShowsByKeyword(keyword, page)
-            }
+        assertThrows<NetworkException> {
+            tvRemoteDataSourceImpl.getTvShowsByKeyword(TV_SHOW_TEST_KEYWORD, TV_SHOW_TEST_PAGE)
         }
+        coVerify(exactly = 1) {
+            tvShowsApiService.getTvShowsByKeyword(
+                TV_SHOW_TEST_KEYWORD,
+                TV_SHOW_TEST_PAGE
+            )
+        }
+    }
 
 
     @Test
     fun `getTvShowDetailsById should return detailed TV show information when successful`() =
         runTest {
-            // Given
-            val tvShowId = 1399L
-            val expectedDetailsResponse = remoteTvShowDetailsResponse
-            coEvery { tvShowsApiService.getTvShowDetailsById(tvShowId) } returns expectedDetailsResponse
+            coEvery { tvShowsApiService.getTvShowDetailsById(TV_SHOW_TEST_ID) } returns tvShowDetailsRemoteResponse
 
-            // When
-            val details = tvRemoteDataSourceImpl.getTvShowDetailsById(tvShowId)
+            val details = tvRemoteDataSourceImpl.getTvShowDetailsById(TV_SHOW_TEST_ID)
 
-            // Then
-            assertThat(details).isEqualTo(expectedDetailsResponse)
-            coVerify(exactly = 1) { tvShowsApiService.getTvShowDetailsById(tvShowId) }
+            assertThat(details).isEqualTo(tvShowDetailsRemoteResponse)
+            coVerify(exactly = 1) { tvShowsApiService.getTvShowDetailsById(TV_SHOW_TEST_ID) }
         }
 
     @Test
     fun `getTvShowDetailsById should rethrow NetworkException from service provider`() = runTest {
-        // Given
-        val tvShowId = 1399L
-        coEvery { tvShowsApiService.getTvShowDetailsById(tvShowId) } throws NetworkException()
+        coEvery { tvShowsApiService.getTvShowDetailsById(TV_SHOW_TEST_ID) } throws NetworkException()
 
-        // When & Then
         assertThrows<NetworkException> {
-            tvRemoteDataSourceImpl.getTvShowDetailsById(tvShowId)
+            tvRemoteDataSourceImpl.getTvShowDetailsById(TV_SHOW_TEST_ID)
         }
+        coVerify(exactly = 1) { tvShowsApiService.getTvShowDetailsById(TV_SHOW_TEST_ID) }
     }
 
     @Test
     fun `getTvShowCast should return cast and crew for a TV show when successful`() = runTest {
-        // Given
-        val tvShowId = 1399L
-        val expectedCastAndCrewResponse = CastAndCrewRemoteResponse(
-            id = tvShowId,
-            cast = emptyList(),
-            crew = emptyList()
-        )
-        coEvery { tvShowsApiService.getTvShowCast(tvShowId) } returns expectedCastAndCrewResponse
+        coEvery { tvShowsApiService.getTvShowCast(TV_SHOW_TEST_ID) } returns tvShowCastAndCrewRemoteResponse
 
-        // When
-        val castAndCrew = tvRemoteDataSourceImpl.getTvShowCast(tvShowId)
+        val castAndCrew = tvRemoteDataSourceImpl.getTvShowCast(TV_SHOW_TEST_ID)
 
-        // Then
-        assertThat(castAndCrew).isEqualTo(expectedCastAndCrewResponse)
-        coVerify(exactly = 1) { tvShowsApiService.getTvShowCast(tvShowId) }
+        assertThat(castAndCrew).isEqualTo(tvShowCastAndCrewRemoteResponse)
+        coVerify(exactly = 1) { tvShowsApiService.getTvShowCast(TV_SHOW_TEST_ID) }
     }
 
     @Test
     fun `getTvShowCast should rethrow NetworkException from service provider`() = runTest {
-        // Given
-        val tvShowId = 1399L
-        coEvery { tvShowsApiService.getTvShowCast(tvShowId) } throws NetworkException()
+        coEvery { tvShowsApiService.getTvShowCast(TV_SHOW_TEST_ID) } throws NetworkException()
 
-        // When & Then
         assertThrows<NetworkException> {
-            tvRemoteDataSourceImpl.getTvShowCast(tvShowId)
+            tvRemoteDataSourceImpl.getTvShowCast(TV_SHOW_TEST_ID)
         }
+        coVerify(exactly = 1) { tvShowsApiService.getTvShowCast(TV_SHOW_TEST_ID) }
     }
 
     @Test
     fun `getEpisodesBySeasonNumber should return a list of episodes when successful`() = runTest {
-        // Given
-        val tvShowId = 1399L
-        val seasonNumber = 1
-        val expectedResponse = episodeResponse
         coEvery {
             tvShowsApiService.getEpisodesBySeasonNumber(
-                tvShowId,
-                seasonNumber
+                TV_SHOW_TEST_ID,
+                TV_SHOW_TEST_SEASON_NUMBER
             )
-        } returns expectedResponse
+        } returns episodeRemoteResponse
 
-        // When
-        val episodes = tvRemoteDataSourceImpl.getEpisodesBySeasonNumber(tvShowId, seasonNumber)
+        val episodes = tvRemoteDataSourceImpl.getEpisodesBySeasonNumber(
+            TV_SHOW_TEST_ID,
+            TV_SHOW_TEST_SEASON_NUMBER
+        )
 
-        // Then
-        assertThat(episodes).isEqualTo(expectedResponse)
+        assertThat(episodes).isEqualTo(episodeRemoteResponse)
         coVerify(exactly = 1) {
             tvShowsApiService.getEpisodesBySeasonNumber(
-                tvShowId,
-                seasonNumber
+                TV_SHOW_TEST_ID,
+                TV_SHOW_TEST_SEASON_NUMBER
             )
         }
     }
@@ -248,129 +222,173 @@ class TvRemoteDataSourceImplTest {
     @Test
     fun `getEpisodesBySeasonNumber should rethrow NetworkException from service provider`() =
         runTest {
-            // Given
-            val tvShowId = 1399L
-            val seasonNumber = 1
             coEvery {
                 tvShowsApiService.getEpisodesBySeasonNumber(
-                    tvShowId,
-                    seasonNumber
+                    TV_SHOW_TEST_ID,
+                    TV_SHOW_TEST_SEASON_NUMBER
                 )
             } throws NetworkException()
 
-            // When & Then
             assertThrows<NetworkException> {
-                tvRemoteDataSourceImpl.getEpisodesBySeasonNumber(tvShowId, seasonNumber)
+                tvRemoteDataSourceImpl.getEpisodesBySeasonNumber(
+                    TV_SHOW_TEST_ID,
+                    TV_SHOW_TEST_SEASON_NUMBER
+                )
+            }
+            coVerify(exactly = 1) {
+                tvShowsApiService.getEpisodesBySeasonNumber(
+                    TV_SHOW_TEST_ID,
+                    TV_SHOW_TEST_SEASON_NUMBER
+                )
             }
         }
 
     @Test
     fun `getEpisodeVideos should return a VideoResponse object when successful`() = runTest {
-        // Given
-        val tvShowId = 1399L
-        val seasonNumber = 1
-        val episodeNumber = 1
-        val expectedResponse = VideoRemoteResponse(
-            results = listOf(
-                videoDto
+        coEvery {
+            tvShowsApiService.getEpisodeVideos(
+                TV_SHOW_TEST_ID,
+                TV_SHOW_TEST_SEASON_NUMBER,
+                TV_SHOW_TEST_EPISODE_NUMBER
             )
+        } returns tvShowVideoRemoteResponse
+
+        val videoResponse = tvRemoteDataSourceImpl.getEpisodeVideos(
+            TV_SHOW_TEST_ID,
+            TV_SHOW_TEST_SEASON_NUMBER,
+            TV_SHOW_TEST_EPISODE_NUMBER
+        )
+
+        assertThat(videoResponse).isEqualTo(tvShowVideoRemoteResponse)
+        coVerify(exactly = 1) {
+            tvShowsApiService.getEpisodeVideos(
+                TV_SHOW_TEST_ID,
+                TV_SHOW_TEST_SEASON_NUMBER,
+                TV_SHOW_TEST_EPISODE_NUMBER
+            )
+        }
+    }
+
+    @Test
+    fun `getEpisodeVideos should return an empty list when API response is empty`() = runTest {
+        val expectedResponse = TvShowRemoteResponse(
+            page = 1,
+            results = emptyList(),
+            totalPages = 1,
+            totalResults = 0
         )
         coEvery {
             tvShowsApiService.getEpisodeVideos(
-                tvShowId,
-                seasonNumber,
-                episodeNumber
+                TV_SHOW_TEST_ID,
+                TV_SHOW_TEST_SEASON_NUMBER,
+                TV_SHOW_TEST_EPISODE_NUMBER
             )
-        } returns expectedResponse
+        } returns tvShowVideoRemoteResponse.copy(results = emptyList())
 
-        // When
         val videoResponse = tvRemoteDataSourceImpl.getEpisodeVideos(
-            tvShowId,
-            seasonNumber,
-            episodeNumber
+            TV_SHOW_TEST_ID,
+            TV_SHOW_TEST_SEASON_NUMBER,
+            TV_SHOW_TEST_EPISODE_NUMBER
         )
 
-        // Then
-        assertThat(videoResponse).isEqualTo(expectedResponse)
+        assertThat(videoResponse.results).isEmpty()
         coVerify(exactly = 1) {
             tvShowsApiService.getEpisodeVideos(
-                tvShowId,
-                seasonNumber,
-                episodeNumber
+                TV_SHOW_TEST_ID,
+                TV_SHOW_TEST_SEASON_NUMBER,
+                TV_SHOW_TEST_EPISODE_NUMBER
             )
         }
-
     }
 
     @Test
     fun `setTvShowRate should return RatingResponse when API call is successful`() = runTest {
-        // Given
-        val tvShowId = 123L
-        val sessionId = "mock_session"
-        val rate = 8
-        val expectedResponse = RatingRemoteResponse(statusCode = 1, statusMessage = "Success")
+        val rate = TV_SHOW_TEST_RATING.toInt()
 
         coEvery {
-            tvShowsApiService.postTvRating(tvShowId, rate.toFloat(), sessionId)
-        } returns expectedResponse
+            tvShowsApiService.postTvRating(
+                TV_SHOW_TEST_ID,
+                rate.toFloat(),
+            )
+        } returns tvShowRatingRemoteResponse
 
-        // When
         val result = tvRemoteDataSourceImpl.setTvShowRate(
             rate = rate,
-            tvShowId = tvShowId,
-            sessionId = sessionId
+            tvShowId = TV_SHOW_TEST_ID,
         )
 
-        // Then
-        assertThat(result).isEqualTo(expectedResponse)
+        assertThat(result).isEqualTo(tvShowRatingRemoteResponse)
         coVerify(exactly = 1) {
-            tvShowsApiService.postTvRating(tvShowId, rate.toFloat(), sessionId)
+            tvShowsApiService.postTvRating(TV_SHOW_TEST_ID, rate.toFloat())
         }
     }
 
 
     @Test
-    fun `getTvShowRated should return rating for a TV show`() = runTest {
-        //Given
-        val sessionId = "session_id"
-
+    fun `getRatedTvShows should return rated TV shows when successful`() = runTest {
         val expectedResponse = TvShowRemoteResponse(
-            page = 1,
-            results = listOf(
-                remoteTvShowItemDto
-            ),
+            page = TV_SHOW_TEST_PAGE,
+            results = listOf(tvShowItemRemoteDto),
             totalPages = 1,
             totalResults = 1
         )
-        coEvery { tvShowsApiService.getRatedTvShows(0, sessionId) } returns expectedResponse
-        //When
-        val ratingResponse = tvRemoteDataSourceImpl.getRatedTvShows(sessionId)
-        //Then
-        assertThat(ratingResponse).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { tvShowsApiService.getRatedTvShows(0, sessionId) }
+        coEvery { tvShowsApiService.getRatedTvShows() } returns expectedResponse
 
+        val ratingResponse = tvRemoteDataSourceImpl.getRatedTvShows()
+
+        assertThat(ratingResponse).isEqualTo(expectedResponse)
+        coVerify(exactly = 1) { tvShowsApiService.getRatedTvShows() }
     }
 
     @Test
+    fun `getRatedTvShows should throw NetworkException when api call fails`() = runTest {
+        coEvery { tvShowsApiService.getRatedTvShows() } throws NetworkException()
+
+        assertThrows<NetworkException> {
+            tvRemoteDataSourceImpl.getRatedTvShows()
+        }
+        coVerify(exactly = 1) { tvShowsApiService.getRatedTvShows() }
+    }
+
+
+    @Test
     fun `deleteTvShowRate should call deleteTvRating API with correct parameters`() = runTest {
-        // Given
-        val tvShowId = 1399L
-        val sessionId = "session_id"
-        val expectedResponse = RatingRemoteResponse(
-            statusCode = 200,
-            statusMessage = "Success"
-        )
         coEvery {
-            tvShowsApiService.deleteTvRating(tvId = tvShowId, sessionId = sessionId)
-        } returns expectedResponse
+            tvShowsApiService.deleteTvRating(tvId = TV_SHOW_TEST_ID)
+        } returns tvShowRatingRemoteResponse
 
-        // When
-        tvRemoteDataSourceImpl.deleteTvShowRate(tvShowId, sessionId)
+        tvRemoteDataSourceImpl.deleteTvShowRate(TV_SHOW_TEST_ID)
 
-        // Then
         coVerify(exactly = 1) {
-            tvShowsApiService.deleteTvRating(tvId = tvShowId, sessionId = sessionId)
+            tvShowsApiService.deleteTvRating(tvId = TV_SHOW_TEST_ID)
         }
     }
 
+    @Test
+    fun `getTvShowsByGenreId should return a list of TV shows when successful`() = runTest {
+        val expectedResponse = TvShowRemoteResponse(
+            page = TV_SHOW_TEST_PAGE,
+            results = listOf(tvShowItemRemoteDto),
+            totalPages = 1,
+            totalResults = 1
+        )
+        val genreList = listOf(TV_SHOW_TEST_GENRE_ID)
+        coEvery {
+            tvShowsApiService.getTvShowsByGenreIds(
+                genreList,
+                TV_SHOW_TEST_PAGE
+            )
+        } returns expectedResponse
+
+        val tvShows =
+            tvRemoteDataSourceImpl.getTvShowsByGenreId(TV_SHOW_TEST_GENRE_ID, TV_SHOW_TEST_PAGE)
+
+        assertThat(tvShows).isEqualTo(expectedResponse)
+        coVerify(exactly = 1) {
+            tvShowsApiService.getTvShowsByGenreIds(
+                genreList,
+                TV_SHOW_TEST_PAGE
+            )
+        }
+    }
 }
