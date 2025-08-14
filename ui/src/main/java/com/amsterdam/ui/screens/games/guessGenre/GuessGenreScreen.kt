@@ -1,5 +1,6 @@
 package com.amsterdam.ui.screens.games.guessGenre
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +21,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,12 +28,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.Scaffold
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
-import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.GameTopBar
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.AdaptiveAnswersColumn
 import com.amsterdam.ui.components.guessGame.GuessTitle
+import com.amsterdam.ui.screens.letsPlay.component.NotEnoughPointsDialog
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.uiModel
 import com.amsterdam.viewmodel.game.whichGenre.GameQuestionUiState
@@ -42,7 +42,6 @@ import com.amsterdam.viewmodel.game.whichGenre.GenreGameInteractionListener
 import com.amsterdam.viewmodel.game.whichGenre.GenreGameUiState
 import com.amsterdam.viewmodel.game.whichGenre.GuessGenreViewModel
 import kotlinx.coroutines.launch
-import com.amsterdam.ui.R as R2
 
 @Composable
 fun GuessGenreScreen(
@@ -50,8 +49,6 @@ fun GuessGenreScreen(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val navigationManager = LocalNavManager.current
-    val context = LocalContext.current
-
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -67,13 +64,6 @@ fun GuessGenreScreen(
                         totalSpentSeconds = resultScreenData.totalSpentSeconds,
                         gameType = resultScreenData.gameType,
                         difficulty = resultScreenData.difficulty
-                    )
-                }
-
-                GenreGameEffect.ShowNotEnoughPointsSnackBar -> {
-                    SnackBarManager.showError(
-                        context.getString(R2.string.oops_there_are_not_enough_points),
-                        duration = 1500L
                     )
                 }
             }
@@ -120,6 +110,10 @@ private fun GameScreenContent(
     ) { innerPadding ->
         Box {
             LoginBackground()
+            AnimatedVisibility(state.isNotEnoughPointsDialogVisible) {
+                NotEnoughPointsDialog(onConfirm = interactionListener::dismissNotEnoughPointsDialog,
+                    onDismiss = interactionListener::dismissNotEnoughPointsDialog,)
+            }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()

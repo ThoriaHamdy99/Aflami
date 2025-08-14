@@ -6,6 +6,4 @@ interface GuessMovieByPosterGameEffect {
     object NavigateBack : GuessMovieByPosterGameEffect
     data class NavigateToGameResult(val resultScreenData : ResultScreenData) :
         GuessMovieByPosterGameEffect
-    data object ShowNotEnoughPointsSnackBar: GuessMovieByPosterGameEffect
-
 }

@@ -62,7 +62,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.Default) {
             timerHandler.startTimer(
                 currentQuestion.questionTimeSeconds,
-                onTimerFinish = ::onTimeFinish
+                onTimerFinish = ::onMoveToNextQuestion
             )
                 .collect(::onTimerUpdate)
         }
@@ -81,10 +81,6 @@ class GuessReleaseYearGameViewModel @Inject constructor(
             )
         }
         increaseSpentTimeSecondsByOne()
-    }
-
-    private fun onTimeFinish() {
-        onMoveToNextQuestion()
     }
 
     private fun onCompletion() {
@@ -154,6 +150,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
                     selectedAnswerIndex = null,
                     isAnswerCorrect = null,
                     isNextEnabled = false,
+                    isNotEnoughPointsDialogVisible = false
                 )
             }
             startTheTimer()
@@ -178,13 +175,17 @@ class GuessReleaseYearGameViewModel @Inject constructor(
         sendNewNavigationEffect(GuessReleaseYearGameEffect.NavigateBack)
     }
 
+    override fun dismissNotEnoughPointsDialog() {
+        updateState { it.copy(isNotEnoughPointsDialogVisible = false) }
+    }
+
     override fun onClickClose() {
         sendNewNavigationEffect(GuessReleaseYearGameEffect.NavigateBack)
     }
 
     private fun onError(error: AflamiException) {
         when(error){
-            is NotEnoughPointsException -> sendNewEffect(GuessReleaseYearGameEffect.ShowNotEnoughPointsSnackBar)
+            is NotEnoughPointsException -> updateState { it.copy(isNotEnoughPointsDialogVisible = true) }
         }
     }
 }

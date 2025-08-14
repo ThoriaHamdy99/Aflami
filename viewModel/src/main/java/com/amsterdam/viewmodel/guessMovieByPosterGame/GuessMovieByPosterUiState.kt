@@ -10,6 +10,7 @@ data class GuessMovieByPosterUiState(
     val selectedAnswerIndex: Int? = null,
     val isAnswerCorrect: Boolean? = null,
     val isHintEnabled: Boolean = true,
+    val isNotEnoughPointsDialogVisible: Boolean = false,
     val isNextEnabled: Boolean = false,
     val currentQuestionIndex: Int = 0,
     val timerUiState: TimerUiState = TimerUiState()

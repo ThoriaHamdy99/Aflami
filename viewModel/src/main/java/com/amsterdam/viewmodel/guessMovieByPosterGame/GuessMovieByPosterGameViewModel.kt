@@ -62,7 +62,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.Default) {
             timerHandler.startTimer(
                 currentQuestion.questionTimeSeconds,
-                onTimerFinish = ::onTimeFinish
+                onTimerFinish = ::onMoveToNextQuestion
             )
                 .collect(::onTimerUpdate)
         }
@@ -80,10 +80,6 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
             )
         }
         increaseSpentTimeSecondsByOne()
-    }
-
-    private fun onTimeFinish() {
-        onMoveToNextQuestion()
     }
 
     private fun onCompletion() {
@@ -171,6 +167,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
                     selectedAnswerIndex = null,
                     isAnswerCorrect = null,
                     isNextEnabled = false,
+                    isNotEnoughPointsDialogVisible = false
                 )
             }
             startTheTimer()
@@ -187,6 +184,10 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
         }
     }
 
+    override fun dismissNotEnoughPointsDialog() {
+        updateState { it.copy(isNotEnoughPointsDialogVisible = false) }
+    }
+
     private fun increaseSpentTimeSecondsByOne() {
         spentTimeSeconds += 1
     }
@@ -198,7 +199,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
 
     private fun onError(error: AflamiException) {
         when(error){
-            is NotEnoughPointsException -> sendNewEffect(GuessMovieByPosterGameEffect.ShowNotEnoughPointsSnackBar)
+            is NotEnoughPointsException -> updateState { it.copy(isNotEnoughPointsDialogVisible = true) }
         }
     }
 }

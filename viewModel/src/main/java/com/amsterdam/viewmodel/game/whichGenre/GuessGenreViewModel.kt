@@ -61,7 +61,7 @@ class GuessGenreViewModel @Inject constructor(
         val currentQuestion =
             state.value.questions[state.value.currentQuestionIndex]
         viewModelScope.launch(dispatcherProvider.Default) {
-            timerHandler.startTimer( currentQuestion.questionTime, onTimerFinish = ::onTimeFinish)
+            timerHandler.startTimer( currentQuestion.questionTime, onTimerFinish = ::onMoveToNextQuestion)
                 .collect(::onTimerUpdate)
         }
     }
@@ -78,10 +78,6 @@ class GuessGenreViewModel @Inject constructor(
                 )
             )
         }
-    }
-
-    private fun onTimeFinish() {
-        onMoveToNextQuestion()
     }
 
     private fun onCompletion() {
@@ -115,7 +111,8 @@ class GuessGenreViewModel @Inject constructor(
             it.copy(
                 selectedAnswerIndex = answerIndex,
                 isAnswerCorrect = answerResult.isCorrect,
-                isNextEnabled = true
+                isNextEnabled = true,
+                isNotEnoughPointsDialogVisible = false
             )
         }
         totalEarnedPoints += answerResult.earnedPoints
@@ -171,9 +168,13 @@ class GuessGenreViewModel @Inject constructor(
         }
     }
 
+    override fun dismissNotEnoughPointsDialog() {
+        updateState { it.copy(isNotEnoughPointsDialogVisible = false) }
+    }
+
     private fun onError(error: AflamiException) {
         when(error){
-            is NotEnoughPointsException -> sendNewEffect(GenreGameEffect.ShowNotEnoughPointsSnackBar)
+            is NotEnoughPointsException -> updateState { it.copy(isNotEnoughPointsDialogVisible = true) }
         }
     }
 }

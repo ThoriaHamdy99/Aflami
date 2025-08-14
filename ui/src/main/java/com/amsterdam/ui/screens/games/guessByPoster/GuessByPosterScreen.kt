@@ -1,5 +1,6 @@
 package com.amsterdam.ui.screens.games.guessByPoster
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +23,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,7 +35,6 @@ import com.amsterdam.designsystem.components.Scaffold
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
-import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
@@ -44,6 +43,7 @@ import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.AdaptiveAnswersColumn
 import com.amsterdam.ui.components.guessGame.GuessPicture
 import com.amsterdam.ui.components.guessGame.TimerComponent
+import com.amsterdam.ui.screens.letsPlay.component.NotEnoughPointsDialog
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameEffect
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameViewModel
@@ -60,7 +60,6 @@ fun GuessByPosterGameScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navigationManager = LocalNavManager.current
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -76,13 +75,6 @@ fun GuessByPosterGameScreen(
                         totalSpentSeconds = resultScreenData.totalSpentSeconds,
                         gameType = resultScreenData.gameType,
                         difficulty = resultScreenData.difficulty
-                    )
-                }
-
-                GuessMovieByPosterGameEffect.ShowNotEnoughPointsSnackBar -> {
-                    SnackBarManager.showError(
-                        context.getString(com.amsterdam.ui.R.string.oops_there_are_not_enough_points),
-                        duration = 1500
                     )
                 }
             }
@@ -137,6 +129,10 @@ private fun GuessByPosterContent(
 
         Box {
             LoginBackground()
+            AnimatedVisibility(state.isNotEnoughPointsDialogVisible) {
+                NotEnoughPointsDialog(onConfirm = interactionListener::dismissNotEnoughPointsDialog,
+                    onDismiss = interactionListener::dismissNotEnoughPointsDialog,)
+            }
             LazyColumn(
                 modifier =
                     modifier
@@ -288,6 +284,7 @@ private fun GuessByPosterScreenPreview() {
                     override fun onHintClicked() {}
                     override fun onSelectAnswer(selectedAnswerIndex: Int) {}
                     override fun onMoveToNextQuestion() {}
+                    override fun dismissNotEnoughPointsDialog() {}
                 },
         )
     }

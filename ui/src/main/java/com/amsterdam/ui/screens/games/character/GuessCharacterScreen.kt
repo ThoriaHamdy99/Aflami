@@ -1,5 +1,6 @@
 package com.amsterdam.ui.screens.games.character
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,13 +28,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amsterdam.designsystem.components.Scaffold
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
-import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.GameTopBar
 import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.components.guessGame.AdaptiveAnswersColumn
 import com.amsterdam.ui.components.guessGame.GuessPicture
+import com.amsterdam.ui.screens.letsPlay.component.NotEnoughPointsDialog
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameEffect
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameViewModel
@@ -41,12 +42,10 @@ import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterUiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun GuessCharacterScreen(viewModel: GuessCharacterGameViewModel = hiltViewModel()) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val navigationManager = LocalNavManager.current
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
@@ -62,13 +61,6 @@ fun GuessCharacterScreen(viewModel: GuessCharacterGameViewModel = hiltViewModel(
                         totalSpentSeconds = resultScreenData.totalSpentSeconds,
                         gameType = resultScreenData.gameType,
                         difficulty = resultScreenData.difficulty
-                    )
-                }
-
-                GuessCharacterGameEffect.ShowNotEnoughPointsSnackBar -> {
-                    SnackBarManager.showError(
-                        context.getString(R.string.oops_there_are_not_enough_points),
-                        duration = 1500
                     )
                 }
             }
@@ -114,6 +106,10 @@ private fun GameContent(
     ) { innerPadding ->
         Box {
             LoginBackground()
+            AnimatedVisibility(state.isNotEnoughPointsDialogVisible) {
+                NotEnoughPointsDialog(onConfirm = interactionListener::dismissNotEnoughPointsDialog,
+                    onDismiss = interactionListener::dismissNotEnoughPointsDialog,)
+            }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()

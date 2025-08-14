@@ -4,5 +4,6 @@ interface GuessCharacterInteractionListener {
     fun onHintClicked()
     fun onSelectAnswer(selectedAnswerIndex : Int)
     fun onMoveToNextQuestion()
+    fun dismissNotEnoughPointsDialog()
     fun onCloseButtonClicked()
 }
