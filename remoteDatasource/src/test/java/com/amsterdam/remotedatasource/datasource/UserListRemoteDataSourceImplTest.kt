@@ -16,7 +16,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import retrofit2.HttpException
@@ -24,19 +23,13 @@ import retrofit2.Response
 
 class UserListRemoteDataSourceImplTest {
 
-    private lateinit var userListRemoteDataSourceImpl: UserListRemoteDataSourceImpl
-    private lateinit var userListApiService: UserListApiService
-    private lateinit var jsonMock: Json
-
-    @BeforeEach
-    fun setup() {
-        userListApiService = mockk()
-        jsonMock = mockk(relaxed = true)
-        userListRemoteDataSourceImpl = UserListRemoteDataSourceImpl(
+    private val userListApiService: UserListApiService = mockk()
+    private val jsonMock: Json = mockk(relaxed = true)
+    private val userListRemoteDataSourceImpl: UserListRemoteDataSourceImpl =
+        UserListRemoteDataSourceImpl(
             userListApiService = userListApiService,
             json = jsonMock
         )
-    }
 
     @Test
     fun `createNewList should return a new user list response on successful API call`() = runTest {

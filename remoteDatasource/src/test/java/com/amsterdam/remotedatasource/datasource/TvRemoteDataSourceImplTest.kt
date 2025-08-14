@@ -21,20 +21,14 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class TvRemoteDataSourceImplTest {
 
-    private lateinit var tvShowsApiService: TvShowsApiService
-    private lateinit var tvRemoteDataSourceImpl: TvRemoteDataSourceImpl
-
-    @BeforeEach
-    fun setUp() {
-        tvShowsApiService = mockk()
-        tvRemoteDataSourceImpl = TvRemoteDataSourceImpl(tvShowsApiService)
-    }
+    private val tvShowsApiService: TvShowsApiService = mockk()
+    private val tvRemoteDataSourceImpl: TvRemoteDataSourceImpl =
+        TvRemoteDataSourceImpl(tvShowsApiService)
 
     @Test
     fun `getPopularTvShows should return a list of TV shows when the API call is successful`() =
