@@ -4,11 +4,11 @@ import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.entity.Season
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.entity.category.TvShowGenre
-import com.amsterdam.repository.datasource.remote.TvShowsRemoteSource
+import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
 import com.amsterdam.repository.dto.remote.RemoteCastAndCrewResponse
 import com.amsterdam.repository.dto.remote.RemoteTvShowResponse
 import com.amsterdam.repository.dto.remote.VideoResponse
-import com.amsterdam.repository.mapper.remote.toEntityList
+import com.amsterdam.repository.mapper.toEntityList
 import com.amsterdam.repository.utils.remoteCastDto
 import com.amsterdam.repository.utils.remoteTvShowItemDto
 import com.amsterdam.repository.utils.tvShowDetailsRemoteResponse
@@ -20,7 +20,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
 class TvShowRepositoryImplTest {
-    private val tvShowRemoteDataSource: TvShowsRemoteSource = mockk()
+    private val tvShowRemoteDataSource: TvShowsRemoteDataSource = mockk()
 
     private val tvShowRepository: TvShowRepository by lazy {
         TvShowRepositoryImpl(
@@ -28,7 +28,7 @@ class TvShowRepositoryImplTest {
             remoteTvDataSource = tvShowRemoteDataSource,
             preferences = mockk(),
             categoryLocalDataSource = mockk(),
-            categoryRemoteSource = mockk()
+            categoryRemoteDataSource = mockk()
         )
     }
 

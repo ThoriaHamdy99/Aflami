@@ -6,12 +6,14 @@ import com.amsterdam.remotedatasource.api.AuthenticationApiService
 import com.amsterdam.remotedatasource.api.CategoryApiService
 import com.amsterdam.remotedatasource.api.CountryApiService
 import com.amsterdam.remotedatasource.api.MovieApiService
+import com.amsterdam.remotedatasource.api.PeopleApiService
 import com.amsterdam.remotedatasource.api.ProfileApiService
 import com.amsterdam.remotedatasource.api.TvShowsApiService
 import com.amsterdam.remotedatasource.api.UserListApiService
 import com.amsterdam.remotedatasource.utils.RequiresSessionId
 import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
-import com.amsterdam.repository.security.CryptoData
+import com.amsterdam.repository.security.CryptoManager
+import com.amsterdam.repository.utils.decryptString
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -28,7 +30,7 @@ class RetrofitClient(
     private val json: Json,
     private val preferences: AppPreferencesRepository,
     private val authenticationLocalDataSource: AuthenticationLocalDataSource,
-    private val cryptoData: CryptoData
+    private val cryptoManager: CryptoManager
 
 ) {
     private val TOKEN_HEADER_NAME = "Authorization"
@@ -62,7 +64,7 @@ class RetrofitClient(
 
             if (requireSession) {
                 val sessionId = runBlocking {
-                    cryptoData.decryptString(authenticationLocalDataSource.getCachedSessionId())
+                    cryptoManager.decryptString(authenticationLocalDataSource.getCachedSessionId())
                 }
 
                 if (!sessionId.isNullOrBlank()) {
@@ -97,4 +99,6 @@ class RetrofitClient(
     fun tvApiService(): TvShowsApiService = retrofit.create(TvShowsApiService::class.java)
     fun userListApiService(): UserListApiService = retrofit.create(UserListApiService::class.java)
     fun profileApiService(): ProfileApiService = retrofit.create(ProfileApiService::class.java)
+
+    fun peopleApiService(): PeopleApiService = retrofit.create(PeopleApiService::class.java)
 }
