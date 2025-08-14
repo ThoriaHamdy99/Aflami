@@ -107,7 +107,7 @@ private fun GuessByPosterContent(
         ) {
             val pagerState = rememberPagerState(pageCount = { state.questions.size })
             val scope = rememberCoroutineScope()
-            val topBarTitle = stringResource(com.amsterdam.ui.R.string.guess_movie_game_title)
+            val topBarTitle = stringResource(com.amsterdam.ui.R.string.guess_by_poster)
 
             LaunchedEffect(state.currentQuestionIndex) {
                 scope.launch { pagerState.animateScrollToPage(state.currentQuestionIndex) }
@@ -188,14 +188,12 @@ fun GameQuestion(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        var blurRadius by remember { mutableStateOf(8.dp) }
         GuessPicture(
-            blurRadius = blurRadius,
+            blurRadius = question.blurRadius.dp,
             points = 10,
             imageUrl = question.posterUrl,
             isHintVisible = isHintEnabled,
             onClick = {
-                blurRadius = 5.dp
                 onHintClick()
             },
         )

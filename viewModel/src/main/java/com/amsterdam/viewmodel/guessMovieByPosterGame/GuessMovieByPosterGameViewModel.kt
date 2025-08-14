@@ -92,6 +92,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
     }
 
     override fun onHintClicked() {
+        if (state.value.isNextEnabled) return
         tryToExecute(
             action = {
                 val currentQuestion = state.value.questions[state.value.currentQuestionIndex]
@@ -103,7 +104,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
                         questions = it.questions.toMutableList().apply {
                             set(
                                 state.value.currentQuestionIndex,
-                                newQuestion.toQuestionUiState()
+                                newQuestion.toQuestionUiState().copy(blurRadius = 5)
                             )
                         }, isHintEnabled = false
                     )
@@ -112,6 +113,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
             onError = ::onError
         )
     }
+
 
     override fun onSelectAnswer(selectedAnswerIndex: Int) {
         val question =
@@ -126,7 +128,8 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
                     difficultyType
                 )
             },
-            onSuccess = { onSuccessSubmitAnswer(it, selectedAnswerIndex) }
+            onSuccess = { onSuccessSubmitAnswer(it, selectedAnswerIndex) },
+            onCompletion = ::onSubmitTheAnswerComplete
         )
     }
 
@@ -141,7 +144,20 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
                 selectedAnswerIndex = selectedAnswerIndex
             )
         }
-            totalCollectedPoints += answerResult.earnedPoints
+        totalCollectedPoints += answerResult.earnedPoints
+    }
+
+    private fun onSubmitTheAnswerComplete() {
+        updateState {
+            it.copy(
+                questions = it.questions.toMutableList().apply {
+                    set(
+                        state.value.currentQuestionIndex,
+                        it.questions[state.value.currentQuestionIndex].copy(blurRadius = 0)
+                    )
+                }
+            )
+        }
     }
 
     override fun onMoveToNextQuestion() {

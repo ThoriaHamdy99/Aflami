@@ -134,6 +134,7 @@ class GuessGenreViewModel @Inject constructor(
     }
 
     override fun onUseHint() {
+        if (state.value.isNextEnabled) return
         val currentQuestion = state.value.questions[state.value.currentQuestionIndex]
         tryToExecute(
             action = { guessMovieGenreUseCase.giveHint(currentQuestion.toQuestion()) },

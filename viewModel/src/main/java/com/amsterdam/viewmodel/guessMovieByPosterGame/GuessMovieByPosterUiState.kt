@@ -18,7 +18,8 @@ data class GuessMovieByPosterUiState(
         val posterUrl: String = "",
         val movieNameChoices: List<String> = emptyList(),
         val correctAnswer: String = "",
-        val questionTimeSeconds: Int = 0
+        val questionTimeSeconds: Int = 0,
+        val blurRadius: Int = 8
     )
 }
 

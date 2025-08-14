@@ -95,6 +95,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
     }
 
     override fun onHintClicked() {
+        if (state.value.isNextEnabled) return
         tryToExecute(
             action = {
                 val currentQuestion = state.value.questions[state.value.currentQuestionIndex]

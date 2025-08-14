@@ -1,6 +1,5 @@
 package com.amsterdam.ui.screens.games.character
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +18,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -129,6 +127,7 @@ private fun GameContent(
                 CharacterGameQuestion(
                     questionImageModel = question.characterImageUrl,
                     answers = question.characterChoices,
+                    blurRadius = question.blurRadius,
                     selectedAnswerIndex = state.selectedAnswerIndex,
                     isAnswerCorrect = state.isAnswerCorrect,
                     isHintEnabled = state.isHintEnabled,
@@ -156,6 +155,7 @@ private fun GameContent(
 fun CharacterGameQuestion(
     questionImageModel: String,
     answers: List<String>,
+    blurRadius: Int,
     selectedAnswerIndex: Int?,
     isAnswerCorrect: Boolean?,
     isHintEnabled: Boolean,
@@ -170,12 +170,8 @@ fun CharacterGameQuestion(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        val animatedBlur by animateDpAsState(
-            targetValue = if (isHintEnabled) 8.dp else 5.dp,
-        )
-
         GuessPicture(
-            blurRadius = animatedBlur,
+            blurRadius = blurRadius.dp,
             points = 10,
             imageUrl = questionImageModel,
             isHintVisible = isHintEnabled,
