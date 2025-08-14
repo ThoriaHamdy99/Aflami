@@ -36,9 +36,9 @@ open class BaseViewModel<S, E>(
     private val _errorState: MutableStateFlow<BaseErrorUiState?> = MutableStateFlow(null)
     val errorState: StateFlow<BaseErrorUiState?> = _errorState.asStateFlow()
 
-    protected fun updateErrorState(error: BaseErrorUiState?) {
+    protected fun updateErrorStateByException(exception: AflamiException?) {
         viewModelScope.launch(dispatcherProvider.MainImmediate) {
-            _errorState.value = error
+            _errorState.value = exception.toErrorUiState()
         }
     }
 
