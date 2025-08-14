@@ -8,9 +8,12 @@ import com.amsterdam.entity.TvShowWatchHistory
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
@@ -28,28 +31,34 @@ class GetContinueWatchingScreenDataUseCaseTest {
     }
 
     @Test
-    fun `should call both child use cases with half the page size`() = runTest {
-        coEvery { getContinueWatchingMoviesUseCase(page, pageSize / 2) } returns flow {
-            emit(
-                emptyList()
-            )
-        }
-        coEvery { getContinueWatchingTvShowsUseCase(page, pageSize / 2) } returns flow {
-            emit(
-                emptyList()
-            )
-        }
+    fun `should call getContinueWatchingMoviesUseCases with half the page size`() = runTest {
+        coEvery { getContinueWatchingMoviesUseCase(page, any()) } returns flowOf(emptyList())
+        coEvery { getContinueWatchingTvShowsUseCase(page, any()) } returns flowOf(emptyList())
 
         getContinueWatchingScreenDataUseCase(page, pageSize)
 
-        coVerify(exactly = 1) { getContinueWatchingMoviesUseCase(page, 10) }
-        coVerify(exactly = 1) { getContinueWatchingTvShowsUseCase(page, 10) }
+        coVerify(exactly = 1) { getContinueWatchingMoviesUseCase(page, pageSize / 2) }
+    }
+
+    @Test
+    fun `should call getContinueWatchingTvShowsUseCase with half the page size`() = runTest {
+        coEvery { getContinueWatchingMoviesUseCase(page, any()) } returns flowOf(emptyList())
+        coEvery { getContinueWatchingTvShowsUseCase(page, any()) } returns flowOf(emptyList())
+
+        getContinueWatchingScreenDataUseCase(page, pageSize)
+
+        coVerify(exactly = 1) { getContinueWatchingTvShowsUseCase(page, pageSize / 2) }
     }
 
     @Test
     fun `should return ContinueWatchingScreenData object with correct flows`() = runTest {
         val expectedMovieList = listOf(fakeMovieWatchHistory)
         val expectedTvShowList = listOf(fakeTvShowWatchHistory)
+
+        val continueWatchingDataExpectedResult = GetContinueWatchingScreenDataUseCase.ContinueWatchingScreenData(
+            expectedMovieList,
+            expectedTvShowList
+        )
 
         val movieFlow = flow { emit(expectedMovieList) }
         val tvShowFlow = flow { emit(expectedTvShowList) }
@@ -59,8 +68,7 @@ class GetContinueWatchingScreenDataUseCaseTest {
 
         val result = getContinueWatchingScreenDataUseCase().first()
 
-        assertThat(result.continueWatchingMovies).isEqualTo(expectedMovieList)
-        assertThat(result.continueWatchingTvShows).isEqualTo(expectedTvShowList)
+        assertThat(result).isEqualTo(continueWatchingDataExpectedResult)
     }
 
 

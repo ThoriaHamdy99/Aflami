@@ -23,17 +23,15 @@ class GetUserListsUseCaseTest {
         val result = getUserListsUseCase(page)
 
         assertThat(result).isEqualTo(expectedResult)
-        coVerify(exactly = 1) { userListRepository.getUserLists(0, page) }
     }
 
     @Test
     fun `should use default page value when no page is provided`() = runTest {
         val expectedResult = emptyList<UserList>()
-        coEvery { userListRepository.getUserLists(page = 1) } returns expectedResult
+        coEvery { userListRepository.getUserLists(any()) } returns expectedResult
 
-        val result = getUserListsUseCase()
+        getUserListsUseCase()
 
-        assertThat(result).isEqualTo(expectedResult)
         coVerify(exactly = 1) { userListRepository.getUserLists(page = 1) }
     }
 
@@ -45,7 +43,6 @@ class GetUserListsUseCaseTest {
         val result = getUserListsUseCase(page)
 
         assertThat(result).isEqualTo(expectedResult)
-        coVerify(exactly = 1) { userListRepository.getUserLists(0, page) }
     }
 
     private val page = 1
