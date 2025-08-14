@@ -33,6 +33,14 @@ open class BaseViewModel<S, E>(
 
     val state: StateFlow<S> = _state.asStateFlow()
 
+    private val _errorState: MutableStateFlow<BaseErrorUiState?> = MutableStateFlow(null)
+    val errorState: StateFlow<BaseErrorUiState?> = _errorState.asStateFlow()
+
+    protected fun updateErrorState(error: BaseErrorUiState?) {
+        viewModelScope.launch(dispatcherProvider.MainImmediate) {
+            _errorState.value = error
+        }
+    }
 
     protected fun updateState(updater: (S) -> S) {
         viewModelScope.launch(dispatcherProvider.MainImmediate) {
@@ -65,8 +73,10 @@ open class BaseViewModel<S, E>(
                     onSuccess(it)
                 }
             } catch (exception: AflamiException) {
+                _errorState.value = exception.toErrorUiState()
                 onError(exception)
             } catch (_: Exception) {
+                _errorState.value = AflamiException().toErrorUiState()
                 onError(AflamiException())
             } finally {
                 onCompletion()
