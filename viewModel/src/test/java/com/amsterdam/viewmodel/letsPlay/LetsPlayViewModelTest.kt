@@ -3,12 +3,15 @@ package com.amsterdam.viewmodel.letsPlay
 import app.cash.turbine.test
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
 import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
+import com.amsterdam.entity.Game
+import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState.GameDifficultyUiState
 import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState.GameUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -33,17 +36,10 @@ class LetsPlayViewModelTest {
         )
     }
 
-    private fun toLetsPlayUiState(): LetsPlayUiState {
-        return LetsPlayUiState(
-            games = testGamesUiState,
-            difficulties = testDifficultiesUiState
-        )
-    }
-
     @BeforeEach
     fun setUp() {
         coEvery { getTotalUserPointsUseCase() } returns flowOf(1000)
-        coEvery { getAvailableGamesUseCase() } returns GetAvailableGamesUseCase.AvailableGames(emptyList(), emptyList())
+        every { getAvailableGamesUseCase() } returns availableGamesResponse
     }
 
     @Test
@@ -58,16 +54,12 @@ class LetsPlayViewModelTest {
     }
 
     @Test
-    fun `init should update state with available games and difficulties on success`() = runTest {
-        val availableGamesResponse = GetAvailableGamesUseCase.AvailableGames(emptyList(), emptyList())
-        coEvery { getAvailableGamesUseCase() } returns availableGamesResponse
-
+    fun `init should correctly map and update state with available games and difficulties`() = runTest {
         viewModel
         advanceUntilIdle()
 
-        val expectedUiState = availableGamesResponse.toLetsPlayUiState()
-        assertThat(viewModel.state.value.games).isEqualTo(expectedUiState.games)
-        assertThat(viewModel.state.value.difficulties).isEqualTo(expectedUiState.difficulties)
+        assertThat(viewModel.state.value.games).isEqualTo(testGamesUiState)
+        assertThat(viewModel.state.value.difficulties).isEqualTo(testDifficultiesUiState)
     }
 
     @Test
@@ -92,7 +84,7 @@ class LetsPlayViewModelTest {
 
     @Test
     fun `onSelectDifficultyLevel should update state with selected difficulty and enable start button`() = runTest {
-        val selectedDifficulty = testDifficultiesUiState.first { it.difficultyLevel == GameDifficultyUiState.DifficultyLevelUiState.HARD }
+        val selectedDifficulty = hardDifficulty
 
         viewModel.onSelectDifficultyLevel(selectedDifficulty)
         advanceUntilIdle()
@@ -129,14 +121,42 @@ class LetsPlayViewModelTest {
     }
 
     @Test
+    fun `onClickStartGame should send NavigateToGuessMovieByReleaseScreen effect when selected`() = runTest {
+        viewModel.onClickGameCard(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_RELEASE)
+        viewModel.onSelectDifficultyLevel(hardDifficulty)
+        advanceUntilIdle()
+
+        viewModel.effect.test {
+            viewModel.onClickStartGame()
+            val expectedEffect = LetsPlayEffect.NavigateToGuessMovieByReleaseScreen(hardDifficulty.difficultyLevel.name)
+            assertThat(awaitItem()).isEqualTo(expectedEffect)
+        }
+    }
+
+    @Test
     fun `onClickStartGame should send NavigateToGuessMovieByPosterScreen effect when selected`() = runTest {
         viewModel.onClickGameCard(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_POSTER)
+
         viewModel.onSelectDifficultyLevel(easyDifficulty)
         advanceUntilIdle()
 
         viewModel.effect.test {
             viewModel.onClickStartGame()
             val expectedEffect = LetsPlayEffect.NavigateToGuessMovieByPosterScreen(easyDifficulty.difficultyLevel.name)
+            assertThat(awaitItem()).isEqualTo(expectedEffect)
+        }
+    }
+
+    @Test
+    fun `onClickStartGame should send NavigateToGuessMovieByGenreScreen effect when selected`() = runTest {
+        viewModel.onClickGameCard(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_GENRE)
+
+        viewModel.onSelectDifficultyLevel(mediumDifficulty)
+        advanceUntilIdle()
+
+        viewModel.effect.test {
+            viewModel.onClickStartGame()
+            val expectedEffect = LetsPlayEffect.NavigateToGuessMovieByGenreScreen(mediumDifficulty.difficultyLevel.name)
             assertThat(awaitItem()).isEqualTo(expectedEffect)
         }
     }
@@ -153,58 +173,40 @@ class LetsPlayViewModelTest {
     }
 
     @Test
-    fun `onClickStartGame should reset state after sending navigation effect`() = runTest {
-        viewModel.onClickGameCard(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_GENRE)
-        viewModel.onSelectDifficultyLevel(hardDifficulty)
-        advanceUntilIdle()
-
-        viewModel.onClickStartGame()
-        advanceUntilIdle()
-
-        assertThat(viewModel.state.value.selectedGameTypeUiState).isNull()
-        assertThat(viewModel.state.value.selectedDifficultyLevel).isNull()
-        assertThat(viewModel.state.value.isStartGameButtonEnable).isFalse()
-    }
-
-    private val easyDifficulty = GameDifficultyUiState(
-        totalQuestions = 10,
-        timeLimitSeconds = 30,
-        pointsPerQuestion = 10,
-        difficultyLevel = GameDifficultyUiState.DifficultyLevelUiState.EASY
-    )
-    private val mediumDifficulty = GameDifficultyUiState(
-        totalQuestions = 15,
-        timeLimitSeconds = 20,
-        pointsPerQuestion = 20,
-        difficultyLevel = GameDifficultyUiState.DifficultyLevelUiState.MEDIUM
-    )
-    private val hardDifficulty = GameDifficultyUiState(
-        totalQuestions = 20,
-        timeLimitSeconds = 15,
-        pointsPerQuestion = 30,
-        difficultyLevel = GameDifficultyUiState.DifficultyLevelUiState.HARD
-    )
-
-    private val testDifficultiesUiState = listOf(easyDifficulty, mediumDifficulty, hardDifficulty)
-
-    private val testGamesUiState = listOf(
-        GameUiState(GameUiState.GameTypeUiState.GUESS_CHARACTER, requiredPoints = 0),
-        GameUiState(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_POSTER, requiredPoints = 500),
-        GameUiState(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_RELEASE, requiredPoints = 1000),
-        GameUiState(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_GENRE, requiredPoints = 1500)
-    )
-
-    @Test
-    fun `onClickStartGame should send NavigateToGuessMovieByReleaseScreen effect when selected`() = runTest {
-        viewModel.onClickGameCard(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_RELEASE)
-
-        viewModel.onSelectDifficultyLevel(hardDifficulty)
+    fun `onClickStartGame should do nothing if game type is not selected`() = runTest {
+        viewModel.onSelectDifficultyLevel(easyDifficulty)
         advanceUntilIdle()
 
         viewModel.effect.test {
             viewModel.onClickStartGame()
-            val expectedEffect = LetsPlayEffect.NavigateToGuessMovieByReleaseScreen(hardDifficulty.difficultyLevel.name)
-            assertThat(awaitItem()).isEqualTo(expectedEffect)
+            expectNoEvents()
         }
     }
+
+
+    private val availableGamesResponse = GetAvailableGamesUseCase.AvailableGames(
+        games = listOf(
+            Game(gameType = Game.GameType.GUESS_CHARACTER, requiredPoints = 0),
+            Game(gameType = Game.GameType.GUESS_MOVIE_BY_POSTER, requiredPoints = 0),
+            Game(gameType = Game.GameType.GUESS_MOVIE_BY_RELEASE, requiredPoints = 400),
+            Game(gameType = Game.GameType.GUESS_MOVIE_BY_GENRE, requiredPoints = 400)
+        ),
+        difficultyLevels = listOf(
+            GameDifficulty(5, 45, 5, GameDifficulty.DifficultyType.EASY),
+            GameDifficulty(10, 30, 10, GameDifficulty.DifficultyType.MEDIUM),
+            GameDifficulty(20, 10, 20, GameDifficulty.DifficultyType.HARD)
+        )
+    )
+
+    private val easyDifficulty = GameDifficultyUiState(5, 45, 5, GameDifficultyUiState.DifficultyLevelUiState.EASY)
+    private val mediumDifficulty = GameDifficultyUiState(10, 30, 10, GameDifficultyUiState.DifficultyLevelUiState.MEDIUM)
+    private val hardDifficulty = GameDifficultyUiState(20, 10, 20, GameDifficultyUiState.DifficultyLevelUiState.HARD)
+
+    private val testDifficultiesUiState = listOf(easyDifficulty, mediumDifficulty, hardDifficulty)
+    private val testGamesUiState = listOf(
+        GameUiState(GameUiState.GameTypeUiState.GUESS_CHARACTER, 0),
+        GameUiState(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_POSTER, 0),
+        GameUiState(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_RELEASE, 400),
+        GameUiState(GameUiState.GameTypeUiState.GUESS_MOVIE_BY_GENRE, 400)
+    )
 }
