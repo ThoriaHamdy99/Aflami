@@ -1,5 +1,6 @@
+package com.amsterdam.domain.useCase.myRating.tvShow
+
 import com.amsterdam.domain.repository.TvShowRepository
-import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -8,15 +9,16 @@ import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class DeleteUserRatedTvShowUseCaseTest {
 
     private lateinit var tvShowRepository: TvShowRepository
     private lateinit var deleteUserRatedTvShowUseCase: DeleteUserRatedTvShowUseCase
 
-    @Before
-    fun setup() {
+    @BeforeEach
+    fun setUp() {
         tvShowRepository = mockk()
         deleteUserRatedTvShowUseCase = DeleteUserRatedTvShowUseCase(tvShowRepository)
     }

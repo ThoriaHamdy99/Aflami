@@ -1,5 +1,6 @@
+package com.amsterdam.domain.useCase.myRating.tvShow
+
 import com.amsterdam.domain.repository.TvShowRepository
-import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.utils.tvShow1
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery

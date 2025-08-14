@@ -1,3 +1,5 @@
+package com.amsterdam.domain.useCase.myRating.tvShow
+
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
 import com.google.common.truth.Truth.assertThat
