@@ -18,9 +18,129 @@ class PeopleRemoteDataSourceImplTest {
     private val peopleRemoteDataSourceImpl: PeopleRemoteDataSourceImpl =
         PeopleRemoteDataSourceImpl(peopleApiService)
 
+    @Test
+    fun `getTrendingPeople should return a list of people on successful API call`() = runTest {
+        coEvery { peopleApiService.getTrendingPeople(any()) } returns trendingPeopleResponse
+
+        val people = peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
+
+        assertThat(people).isEqualTo(trendingPeopleResponse)
+    }
+
+    @Test
+    fun `getTrendingPeople should call getTrendingPeople exactly once on a successful API call`() =
+        runTest {
+            coEvery { peopleApiService.getTrendingPeople(any()) } returns trendingPeopleResponse
+
+            peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
+
+            coVerify(exactly = 1) { peopleApiService.getTrendingPeople(any()) }
+        }
+
+    @Test
+    fun `getTrendingPeople should rethrow a NetworkException when the service provider throws one`() =
+        runTest {
+            coEvery { peopleApiService.getTrendingPeople(any()) } throws networkException
+
+            assertThrows<NetworkException> { peopleRemoteDataSourceImpl.getTrendingPeople(page = 1) }
+        }
+
+    @Test
+    fun `getTrendingPeople should call the API exactly once when it throws a NetworkException`() = runTest {
+        coEvery { peopleApiService.getTrendingPeople(any()) } throws networkException
+
+        try {
+            peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
+        } catch (e: NetworkException) {
+        }
+
+        coVerify(exactly = 1) { peopleApiService.getTrendingPeople(any()) }
+    }
+
+    @Test
+    fun `getTrendingPeople should return an empty list when the API service returns an empty list`() =
+        runTest {
+            coEvery { peopleApiService.getTrendingPeople(any()) } returns emptyPeopleResponse
+
+            val people = peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
+
+            assertThat(people.results).isEmpty()
+        }
+
+    @Test
+    fun `getTrendingPeople should call the API exactly once when it returns an empty list`() = runTest {
+        coEvery { peopleApiService.getTrendingPeople(any()) } returns emptyPeopleResponse
+
+        peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
+
+        coVerify(exactly = 1) { peopleApiService.getTrendingPeople(any()) }
+    }
+
+    @Test
+    fun `getRandomizedTrendingPeople should return the required number of people`() = runTest {
+        coEvery { peopleApiService.getTrendingPeople(page = 1) } returns firstPageForRandomizedTest
+        coEvery { peopleApiService.getTrendingPeople(page = 2) } returns secondPageForRandomizedTest
+
+        val people = peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(3)
+
+        assertThat(people.size).isEqualTo(3)
+    }
+
+    @Test
+    fun `getRandomizedTrendingPeople should call the API multiple times (at least twice) to get enough people`() =
+        runTest {
+            coEvery { peopleApiService.getTrendingPeople(page = 1) } returns firstPageForRandomizedTest
+            coEvery { peopleApiService.getTrendingPeople(page = 2) } returns secondPageForRandomizedTestWithSinglePerson
+
+            peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(3)
+
+            coVerify(atLeast = 2) { peopleApiService.getTrendingPeople(page = any()) }
+        }
+
+    @Test
+    fun `getRandomizedTrendingPeople should filter out people with incomplete data`() = runTest {
+        coEvery { peopleApiService.getTrendingPeople(any()) } returns responseWithDuplicatesAndIncompleteData
+
+        val people = peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(2)
+
+        assertThat(people.size).isEqualTo(2)
+        assertThat(people.any { it.name.isBlank() || it.profilePath.isNullOrBlank() }).isFalse()
+    }
+
+    @Test
+    fun `getRandomizedTrendingPeople should not return more than the required number of people`() =
+        runTest {
+            coEvery { peopleApiService.getTrendingPeople(any()) } returns responseWithExtraData
+
+            val people = peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(2)
+
+            assertThat(people.size).isEqualTo(2)
+        }
+
+    @Test
+    fun `getRandomizedTrendingPeople should handle duplicate people from different pages`() =
+        runTest {
+            coEvery { peopleApiService.getTrendingPeople(page = 1) } returns firstPageWithDuplicateId
+            coEvery { peopleApiService.getTrendingPeople(page = 2) } returns secondPageWithDuplicateId
+
+            val people = peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(2)
+
+            assertThat(people.size).isEqualTo(2)
+            assertThat(people.map { it.id }).containsNoDuplicates()
+        }
+
+    @Test
+    fun `getRandomizedTrendingPeople should return an empty list when no high-quality people are found`() =
+        runTest {
+            coEvery { peopleApiService.getTrendingPeople(any()) } returns responseWithIncompleteData
+
+            val people = peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(2)
+
+            assertThat(people).isEmpty()
+        }
+
     private val networkException = NetworkException()
 
-    // Shared data and helper functions
     private val trendingPeopleResponse = RemotePeopleResponse(
         page = 1,
         totalPages = 2,
@@ -93,147 +213,31 @@ class PeopleRemoteDataSourceImplTest {
         createPeopleItemDto(id = 2, name = "Jerry", profilePath = null)
     )
 
-    @Test
-    fun `getTrendingPeople should return a list of people on successful API call`() = runTest {
-        coEvery { peopleApiService.getTrendingPeople(any()) } returns trendingPeopleResponse
-        val people = peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
-        assertThat(people).isEqualTo(trendingPeopleResponse)
-    }
-
-    @Test
-    fun `getTrendingPeople should call getTrendingPeople exactly once on a successful API call`() =
-        runTest {
-            coEvery { peopleApiService.getTrendingPeople(any()) } returns trendingPeopleResponse
-            peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
-            coVerify(exactly = 1) { peopleApiService.getTrendingPeople(any()) }
-        }
-
-    @Test
-    fun `getTrendingPeople should rethrow a NetworkException when the service provider throws one`() =
-        runTest {
-            coEvery { peopleApiService.getTrendingPeople(any()) } throws networkException
-            assertThrows<NetworkException> { peopleRemoteDataSourceImpl.getTrendingPeople(page = 1) }
-        }
-
-    @Test
-    fun `getTrendingPeople should call the API exactly once when it throws a NetworkException`() = runTest {
-        coEvery { peopleApiService.getTrendingPeople(any()) } throws networkException
-        try {
-            peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
-        } catch (e: NetworkException) {
-        }
-        coVerify(exactly = 1) { peopleApiService.getTrendingPeople(any()) }
-    }
-
-    @Test
-    fun `getTrendingPeople should return an empty list when the API service returns an empty list`() =
-        runTest {
-            coEvery { peopleApiService.getTrendingPeople(any()) } returns emptyPeopleResponse
-            val people = peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
-            assertThat(people.results).isEmpty()
-        }
-
-    @Test
-    fun `getTrendingPeople should call the API exactly once when it returns an empty list`() = runTest {
-        coEvery { peopleApiService.getTrendingPeople(any()) } returns emptyPeopleResponse
-        peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
-        coVerify(exactly = 1) { peopleApiService.getTrendingPeople(any()) }
-    }
-
-    @Test
-    fun `getRandomizedTrendingPeople should return the required number of people`() = runTest {
-        val requiredNumber = 3
-        coEvery { peopleApiService.getTrendingPeople(page = 1) } returns createMockPeopleResponse(
-            totalPages = 2, results = peopleForRandomizedTest
+    private val firstPageForRandomizedTest = createMockPeopleResponse(totalPages = 2, results = peopleForRandomizedTest)
+    private val secondPageForRandomizedTest = createMockPeopleResponse(
+        totalPages = 2, results = listOf(
+            createPeopleItemDto(id = 3, name = "Spike", profilePath = "path3"),
+            createPeopleItemDto(id = 4, name = "Tyke", profilePath = "path4")
         )
-        coEvery { peopleApiService.getTrendingPeople(page = 2) } returns createMockPeopleResponse(
-            totalPages = 2, results = listOf(
-                createPeopleItemDto(id = 3, name = "Spike", profilePath = "path3"),
-                createPeopleItemDto(id = 4, name = "Tyke", profilePath = "path4")
-            )
+    )
+    private val secondPageForRandomizedTestWithSinglePerson = createMockPeopleResponse(
+        totalPages = 2, results = listOf(
+            createPeopleItemDto(id = 3, name = "Spike", profilePath = "path3")
         )
-
-        val people = peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(requiredNumber)
-
-        assertThat(people.size).isEqualTo(requiredNumber)
-    }
-
-    @Test
-    fun `getRandomizedTrendingPeople should call the API multiple times (at least twice) to get enough people`() =
-        runTest {
-            val requiredNumber = 3
-            coEvery { peopleApiService.getTrendingPeople(page = 1) } returns createMockPeopleResponse(
-                totalPages = 2, results = peopleForRandomizedTest
-            )
-            coEvery { peopleApiService.getTrendingPeople(page = 2) } returns createMockPeopleResponse(
-                totalPages = 2, results = listOf(
-                    createPeopleItemDto(id = 3, name = "Spike", profilePath = "path3")
-                )
-            )
-
-            peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(requiredNumber)
-
-            coVerify(atLeast = 2) { peopleApiService.getTrendingPeople(page = any()) }
-        }
-
-    @Test
-    fun `getRandomizedTrendingPeople should filter out people with incomplete data`() = runTest {
-        val requiredNumber = 2
-        coEvery { peopleApiService.getTrendingPeople(any()) } returns createMockPeopleResponse(
-            totalPages = 1,
-            results = peopleWithDuplicatesAndIncompleteData
-        )
-
-        val people = peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(requiredNumber)
-
-        assertThat(people.size).isEqualTo(requiredNumber)
-        assertThat(people.any { it.name.isBlank() || it.profilePath.isNullOrBlank() }).isFalse()
-    }
-
-    @Test
-    fun `getRandomizedTrendingPeople should not return more than the required number of people`() =
-        runTest {
-            val requiredNumber = 2
-            coEvery { peopleApiService.getTrendingPeople(any()) } returns createMockPeopleResponse(
-                totalPages = 1,
-                results = peopleWithExtraData
-            )
-
-            val people = peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(requiredNumber)
-
-            assertThat(people.size).isEqualTo(requiredNumber)
-        }
-
-    @Test
-    fun `getRandomizedTrendingPeople should handle duplicate people from different pages`() =
-        runTest {
-            val requiredNumber = 2
-            coEvery { peopleApiService.getTrendingPeople(page = 1) } returns createMockPeopleResponse(
-                totalPages = 2,
-                results = listOf(createPeopleItemDto(id = 1, name = "Tom", profilePath = "path1"))
-            )
-            coEvery { peopleApiService.getTrendingPeople(page = 2) } returns createMockPeopleResponse(
-                totalPages = 2, results = peopleWithDuplicateId
-            )
-
-            val people = peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(requiredNumber)
-
-            assertThat(people.size).isEqualTo(requiredNumber)
-            val collectedIds = people.map { it.id }
-            assertThat(collectedIds).containsNoDuplicates()
-        }
-
-    @Test
-    fun `getRandomizedTrendingPeople should return an empty list when no high-quality people are found`() =
-        runTest {
-            val requiredNumber = 2
-            coEvery { peopleApiService.getTrendingPeople(any()) } returns createMockPeopleResponse(
-                totalPages = 1,
-                results = peopleWithIncompleteData
-            )
-
-            val people = peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(requiredNumber)
-
-            assertThat(people).isEmpty()
-        }
+    )
+    private val responseWithDuplicatesAndIncompleteData = createMockPeopleResponse(
+        totalPages = 1, results = peopleWithDuplicatesAndIncompleteData
+    )
+    private val responseWithExtraData = createMockPeopleResponse(
+        totalPages = 1, results = peopleWithExtraData
+    )
+    private val firstPageWithDuplicateId = createMockPeopleResponse(
+        totalPages = 2, results = listOf(createPeopleItemDto(id = 1, name = "Tom", profilePath = "path1"))
+    )
+    private val secondPageWithDuplicateId = createMockPeopleResponse(
+        totalPages = 2, results = peopleWithDuplicateId
+    )
+    private val responseWithIncompleteData = createMockPeopleResponse(
+        totalPages = 1, results = peopleWithIncompleteData
+    )
 }
