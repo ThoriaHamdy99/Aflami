@@ -10,14 +10,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class GetEpisodeVideosUseCaseTest {
-    private lateinit var tvShowRepository: TvShowRepository
-    private lateinit var getEpisodeVideosUseCase: GetEpisodeVideosUseCase
-
-    @BeforeEach
-    fun setUp() {
-        tvShowRepository = mockk(relaxed = true)
-        getEpisodeVideosUseCase = GetEpisodeVideosUseCase(tvShowRepository)
+    private val tvShowRepository: TvShowRepository = mockk(relaxed = true)
+    private val getEpisodeVideosUseCase by lazy {
+        GetEpisodeVideosUseCase(tvShowRepository)
     }
+
 
     @Test
     fun `getEpisodeVideosUseCase should return video url when  `() = runTest {
