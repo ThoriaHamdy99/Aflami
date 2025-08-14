@@ -2,9 +2,9 @@ package com.amsterdam.repository.mapper
 
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.repository.dto.local.MovieLocalDto
-import com.amsterdam.repository.dto.remote.Rated
 import com.amsterdam.repository.dto.remote.MovieDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.MovieItemRemoteDto
+import com.amsterdam.repository.dto.remote.Rated
 import com.amsterdam.repository.utils.toSafeLocalDate
 
 fun MovieDetailsRemoteResponse.toEntity(): MovieDetails {
@@ -64,7 +64,7 @@ fun MovieDetailsRemoteResponse.toMovieItemDto(): MovieItemRemoteDto {
     )
 }
 
-fun RemoteMovieDetailsResponse.toLocalDto(storedLanguage: String): MovieLocalDto {
+fun MovieDetailsRemoteResponse.toLocalDto(storedLanguage: String): MovieLocalDto {
     return MovieLocalDto(
         movieId = id,
         storedLanguage = storedLanguage,

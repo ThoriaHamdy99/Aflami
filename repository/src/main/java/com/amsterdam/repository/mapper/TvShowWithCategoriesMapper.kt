@@ -2,7 +2,6 @@ package com.amsterdam.repository.mapper
 
 import com.amsterdam.entity.TvShow
 import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
-import com.amsterdam.repository.mapper.shared.toTvShowGenre
 
 fun TvShowWithCategories.toEntity(): TvShow =
     TvShow(

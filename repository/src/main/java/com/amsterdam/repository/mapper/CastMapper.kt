@@ -4,8 +4,7 @@ import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Gender
 import com.amsterdam.repository.dto.remote.CastRemoteDto
 
-fun CastRemoteDto.toEntity(): Actor =
-    Actor(
+fun CastRemoteDto.toEntity(): Actor = Actor(
         id = id,
         name = name,
         imageUrl = fullProfilePath.orEmpty(),
