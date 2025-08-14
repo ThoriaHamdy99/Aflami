@@ -44,3 +44,18 @@ private fun DependencyHandlerScope.testDependencies() {
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }
+
+kover.reports{
+
+    filters.excludes{
+        packages(
+            "*.exceptions",
+            "*.logger",
+            "*.models",
+            "*.useCase.game"
+        )
+
+        classes("*${'$'}${'$'}inlined${'$'}*")
+    }
+
+}
