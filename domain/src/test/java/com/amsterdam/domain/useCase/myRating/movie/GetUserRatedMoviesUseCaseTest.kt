@@ -23,8 +23,7 @@ class GetUserRatedMoviesUseCaseTest {
     @Test
     fun `should return sorted list by user rate descending when invoked`() = runTest {
         val unsortedRatedMovies = listOf(
-            UserRatedMovie(movie = fakeMovieList.first(), userRate = 5),
-            UserRatedMovie(movie = fakeMovieList.last().copy(name = "Movie Two"), userRate = 9)
+            lowRatedMovie, highRatedMovie
         )
 
         coEvery { movieRepository.getUserRatedMovies() } returns unsortedRatedMovies
@@ -32,8 +31,10 @@ class GetUserRatedMoviesUseCaseTest {
         val result = useCase.getRatedMovies()
 
         assertThat(result).containsExactly(
-            UserRatedMovie(movie = fakeMovieList.last().copy(name = "Movie Two"), userRate = 9),
-            UserRatedMovie(movie = fakeMovieList.first(), userRate = 5)
+            highRatedMovie, lowRatedMovie
         ).inOrder()
     }
+
+    private val lowRatedMovie = UserRatedMovie(movie = fakeMovieList.first(), userRate = 5)
+    private val highRatedMovie = UserRatedMovie(movie = fakeMovieList.last().copy(name = "Movie Two"), userRate = 9)
 }
