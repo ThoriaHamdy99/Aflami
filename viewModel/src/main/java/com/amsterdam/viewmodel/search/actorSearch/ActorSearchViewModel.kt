@@ -6,6 +6,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.search.mapper.toSearchMediaItemUiState
@@ -85,26 +86,19 @@ class ActorSearchViewModel @Inject constructor(
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
-        when (val refreshState = loadStates.refresh) {
+        when (loadStates.refresh) {
             is LoadState.Loading -> {
                 if (state.value.keyword.isNotBlank()) {
-                    updateState { it.copy(isLoading = true, error = null) }
+                    resetErrorStateToNull()
+                    updateState { it.copy(isLoading = true) }
                 }
             }
 
-            is LoadState.NotLoading -> {
-                updateState { it.copy(isLoading = false) }
-            }
+            is LoadState.NotLoading -> updateState { it.copy(isLoading = false) }
 
             is LoadState.Error -> {
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        error = ActorSearchErrorState.toActorSearchErrorState(
-                            refreshState.error
-                        ),
-                    )
-                }
+                updateState { it.copy(isLoading = false) }
+                updateErrorStateByException(AflamiException())
             }
         }
     }
