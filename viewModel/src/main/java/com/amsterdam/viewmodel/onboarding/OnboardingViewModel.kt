@@ -15,6 +15,9 @@ class OnboardingViewModel @Inject constructor(
     dispatcherProvider
 ), OnboardingInteractionListener {
 
+    init {
+        tryToExecute({ setOnboardingCompletedUseCase(true) })
+    }
     override fun onNextPageClicked() {
         if (state.value.currentPageIndex < state.value.totalPages - 1) {
             val newIndex = state.value.currentPageIndex + 1
@@ -40,21 +43,13 @@ class OnboardingViewModel @Inject constructor(
     }
 
     override fun onSkipClicked() {
-        completeOnboardingAndNavigateToLogin()
+        sendNewNavigationEffect(OnboardingEffect.NavigateToLoginScreen)
     }
 
     override fun onGetStartedClicked() {
-        completeOnboardingAndNavigateToLogin()
+        sendNewNavigationEffect(OnboardingEffect.NavigateToLoginScreen)
     }
-
-    private fun completeOnboardingAndNavigateToLogin() {
-        tryToExecute(
-            action = { setOnboardingCompletedUseCase(true) },
-            onSuccess = { sendNewNavigationEffect(OnboardingEffect.NavigateToLoginScreen) },
-            onError = { sendNewNavigationEffect(OnboardingEffect.NavigateToLoginScreen) }
-        )
-    }
-
+    
     fun setCurrentPage(newIndex: Int) {
         updateState {
             it.copy(

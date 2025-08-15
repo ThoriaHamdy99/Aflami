@@ -46,7 +46,12 @@ fun NavigationButton(
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.85f else 1f,
         animationSpec = tween(
-            durationMillis = 300
+            durationMillis = 300,
+            easing = {
+                val overshoot = 1.2f
+                val x = it - 1f
+                x * x * ((overshoot + 1) * x + overshoot) + 1f
+            }
         ),
         label = "scaleAnimation"
     )
@@ -89,7 +94,7 @@ fun NavigationButton(
 
     LaunchedEffect(isPressed) {
         if (isPressed) {
-            delay(300)
+            delay(250)
             isPressed = false
         }
     }
