@@ -5,6 +5,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import com.amsterdam.domain.useCase.details.GetTvShowsByGenreUseCase
 import com.amsterdam.entity.category.TvShowGenre
+import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowDetailsPagingSource
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgs
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsViewModel
@@ -20,12 +21,11 @@ import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 
 class CategoriesTvShowsDetailsViewModelTest {
-
-    private val getTvShowsByGenreUseCase: GetTvShowsByGenreUseCase = mockk(relaxed = true)
+    private val  categoriesTvShowDetailsPagingSource: CategoriesTvShowDetailsPagingSource = mockk()
     private val args: CategoriesTvShowsDetailsArgs = mockk(relaxed = true)
     private val viewModel by lazy {
         CategoriesTvShowsDetailsViewModel(
-            getTvShowsByGenreIdUseCase = getTvShowsByGenreUseCase,
+            categoriesTvShowDetailsPagingSource,
             categoriesTvShowsDetailsArgs = args,
             dispatcherProvider = TestDispatcherProvider()
         )
@@ -34,7 +34,6 @@ class CategoriesTvShowsDetailsViewModelTest {
     @Test
     fun `init should set initial genre`() = runTest {
         coEvery { args.genreName } returns TvShowGenre.COMEDY.name
-        coEvery { getTvShowsByGenreUseCase.invoke(TvShowGenre.COMEDY.name) } returns mockk()
         assertThat(viewModel.state.value.selectedGenre).isEqualTo(TvShowGenre.COMEDY)
     }
 
@@ -59,7 +58,6 @@ class CategoriesTvShowsDetailsViewModelTest {
 
     @Test
     fun `onClickGenre with different genre should update selectedGenre`() = runTest {
-        val newGenre = TvShowGenre.COMEDY
         viewModel.onClickGenre(newGenre)
         advanceUntilIdle()
         assertThat(viewModel.state.value.selectedGenre).isEqualTo(newGenre)
@@ -89,5 +87,6 @@ class CategoriesTvShowsDetailsViewModelTest {
     }
     private val tvShowId = 123L
     private val initialGenre = viewModel.state.value.selectedGenre
+   private val newGenre = TvShowGenre.COMEDY
 
 }

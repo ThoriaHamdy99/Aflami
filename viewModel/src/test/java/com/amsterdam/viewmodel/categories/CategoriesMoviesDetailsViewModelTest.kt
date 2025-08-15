@@ -1,12 +1,13 @@
 package com.amsterdam.viewmodel.categories
 
+
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import app.cash.turbine.test
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.useCase.details.GetMoviesByGenreUseCase
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMovieDetailsArgs
+import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsPagingSource
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsViewModel
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
@@ -18,32 +19,34 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CategoriesMoviesDetailsViewModelTest {
-
-    private val getMoviesByGenreUseCase: GetMoviesByGenreUseCase = mockk(relaxed = true)
+    private val categoriesMoviesDetailsPagingSource: CategoriesMoviesDetailsPagingSource =
+        mockk(relaxed = true)
     private val args: CategoriesMovieDetailsArgs = mockk(relaxed = true)
-    val viewModel by lazy {
+    private val viewModel by lazy {
         CategoriesMoviesDetailsViewModel(
-            getMoviesByGenreIdUseCase = getMoviesByGenreUseCase,
+            categoriesMoviesDetailsPagingSource,
             categoriesMovieDetailsArgs = args,
             dispatcherProvider = TestDispatcherProvider()
         )
     }
 
-    @Before
+    @BeforeEach
     fun setUp() {
-        every { args.genreName } returns MovieGenre.ACTION.name
-        coEvery { getMoviesByGenreUseCase(any(), any()) } returns emptyList()
+        every { args.genreName } returns MovieGenre.COMEDY.name
+       coEvery { args.genreName } returns MovieGenre.COMEDY.name
     }
 
     @Test
     fun `onClickBack should send NavigateBack effect`() = runTest {
+        viewModel
         viewModel.effect.test {
-            launch { viewModel.onClickBack() }
+            viewModel.onClickBack()
             assertThat(awaitItem()).isEqualTo(CategoriesMoviesDetailsUiEffect.NavigateBack)
         }
     }
@@ -73,27 +76,15 @@ class CategoriesMoviesDetailsViewModelTest {
 
     @Test
     fun `onPagingLoadStateChanged with Loading should set isLoading true`() = runTest {
-        val loadStates = CombinedLoadStates(
-            refresh = LoadState.Loading,
-            prepend = LoadState.NotLoading(false),
-            append = LoadState.NotLoading(false),
-            source = mockk(relaxed = true),
-            mediator = null
-        )
+
         viewModel.onPagingLoadStateChanged(loadStates)
         assertThat(viewModel.state.value.isLoading).isTrue()
     }
 
     @Test
     fun `onPagingLoadStateChanged with NotLoading should set isLoading false`() = runTest {
-        val loadStates = CombinedLoadStates(
-            refresh = LoadState.NotLoading(false),
-            prepend = LoadState.NotLoading(false),
-            append = LoadState.NotLoading(false),
-            source = mockk(relaxed = true),
-            mediator = null
-        )
-        viewModel.onPagingLoadStateChanged(loadStates)
+
+        viewModel.onPagingLoadStateChanged(notLoadStates)
         assertThat(viewModel.state.value.isLoading).isFalse()
     }
 
@@ -117,7 +108,22 @@ class CategoriesMoviesDetailsViewModelTest {
         advanceUntilIdle()
         assertThat(viewModel.state.value.isLoading).isTrue()
     }
+
     private val movieId = 42L
     private val newGenre = MovieGenre.COMEDY
     private val initialState = viewModel.state.value
+    private val loadStates = CombinedLoadStates(
+        refresh = LoadState.Loading,
+        prepend = LoadState.NotLoading(false),
+        append = LoadState.NotLoading(false),
+        source = mockk(relaxed = true),
+        mediator = null
+    )
+    private val notLoadStates = CombinedLoadStates(
+        refresh = LoadState.NotLoading(false),
+        prepend = LoadState.NotLoading(false),
+        append = LoadState.NotLoading(false),
+        source = mockk(relaxed = true),
+        mediator = null
+    )
 }
