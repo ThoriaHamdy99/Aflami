@@ -90,15 +90,19 @@ fun PopularMediaItemCard(
                 )
             }
 
-            Icon(
+            Box(
                 modifier = Modifier
                     .size(64.dp)
+                    .alpha(ratingAlpha)
                     .background(color = AppTheme.color.onPrimary, shape = CircleShape)
-                    .align(Alignment.Center)
-                    .padding(16.dp),
-                painter = painterResource(R.drawable.ic_play),
-                contentDescription = null
-            )
+                    .align(Alignment.Center),
+                contentAlignment = Alignment.Center
+            ){
+                Icon(
+                    painter = painterResource(R.drawable.ic_play),
+                    contentDescription = null
+                )
+            }
         }
 
         Text(
