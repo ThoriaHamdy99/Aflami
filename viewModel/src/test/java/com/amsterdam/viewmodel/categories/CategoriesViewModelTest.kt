@@ -1,30 +1,21 @@
 package com.amsterdam.viewmodel.categories
 
 import app.cash.turbine.test
-import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
-import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language
 import com.amsterdam.viewmodel.shared.TabOption
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
-import io.mockk.mockk
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(MainDispatcherExtension::class)
 class CategoriesViewModelTest {
-    private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase = mockk(relaxed = true)
+
     private val viewModel by lazy {
         CategoriesViewModel(
             dispatcherProvider = TestDispatcherProvider()
         )
-    }
-
-    @BeforeEach
-    fun setUp() {
-        every { manageLocaleLanguageUseCase.getAppLanguage() } returns flowOf(Language.ENGLISH)
     }
 
     @Test
@@ -32,7 +23,6 @@ class CategoriesViewModelTest {
         runTest {
             viewModel.effect.test {
                 viewModel.onClickMovieGenreCard(genreName)
-                advanceUntilIdle()
                 assertThat(awaitItem()).isEqualTo(
                     CategoriesUiEffect.NavigateToCategoriesMoviesDetailsScreen(genreName)
                 )
@@ -44,7 +34,6 @@ class CategoriesViewModelTest {
         runTest {
             viewModel.effect.test {
                 viewModel.onClickTvShowGenreCard(genreName)
-                advanceUntilIdle()
                 assertThat(awaitItem()).isEqualTo(
                     CategoriesUiEffect.NavigateToCategoriesTvShowsDetailsScreen(genreName)
                 )
@@ -56,9 +45,8 @@ class CategoriesViewModelTest {
         viewModel.onChangeTabOption(tabOption)
         advanceUntilIdle()
         assertThat(viewModel.state.value.selectedTabOption).isEqualTo(tabOption)
-
     }
+
     private val genreName = "action"
     private val tabOption = TabOption.MOVIES
-
 }
