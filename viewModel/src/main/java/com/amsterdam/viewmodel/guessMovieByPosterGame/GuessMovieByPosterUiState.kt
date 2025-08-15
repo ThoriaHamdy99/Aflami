@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.guessMovieByPosterGame
 
-import com.amsterdam.entity.GameQuestion
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 
 data class GuessMovieByPosterUiState(

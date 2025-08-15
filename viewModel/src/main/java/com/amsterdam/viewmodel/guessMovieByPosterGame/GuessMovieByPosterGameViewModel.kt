@@ -5,9 +5,9 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.guessByPoster.GuessMovieByPosterGameUseCase
-import com.amsterdam.domain.useCase.game.guessByPoster.SubmitGuessMovieByPosterAnswerUseCase
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty
-import com.amsterdam.entity.GameQuestion
 import com.amsterdam.viewmodel.gameResult.ResultScreenData
 import com.amsterdam.viewmodel.gameResult.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -129,7 +129,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
     }
 
     private fun onSuccessSubmitAnswer(
-        answerResult: SubmitGuessMovieByPosterAnswerUseCase.AnswerResult,
+        answerResult: AnswerResult,
         selectedAnswerIndex: Int
     ) {
         updateState {

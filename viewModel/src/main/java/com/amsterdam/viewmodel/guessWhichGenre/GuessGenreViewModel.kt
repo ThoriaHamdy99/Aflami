@@ -5,9 +5,9 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreUseCase
-import com.amsterdam.domain.useCase.game.whichGenre.SubmitGuessMovieGenreAnswerUseCase
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
-import com.amsterdam.entity.GameQuestion
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.gameResult.ResultScreenData
 import com.amsterdam.viewmodel.gameResult.ResultSideEffect
@@ -110,7 +110,7 @@ class GuessGenreViewModel @Inject constructor(
     }
 
     private fun onAnswerCorrect(
-        answerResult: SubmitGuessMovieGenreAnswerUseCase.AnswerResult,
+        answerResult: AnswerResult,
         answerIndex: Int
     ) {
         updateState {

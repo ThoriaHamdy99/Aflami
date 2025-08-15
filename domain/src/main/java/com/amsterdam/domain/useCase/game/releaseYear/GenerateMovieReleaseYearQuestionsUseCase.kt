@@ -2,8 +2,8 @@ package com.amsterdam.domain.useCase.game.releaseYear
 
 import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
-import com.amsterdam.entity.GameQuestion
 
 class GenerateMovieReleaseYearQuestionsUseCase(
     private val gameRepository: GameRepository,

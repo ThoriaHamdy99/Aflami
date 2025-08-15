@@ -2,9 +2,9 @@ package com.amsterdam.domain.useCase.game.guessByPoster
 
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
-import com.amsterdam.entity.AnswerResult
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty
-import com.amsterdam.entity.GameQuestion
 
 class SubmitGuessMovieByPosterAnswerUseCase(
     private val getDifficulty: GetGameDifficultyByDifficultyTypeUseCase,

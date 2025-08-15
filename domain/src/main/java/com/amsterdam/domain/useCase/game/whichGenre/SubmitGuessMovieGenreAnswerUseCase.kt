@@ -2,9 +2,9 @@ package com.amsterdam.domain.useCase.game.whichGenre
 
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
-import com.amsterdam.entity.AnswerResult
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
-import com.amsterdam.entity.GameQuestion
 import com.amsterdam.entity.category.MovieGenre
 
 class SubmitGuessMovieGenreAnswerUseCase(

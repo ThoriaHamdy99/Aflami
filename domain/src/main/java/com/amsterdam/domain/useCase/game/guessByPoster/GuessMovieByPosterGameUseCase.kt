@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.game.guessByPoster
 
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty
-import com.amsterdam.entity.GameQuestion
 
 class GuessMovieByPosterGameUseCase(
     private val getGameData: GenerateMoviePosterQuestionsUseCase,

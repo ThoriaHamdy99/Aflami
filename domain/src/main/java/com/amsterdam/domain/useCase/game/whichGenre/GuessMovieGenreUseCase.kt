@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.game.whichGenre
 
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty
-import com.amsterdam.entity.GameQuestion
 import com.amsterdam.entity.category.MovieGenre
 
 class GuessMovieGenreUseCase(

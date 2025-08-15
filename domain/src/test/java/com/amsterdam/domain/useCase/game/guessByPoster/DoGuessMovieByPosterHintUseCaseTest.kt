@@ -3,7 +3,7 @@ package com.amsterdam.domain.useCase.game.guessByPoster
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
-import com.amsterdam.entity.GameQuestion
+import com.amsterdam.domain.utils.GameQuestion
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.just

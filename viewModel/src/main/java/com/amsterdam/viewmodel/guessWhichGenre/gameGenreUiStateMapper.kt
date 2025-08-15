@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.guessWhichGenre
 
-import com.amsterdam.entity.GameQuestion
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.category.MovieGenre
 
 fun GameQuestionUiState.toQuestion() = GameQuestion(
