@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.utils
 
-import com.amsterdam.entity.TvShow
 import com.amsterdam.domain.utils.category.TvShowGenre
+import com.amsterdam.entity.TvShow
 import kotlinx.datetime.LocalDate
 
 val specificTvShowList = listOf(
@@ -25,7 +25,7 @@ val specificTvShowList = listOf(
         airDate = LocalDate(2023, 1, 1),
         categories = listOf(
             TvShowGenre.TALK
-        ),
+        ).map { it.name },
         rating = 5.0f,
         popularity = 5.0,
         seasonCount = 4,
@@ -121,7 +121,7 @@ val fakeTvShowListWithCategories =
             description = "",
             posterUrl = "",
             airDate = LocalDate(2023, 1, 1),
-            categories = listOf(TvShowGenre.TALK),
+            categories = listOf(TvShowGenre.TALK).map { it.name },
             rating = 8.0f,
             popularity = 10.0,
             seasonCount = 4,
@@ -133,7 +133,7 @@ val fakeTvShowListWithCategories =
             description = "",
             posterUrl = "",
             airDate = LocalDate(2023, 1, 1),
-            categories = listOf(TvShowGenre.TALK),
+            categories = listOf(TvShowGenre.TALK).map { it.name },
             rating = 7.0f,
             popularity = 9.0,
             seasonCount = 4,
@@ -148,7 +148,7 @@ val fakeTvShowListWithCategories =
             categories = listOf(
                 TvShowGenre.TALK,
                 TvShowGenre.COMEDY,
-            ),
+            ).map { it.name },
             rating = 7.5f,
             popularity = 11.0,
             seasonCount = 4,
@@ -160,7 +160,7 @@ val fakeTvShowListWithCategories =
             description = "",
             posterUrl = "",
             airDate = LocalDate(2023, 1, 1),
-            categories = listOf(TvShowGenre.TALK),
+            categories = listOf(TvShowGenre.TALK).map { it.name },
             rating = 6.0f,
             popularity = 8.0,
             seasonCount = 4,

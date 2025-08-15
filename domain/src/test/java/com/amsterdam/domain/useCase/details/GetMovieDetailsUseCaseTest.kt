@@ -4,11 +4,11 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.useCase.common.AddMovieWatchHistoryUseCase
 import com.amsterdam.domain.useCase.utils.fakeMovieList
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Gender
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.Review
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coJustRun
@@ -41,7 +41,7 @@ class GetMovieDetailsUseCaseTest {
             "Desc",
             "poster2.jpg",
             LocalDate(2021, 1, 1),
-            listOf(MovieGenre.ACTION),
+            listOf(MovieGenre.ACTION).map { it.name },
             7.0f,
             90.0,
             "USA",

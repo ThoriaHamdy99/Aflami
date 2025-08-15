@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.utils
 
-import com.amsterdam.entity.Movie
 import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.entity.Movie
 import kotlinx.datetime.LocalDate
 
 val specificMovieList = listOf(
@@ -24,7 +24,7 @@ val specificMovieList = listOf(
         description = "",
         posterUrl = "",
         releaseDate = LocalDate(2023, 1, 1),
-        categories = listOf(MovieGenre.TV_MOVIE),
+        categories = listOf(MovieGenre.TV_MOVIE).map { it.name },
         rating = 5.0f,
         popularity = 5.0,
         originCountry = "",
@@ -41,7 +41,7 @@ val fakeMovieListWithCategories =
             description = "",
             posterUrl = "",
             releaseDate = LocalDate(2023, 1, 1),
-            categories = listOf(MovieGenre.ACTION),
+            categories = listOf(MovieGenre.ACTION).map { it.name },
             rating = 8.0f,
             popularity = 10.0,
             originCountry = "",
@@ -54,7 +54,7 @@ val fakeMovieListWithCategories =
             description = "",
             posterUrl = "",
             releaseDate = LocalDate(2023, 1, 1),
-            categories = listOf(MovieGenre.COMEDY),
+            categories = listOf(MovieGenre.COMEDY).map { it.name },
             rating = 7.0f,
             popularity = 9.0,
             originCountry = "",
@@ -70,7 +70,7 @@ val fakeMovieListWithCategories =
             categories = listOf(
                 MovieGenre.ACTION,
                 MovieGenre.DRAMA,
-            ),
+            ).map { it.name },
             rating = 7.5f,
             popularity = 11.0,
             originCountry = "",
@@ -83,7 +83,7 @@ val fakeMovieListWithCategories =
             description = "",
             posterUrl = "",
             releaseDate = LocalDate(2023, 1, 1),
-            categories = listOf(MovieGenre.THRILLER),
+            categories = listOf(MovieGenre.THRILLER).map { it.name },
             rating = 6.0f,
             popularity = 8.0,
             originCountry = "",
@@ -188,7 +188,7 @@ fun generateFakeMoviesByCount(count: Int): List<Movie>{
                 description = "",
                 posterUrl = "fthft",
                 releaseDate = LocalDate(2023, 1, 1),
-                categories = listOf(MovieGenre.ACTION),
+                categories = listOf(MovieGenre.ACTION).map { it.name },
                 rating = 8.0f,
                 popularity = 10.0,
                 originCountry = "",

@@ -1,9 +1,9 @@
 package com.amsterdam.domain.useCase.home
 
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.utils.Mood
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.useCase.utils.fakeMovieList
+import com.amsterdam.domain.utils.Mood
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -32,7 +32,7 @@ class GetMoviesByMoodUseCaseTest {
     @Test
     fun `should return movies for the specified mood`() = runTest {
         val expectedGenres = angryMood.movieGenres
-        val moviesForAngryMood = listOf(fakeMovieList.first().copy(categories = expectedGenres))
+        val moviesForAngryMood = listOf(fakeMovieList.first().copy(categories = expectedGenres.map { it.name }))
         coEvery {
             movieRepository.getMoviesByGenres(
                 expectedGenres,

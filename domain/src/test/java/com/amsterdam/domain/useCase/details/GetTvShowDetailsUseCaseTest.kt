@@ -4,13 +4,13 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.useCase.common.AddTvShowWatchHistoryUseCase
 import com.amsterdam.domain.useCase.utils.fakeTvShowList
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Gender
 import com.amsterdam.entity.ProductionCompany
 import com.amsterdam.entity.Review
 import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
-import com.amsterdam.domain.utils.category.TvShowGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coJustRun
@@ -40,7 +40,7 @@ class GetTvShowDetailsUseCaseTest {
     private val fakeSimilarTvShows = listOf(
         TvShow(
             2L, "Similar TV Show", "Desc", "poster2.jpg", LocalDate(2021, 1, 1),
-            listOf(TvShowGenre.DRAMA), 7.0f, 90.0, 3, "USA",
+            listOf(TvShowGenre.DRAMA).map { it.name }, 7.0f, 90.0, 3, "USA",
         )
     )
     private val fakeGallery = listOf("gallery1.jpg", "gallery2.jpg")
