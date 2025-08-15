@@ -1,8 +1,9 @@
 package com.amsterdam.domain.useCase.home
 
 import com.amsterdam.domain.repository.MovieRepository
-import com.amsterdam.entity.Movie
 import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.utils.category.toMovieGenres
+import com.amsterdam.entity.Movie
 
 class GetUpcomingMoviesUseCase(private val movieRepository: MovieRepository) {
     suspend operator fun invoke(genre: MovieGenre): List<Movie> {
@@ -16,7 +17,7 @@ class GetUpcomingMoviesUseCase(private val movieRepository: MovieRepository) {
     }
 
     private fun hasGenre(movie: Movie, genre: MovieGenre): Boolean {
-        return movie.categories.isNotEmpty() && genre in movie.categories
+        return movie.categories.toMovieGenres().isNotEmpty() && genre in movie.categories.toMovieGenres()
     }
 
     private fun sortByPopularityAndRating(movies: List<Movie>): List<Movie> {

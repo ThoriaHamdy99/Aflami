@@ -32,7 +32,7 @@ fun MovieItemRemoteDto.toEntity(
         description = overview,
         posterUrl = imageUrl.orEmpty(),
         releaseDate = releaseDate.toSafeLocalDate(),
-        categories = genreIds.map { toMovieGenre(it.toLong()) },
+        categories = genreIds.map { toMovieGenre(it.toLong()).name },
         rating = voteAverage.toFloat(),
         popularity = popularity,
         originCountry = originCountry.firstOrNull() ?: "",

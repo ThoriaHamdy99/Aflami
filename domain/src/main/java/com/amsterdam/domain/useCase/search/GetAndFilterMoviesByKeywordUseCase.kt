@@ -1,8 +1,9 @@
 package com.amsterdam.domain.useCase.search
 
 import com.amsterdam.domain.repository.MovieRepository
-import com.amsterdam.entity.Movie
 import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.utils.category.toMovieGenre
+import com.amsterdam.entity.Movie
 import kotlin.math.floor
 
 class GetAndFilterMoviesByKeywordUseCase(
@@ -29,7 +30,7 @@ class GetAndFilterMoviesByKeywordUseCase(
         return this.filter { item -> floor(item.rating) >= rating }
             .filter { movie ->
                 if (genre == MovieGenre.ALL) return@filter true
-                movie.categories.any { it == genre }
+                movie.categories.any { it.toMovieGenre() == genre }
             }
     }
 }
