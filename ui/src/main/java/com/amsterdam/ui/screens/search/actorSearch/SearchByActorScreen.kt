@@ -178,7 +178,7 @@ private fun SearchByActorContent(
 }
 
 @Composable
-internal fun MovieImage(imageUrl: String) {
+internal fun MovieImage(imageUrl: String, isAdult: Boolean) {
     val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     SafeImageView(
         model = imageUrl,
@@ -188,6 +188,7 @@ internal fun MovieImage(imageUrl: String) {
         safetyLevel = safetyLevel,
         onLoading = { ImageLoadingIndicator() },
         onError = { ImageErrorIndicator() },
+        isAdult = isAdult
     )
 }
 
@@ -197,7 +198,7 @@ private fun SearchByActorContentPreview() {
     AflamiTheme {
         SearchByActorContent(
             state = ActorSearchUiState(),
-            movies = emptyFlow<PagingData< SearchMediaItemUiState>>().collectAsLazyPagingItems(),
+            movies = emptyFlow<PagingData<SearchMediaItemUiState>>().collectAsLazyPagingItems(),
             interactionListener = object : ActorSearchInteractionListener {
                 override fun onUserSearchChange(keyword: String) {}
                 override fun onClickNavigateBack() {}

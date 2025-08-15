@@ -15,7 +15,8 @@ fun MovieWatchHistory.toContinueWatchingItemUiState(): ContinueWatchingItemUiSta
             posterImageUrl = posterUrl,
             yearOfRelease = releaseDate?.year?.toString() ?: "",
             dateAdded = lastWatchedTime,
-            mediaType = MediaType.MOVIE
+            mediaType = MediaType.MOVIE,
+            isAdult = isAdult
         )
     }
 }
@@ -29,7 +30,8 @@ fun TvShowWatchHistory.toContinueWatchingItemUiState(): ContinueWatchingItemUiSt
             posterImageUrl = posterUrl,
             yearOfRelease = airDate?.year?.toString() ?: "",
             dateAdded = lastWatchedTime,
-            mediaType = MediaType.TV_SHOW
+            mediaType = MediaType.TV_SHOW,
+            isAdult = isAdult
         )
     }
 }

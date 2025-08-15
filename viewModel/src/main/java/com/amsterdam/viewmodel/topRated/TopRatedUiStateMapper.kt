@@ -34,7 +34,8 @@ fun Movie.toTopRatedMediaItemUiState(): TopRatedMediaItemUiState {
         rate = rating.toFormattedRating(),
         posterImageUrl = posterUrl,
         yearOfRelease = releaseDate?.year?.toString() ?: "",
-        mediaType = MediaType.MOVIE
+        mediaType = MediaType.MOVIE,
+        isAdult = isAdult
     )
 }
 
@@ -46,6 +47,7 @@ fun TvShow.toTopRatedMediaItemUiState(): TopRatedMediaItemUiState {
         rate = rating.toFormattedRating(),
         posterImageUrl = posterUrl,
         yearOfRelease = airDate?.year?.toString() ?: "",
-        mediaType = MediaType.TV_SHOW
+        mediaType = MediaType.TV_SHOW,
+        isAdult = isAdult
     )
 }

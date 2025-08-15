@@ -104,6 +104,7 @@ fun LazyListScope.upcomingMoviesSection(
                                 safetyLevel = safetyLevel,
                                 onLoading = { ImageLoadingIndicator() },
                                 onError = { ImageErrorIndicator() },
+                                isAdult = movie.isAdult
                             )
                         },
                         movieType = stringResource(R.string.movies),
