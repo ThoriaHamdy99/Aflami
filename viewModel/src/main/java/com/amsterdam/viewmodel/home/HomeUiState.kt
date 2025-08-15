@@ -120,7 +120,7 @@ data class HomeUiState(
 
         companion object {
             fun toHomeErrorUiState(exception: AflamiException): HomeError {
-                return when(exception){
+                return when (exception) {
                     is NetworkException -> NetworkError
                     else -> UnknownError
                 }

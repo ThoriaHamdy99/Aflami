@@ -144,7 +144,7 @@ fun ResultScreenContent(
                     ) {
                         StatCard(
                             modifier = Modifier.weight(1f),
-                            iconRes = com.amsterdam.designsystem.R.drawable.img_user_rating,
+                            iconRes = R.drawable.img_user_rating,
                             label = "Points Achieved",
                             value = "${state.points} Pts."
                         )

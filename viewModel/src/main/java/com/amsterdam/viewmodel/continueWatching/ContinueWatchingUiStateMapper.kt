@@ -11,7 +11,7 @@ fun MovieWatchHistory.toContinueWatchingItemUiState(): ContinueWatchingItemUiSta
         return ContinueWatchingItemUiState(
             id = id,
             name = name,
-            rate =  rating.toFormattedRating(),
+            rate = rating.toFormattedRating(),
             posterImageUrl = posterUrl,
             yearOfRelease = releaseDate?.year?.toString() ?: "",
             dateAdded = lastWatchedTime,
@@ -26,7 +26,7 @@ fun TvShowWatchHistory.toContinueWatchingItemUiState(): ContinueWatchingItemUiSt
         return ContinueWatchingItemUiState(
             id = id,
             name = name,
-            rate =  rating.toFormattedRating(),
+            rate = rating.toFormattedRating(),
             posterImageUrl = posterUrl,
             yearOfRelease = airDate?.year?.toString() ?: "",
             dateAdded = lastWatchedTime,

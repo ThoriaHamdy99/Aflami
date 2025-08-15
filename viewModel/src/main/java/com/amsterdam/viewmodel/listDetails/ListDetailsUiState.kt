@@ -25,16 +25,17 @@ data class ListDetailsUiState(
         val mediaType: MediaType = MediaType.MOVIE
     )
 
-sealed interface ListDetailsError {
-    data object NoNetwork : ListDetailsError
-    data object UnknownError : ListDetailsError
+    sealed interface ListDetailsError {
+        data object NoNetwork : ListDetailsError
+        data object UnknownError : ListDetailsError
 
-    companion object {
-        fun toListDetailsError(exception: Throwable): ListDetailsError {
-            return when (exception) {
-                is NetworkException -> NoNetwork
-                else -> UnknownError
+        companion object {
+            fun toListDetailsError(exception: Throwable): ListDetailsError {
+                return when (exception) {
+                    is NetworkException -> NoNetwork
+                    else -> UnknownError
+                }
             }
         }
     }
-}}
+}
