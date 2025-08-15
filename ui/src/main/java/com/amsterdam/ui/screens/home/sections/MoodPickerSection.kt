@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.amsterdam.domain.models.Mood
+import com.amsterdam.domain.utils.Mood
 import com.amsterdam.ui.screens.home.component.MoodPickerCard
 import com.amsterdam.ui.screens.home.model.CardMood
 import com.amsterdam.viewmodel.home.HomeInteractionListener

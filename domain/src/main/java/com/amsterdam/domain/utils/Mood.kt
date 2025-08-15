@@ -1,4 +1,4 @@
-package com.amsterdam.domain.models
+package com.amsterdam.domain.utils
 
 import com.amsterdam.entity.category.MovieGenre
 

@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.home
 
 import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.domain.models.Mood
+import com.amsterdam.domain.utils.Mood
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
