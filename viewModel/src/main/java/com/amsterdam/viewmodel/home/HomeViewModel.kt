@@ -75,7 +75,7 @@ class HomeViewModel @Inject constructor(
 
     private fun onGetHomeScreenDataSuccess(homeScreenData: HomeScreenData) {
         updateState {
-                homeScreenData.toHomeUiState(state.value.continueWatchingMediaSectionUiState.mediaItems)
+            homeScreenData.toHomeUiState(state.value.continueWatchingMediaSectionUiState.mediaItems)
         }
     }
 

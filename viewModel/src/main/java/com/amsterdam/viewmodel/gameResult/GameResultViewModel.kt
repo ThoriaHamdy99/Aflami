@@ -6,7 +6,6 @@ import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-
 @HiltViewModel
 class GameResultViewModel @Inject constructor(
     gameResultArgs: GameResultArgs,
