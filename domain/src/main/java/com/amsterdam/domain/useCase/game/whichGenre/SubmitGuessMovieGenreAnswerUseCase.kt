@@ -2,8 +2,8 @@ package com.amsterdam.domain.useCase.game.whichGenre
 
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
-import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase.MovieGenreQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
+import com.amsterdam.entity.GameQuestion
 import com.amsterdam.entity.category.MovieGenre
 
 class SubmitGuessMovieGenreAnswerUseCase(
@@ -11,7 +11,7 @@ class SubmitGuessMovieGenreAnswerUseCase(
     private val updateUserGamePointsUseCase: UpdateUserGamePointsUseCase
 ) {
     suspend operator fun invoke(
-        question: MovieGenreQuestion,
+        question: GameQuestion<MovieGenre>,
         answer: MovieGenre,
         difficultyType: DifficultyType
     ): AnswerResult {
