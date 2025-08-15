@@ -1,6 +1,8 @@
 package com.amsterdam.domain.useCase.game.character
 
+import com.amsterdam.entity.AnswerResult
 import com.amsterdam.entity.GameDifficulty
+import com.amsterdam.entity.GameQuestion
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -47,12 +49,12 @@ class GuessCharacterGameUseCaseTest {
     }
 
     private val difficultyType = GameDifficulty.DifficultyType.EASY
-    private val movieCharacterQuestion = GenerateCharacterQuestionsUseCase.CharacterDataQuestion(
-        questionAsPosterUrl = "character",
+    private val movieCharacterQuestion = GameQuestion(
+        question = "character",
         choices = listOf("john", "man", "woman"),
-        correctAnswer = "john",
-        questionTimeSeconds = 30
+        correctChoice = "john",
+        questionTime = 30
     )
     private val hintedQuestion = movieCharacterQuestion.copy(choices = listOf("john"))
-    private val answerResult = SubmitCharacterAnswerUseCase.AnswerResult(true, 10)
+    private val answerResult = AnswerResult(true, 10)
 }

@@ -2,7 +2,9 @@ package com.amsterdam.domain.useCase.game.whichGenre
 
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.entity.AnswerResult
 import com.amsterdam.entity.GameDifficulty
+import com.amsterdam.entity.GameQuestion
 import com.amsterdam.entity.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
@@ -41,13 +43,12 @@ class SubmitGuessMovieGenreAnswerUseCaseTest {
 
     private val difficultyType = GameDifficulty.DifficultyType.EASY
     private val gameDifficulty = GameDifficulty(5, 30, 10, GameDifficulty.DifficultyType.EASY)
-    private val movieGenreQuestion = GenerateMovieGenreQuestionsUseCase.MovieGenreQuestion(
-        id = 1,
+    private val movieGenreQuestion = GameQuestion(
         question = "Test Movie",
-        genreChoices = listOf(MovieGenre.ACTION, MovieGenre.DRAMA),
+        choices = listOf(MovieGenre.ACTION, MovieGenre.DRAMA),
         correctChoice = MovieGenre.ACTION,
         questionTime = 30
     )
-    private val expectedCorrectResult = SubmitGuessMovieGenreAnswerUseCase.AnswerResult(true, 10)
-    private val expectedIncorrectResult = SubmitGuessMovieGenreAnswerUseCase.AnswerResult(false, 0)
+    private val expectedCorrectResult = AnswerResult(true, 10)
+    private val expectedIncorrectResult = AnswerResult(false, 0)
 }

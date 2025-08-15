@@ -1,6 +1,8 @@
 package com.amsterdam.domain.useCase.game.releaseYear
 
+import com.amsterdam.entity.AnswerResult
 import com.amsterdam.entity.GameDifficulty
+import com.amsterdam.entity.GameQuestion
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -25,7 +27,7 @@ class GuessReleaseYearGameUseCaseTest {
 
         val result = guessReleaseYearGameUseCase.startGame(difficultyType)
 
-        assertThat(result).isEqualTo(listOf(movieReleasedDateQuestion))
+        assertThat(result).isEqualTo(listOf<GameQuestion<Int>>(movieReleasedDateQuestion))
     }
 
     @Test
@@ -47,12 +49,12 @@ class GuessReleaseYearGameUseCaseTest {
     }
 
     private val difficultyType = GameDifficulty.DifficultyType.EASY
-    private val movieReleasedDateQuestion = GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion(
+    private val movieReleasedDateQuestion = GameQuestion(
         question = "Sample Movie",
-        releaseYearChoices = listOf(1972, 1973, 1974),
+        choices = listOf(1972, 1973, 1974),
         correctChoice = 1972,
-        questionTimeSeconds = 30
+        questionTime = 30
     )
-    private val hintedQuestion = movieReleasedDateQuestion.copy(releaseYearChoices = listOf(1972))
-    private val answerResult = SubmitGuessReleaseYearAnswerUseCase.AnswerResult(true, 10)
+    private val hintedQuestion = movieReleasedDateQuestion.copy(choices = listOf(1972))
+    private val answerResult = AnswerResult(true, 10)
 }
