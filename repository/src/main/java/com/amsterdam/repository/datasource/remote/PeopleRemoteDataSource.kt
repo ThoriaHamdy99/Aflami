@@ -5,6 +5,7 @@ import com.amsterdam.repository.dto.remote.RemotePeopleResponse
 
 interface PeopleRemoteDataSource {
     suspend fun getTrendingPeople(page: Int): RemotePeopleResponse
+
     suspend fun getRandomizedTrendingPeople(
         requiredNumber: Int,
     ): List<RemotePeopleItemDto>
