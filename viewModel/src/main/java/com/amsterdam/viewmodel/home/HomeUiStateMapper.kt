@@ -1,10 +1,10 @@
 package com.amsterdam.viewmodel.home
 
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase.HomeScreenData
+import com.amsterdam.domain.utils.MovieWatchHistory
+import com.amsterdam.domain.utils.TvShowWatchHistory
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.MovieWatchHistory
 import com.amsterdam.entity.TvShow
-import com.amsterdam.entity.TvShowWatchHistory
 import com.amsterdam.viewmodel.home.HomeUiState.ContinueWatchingHomeItemUiState
 import com.amsterdam.viewmodel.home.HomeUiState.MoodPickerItemUiState
 import com.amsterdam.viewmodel.home.HomeUiState.PopularMediaItemUiState
