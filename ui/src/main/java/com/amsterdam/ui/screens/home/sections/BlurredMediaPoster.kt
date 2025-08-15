@@ -42,6 +42,22 @@ fun BlurredMediaPoster(
 
         Box(
             modifier = Modifier
+                .fillMaxWidth()
+                .height(86.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xCC000000),
+                            Color.Transparent
+                        ),
+                        startY = 0f,
+                        endY = Float.POSITIVE_INFINITY
+                    )
+                )
+        )
+
+        Box(
+            modifier = Modifier
                 .matchParentSize()
                 .background(
                     Brush.verticalGradient(
