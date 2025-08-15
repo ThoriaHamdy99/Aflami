@@ -1,8 +1,8 @@
 package com.amsterdam.viewmodel.letsPlay
 
 import app.cash.turbine.test
+import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.GetAvailableGamesUseCase
-import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
 import com.amsterdam.entity.Game
 import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState.GameDifficultyUiState
