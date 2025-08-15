@@ -6,6 +6,7 @@ import coil.request.ImageResult
 import com.amsterdam.imageviewer.classification.CustomImageClassifier
 import com.amsterdam.imageviewer.classification.NsfwDetectorConfig
 import com.amsterdam.imageviewer.classification.model.NsfwDetectorRule
+import com.amsterdam.imageviewer.util.ImageSafetyContract.KEY_IS_ADULT
 
 internal class SafetyInterceptor(
     private val classifier: CustomImageClassifier,
@@ -13,7 +14,7 @@ internal class SafetyInterceptor(
 ) : Interceptor {
 
     override suspend fun intercept(chain: Interceptor.Chain): ImageResult {
-        val isAdult = chain.request.parameters.value("is_adult") as? Boolean ?: false
+        val isAdult = chain.request.parameters.value(KEY_IS_ADULT) as? Boolean ?: false
         val detectorRule = adjustDetectRule(isAdult)
 
         val safetyTransformation =

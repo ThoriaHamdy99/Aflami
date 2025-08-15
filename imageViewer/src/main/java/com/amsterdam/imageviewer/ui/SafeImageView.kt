@@ -11,6 +11,7 @@ import coil.request.Parameters
 import com.amsterdam.imageviewer.classification.SafetyLevel
 import com.amsterdam.imageviewer.firebase.FirebaseNsfwModelManager
 import com.amsterdam.imageviewer.firebase.ModelDownloadState
+import com.amsterdam.imageviewer.util.ImageSafetyContract.KEY_IS_ADULT
 
 @Composable
 fun SafeImageView(
@@ -32,7 +33,7 @@ fun SafeImageView(
             .data(model)
             .parameters(
                 Parameters.Builder()
-                    .set("is_adult", isAdult)
+                    .set(KEY_IS_ADULT, isAdult)
                     .build()
             )
             .build()
