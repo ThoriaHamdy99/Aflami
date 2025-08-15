@@ -1,7 +1,6 @@
 package com.amsterdam.viewmodel.guessReleseDateGame
 
-import com.amsterdam.viewmodel.gameEnd.ResultScreenData
-
+import com.amsterdam.viewmodel.gameResult.ResultScreenData
 
 interface GuessReleaseYearGameEffect {
     object NavigateBack : GuessReleaseYearGameEffect

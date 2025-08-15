@@ -15,7 +15,7 @@ data class MovieDetailsUiState(
     val originCountry: String = "",
     val description: String = "",
     val videoUrl: String = "",
-    val isVideoLauncherFailed : Boolean = false,
+    val isVideoLauncherFailed: Boolean = false,
     val moviePostersUrl: List<String> = emptyList(),
     val actors: List<ActorMovieUiState> = emptyList(),
     val extraItem: List<Selectable<MovieExtras>> = defaultMovieExtras,
@@ -35,7 +35,7 @@ data class MovieDetailsUiState(
     val listName: String = "",
     val isCreateListLoading: Boolean = false,
     val isAddMovieToListLoading: Boolean = false,
-    val selectedList: UserListUiState? = null,
+    val selectedLists: List<UserListUiState> = emptyList(),
 ) {
     data class SimilarMovieUiState(
         val movieId: Long,
@@ -60,10 +60,12 @@ data class MovieDetailsUiState(
         val name: String = "",
         val country: String = ""
     )
+
     data class ActorMovieUiState(
         val photo: String = "",
         val name: String = ""
     )
+
     enum class MovieExtras {
         MORE_LIKE_THIS,
         REVIEWS,

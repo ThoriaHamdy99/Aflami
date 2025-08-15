@@ -3,7 +3,7 @@ package com.amsterdam.ui.screens.letsPlay
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.amsterdam.ui.navigation.Route
-import com.amsterdam.viewmodel.gameEnd.GameResultArgs
+import com.amsterdam.viewmodel.gameResult.GameResultArgs
 
 class GameResultArgsImpl(savedStateHandle: SavedStateHandle): GameResultArgs {
     override val totalCollectedPoints = savedStateHandle.toRoute<Route.ResultScreen>().totalCollectedPoints

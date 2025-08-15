@@ -21,6 +21,9 @@ android {
         buildConfigField("String", "BEARER_TOKEN", bearerToken)
         buildConfigField("String", "BASE_URL", baseUrl)
     }
+    lint {
+        abortOnError = true
+    }
 }
 
 dependencies {
@@ -32,6 +35,29 @@ dependencies {
     coroutinesDependencies()
     kotlinExtensionsDependencies()
     injectDependencies()
+    lintChecks(projects.lintRules)
+}
+
+kover.reports {
+    filters.excludes {
+        androidGeneratedClasses()
+        packages(
+            "*.remotedatasource.api",
+            "*.remotedatasource.util",
+            "*.remotedatasource.client",
+            "*.generated"
+        )
+        classes(
+            "*_Factory*",
+            "*Hilt*",
+            "*_Impl*",
+            "*${'$'}${'$'}inlined${'$'}*",
+        )
+    }
+
+    verify.rule {
+        minBound(80)
+    }
 }
 
 private fun DependencyHandlerScope.modulesDependencies() {

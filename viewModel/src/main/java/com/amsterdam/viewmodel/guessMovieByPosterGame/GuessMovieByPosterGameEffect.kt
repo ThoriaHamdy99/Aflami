@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.guessMovieByPosterGame
 
-import com.amsterdam.viewmodel.gameEnd.ResultScreenData
+import com.amsterdam.viewmodel.gameResult.ResultScreenData
 
 interface GuessMovieByPosterGameEffect {
     object NavigateBack : GuessMovieByPosterGameEffect

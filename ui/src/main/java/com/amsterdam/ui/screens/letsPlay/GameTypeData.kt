@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.R
-import com.amsterdam.ui.components.GameCardImageContentType
+import com.amsterdam.ui.screens.letsPlay.component.GameCardImageContentType
 import com.amsterdam.viewmodel.letsPlay.LetsPlayUiState.GameUiState.GameTypeUiState
 
 data class GameTypeData(

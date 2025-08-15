@@ -5,7 +5,7 @@ import com.amsterdam.viewmodel.shared.mappers.toFormattedRating
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.utils.toYearString
 
-fun Movie.toMovieUiState( ): CategoriesMoviesDetailsUiState.MoviesUiState{
+fun Movie.toMovieUiState(): CategoriesMoviesDetailsUiState.MoviesUiState {
     return CategoriesMoviesDetailsUiState.MoviesUiState(
         id = id,
         name = name,

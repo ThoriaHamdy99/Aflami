@@ -15,11 +15,11 @@ import com.amsterdam.ui.screens.seriesDetails.SeriesDetailsArgsImpl
 import com.amsterdam.viewmodel.cast.CastScreenArgs
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMovieDetailsArgs
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgs
-import com.amsterdam.viewmodel.game.whichGenre.GameGenreArgs
-import com.amsterdam.viewmodel.gameEnd.GameResultArgs
+import com.amsterdam.viewmodel.gameResult.GameResultArgs
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameArgs
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameArgs
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameArgs
+import com.amsterdam.viewmodel.guessWhichGenre.GameGenreArgs
 import com.amsterdam.viewmodel.listDetails.ListDetailsArgs
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsArgs
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsArgs

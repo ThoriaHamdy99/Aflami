@@ -28,7 +28,6 @@ import com.amsterdam.designsystem.utils.modifierExtensions.dropShadow
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalRestrictionLevel
-import com.amsterdam.ui.components.ProfileImagePlaceholder
 import com.amsterdam.ui.utils.toSafetyLevel
 
 @Composable

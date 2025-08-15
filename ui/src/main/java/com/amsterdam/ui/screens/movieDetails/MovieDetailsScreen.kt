@@ -57,7 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.amsterdam.designsystem.R
+import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.LoadingContainer
@@ -68,20 +68,20 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.application.LocalNavManager
-import com.amsterdam.ui.components.AddToListDialog
+import com.amsterdam.ui.components.movieAndTvShowDetails.AddToListDialog
 import com.amsterdam.ui.components.CreateNewListDialog
 import com.amsterdam.ui.components.MustLoginDialog
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.components.appBar.DefaultAppBar
-import com.amsterdam.ui.components.details.DetailsPostersPager
-import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
-import com.amsterdam.ui.screens.movieDetails.components.DescriptionSection
+import com.amsterdam.ui.components.movieAndTvShowDetails.DetailsPostersPager
+import com.amsterdam.ui.components.CategoryChip
+import com.amsterdam.ui.components.movieAndTvShowDetails.DescriptionSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieCastSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieExtrasSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieInfoSection
-import com.amsterdam.ui.screens.movieDetails.components.PlayButton
-import com.amsterdam.ui.screens.movieDetails.components.RateDialog
+import com.amsterdam.ui.components.movieAndTvShowDetails.PlayButton
+import com.amsterdam.ui.components.movieAndTvShowDetails.RateDialog
 import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.gallerySection
 import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
@@ -310,13 +310,13 @@ fun MovieContent(
         ) {
             AddToListDialog(
                 userLists = state.userLists,
-                selectedList = state.selectedList,
+                selectedLists = state.selectedLists,
                 isAddMovieToListLoading = state.isAddMovieToListLoading,
                 onSelectedListChange = movieDetailsInteractionListener::onSelectedListChange,
-                onAddToSelectedList = { listId ->
+                onAddToSelectedList = { listIds ->
                     movieDetailsInteractionListener.onSaveMovieToList(
                         movieId = state.movieId,
-                        listId = listId,
+                        listIds = listIds,
                     )
                 },
                 onCreateNewList = movieDetailsInteractionListener::onClickCreateList,
@@ -488,8 +488,8 @@ fun MovieContent(
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .statusBarsPadding()
                     .zIndex(10f),
-                firstOption = painterResource(R.drawable.ic_outlined_star),
-                lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
+                firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
+                lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_add_to_favourite),
                 onNavigateBackClicked = movieDetailsInteractionListener::onClickBack,
                 onFirstOptionClicked = movieDetailsInteractionListener::onClickRate,
                 onLastOptionClicked = movieDetailsInteractionListener::onClickAddToList,
@@ -516,7 +516,7 @@ private fun SearchByActorContentPreview() {
                 override fun onClickAddToList() {}
 
                 override fun onSaveMovieToList(
-                    movieId: Long, listId: Long
+                    movieId: Long, listIds: List<Long>
                 ) {
                 }
 
@@ -526,7 +526,7 @@ private fun SearchByActorContentPreview() {
 
                 override fun onClickCreateNewList() {}
 
-                override fun onSelectedListChange(selectedList: UserListUiState) {}
+                override fun onSelectedListChange(selectedLists: List<UserListUiState>) {}
 
                 override fun onClickRate() {}
 

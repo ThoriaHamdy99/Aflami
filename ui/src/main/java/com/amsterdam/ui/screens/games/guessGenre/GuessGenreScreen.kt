@@ -27,23 +27,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.amsterdam.designsystem.R
+import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.Scaffold
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.ui.application.LocalNavManager
-import com.amsterdam.ui.components.GameTopBar
+import com.amsterdam.ui.screens.games.component.GameTopBar
 import com.amsterdam.ui.components.PageIndicator
-import com.amsterdam.ui.components.guessGame.AdaptiveAnswersColumn
-import com.amsterdam.ui.components.guessGame.GuessTitle
-import com.amsterdam.ui.screens.letsPlay.component.NotEnoughPointsDialog
+import com.amsterdam.ui.screens.games.component.AdaptiveAnswersColumn
+import com.amsterdam.ui.screens.games.component.GuessTitle
+import com.amsterdam.ui.screens.games.component.NotEnoughPointsDialog
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.uiModel
-import com.amsterdam.viewmodel.game.whichGenre.GameQuestionUiState
-import com.amsterdam.viewmodel.game.whichGenre.GenreGameEffect
-import com.amsterdam.viewmodel.game.whichGenre.GenreGameInteractionListener
-import com.amsterdam.viewmodel.game.whichGenre.GenreGameUiState
-import com.amsterdam.viewmodel.game.whichGenre.GuessGenreViewModel
+import com.amsterdam.viewmodel.guessWhichGenre.GameQuestionUiState
+import com.amsterdam.viewmodel.guessWhichGenre.GenreGameEffect
+import com.amsterdam.viewmodel.guessWhichGenre.GenreGameInteractionListener
+import com.amsterdam.viewmodel.guessWhichGenre.GenreGameUiState
+import com.amsterdam.viewmodel.guessWhichGenre.GuessGenreViewModel
 import kotlinx.coroutines.launch
 
 @Composable

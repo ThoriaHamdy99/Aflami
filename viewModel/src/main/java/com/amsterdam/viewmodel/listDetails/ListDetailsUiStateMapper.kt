@@ -38,5 +38,4 @@ fun ListScreenDetailsMediaItems.toListDetailsItemUiState(): List<ListDetailsItem
         Movie::toListDetailsItemUiState,
         TvShow::toListDetailsItemUiState
     )
-
 }

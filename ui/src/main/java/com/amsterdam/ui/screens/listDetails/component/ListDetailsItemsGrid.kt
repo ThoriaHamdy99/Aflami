@@ -62,12 +62,12 @@ internal fun ListDetailsItemsGrid(
             val (topIcon, movieType, onCardClick) = when (listMediaItem.mediaType) {
                 MediaType.MOVIE -> Triple(
                     painterResource(com.amsterdam.designsystem.R.drawable.ic_heart_remove),
-                    stringResource(com.amsterdam.designsystem.R.string.movies)
+                    stringResource(R.string.movies)
                 ) { onClickMovie(listMediaItem.id) }
 
                 else -> Triple(
                     null,
-                    stringResource(com.amsterdam.designsystem.R.string.tv_shows),
+                    stringResource(R.string.tv_shows),
                 ) { onClickTvShow(listMediaItem.id) }
             }
 
