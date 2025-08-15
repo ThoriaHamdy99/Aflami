@@ -232,6 +232,7 @@
     <string name="there_is_no_similar_content">لا يوجد محتوى مشابه!</string>
 
     <!-- - Home  -->
+    <string name="aflami_title">أفلامي</string>
     <string name="upcoming">القادمة</string>
     <string name="no_upcoming_movies_found_for_your_selection">لم يتم العثور على أفلام قادمة لاختيارك.</string>
     <string name="error_mood_movies_loading">عذرًا! لم نتمكن من العثور على أفلام تناسب مزاجك.</string>
