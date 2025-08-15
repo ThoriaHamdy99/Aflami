@@ -13,7 +13,7 @@ fun TvShowWithCategories.toEntity(): TvShow =
         rating = tvShow.rating,
         categories = categories
             .distinctBy { it.categoryId }
-            .map { toTvShowGenre(it.categoryId) },
+            .map { toTvShowGenre(it.categoryId).name },
         popularity = tvShow.popularity,
         seasonCount = tvShow.seasonCount,
         originCountry = tvShow.originCountry

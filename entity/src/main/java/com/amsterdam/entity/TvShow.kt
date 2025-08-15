@@ -1,6 +1,5 @@
 package com.amsterdam.entity
 
-import com.amsterdam.entity.category.TvShowGenre
 import kotlinx.datetime.LocalDate
 
 data class TvShow(
@@ -9,7 +8,7 @@ data class TvShow(
     val description: String,
     val posterUrl: String,
     val airDate: LocalDate?,
-    val categories: List<TvShowGenre>,
+    val categories: List<String>,
     val rating: Float,
     val popularity: Double,
     val seasonCount: Int,

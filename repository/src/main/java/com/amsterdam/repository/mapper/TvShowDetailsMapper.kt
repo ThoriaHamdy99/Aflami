@@ -14,7 +14,7 @@ fun TvShowDetailsRemoteResponse.toEntity(): TvShowDetails {
         description = overview,
         posterUrl = fullPosterPath.orEmpty(),
         airDate = releaseDate.toSafeLocalDate(),
-        categories = genres.map { toTvShowGenre(it.id.toLong()) },
+        categories = genres.map { toTvShowGenre(it.id.toLong()).name },
         rating = voteAverage.toFloat(),
         popularity = popularity,
         seasonCount = seasonCount,

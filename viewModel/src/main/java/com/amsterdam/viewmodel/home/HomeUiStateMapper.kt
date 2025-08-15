@@ -3,6 +3,8 @@ package com.amsterdam.viewmodel.home
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase.HomeScreenData
 import com.amsterdam.domain.utils.MovieWatchHistory
 import com.amsterdam.domain.utils.TvShowWatchHistory
+import com.amsterdam.domain.utils.category.toMovieGenre
+import com.amsterdam.domain.utils.category.toTvShowGenre
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.TvShow
 import com.amsterdam.viewmodel.home.HomeUiState.ContinueWatchingHomeItemUiState
@@ -71,7 +73,7 @@ fun Movie.toPopularMediaItemUiState(): PopularMediaItemUiState {
         rating = rating.toFormattedRating(),
         posterUrl = posterUrl,
         type = MediaType.MOVIE,
-        categories = categories.map { it.name }
+        categories = categories.map { it.toMovieGenre().name }
     )
 }
 
@@ -82,7 +84,7 @@ fun TvShow.toPopularMediaItemUiState(): PopularMediaItemUiState {
         rating = rating.toFormattedRating(),
         posterUrl = posterUrl,
         type = MediaType.TV_SHOW,
-        categories = categories.map { it.name }
+        categories = categories.map { it.toTvShowGenre().name }
     )
 }
 

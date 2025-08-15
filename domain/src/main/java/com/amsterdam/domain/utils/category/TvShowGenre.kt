@@ -19,3 +19,7 @@ enum class TvShowGenre {
     WESTERN,
     DOCUMENTARY
 }
+
+fun String.toTvShowGenre() = TvShowGenre.valueOf(this)
+
+fun List<String>.toTvShowGenres() = this.map { it.toTvShowGenre() }

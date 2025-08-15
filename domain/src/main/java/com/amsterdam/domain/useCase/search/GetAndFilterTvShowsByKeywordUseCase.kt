@@ -1,8 +1,9 @@
 package com.amsterdam.domain.useCase.search
 
 import com.amsterdam.domain.repository.TvShowRepository
-import com.amsterdam.entity.TvShow
 import com.amsterdam.domain.utils.category.TvShowGenre
+import com.amsterdam.domain.utils.category.toTvShowGenre
+import com.amsterdam.entity.TvShow
 import kotlin.math.floor
 
 class GetAndFilterTvShowsByKeywordUseCase (
@@ -27,7 +28,7 @@ class GetAndFilterTvShowsByKeywordUseCase (
         return this.filter { item -> floor(item.rating) >= rating }
             .filter { tv ->
                 if (genre == TvShowGenre.ALL) return@filter true
-                tv.categories.any { it == genre }
+                tv.categories.any { it.toTvShowGenre() == genre }
             }
     }
 }
