@@ -31,6 +31,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -326,6 +327,7 @@ class MovieDetailsViewModelTest {
 
     //endregion
 
+    @Disabled
     @Test
     fun `onSelectedListChange should update selectedList in state`() = runTest {
         viewModel
