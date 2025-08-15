@@ -18,7 +18,6 @@ data class GenreGameUiState(
 )
 
 data class GameQuestionUiState(
-    val id: Long,
     val questionData: String,
     val answers: List<MovieGenre>,
     val correctAnswer: MovieGenre,
