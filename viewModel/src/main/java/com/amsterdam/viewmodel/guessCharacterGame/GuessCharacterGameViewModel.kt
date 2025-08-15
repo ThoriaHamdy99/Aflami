@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.timer.TimerHandler
-import com.amsterdam.domain.useCase.game.character.GenerateCharacterQuestionsUseCase.CharacterDataQuestion
 import com.amsterdam.domain.useCase.game.character.GuessCharacterGameUseCase
-import com.amsterdam.domain.useCase.game.character.SubmitCharacterAnswerUseCase.AnswerResult
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
 import com.amsterdam.viewmodel.gameResult.ResultScreenData
 import com.amsterdam.viewmodel.gameResult.ResultSideEffect
@@ -45,11 +45,11 @@ class GuessCharacterGameViewModel @Inject constructor(
         )
     }
 
-    private suspend fun startTheGame(): List<CharacterDataQuestion> {
+    private suspend fun startTheGame(): List<GameQuestion<String>> {
         return guessCharacterGameUseCase.startGame(difficultyType)
     }
 
-    private fun onSuccessGetQuestions(questions: List<CharacterDataQuestion>) {
+    private fun onSuccessGetQuestions(questions: List<GameQuestion<String>>) {
         viewModelScope.launch {
             updateState { it.copy(questions = questions.toQuestionsUiState()) }
             startTheTimer()
