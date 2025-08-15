@@ -1,6 +1,7 @@
 package com.amsterdam.domain.useCase.game.guessByPoster
 
 import com.amsterdam.entity.GameDifficulty
+import com.amsterdam.entity.GameQuestion
 
 class GuessMovieByPosterGameUseCase(
     private val getGameData: GenerateMoviePosterQuestionsUseCase,
@@ -11,11 +12,11 @@ class GuessMovieByPosterGameUseCase(
     suspend fun startGame(difficultyType: GameDifficulty.DifficultyType) =
         getGameData(difficultyType)
 
-    suspend fun giveHint(question: MoviePosterQuestion) =
+    suspend fun giveHint(question: GameQuestion<String>) =
         doHint(question)
 
     suspend fun answer(
-        question: MoviePosterQuestion,
+        question: GameQuestion<String>,
         answer: String,
         difficultyType: GameDifficulty.DifficultyType
     ) = submitAnswer(question, answer, difficultyType)

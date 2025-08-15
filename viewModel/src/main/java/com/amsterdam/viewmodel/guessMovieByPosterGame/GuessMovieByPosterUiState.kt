@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.guessMovieByPosterGame
 
-import com.amsterdam.domain.useCase.game.guessByPoster.MoviePosterQuestion
+import com.amsterdam.entity.GameQuestion
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 
 data class GuessMovieByPosterUiState(
@@ -24,23 +24,23 @@ data class GuessMovieByPosterUiState(
     )
 }
 
-fun MoviePosterQuestion.toQuestionUiState(): GuessMovieByPosterUiState.QuestionUiState {
+fun GameQuestion<String>.toQuestionUiState(): GuessMovieByPosterUiState.QuestionUiState {
     return GuessMovieByPosterUiState.QuestionUiState(
-        posterUrl = this.posterUrl,
-        movieNameChoices = this.movieNameChoices,
-        correctAnswer = this.correctMovieName,
-        questionTimeSeconds = this.questionTimeSeconds
+        posterUrl = this.question,
+        movieNameChoices = this.choices,
+        correctAnswer = this.correctChoice,
+        questionTimeSeconds = this.questionTime
     )
 }
 
-fun GuessMovieByPosterUiState.QuestionUiState.toMoviePosterQuestion(): MoviePosterQuestion {
-    return MoviePosterQuestion(
-        posterUrl = this.posterUrl,
-        movieNameChoices = this.movieNameChoices,
-        correctMovieName = this.correctAnswer,
-        questionTimeSeconds = this.questionTimeSeconds
+fun GuessMovieByPosterUiState.QuestionUiState.toMoviePosterQuestion(): GameQuestion<String> {
+    return GameQuestion(
+        question = this.posterUrl,
+        choices = this.movieNameChoices,
+        correctChoice = this.correctAnswer,
+        questionTime = this.questionTimeSeconds
     )
 }
 
-fun List<MoviePosterQuestion>.toQuestionsUiState(): List<GuessMovieByPosterUiState.QuestionUiState> =
+fun List<GameQuestion<String>>.toQuestionsUiState(): List<GuessMovieByPosterUiState.QuestionUiState> =
     map { it.toQuestionUiState() }

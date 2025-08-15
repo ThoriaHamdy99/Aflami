@@ -5,9 +5,9 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.guessByPoster.GuessMovieByPosterGameUseCase
-import com.amsterdam.domain.useCase.game.guessByPoster.MoviePosterQuestion
 import com.amsterdam.domain.useCase.game.guessByPoster.SubmitGuessMovieByPosterAnswerUseCase
 import com.amsterdam.entity.GameDifficulty
+import com.amsterdam.entity.GameQuestion
 import com.amsterdam.viewmodel.gameResult.ResultScreenData
 import com.amsterdam.viewmodel.gameResult.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -46,11 +46,11 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
         )
     }
 
-    private suspend fun startTheGame(): List<MoviePosterQuestion> {
+    private suspend fun startTheGame(): List<GameQuestion<String>> {
         return guessMovieByPosterGameUseCase.startGame(difficultyType)
     }
 
-    private fun onSuccessGetQuestions(questions: List<MoviePosterQuestion>) {
+    private fun onSuccessGetQuestions(questions: List<GameQuestion<String>>) {
         viewModelScope.launch {
             updateState { it.copy(questions = questions.toQuestionsUiState()) }
             startTheTimer()
@@ -113,7 +113,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
     override fun onSelectAnswer(selectedAnswerIndex: Int) {
         val question =
             state.value.questions[state.value.currentQuestionIndex].toMoviePosterQuestion()
-        val selectedAnswer = question.movieNameChoices[selectedAnswerIndex]
+        val selectedAnswer = question.choices[selectedAnswerIndex]
 
         tryToExecute(
             action = {
