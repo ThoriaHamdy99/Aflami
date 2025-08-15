@@ -2,6 +2,7 @@ package com.amsterdam.domain.useCase.game.whichGenre
 
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.entity.AnswerResult
 import com.amsterdam.entity.GameDifficulty.DifficultyType
 import com.amsterdam.entity.GameQuestion
 import com.amsterdam.entity.category.MovieGenre
@@ -25,9 +26,4 @@ class SubmitGuessMovieGenreAnswerUseCase(
 
         return AnswerResult(correct, earnedPoints)
     }
-
-    data class AnswerResult(
-        val isCorrect: Boolean,
-        val earnedPoints: Int
-    )
 }

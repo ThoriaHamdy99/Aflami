@@ -2,6 +2,7 @@ package com.amsterdam.domain.useCase.game.character
 
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.entity.AnswerResult
 import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.entity.GameQuestion
 
@@ -24,9 +25,4 @@ class SubmitCharacterAnswerUseCase(
 
         return AnswerResult(correct, earnedPoints)
     }
-
-    data class AnswerResult(
-        val isCorrect: Boolean,
-        val earnedPoints: Int
-    )
 }

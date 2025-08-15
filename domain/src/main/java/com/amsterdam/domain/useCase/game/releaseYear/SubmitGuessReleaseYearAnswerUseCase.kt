@@ -2,6 +2,7 @@ package com.amsterdam.domain.useCase.game.releaseYear
 
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.entity.AnswerResult
 import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.entity.GameQuestion
 
@@ -22,11 +23,6 @@ class SubmitGuessReleaseYearAnswerUseCase(
             earnedPoints = gameDifficulty.pointsPerQuestion
         }
 
-        return AnswerResult(correct,earnedPoints)
+        return AnswerResult(correct, earnedPoints)
     }
-
-    data class AnswerResult(
-        val isCorrect: Boolean,
-        val earnedPoints: Int
-    )
 }
