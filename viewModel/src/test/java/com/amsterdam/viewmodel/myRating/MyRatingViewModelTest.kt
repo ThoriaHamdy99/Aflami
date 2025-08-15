@@ -11,8 +11,8 @@ import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.TvShow
-import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.entity.category.TvShowGenre
+import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.TabOption
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension

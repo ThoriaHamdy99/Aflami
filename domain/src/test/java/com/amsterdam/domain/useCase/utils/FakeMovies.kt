@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.utils
 
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import kotlinx.datetime.LocalDate
 
 val specificMovieList = listOf(

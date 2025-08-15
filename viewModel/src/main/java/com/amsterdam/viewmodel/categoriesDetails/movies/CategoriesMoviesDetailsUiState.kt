@@ -2,7 +2,7 @@ package com.amsterdam.viewmodel.categoriesDetails.movies
 
 import androidx.paging.PagingData
 import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.viewmodel.shared.defaultMovieGenres
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.shared.uiStates.MovieGenreItemUiState

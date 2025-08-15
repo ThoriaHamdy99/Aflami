@@ -1,7 +1,7 @@
 package com.amsterdam.repository.mapper.local
 
 import com.amsterdam.entity.TvShow
-import com.amsterdam.entity.category.TvShowGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.repository.dto.local.TvShowCategoryLocalDto
 import com.amsterdam.repository.dto.local.TvShowLocalDto
 import com.amsterdam.repository.dto.local.relation.TvShowWithCategories

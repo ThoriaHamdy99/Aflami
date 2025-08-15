@@ -8,7 +8,7 @@ import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Gender
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.Review
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coJustRun

@@ -2,7 +2,7 @@ package com.amsterdam.domain.useCase.home
 
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.TvShow
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 
 class GetHomeScreenDataUseCase(
     private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,

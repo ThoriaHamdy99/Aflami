@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.utils.entityHelper
 
 import com.amsterdam.entity.TvShow
-import com.amsterdam.entity.category.TvShowGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import kotlinx.datetime.LocalDate
 
 fun createTvShow(

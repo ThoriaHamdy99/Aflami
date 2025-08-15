@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.utils
 
 import com.amsterdam.entity.TvShow
-import com.amsterdam.entity.category.TvShowGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import kotlinx.datetime.LocalDate
 
 val specificTvShowList = listOf(
@@ -85,7 +85,7 @@ val fakeTvShowListWithRatings =
             popularity = 10.0,
             seasonCount = 4,
             originCountry = "US",
-           
+
         ),
         TvShow(
             id = 2,
@@ -98,7 +98,7 @@ val fakeTvShowListWithRatings =
             popularity = 9.0,
             seasonCount = 4,
             originCountry = "US",
-           
+
         ),
         TvShow(
             id = 3,

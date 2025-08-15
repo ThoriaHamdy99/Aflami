@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.categoriesDetails.tvShow
 
 import androidx.paging.CombinedLoadStates
-import com.amsterdam.entity.category.TvShowGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 
 interface CategoriesTvShowsDetailsInteractionListener {
     fun onClickBack()

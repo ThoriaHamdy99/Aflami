@@ -3,7 +3,7 @@ package com.amsterdam.viewmodel.home
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.utils.Mood
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.viewmodel.shared.defaultMovieGenres
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.shared.uiStates.MovieGenreItemUiState

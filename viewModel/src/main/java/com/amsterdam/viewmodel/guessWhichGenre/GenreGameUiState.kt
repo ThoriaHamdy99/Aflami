@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.guessWhichGenre
 
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 
 data class GenreGameUiState(

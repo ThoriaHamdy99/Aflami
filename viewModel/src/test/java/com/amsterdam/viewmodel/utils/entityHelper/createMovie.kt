@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.utils.entityHelper
 
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import kotlinx.datetime.LocalDate
 
 fun createMovie(

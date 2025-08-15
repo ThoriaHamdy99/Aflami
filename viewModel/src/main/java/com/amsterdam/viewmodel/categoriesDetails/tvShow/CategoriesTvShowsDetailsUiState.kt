@@ -2,7 +2,7 @@ package com.amsterdam.viewmodel.categoriesDetails.tvShow
 
 import androidx.paging.PagingData
 import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.entity.category.TvShowGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.defaultTvShowGenres
 import com.amsterdam.viewmodel.shared.uiStates.TvShowGenreItemUiState
 import kotlinx.coroutines.flow.Flow

@@ -1,6 +1,6 @@
 package com.amsterdam.domain.utils
 
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 
 enum class Mood(val movieGenres: List<MovieGenre>) {
     SAD(listOf(MovieGenre.COMEDY)),

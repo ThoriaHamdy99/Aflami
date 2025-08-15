@@ -1,6 +1,6 @@
 package com.amsterdam.repository.mapper.local
 
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.repository.dto.local.MovieCategoryLocalDto
 import com.amsterdam.repository.mapper.toDtoList
 import com.amsterdam.repository.mapper.toEntity

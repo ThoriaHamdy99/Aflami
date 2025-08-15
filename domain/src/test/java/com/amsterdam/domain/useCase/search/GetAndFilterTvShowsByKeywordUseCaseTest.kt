@@ -6,7 +6,7 @@ import com.amsterdam.domain.useCase.utils.fakeTvShowList
 import com.amsterdam.domain.useCase.utils.fakeTvShowListWithCategories
 import com.amsterdam.domain.useCase.utils.fakeTvShowListWithRatings
 import com.amsterdam.domain.useCase.utils.specificTvShowList
-import com.amsterdam.entity.category.TvShowGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

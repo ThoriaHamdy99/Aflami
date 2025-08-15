@@ -14,7 +14,7 @@ import com.amsterdam.entity.Episode
 import com.amsterdam.entity.Review
 import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
-import com.amsterdam.entity.category.TvShowGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat

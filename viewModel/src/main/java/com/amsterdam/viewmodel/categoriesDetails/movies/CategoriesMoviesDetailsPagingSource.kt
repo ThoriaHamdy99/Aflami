@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.amsterdam.domain.useCase.details.GetMoviesByGenreUseCase
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.paging.BasePagingSource
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow

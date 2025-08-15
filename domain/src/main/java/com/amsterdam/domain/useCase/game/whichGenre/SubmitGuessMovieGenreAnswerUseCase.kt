@@ -4,7 +4,7 @@ import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCas
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase.MovieGenreQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 
 class SubmitGuessMovieGenreAnswerUseCase(
     private val getGameDifficultyUseCase: GetGameDifficultyByDifficultyTypeUseCase,
