@@ -3,13 +3,14 @@ package com.amsterdam.domain.useCase.game.releaseYear
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 import com.amsterdam.entity.GameDifficulty
+import com.amsterdam.entity.GameQuestion
 
 class SubmitGuessReleaseYearAnswerUseCase(
     private val getDifficulty: GetGameDifficultyByDifficultyTypeUseCase,
     private val updatePoints: UpdateUserGamePointsUseCase
 ) {
     suspend operator fun invoke(
-        question: GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion,
+        question: GameQuestion<Int>,
         answer: Int,
         difficultyType: GameDifficulty.DifficultyType
     ): AnswerResult {
