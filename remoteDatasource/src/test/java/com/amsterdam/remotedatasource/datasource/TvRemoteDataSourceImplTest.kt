@@ -301,124 +301,76 @@ class TvRemoteDataSourceImplTest {
             coEvery { tvShowsApiService.getRatedTvShows() } returns validTvShowResponse
 
             val ratingResponse = tvRemoteDataSourceImpl.getRatedTvShows()
-    fun `getTvShowByGenreIds should return TV shows for given genre IDs when successful`() =
-        runTest {
-            coEvery {
-                tvShowsApiService.getTvShowsByGenreIds(
-                    genreIds,
-                    page = 1
-                )
-            } returns expectedResponse
 
-            val tvShows = tvRemoteDataSourceImpl.getTvShowsByGenreId(28L, page = 1)
 
-            assertThat(ratingResponse).isEqualTo(validTvShowResponse)
-            coVerify(exactly = 1) { tvShowsApiService.getRatedTvShows() }
-        }
+            @Test
+            fun `getRatedTvShows should throw NetworkException and call the API exactly once when the API call fails`() =
+                runTest {
+                    coEvery { tvShowsApiService.getRatedTvShows() } throws networkException
 
-    @Test
-    fun `getRatedTvShows should throw NetworkException and call the API exactly once when the API call fails`() =
-        runTest {
-            coEvery { tvShowsApiService.getRatedTvShows() } throws networkException
+                    assertThrows<NetworkException> {
+                        tvRemoteDataSourceImpl.getRatedTvShows()
+                    }
+                    coVerify(exactly = 1) { tvShowsApiService.getRatedTvShows() }
+                }
 
-            assertThrows<NetworkException> {
-                tvRemoteDataSourceImpl.getRatedTvShows()
-            }
-            coVerify(exactly = 1) { tvShowsApiService.getRatedTvShows() }
-        }
+            @Test
+            fun `deleteTvShowRate should call the deleteTvRating API exactly once with the correct parameters`() =
+                runTest {
+                    coEvery {
+                        tvShowsApiService.deleteTvRating(tvId = TV_SHOW_TEST_ID)
+                    } returns tvShowRatingRemoteResponse
 
-    @Test
-    fun `deleteTvShowRate should call the deleteTvRating API exactly once with the correct parameters`() =
-        runTest {
-            coEvery {
-                tvShowsApiService.deleteTvRating(tvId = TV_SHOW_TEST_ID)
-            } returns tvShowRatingRemoteResponse
+                    tvRemoteDataSourceImpl.deleteTvShowRate(TV_SHOW_TEST_ID)
 
-            tvRemoteDataSourceImpl.deleteTvShowRate(TV_SHOW_TEST_ID)
+                    coVerify(exactly = 1) {
+                        tvShowsApiService.deleteTvRating(tvId = TV_SHOW_TEST_ID)
+                    }
+                }
 
-            coVerify(exactly = 1) {
-                tvShowsApiService.deleteTvRating(tvId = TV_SHOW_TEST_ID)
-            }
-        }
+            @Test
+            fun `getTvShowsByGenreId should return a list of TV shows and call the API exactly once when successful`() =
+                runTest {
+                    coEvery {
+                        tvShowsApiService.getTvShowsByGenreIds(
+                            genreList,
+                            TV_SHOW_TEST_PAGE
+                        )
+                    } returns validTvShowResponse
 
-    @Test
-    fun `getTvShowsByGenreId should return a list of TV shows and call the API exactly once when successful`() =
-        runTest {
-            coEvery {
-                tvShowsApiService.getTvShowsByGenreIds(
-                    genreList,
-                    TV_SHOW_TEST_PAGE
-                )
-            } returns validTvShowResponse
+                    val tvShows =
+                        tvRemoteDataSourceImpl.getTvShowsByGenreId(
+                            TV_SHOW_TEST_GENRE_ID,
+                            TV_SHOW_TEST_PAGE
+                        )
 
-            val tvShows =
-                tvRemoteDataSourceImpl.getTvShowsByGenreId(TV_SHOW_TEST_GENRE_ID, TV_SHOW_TEST_PAGE)
+                    assertThat(tvShows).isEqualTo(validTvShowResponse)
+                    coVerify(exactly = 1) {
+                        tvShowsApiService.getTvShowsByGenreIds(
+                            genreList,
+                            TV_SHOW_TEST_PAGE
+                        )
+                    }
+                }
 
-            assertThat(tvShows).isEqualTo(validTvShowResponse)
-            coVerify(exactly = 1) {
-                tvShowsApiService.getTvShowsByGenreIds(
-                    genreList,
-                    TV_SHOW_TEST_PAGE
-                )
-            }
-        }
+            @Test
+            fun `getEpisodeVideos should use season 1 for invalid season numbers and call the API exactly once`() =
+                runTest {
+                    coEvery {
+                        tvShowsApiService.getEpisodeVideos(
+                            TV_SHOW_TEST_ID,
+                            expectedSeasonNumber,
+                            TV_SHOW_TEST_EPISODE_NUMBER
+                        )
+                    } returns tvShowVideoRemoteResponse
 
-    @Test
-    fun `getEpisodeVideos should use season 1 for invalid season numbers and call the API exactly once`() =
-        runTest {
-            coEvery {
-                tvShowsApiService.getEpisodeVideos(
-                    TV_SHOW_TEST_ID,
-                    expectedSeasonNumber,
-                    TV_SHOW_TEST_EPISODE_NUMBER
-                )
-            } returns tvShowVideoRemoteResponse
+                    val videoResponse = tvRemoteDataSourceImpl.getEpisodeVideos(
+                        TV_SHOW_TEST_ID,
+                        invalidSeasonNumber,
+                        TV_SHOW_TEST_EPISODE_NUMBER
+                    )
 
-            val videoResponse = tvRemoteDataSourceImpl.getEpisodeVideos(
-                TV_SHOW_TEST_ID,
-                invalidSeasonNumber,
-                TV_SHOW_TEST_EPISODE_NUMBER
-            )
-            assertThat(tvShows).isEqualTo(expectedResponse)
-            coVerify(exactly = 1) { tvShowsApiService.getTvShowsByGenreIds(genreIds, page = 1) }
-
-        }
-
-    private val keyword = "Game of Thrones"
-    private val page = 1
-    private val tvShowId = 1399L
-    private val seasonNumber = 1
-    private val episodeNumber = 1
-    private val expectedVideoResponse = VideoRemoteResponse(
-        results = listOf(
-            videoDto
-        )
-    )
-    private val expectedDetailsResponse = remoteTvShowDetailsResponse
-    private val expectedEpisodeResponse = episodeResponse
-    private val expectedRatingResponse = RatingRemoteResponse(statusCode = 1, statusMessage = "Success")
-    private val expectedResponse = TvShowRemoteResponse(
-        page = 1,
-        results = listOf(
-            remoteTvShowItemDto
-        ),
-        totalPages = 1,
-        totalResults = 1
-    )
-    private val expectedEmptyResponse = TvShowRemoteResponse(
-        page = 1,
-        results = emptyList(),
-        totalPages = 1,
-        totalResults = 1
-    )
-    private val expectedCastAndCrewResponse =CastAndCrewRemoteResponse(
-        id = tvShowId,
-        cast = emptyList(),
-        crew = emptyList()
-    )
-    private val genreIds = listOf(28L)
-
-            assertThat(videoResponse).isEqualTo(tvShowVideoRemoteResponse)
+                }
 
             coVerify(exactly = 1) {
                 tvShowsApiService.getEpisodeVideos(

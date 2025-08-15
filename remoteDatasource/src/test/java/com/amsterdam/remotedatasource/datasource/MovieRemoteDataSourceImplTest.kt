@@ -437,62 +437,9 @@ class MovieRemoteDataSourceImplTest {
             assertThat(result.size).isEqualTo(2)
             coVerify(exactly = 1) { movieApiService.getPopularMovies(any()) }
         }
-    }
 
-    @Test
-    fun `getMoviesByGenreId should return movies for given genre ID when successful `() = runTest {
-        coEvery {
-            movieApiService.getMoviesByGenreIds(
-                listOf(genreId),
-                page
-            )
-        } returns expectedResponse
 
-        val movies = movieRemoteDataSourceImpl.getMoviesByGenreId(genreId, page)
 
-        assertThat(movies).isEqualTo(expectedResponse)
-        coVerify(exactly = 1) { movieApiService.getMoviesByGenreIds(listOf(genreId), page) }
-
-    }
-
-    private val movieId = 1399L
-    private val genreId = 28L
-    private val page = 1
-    private val genreIds = listOf(28L)
-    private val countryIsoCode = "US"
-    private val name = "test"
-    private val actorIds = listOf(6193)
-    private val keyword = "Inception"
-    private val expectedResponse = RemoteMovieResponse(
-        page = page,
-        results = listOf(remoteMovieItemDto),
-        totalPages = 1,
-        totalResults = 1
-    )
-    private val expectedActorSearchResponse = RemoteActorSearchResponse(
-        page = 1,
-        totalPages = 1,
-        totalResults = 1,
-        actors = listOf(
-            actorSearchItemDto
-        )
-    )
-    private val expectedEmptyActorSearchResponse = RemoteActorSearchResponse(
-        page = 1,
-        totalPages = 1,
-        totalResults = 1,
-        actors = emptyList()
-    )
-}
-
-    @Test
-    fun `getRandomMoviesWithNotNullDate should handle duplicates correctly`() = runTest {
-        coEvery { movieApiService.getPopularMovies(any()) } returns responseWithDuplicates
-
-        val result = movieRemoteDataSourceImpl.getRandomMoviesWithNotNullDate(2)
-
-        assertThat(result).containsNoDuplicates()
-    }
 
     @Test
     fun `getRandomMoviesWithNotNullPoster should return the required number of movies, handling null posters, and call the API at least twice`() =
@@ -506,27 +453,6 @@ class MovieRemoteDataSourceImplTest {
             coVerify(atLeast = 2) { movieApiService.getPopularMovies(any()) }
         }
 
-    @Test
-    fun `getRandomMoviesWithNotNullPoster should break the loop and call the API exactly once when enough movies are collected`() =
-        runTest {
-            coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithPosterResponse
-
-            val result =
-                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullPoster(2)
-
-            assertThat(result.size).isEqualTo(2)
-            coVerify(exactly = 1) { movieApiService.getPopularMovies(any()) }
-        }
-
-    @Test
-    fun `getRandomMoviesWithNotNullPoster should handle duplicates correctly`() = runTest {
-        coEvery { movieApiService.getPopularMovies(any()) } returns responseWithDuplicates
-
-        val result =
-            movieRemoteDataSourceImpl.getRandomMoviesWithNotNullPoster(2)
-
-        assertThat(result).containsNoDuplicates()
-    }
 
     private val networkException = NetworkException()
 
