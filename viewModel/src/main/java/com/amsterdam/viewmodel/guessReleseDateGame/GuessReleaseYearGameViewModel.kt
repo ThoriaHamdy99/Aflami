@@ -136,7 +136,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
                 selectedAnswerIndex = selectedAnswerIndex
             )
         }
-            totalCollectedPoints += answerResult.earnedPoints
+        totalCollectedPoints += answerResult.earnedPoints
 
     }
 
@@ -184,7 +184,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
     }
 
     private fun onError(error: AflamiException) {
-        when(error){
+        when (error) {
             is NotEnoughPointsException -> updateState { it.copy(isNotEnoughPointsDialogVisible = true) }
         }
     }

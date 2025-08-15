@@ -10,7 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.TopAppBar
-import com.amsterdam.designsystem.components.IconButton
+import com.amsterdam.designsystem.components.buttons.IconButton
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme

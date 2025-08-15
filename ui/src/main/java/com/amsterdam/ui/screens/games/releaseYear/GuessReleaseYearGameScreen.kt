@@ -32,10 +32,10 @@ import com.amsterdam.designsystem.components.Scaffold
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
-import com.amsterdam.ui.components.GameTopBar
+import com.amsterdam.ui.screens.games.component.GameTopBar
 import com.amsterdam.ui.components.PageIndicator
-import com.amsterdam.ui.components.guessGame.AdaptiveAnswersColumn
-import com.amsterdam.ui.components.guessGame.GuessTitle
+import com.amsterdam.ui.screens.games.component.AdaptiveAnswersColumn
+import com.amsterdam.ui.screens.games.component.GuessTitle
 import com.amsterdam.ui.screens.games.component.NotEnoughPointsDialog
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearGameEffect
@@ -90,7 +90,7 @@ private fun GameContent(
             .navigationBarsPadding(),
         bottomBar = {
             ConfirmButton(
-                title = stringResource(com.amsterdam.designsystem.R.string.next),
+                title = stringResource(R.string.next),
                 onClick = interactionListener::onMoveToNextQuestion,
                 isEnabled = state.isNextEnabled,
                 isLoading = false,

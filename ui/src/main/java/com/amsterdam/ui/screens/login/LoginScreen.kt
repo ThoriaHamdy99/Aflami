@@ -30,7 +30,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.amsterdam.designsystem.components.IconButton
+import com.amsterdam.designsystem.components.buttons.IconButton
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.TextField
 import com.amsterdam.designsystem.components.buttons.ButtonDefaults

@@ -6,7 +6,7 @@ import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearUiState.Quest
 fun MovieReleasedDateQuestion.toQuestionUiStateUiState(): QuestionUiState {
     return QuestionUiState(
         movieName = this.question,
-        releaseYearAnswer = this.releaseYearChoices.map { it.toString()},
+        releaseYearAnswer = this.releaseYearChoices.map { it.toString() },
         correctAnswer = this.correctChoice.toString(),
         questionTimeSeconds = questionTimeSeconds
     )
@@ -21,4 +21,5 @@ fun QuestionUiState.toMovieReleasedDateQuestion(): MovieReleasedDateQuestion {
     )
 }
 
-fun List<MovieReleasedDateQuestion>.toQuestionsUiStateUiState(): List<QuestionUiState>  = map { it.toQuestionUiStateUiState() }
+fun List<MovieReleasedDateQuestion>.toQuestionsUiStateUiState(): List<QuestionUiState> =
+    map { it.toQuestionUiStateUiState() }

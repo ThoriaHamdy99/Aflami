@@ -136,7 +136,7 @@ class GuessCharacterGameViewModel @Inject constructor(
                 selectedAnswerIndex = selectedAnswerIndex
             )
         }
-            totalCollectedPoints += answerResult.earnedPoints
+        totalCollectedPoints += answerResult.earnedPoints
     }
 
     private fun onSubmitTheAnswerComplete() {
@@ -181,6 +181,7 @@ class GuessCharacterGameViewModel @Inject constructor(
             )
         }
     }
+
     override fun dismissNotEnoughPointsDialog() {
         updateState { it.copy(isNotEnoughPointsDialogVisible = false) }
     }
@@ -194,10 +195,9 @@ class GuessCharacterGameViewModel @Inject constructor(
     }
 
     private fun onError(error: AflamiException) {
-        when(error){
+        when (error) {
             is NotEnoughPointsException -> updateState { it.copy(isNotEnoughPointsDialogVisible = true) }
 
         }
     }
-
 }

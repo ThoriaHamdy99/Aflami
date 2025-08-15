@@ -41,6 +41,7 @@ data class SeriesDetailsUiState(
         GALLERY,
         COMPANY_PRODUCTION
     }
+
     data class SimilarTvShowUiState(
         val movieId: Long,
         val rate: String = "",
@@ -48,6 +49,7 @@ data class SeriesDetailsUiState(
         val productionYear: String = "",
         val posterUrl: String = ""
     )
+
     data class SeasonUiState(
         val id: Long = 0,
         val title: String = "",
@@ -70,6 +72,7 @@ data class SeriesDetailsUiState(
             val videoUrl: String = ""
         )
     }
+
     data class ActorTvShowUiState(
         val photo: String = "",
         val name: String = ""
