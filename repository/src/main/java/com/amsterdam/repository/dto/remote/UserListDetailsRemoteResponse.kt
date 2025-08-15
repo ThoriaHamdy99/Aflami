@@ -14,4 +14,3 @@ data class UserListDetailsRemoteResponse(
     @SerialName("items") val items: List<UserListItemRemoteDto>,
     @SerialName("poster_path") val posterPath: String?
 )
-
