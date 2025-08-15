@@ -112,20 +112,25 @@ class UserListRepositoryImplTest {
     @Test
     fun `should return list of movies when response return with results`() = runTest {
         val response = remoteListResponse.copy(items = listItems)
-        coEvery { userListRemoteDataSource.getMoviesFromList(listId, 1) } returns response
+        coEvery { userListRemoteDataSource.getMoviesAndTvShowsFromList(listId, 1) } returns response
 
-        val result = userListRepository.getMoviesFromList(listId, 1)
+        val result = userListRepository.getMoviesAndTvShowsFromList(listId, 1)
 
-        assertThat(result).containsExactlyElementsIn(listItems.map { it.toMovieEntity() })
+        assertThat(result.listDetailsMovies).containsExactlyElementsIn(listItems.map { it.toMovieEntity() })
     }
 
     @Test
     fun `should return empty list of movies when response returns empty list with`() = runTest {
-        coEvery { userListRemoteDataSource.getMoviesFromList(listId, 1) } returns remoteListResponse
+        coEvery {
+            userListRemoteDataSource.getMoviesAndTvShowsFromList(
+                listId,
+                1
+            )
+        } returns remoteListResponse
 
-        val result = userListRepository.getMoviesFromList(listId, 1)
+        val result = userListRepository.getMoviesAndTvShowsFromList(listId, 1)
 
-        assertThat(result).isEmpty()
+        assertThat(result.listDetailsMovies).isEmpty()
     }
 
     @Test
