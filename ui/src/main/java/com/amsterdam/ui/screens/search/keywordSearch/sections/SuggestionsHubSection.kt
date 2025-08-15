@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AppTheme
-import com.amsterdam.ui.components.globalSearchHub.GlobalSearchHub
-import com.amsterdam.ui.components.globalSearchHub.GlobalSearchHubUI
+import com.amsterdam.ui.screens.search.keywordSearch.sections.globalSearchHub.GlobalSearchHub
+import com.amsterdam.ui.screens.search.keywordSearch.sections.globalSearchHub.GlobalSearchHubUI
 
 @Composable
 internal fun SuggestionsHubSection(

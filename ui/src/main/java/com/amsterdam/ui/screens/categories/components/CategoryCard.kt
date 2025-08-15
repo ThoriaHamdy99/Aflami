@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components
+package com.amsterdam.ui.screens.categories.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image

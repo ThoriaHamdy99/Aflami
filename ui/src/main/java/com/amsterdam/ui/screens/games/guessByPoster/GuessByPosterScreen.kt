@@ -43,9 +43,9 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.PageIndicator
-import com.amsterdam.ui.components.guessGame.AdaptiveAnswersColumn
-import com.amsterdam.ui.components.guessGame.GuessPicture
-import com.amsterdam.ui.components.guessGame.TimerComponent
+import com.amsterdam.ui.screens.games.component.AdaptiveAnswersColumn
+import com.amsterdam.ui.screens.games.component.GuessPicture
+import com.amsterdam.ui.screens.games.component.TimerComponent
 import com.amsterdam.ui.screens.games.component.NotEnoughPointsDialog
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.viewmodel.guessMovieByPosterGame.GuessMovieByPosterGameEffect

@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components.grids
+package com.amsterdam.ui.screens.watchHistory.sections
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +11,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.imageviewer.ui.SafeImageView
@@ -20,9 +21,9 @@ import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.watchHistory.WatchHistoryUiState
 
 @Composable
-fun SuccessTvShowMediaItemsSection(
-    onTvShowClicked: (movieId: Long) -> Unit,
-    selectedItems: LazyPagingItems<WatchHistoryUiState.WatchHistoryTvShowUiState>,
+fun SuccessMovieMediaItemsSection(
+    onMovieClicked: (movieId: Long) -> Unit,
+    selectedItems: LazyPagingItems<WatchHistoryUiState.WatchHistoryMovieUiState>,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(160.dp),
@@ -47,13 +48,12 @@ fun SuccessTvShowMediaItemsSection(
                         onError = { ImageErrorIndicator() },
                     )
                 },
-                movieType = stringResource(com.amsterdam.ui.R.string.tv),
+                movieType = stringResource(R.string.movies),
                 movieYear = selectedItem.yearOfRelease,
                 movieTitle = selectedItem.name,
                 movieRating = selectedItem.rate,
-                onClick = { onTvShowClicked(selectedItem.id) }
+                onClick = { onMovieClicked(selectedItem.id) }
             )
         }
     }
 }
-

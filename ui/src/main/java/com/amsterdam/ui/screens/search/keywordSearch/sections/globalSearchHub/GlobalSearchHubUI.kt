@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components.globalSearchHub
+package com.amsterdam.ui.screens.search.keywordSearch.sections.globalSearchHub
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

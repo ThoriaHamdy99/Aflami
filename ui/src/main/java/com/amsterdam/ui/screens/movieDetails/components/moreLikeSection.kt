@@ -13,7 +13,7 @@ import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.EmptyStateText
-import com.amsterdam.ui.components.UpcomingCard
+import com.amsterdam.ui.components.movieAndTvShowDetails.UpcomingCard
 import com.amsterdam.ui.components.adaptiveGrid
 import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.SimilarMovieUiState

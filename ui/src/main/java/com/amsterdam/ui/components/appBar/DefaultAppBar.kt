@@ -19,8 +19,8 @@ import com.amsterdam.ui.R
 
 @Composable
 fun DefaultAppBar(
-    title: String = "",
     modifier: Modifier = Modifier,
+    title: String = "",
     showNavigateBackButton: Boolean = true,
     firstOption: Painter? = null,
     firstOptionIconTint: Color = AppTheme.color.body,

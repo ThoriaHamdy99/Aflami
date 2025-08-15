@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components.guessGame
+package com.amsterdam.ui.screens.games.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween

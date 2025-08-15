@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components.globalSearchHub
+package com.amsterdam.ui.screens.search.keywordSearch.sections.globalSearchHub
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

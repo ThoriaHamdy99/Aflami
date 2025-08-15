@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components
+package com.amsterdam.ui.screens.games.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,7 +11,6 @@ import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.buttons.IconButton
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.R
-import com.amsterdam.ui.components.guessGame.TimerComponent
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 
 @Composable

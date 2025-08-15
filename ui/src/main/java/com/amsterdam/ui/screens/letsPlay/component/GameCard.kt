@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components
+package com.amsterdam.ui.screens.letsPlay.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically

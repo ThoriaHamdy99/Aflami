@@ -17,7 +17,6 @@ import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.R
-import com.amsterdam.ui.components.selection.LanguageSelectionItem
 import com.amsterdam.ui.screens.profile.model.Language
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language as DomainLanguage
 

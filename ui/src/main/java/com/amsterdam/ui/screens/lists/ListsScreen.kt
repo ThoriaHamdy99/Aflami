@@ -46,7 +46,7 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.application.LocalScaffoldBottomPadding
 import com.amsterdam.ui.components.CreateNewListDialog
-import com.amsterdam.ui.components.ListItem
+import com.amsterdam.ui.screens.lists.components.ListItem
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar

@@ -37,8 +37,8 @@ import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
-import com.amsterdam.ui.components.grids.SuccessMovieMediaItemsSection
-import com.amsterdam.ui.components.grids.SuccessTvShowMediaItemsSection
+import com.amsterdam.ui.screens.watchHistory.sections.SuccessMovieMediaItemsSection
+import com.amsterdam.ui.screens.watchHistory.sections.SuccessTvShowMediaItemsSection
 import com.amsterdam.ui.screens.home.sections.AnimatedSectionVisibility
 import com.amsterdam.viewmodel.shared.TabOption
 import com.amsterdam.viewmodel.watchHistory.WatchHistoryEffect

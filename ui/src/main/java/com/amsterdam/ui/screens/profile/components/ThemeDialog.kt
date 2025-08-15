@@ -29,7 +29,6 @@ import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.R
-import com.amsterdam.ui.components.selection.ThemeSelectionItem
 
 @Composable
 fun ThemeDialog(

@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components
+package com.amsterdam.ui.screens.lists.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

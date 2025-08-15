@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components.guessGame
+package com.amsterdam.ui.screens.games.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,8 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.amsterdam.ui.components.selection.AnswerSelectionItem
-import com.amsterdam.ui.components.selection.AnswerStatus
 
 @Composable
 fun AdaptiveAnswersColumn(

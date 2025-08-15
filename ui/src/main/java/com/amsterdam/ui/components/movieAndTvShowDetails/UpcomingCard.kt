@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components
+package com.amsterdam.ui.components.movieAndTvShowDetails
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.ui.components.BaseCard
 
 @Composable
 fun UpcomingCard(

@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components.selection
+package com.amsterdam.ui.screens.profile.components
 
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
@@ -19,13 +19,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.RadioButton
 import com.amsterdam.designsystem.components.buttons.RadioState
-import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.ui.R
+import com.amsterdam.ui.screens.profile.model.Language
 
 @Composable
 fun LanguageSelectionItem(
@@ -97,15 +97,19 @@ private fun SelectionFieldPreview() {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            ThemeSelectionItem(
-                text = stringResource(R.string.light),
+            LanguageSelectionItem(
+                modifier = Modifier.padding(top = 24.dp),
                 isSelected = true,
-                trailingIcon = com.amsterdam.designsystem.R.drawable.ic_moon
+                onClick = { },
+                text = stringResource(Language.ENGLISH.nameResourceId),
+                trailingText = stringResource(Language.ENGLISH.exampleResourceId)
             )
-            ThemeSelectionItem(
-                text = stringResource(R.string.dark),
-                isSelected = false,
-                trailingIcon = com.amsterdam.designsystem.R.drawable.ic_sun
+            LanguageSelectionItem(
+                modifier = Modifier.padding(top = 24.dp),
+                isSelected = true,
+                onClick = { },
+                text = stringResource(Language.ARABIC.nameResourceId),
+                trailingText = stringResource(Language.ARABIC.exampleResourceId)
             )
         }
     }

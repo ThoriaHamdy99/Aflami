@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components.guessGame
+package com.amsterdam.ui.screens.games.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -9,7 +9,6 @@ import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.ui.screens.games.component.GuessCard
 
 @Composable
 fun GuessTitle(

@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components.selection
+package com.amsterdam.ui.screens.games.component
 
 import androidx.annotation.DrawableRes
 import com.amsterdam.designsystem.R
