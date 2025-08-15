@@ -10,7 +10,7 @@ import com.amsterdam.domain.repository.RecentSearchRepository
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.domain.repository.WatchHistoryRepository
-import com.amsterdam.domain.timer.TimerHandler
+import com.amsterdam.viewmodel.utils.timer.TimerHandler
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.authentication.LoginAsGuestUseCase
 import com.amsterdam.domain.useCase.authentication.LoginWithPasswordUseCase

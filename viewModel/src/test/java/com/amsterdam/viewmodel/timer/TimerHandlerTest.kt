@@ -1,5 +1,6 @@
-package com.amsterdam.domain.timer
+package com.amsterdam.viewmodel.timer
 
+import com.amsterdam.viewmodel.utils.timer.TimerHandler
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coVerify
 import io.mockk.mockk

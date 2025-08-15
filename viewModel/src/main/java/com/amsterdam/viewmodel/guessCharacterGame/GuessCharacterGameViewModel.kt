@@ -3,7 +3,7 @@ package com.amsterdam.viewmodel.guessCharacterGame
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
-import com.amsterdam.domain.timer.TimerHandler
+import com.amsterdam.viewmodel.utils.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.character.GenerateCharacterQuestionsUseCase.CharacterDataQuestion
 import com.amsterdam.domain.useCase.game.character.GuessCharacterGameUseCase
 import com.amsterdam.domain.useCase.game.character.SubmitCharacterAnswerUseCase.AnswerResult

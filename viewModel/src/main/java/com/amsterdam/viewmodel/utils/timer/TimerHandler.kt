@@ -1,4 +1,4 @@
-package com.amsterdam.domain.timer
+package com.amsterdam.viewmodel.utils.timer
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
