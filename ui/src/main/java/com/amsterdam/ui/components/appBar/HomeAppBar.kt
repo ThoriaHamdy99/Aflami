@@ -1,11 +1,13 @@
 package com.amsterdam.ui.components.appBar
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.IconButton
@@ -33,9 +35,12 @@ fun HomeAppBar(
         containerColor = containerColor,
         subTitle = {
             Text(
+                modifier = Modifier.fillMaxWidth(0.85f),
                 text = stringResource(R.string.aflami_description),
                 color = AppTheme.color.body,
                 style = AppTheme.textStyle.label.small,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         },
         leadingIcon = {
