@@ -9,10 +9,10 @@ import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase.Use
 import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
-import com.amsterdam.entity.Movie
-import com.amsterdam.entity.TvShow
 import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.domain.utils.category.TvShowGenre
+import com.amsterdam.entity.Movie
+import com.amsterdam.entity.TvShow
 import com.amsterdam.viewmodel.shared.TabOption
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
@@ -244,7 +244,7 @@ class MyRatingViewModelTest {
                 description = "A fake movie description",
                 posterUrl = "https://example.com/fake-movie.jpg",
                 releaseDate = LocalDate(2025, 8, 8),
-                categories = listOf(MovieGenre.ACTION, MovieGenre.DRAMA),
+                categories = listOf(MovieGenre.ACTION, MovieGenre.DRAMA).map { it.name },
                 rating = 8.5f,
                 popularity = 123.45,
                 originCountry = "US",
@@ -261,7 +261,7 @@ class MyRatingViewModelTest {
                 description = "A fake TV show description",
                 posterUrl = "https://example.com/fake-show.jpg",
                 airDate = LocalDate(2025, 8, 8),
-                categories = listOf(TvShowGenre.ACTION_ADVENTURE, TvShowGenre.DRAMA),
+                categories = listOf(TvShowGenre.ACTION_ADVENTURE, TvShowGenre.DRAMA).map { it.name },
                 rating = 8.0f,
                 popularity = 98.76,
                 seasonCount = 3,

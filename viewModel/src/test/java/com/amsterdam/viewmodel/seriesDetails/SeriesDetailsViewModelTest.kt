@@ -10,11 +10,11 @@ import com.amsterdam.domain.useCase.myRating.tvShow.SetUserTvShowRatingUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language
 import com.amsterdam.domain.utils.SessionType
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.entity.Episode
 import com.amsterdam.entity.Review
 import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
-import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
@@ -81,7 +81,7 @@ class SeriesDetailsViewModelTest {
                 description = "Description",
                 posterUrl = "",
                 airDate = LocalDate(2023, 1, 1),
-                categories = listOf(TvShowGenre.ACTION_ADVENTURE),
+                categories = listOf(TvShowGenre.ACTION_ADVENTURE).map { it.name },
                 rating = 8.0f,
                 popularity = 100.0,
                 seasonCount = 1,
@@ -400,7 +400,7 @@ class SeriesDetailsViewModelTest {
                 description = "Description",
                 posterUrl = "",
                 airDate = LocalDate(2023, 1, 1),
-                categories = listOf(TvShowGenre.ACTION_ADVENTURE),
+                categories = listOf(TvShowGenre.ACTION_ADVENTURE).map { it.name },
                 rating = 8.0f,
                 popularity = 100.0,
                 seasonCount = 1,
