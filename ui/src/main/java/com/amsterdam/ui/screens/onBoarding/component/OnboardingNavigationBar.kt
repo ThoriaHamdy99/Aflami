@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.R
-import com.amsterdam.viewmodel.onboarding.OnboardingViewModel
+import com.amsterdam.viewmodel.onboarding.OnboardingInteractionListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -29,7 +29,7 @@ fun BoxScope.OnboardingNavigationBar(
     currentPageIndex: Int,
     totalPages: Int,
     pagerState: PagerState,
-    onboardingViewModel: OnboardingViewModel,
+    interactionListener: OnboardingInteractionListener,
     coroutineScope: CoroutineScope
 ) {
     Column(
@@ -67,7 +67,7 @@ fun BoxScope.OnboardingNavigationBar(
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(currentPageIndex - 1)
                     }
-                    onboardingViewModel.onPreviousPageClicked()
+                    interactionListener.onPreviousPageClicked()
                 },
                 modifier = Modifier
                     .offset(x = backButtonTargetOffsetX)
@@ -80,12 +80,12 @@ fun BoxScope.OnboardingNavigationBar(
                 icon = painterResource(id = R.drawable.ic_arrow_right),
                 onClick = {
                     if (currentPageIndex == totalPages - 1) {
-                        onboardingViewModel.onGetStartedClicked()
+                        interactionListener.onGetStartedClicked()
                     } else {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(currentPageIndex + 1)
                         }
-                        onboardingViewModel.onNextPageClicked()
+                        interactionListener.onNextPageClicked()
                     }
                 },
                 modifier = Modifier.offset(x = nextButtonTargetOffsetX)

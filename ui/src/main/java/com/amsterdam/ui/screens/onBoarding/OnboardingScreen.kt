@@ -32,6 +32,7 @@ import com.amsterdam.ui.components.PageIndicator
 import com.amsterdam.ui.screens.onBoarding.component.AnimatedSkipText
 import com.amsterdam.ui.screens.onBoarding.component.OnboardingNavigationBar
 import com.amsterdam.viewmodel.onboarding.OnboardingEffect
+import com.amsterdam.viewmodel.onboarding.OnboardingInteractionListener
 import com.amsterdam.viewmodel.onboarding.OnboardingViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.math.absoluteValue
@@ -41,7 +42,7 @@ fun OnboardingScreen(
     onboardingViewModel: OnboardingViewModel = hiltViewModel()
 ) {
     val navigationManager = LocalNavManager.current
-    val state by onboardingViewModel.uiState.collectAsStateWithLifecycle()
+    val state by onboardingViewModel.state.collectAsStateWithLifecycle()
     val pagerState = rememberPagerState(
         initialPage = state.currentPageIndex,
         pageCount = { OnboardingData.screens.size })
@@ -69,7 +70,7 @@ fun OnboardingScreen(
     OnboardingScreenContent(
         currentPageIndex = state.currentPageIndex,
         totalPages = state.totalPages,
-        onboardingViewModel = onboardingViewModel,
+        interactionListener = onboardingViewModel,
         pagerState = pagerState
     )
 }
@@ -78,7 +79,7 @@ fun OnboardingScreen(
 private fun OnboardingScreenContent(
     currentPageIndex: Int,
     totalPages: Int,
-    onboardingViewModel: OnboardingViewModel,
+    interactionListener: OnboardingInteractionListener,
     pagerState: PagerState,
     modifier: Modifier = Modifier
 ) {
@@ -132,13 +133,13 @@ private fun OnboardingScreenContent(
             currentPageIndex = currentPageIndex,
             totalPages = totalPages,
             pagerState = pagerState,
-            onboardingViewModel = onboardingViewModel,
+            interactionListener = interactionListener,
             coroutineScope = coroutineScope
         )
 
         AnimatedSkipText(
             isVisible = currentPageIndex < totalPages - 1,
-            onClick = onboardingViewModel::onSkipClicked
+            onClick = interactionListener::onSkipClicked
         )
         AnimatedVisibility(
             visible = indicatorYOffset.intValue != -100,

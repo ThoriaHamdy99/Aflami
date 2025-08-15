@@ -1,5 +1,6 @@
 package com.amsterdam.ui.screens.onBoarding.component
 
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -45,12 +46,7 @@ fun NavigationButton(
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.85f else 1f,
         animationSpec = tween(
-            durationMillis = 300,
-            easing = {
-                val overshoot = 1.2f
-                val x = it - 1f
-                x * x * ((overshoot + 1) * x + overshoot) + 1f
-            }
+            durationMillis = 300
         ),
         label = "scaleAnimation"
     )
@@ -93,12 +89,11 @@ fun NavigationButton(
 
     LaunchedEffect(isPressed) {
         if (isPressed) {
-            delay(250)
+            delay(300)
             isPressed = false
         }
     }
 }
-
 
 @ThemeAndLocalePreviews
 @Composable
