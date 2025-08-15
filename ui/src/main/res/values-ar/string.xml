@@ -51,6 +51,7 @@
     <string name="popular">رائج</string>
     <string name="movies_birthday">عيد ميلاد الأفلام</string>
     <string name="recently_watched">تمت مشاهدته مؤخرًا</string>
+    <string name="continue_watching">متابعة المشاهدة</string>
     <string name="top_rating">أعلى تقييم</string>
     <string name="celebrate_message">احتفل مع الأفلام التي صدرت في مثل هذا اليوم.</string>
     <!-- -   -->
@@ -88,7 +89,8 @@
     <!-- - Game section   -->
     <string name="release_game_title">متى تم إصداره؟</string>
     <string name="release_game_description">اختر سنة الإصدار الصحيحة.</string>
-    <string name="guess_movie_game_title">خمن الفيلم من الملصق</string>
+    <string name="guess_by_poster">خمن من الملصق</string>
+    <string name="guess_movie_game_title">خمن الفيلم من خلال الملصق</string>
     <string name="guess_movie_game_description">طابق الملصق مع العنوان الصحيح!</string>
     <string name="genre_game_title">أي نوع؟</string>
     <string name="genre_game_description">أي واحد هو فيلم الأكشن الحقيقي؟</string>
@@ -117,7 +119,7 @@
     <string name="cd_cancel">يلغي</string>
     <!-- -   -->
     <!-- -  -->
-    <string name="loading">تحميل…</string>
+    <string name="loading">تحميل...</string>
     <string name="all">الكل</string>
     <string name="light">فاتح</string>
     <string name="dark">داكن</string>
@@ -135,7 +137,7 @@
     <string name="cast">الممثلون</string>
     <string name="search">بحث</string>
     <string name="game_settings">%1$d سؤال، %2$d ثانية، %3$d نقطة لكل سؤال</string>
-    <string name="search_hint">ابحث…</string>
+    <string name="search_hint">ابحث...</string>
     <string name="serach_suggestions_hub">مركز اقتراحات البحث</string>
     <string name="search_description">ابدأ الاستكشاف! ابحث عن أفلامك ومسلسلاتك وعروضك المفضلة</string>
     <string name="clear_all">مسح الكل</string>
@@ -178,6 +180,7 @@
     <string name="settings">الإعدادات</string>
     <string name="change_password">تغيير كلمة المرور</string>
     <string name="tired_of_watching">هل مللت من المشاهدة؟</string>
+    <string name="tired_to_watching">هل مللت من المشاهدة؟</string>
     <string name="logout">تسجيل الخروج</string>
     <string name="logout_message">إذا مللت منا، فاعلم أننا لم نفعل، وسنبقى هنا.</string>
     <string name="login_message">الرجاء تسجيل الدخول للوصول إلى تفاصيل حسابك والميزات الأخرى!</string>
@@ -196,6 +199,7 @@
     <string name="gallary">المعرض</string>
     <string name="company_production">شركة الإنتاج</string>
     <string name="read_more">اقرأ المزيد</string>
+    <string name="read_less">اقرأ أقل</string>
     <string name="rate">تقييم</string>
     <string name="rate_title">قيمه</string>
     <string name="rate_message">اختر مدى إعجابك به</string>
@@ -227,10 +231,12 @@
     <string name="search_error_blank_query">يرجى إدخال شيء ما.</string>
     <string name="search_error_unknown">حدث خطأ غير متوقع.</string>
     <string name="there_is_no_production_company">لا توجد شركة إنتاج!</string>
+    <string name="there_is_no_seasons">يبدو أنه لم تصدر مواسم بعد</string>
     <string name="there_is_no_reviews">لا توجد مراجعات!</string>
     <string name="there_is_no_similar_content">لا يوجد محتوى مشابه!</string>
 
     <!-- - Home  -->
+    <string name="aflami_title">أفلامي</string>
     <string name="upcoming">القادمة</string>
     <string name="no_upcoming_movies_found_for_your_selection">لم يتم العثور على أفلام قادمة لاختيارك.</string>
     <string name="error_mood_movies_loading">عذرًا! لم نتمكن من العثور على أفلام تناسب مزاجك.</string>
@@ -276,5 +282,17 @@
     <string name="when_is_released">متي تم عرضه</string>
 
     <string name="oops_there_are_not_enough_points">لا توجد نقاط كافية</string>
+
+    <string name="no_rated_movies">لا توجد أفلام مقيمة بعد!</string>
+    <string name="no_rated_movies_description">افتح فيلمًا، قيّمه، وستظهر تقييماتك هنا.</string>
+    <string name="no_rated_tv_shows">لا توجد مسلسلات مقيمة بعد!</string>
+    <string name="no_rated_tv_shows_description">افتح مسلسلًا، قيّمه، وستظهر تقييماتك هنا.</string>
+    <string name="error_rated_media_title">عذرًا! لم نتمكن من تحميل تقييماتك</string>
+    <string name="error_rated_media_description">حدث خطأ أثناء جلب التقييمات الخاصة بك.</string>
+    <string name="select_how_much_you_like_it">حدد مقدار إعجابك!</string>
+    <string name="your_rating_has_been_saved">تم حفظ تقييمك!</string>
+    <string name="failed_to_save_your_rating">عذرًا! لم نتمكن من حفظ تقييمك</string>
+    <string name="failed_to_delete_your_rating">عذرًا! لم نتمكن من حذف تقييمك</string>
+    <string name="your_rate_deletion_has_been_saved">تم حذف تقييمك بنجاح</string>
 
 </resources>

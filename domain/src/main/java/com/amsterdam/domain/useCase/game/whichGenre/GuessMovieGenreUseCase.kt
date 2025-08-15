@@ -1,7 +1,5 @@
 package com.amsterdam.domain.useCase.game.whichGenre
 
-import com.amsterdam.domain.timer.TimerHandler
-import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase.MovieGenreQuestion
 import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.entity.category.MovieGenre

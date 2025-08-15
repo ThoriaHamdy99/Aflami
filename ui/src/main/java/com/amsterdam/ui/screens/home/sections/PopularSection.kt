@@ -47,7 +47,7 @@ import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.ui.R
 import com.amsterdam.ui.screens.home.component.PopularMediaItemCard
 import com.amsterdam.ui.screens.home.sections.placeholder.popularSectionPlaceholder
-import com.amsterdam.ui.screens.movieDetails.components.CategoryChip
+import com.amsterdam.ui.components.CategoryChip
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
 import com.amsterdam.viewmodel.home.HomeUiState
@@ -110,11 +110,14 @@ fun LazyListScope.popularSection(
                             )
                         }
 
-                        DisplayMediaGenres(
-                            modifier = Modifier
-                                .zIndex(2f),
-                            mediaItem = state.mediaItems[pagerState.currentPage % state.mediaItems.size],
-                        )
+                        Crossfade(
+                            targetState = pagerState.currentPage,
+                            animationSpec = tween(500, easing = FastOutSlowInEasing)
+                        ) { page ->
+                            DisplayMediaGenres(
+                                mediaItem = state.mediaItems[page % state.mediaItems.size]
+                            )
+                        }
                     }
                 }
             }

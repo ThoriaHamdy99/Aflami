@@ -1,13 +1,15 @@
 package com.amsterdam.viewmodel.guessCharacterGame
 
 import androidx.lifecycle.viewModelScope
+import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.character.GenerateCharacterQuestionsUseCase.CharacterDataQuestion
 import com.amsterdam.domain.useCase.game.character.GuessCharacterGameUseCase
 import com.amsterdam.domain.useCase.game.character.SubmitCharacterAnswerUseCase.AnswerResult
 import com.amsterdam.entity.GameDifficulty.DifficultyType
-import com.amsterdam.viewmodel.gameEnd.ResultScreenData
-import com.amsterdam.viewmodel.gameEnd.ResultSideEffect
+import com.amsterdam.viewmodel.gameResult.ResultScreenData
+import com.amsterdam.viewmodel.gameResult.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -60,7 +62,7 @@ class GuessCharacterGameViewModel @Inject constructor(
         viewModelScope.launch(dispatcherProvider.Default) {
             timerHandler.startTimer(
                 currentQuestion.questionTimeSeconds,
-                onTimerFinish = ::onTimeFinish
+                onTimerFinish = ::onMoveToNextQuestion
             )
                 .collect(::onTimerUpdate)
         }
@@ -81,19 +83,12 @@ class GuessCharacterGameViewModel @Inject constructor(
         increaseSpentTimeSecondsByOne()
     }
 
-    private fun onTimeFinish() {
-        updateState { it.copy(isNextEnabled = true) }
-    }
-
-    fun onError(error: Exception) {
-
-    }
-
-    fun onCompletion() {
+    private fun onCompletion() {
         updateState { it.copy(isLoading = false) }
     }
 
     override fun onHintClicked() {
+        if (state.value.isNextEnabled) return
         tryToExecute(
             action = {
                 val currentQuestion = state.value.questions[state.value.currentQuestionIndex]
@@ -105,7 +100,7 @@ class GuessCharacterGameViewModel @Inject constructor(
                         questions = it.questions.toMutableList().apply {
                             set(
                                 state.value.currentQuestionIndex,
-                                newQuestion.toQuestionUiState()
+                                newQuestion.toQuestionUiState().copy(blurRadius = 5)
                             )
                         }, isHintEnabled = false
                     )
@@ -128,7 +123,8 @@ class GuessCharacterGameViewModel @Inject constructor(
                     difficultyType
                 )
             },
-            onSuccess = { onSuccessSubmitAnswer(it, selectedAnswerIndex) }
+            onSuccess = { onSuccessSubmitAnswer(it, selectedAnswerIndex) },
+            onCompletion = ::onSubmitTheAnswerComplete
         )
     }
 
@@ -140,9 +136,21 @@ class GuessCharacterGameViewModel @Inject constructor(
                 selectedAnswerIndex = selectedAnswerIndex
             )
         }
-        if (answerResult.isCorrect) {
-            totalCollectedPoints += answerResult.earnedPoints
+        totalCollectedPoints += answerResult.earnedPoints
+    }
+
+    private fun onSubmitTheAnswerComplete() {
+        updateState {
+            it.copy(
+                questions = it.questions.toMutableList().apply {
+                    set(
+                        state.value.currentQuestionIndex,
+                        it.questions[state.value.currentQuestionIndex].copy(blurRadius = 0)
+                    )
+                }
+            )
         }
+        timerHandler.stopTimer()
     }
 
     override fun onMoveToNextQuestion() {
@@ -155,6 +163,7 @@ class GuessCharacterGameViewModel @Inject constructor(
                     selectedAnswerIndex = null,
                     isAnswerCorrect = null,
                     isNextEnabled = false,
+                    isNotEnoughPointsDialogVisible = false
                 )
             }
             startTheTimer()
@@ -173,6 +182,10 @@ class GuessCharacterGameViewModel @Inject constructor(
         }
     }
 
+    override fun dismissNotEnoughPointsDialog() {
+        updateState { it.copy(isNotEnoughPointsDialogVisible = false) }
+    }
+
     private fun increaseSpentTimeSecondsByOne() {
         spentTimeSeconds += 1
     }
@@ -181,8 +194,10 @@ class GuessCharacterGameViewModel @Inject constructor(
         sendNewNavigationEffect(GuessCharacterGameEffect.NavigateBack)
     }
 
-    override fun onClickClose() {
-        sendNewNavigationEffect(GuessCharacterGameEffect.NavigateToGame)
-    }
+    private fun onError(error: AflamiException) {
+        when (error) {
+            is NotEnoughPointsException -> updateState { it.copy(isNotEnoughPointsDialogVisible = true) }
 
+        }
+    }
 }

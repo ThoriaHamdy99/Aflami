@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.game.guessByPoster
 
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
-import com.amsterdam.domain.useCase.game.GetTotalUserPointsUseCase
+import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 import kotlinx.coroutines.flow.first
 
@@ -19,11 +19,9 @@ class DoGuessMovieByPosterHintUseCase(
             throw NotEnoughPointsException()
         }
 
-        val choices = moviePosterQuestion.movieNameChoices.toMutableList()
-
         updatePoints(-REQUIRED_HINT_POINTS)
 
-        return moviePosterQuestion.copy(movieNameChoices = choices)
+        return moviePosterQuestion
     }
 
     companion object {

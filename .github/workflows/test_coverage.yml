@@ -13,7 +13,8 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        module: [ localDatasource, viewModel ]
+        module: [ localDatasource, viewModel, remoteDatasource, domain ]
+
       fail-fast: false
 
     steps:
@@ -50,7 +51,7 @@ jobs:
 
       - name: Run Test And Kover Verification for ${{ matrix.module }}
         run: ./gradlew :${{ matrix.module }}:koverVerify --build-cache
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Generate coverage report for ${{ matrix.module }}
         run: ./gradlew :${{ matrix.module }}:koverXmlReport
@@ -97,6 +98,9 @@ jobs:
           path: |
             coverage-reports/localDatasource-coverage-report/report.xml
             coverage-reports/viewModel-coverage-report/report.xml
+            coverage-reports/remoteDatasource-coverage-report/report.xml
+            coverage-reports/domain-coverage-report/report.xml
+
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "🛡️ Total Code Coverage Report"
           update-comment: true
