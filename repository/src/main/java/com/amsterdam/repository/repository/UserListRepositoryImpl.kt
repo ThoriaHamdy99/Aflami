@@ -6,9 +6,9 @@ import com.amsterdam.domain.repository.UserListRepository
 import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
 import com.amsterdam.entity.UserList
 import com.amsterdam.repository.datasource.remote.UserListRemoteDataSource
+import com.amsterdam.repository.mapper.toEntity
 import com.amsterdam.repository.mapper.toMovieEntity
 import com.amsterdam.repository.mapper.toTvShowEntity
-import com.amsterdam.repository.mapper.toEntity
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
@@ -29,7 +29,10 @@ class UserListRepositoryImpl @Inject constructor(
         ).listId
     }
 
-    override suspend fun getMoviesAndTvShowsFromList(listId: Long, page: Int): GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems {
+    override suspend fun getMoviesAndTvShowsFromList(
+        listId: Long,
+        page: Int
+    ): GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems {
         val items = userListDataSource.getMoviesAndTvShowsFromList(listId, page).items
 
         val tvShows = items.filter { it.mediaType == "tv" }.map { it.toTvShowEntity() }

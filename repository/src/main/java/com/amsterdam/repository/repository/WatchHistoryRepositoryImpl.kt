@@ -23,15 +23,14 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class WatchHistoryRepositoryImpl @Inject constructor(
-    private val watchHistoryLocalDataSource : WatchHistoryLocalDataSource,
-    private val movieLocalDataSource : MovieLocalDataSource,
-    private val movieRemoteDataSource : MovieRemoteDataSource,
-    private val tvShowLocalDataSource : TvShowLocalDataSource,
-    private val tvShowRemoteSource : TvShowsRemoteDataSource,
-    private val preferences : AppPreferences,
-    private val localTvDataSource : TvShowLocalDataSource
+    private val watchHistoryLocalDataSource: WatchHistoryLocalDataSource,
+    private val movieLocalDataSource: MovieLocalDataSource,
+    private val movieRemoteDataSource: MovieRemoteDataSource,
+    private val tvShowLocalDataSource: TvShowLocalDataSource,
+    private val tvShowRemoteSource: TvShowsRemoteDataSource,
+    private val preferences: AppPreferences,
+    private val localTvDataSource: TvShowLocalDataSource
 ) : WatchHistoryRepository {
-
     override suspend fun addMovieToWatchHistory(movieId: Long) {
         watchHistoryLocalDataSource.upsertMovieToWatchHistory(MovieWatchHistoryDto(movieId))
     }

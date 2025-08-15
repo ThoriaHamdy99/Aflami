@@ -22,11 +22,11 @@ import com.amsterdam.repository.dto.remote.MovieRemoteResponse
 import com.amsterdam.repository.mapper.toDto
 import com.amsterdam.repository.mapper.toDtoList
 import com.amsterdam.repository.mapper.toEntity
-import com.amsterdam.repository.mapper.toMovieEntityList
-import com.amsterdam.repository.mapper.toLocalTvShowDtoList
 import com.amsterdam.repository.mapper.toEntityList
 import com.amsterdam.repository.mapper.toLocalDto
 import com.amsterdam.repository.mapper.toLocalMovieDtoList
+import com.amsterdam.repository.mapper.toLocalTvShowDtoList
+import com.amsterdam.repository.mapper.toMovieEntityList
 import com.amsterdam.repository.mapper.toMovieItemDto
 import com.amsterdam.repository.mapper.toMovieUserRateEntityList
 import com.amsterdam.repository.utils.getCachedOrRemoteData
@@ -42,7 +42,6 @@ class MovieRepositoryImpl @Inject constructor(
     private val movieRemoteDataSource: MovieRemoteDataSource,
     private val preferences: AppPreferences,
 ) : MovieRepository {
-
     override suspend fun getMoviesByKeyword(
         keyword: String,
         page: Int,
