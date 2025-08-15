@@ -31,7 +31,7 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.modifierExtensions.dropShadow
 
 @Composable
-fun BoxScope.SnackBar(
+internal fun BoxScope.SnackBar(
     message: String,
     status: SnackBarStatus,
     modifier: Modifier = Modifier

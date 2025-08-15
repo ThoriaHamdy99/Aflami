@@ -173,7 +173,7 @@ fun TextField(
 }
 
 @Composable
-private fun RowScope.InnerTextFieldWithHint(
+private fun InnerTextFieldWithHint(
     innerTextField: @Composable (() -> Unit),
     text: String,
     hintText: String,
@@ -303,7 +303,7 @@ private fun ColumnScope.AnimatedErrorBox(
 }
 
 @Composable
-private fun ColumnScope.AnimatedMaxCharacters(
+private fun AnimatedMaxCharacters(
     canShowMaxCharacters: Boolean,
     message: String,
     style: TextStyle,
