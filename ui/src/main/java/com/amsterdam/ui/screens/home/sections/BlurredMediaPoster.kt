@@ -34,7 +34,7 @@ fun BlurredMediaPoster(
             modifier = Modifier
                 .matchParentSize()
                 .blur(
-                    radius = 5f,
+                    radius = 8f,
                     edgeTreatment = BlurEdgeTreatment.UNBOUNDED
                 )
                 .background(Color(0x80000000))
