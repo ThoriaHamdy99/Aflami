@@ -104,14 +104,15 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getTopRatedMovies(
         page: Int,
     ): List<Movie> {
-        return getCachedOrRemoteData<MovieLocalDto, MovieItemRemoteDto, Movie>(
-            deleteExpired = ::deleteExpiredTopRatedMovies,
-            getFromLocal = ::getTopRatedMoviesFromLocal,
-            getFromRemote = { getTopRatedMoviesFromRemote(page) },
-            saveRemoteToDatabase = ::saveTopRatedMovies,
-            mapFromLocalToEntity = MovieLocalDto::toEntity,
-            mapFromRemoteToEntity = { it.toEntity(isPoster = true) }
-        )
+        return if (page > 1) getTopRatedMoviesFromRemote(page).toMovieEntityList(isPoster = true)
+        else getCachedOrRemoteData<MovieLocalDto, MovieItemRemoteDto, Movie>(
+                deleteExpired = ::deleteExpiredTopRatedMovies,
+                getFromLocal = ::getTopRatedMoviesFromLocal,
+                getFromRemote = { getTopRatedMoviesFromRemote(page) },
+                saveRemoteToDatabase = ::saveTopRatedMovies,
+                mapFromLocalToEntity = MovieLocalDto::toEntity,
+                mapFromRemoteToEntity = { it.toEntity(isPoster = true) }
+            )
     }
 
     override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>, page: Int): List<Movie> {
