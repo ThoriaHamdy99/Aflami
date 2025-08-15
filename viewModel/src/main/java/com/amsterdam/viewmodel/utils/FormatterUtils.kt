@@ -19,13 +19,14 @@ fun movieLengthToHourMinuteString(movieLength: Int): String {
     return "${hours}h ${minutes}m"
 }
 
-fun formatDuration(duration: Int): String {
-    val hours = duration / 60
-    val minutes = duration % 60
+fun LocalDate?.toShortMonthString(): String {
+    return this?.let {
+        val dayOfMonth = this.dayOfMonth
+        val month = this.month.name.lowercase().replaceFirstChar { it.uppercase() }.substring(0, 3)
+        val year = this.year
 
-    return when {
-        hours > 0 && minutes > 0 -> "${hours}h ${minutes}m"
-        hours > 0 -> "${hours}h"
-        else -> "${minutes}m"
-    }
+        "$dayOfMonth $month $year"
+    } ?: ""
+
+
 }

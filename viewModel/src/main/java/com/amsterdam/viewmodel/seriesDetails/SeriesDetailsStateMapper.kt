@@ -11,12 +11,13 @@ import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ActorTvShowUiS
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ProductionTvShowCompanyUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ReviewTvShowUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState
+import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState.DurationUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState.EpisodeUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SimilarTvShowUiState
 import com.amsterdam.viewmodel.shared.RateDialogUiState
-import com.amsterdam.viewmodel.utils.formatDuration
 import com.amsterdam.viewmodel.shared.mappers.toFormattedRating
 import com.amsterdam.viewmodel.utils.toFormattedString
+import com.amsterdam.viewmodel.utils.toShortMonthString
 import kotlin.collections.map
 
 fun TvShowDetails.toUiState(): SeriesDetailsUiState {
@@ -28,7 +29,7 @@ fun TvShowDetails.toUiState(): SeriesDetailsUiState {
         title = tvShow.name,
         airDate = tvShow.airDate.toFormattedString(),
         categories = tvShow.categories,
-        seasonCount = formatSeasonCount(seasons.size),
+        seasonCount = seasons.size,
         originCountry = tvShow.originCountry,
         description = tvShow.description,
         cast = actors.toActorsUiState(),
@@ -85,11 +86,17 @@ private fun Episode.toUiState(): EpisodeUiState {
         imageUrl = episodeImageUrl,
         imageNumber = episodeNumber,
         description = description,
-        duration = formatDuration(runTimeInMinutes),
-        airDate = airDate.toFormattedString()
+        duration = runTimeInMinutes.toDurationUiState(),
+        airDate = airDate.toShortMonthString()
     )
 }
 
+fun Int.toDurationUiState(): DurationUiState {
+    return DurationUiState(
+        hour = this / 60,
+        minute = this % 60
+    )
+}
 
 fun Review.toReviewTvShowUiState(): ReviewTvShowUiState {
     return ReviewTvShowUiState(
@@ -108,8 +115,6 @@ fun List<Review>.toReviewTvShowUiStates(): List<ReviewTvShowUiState> {
 fun Actor.toActorUiState(): ActorTvShowUiState = ActorTvShowUiState(photo = imageUrl, name = name)
 
 fun List<Actor>.toActorsUiState() : List<ActorTvShowUiState> = map { it.toActorUiState() }
-
-private fun formatSeasonCount(count: Int) = "$count Season"
 
 fun ProductionCompany.toProductionTvShowCompanyUiState(): ProductionTvShowCompanyUiState {
     return ProductionTvShowCompanyUiState(

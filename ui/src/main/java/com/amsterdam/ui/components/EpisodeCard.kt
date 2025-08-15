@@ -153,30 +153,10 @@ private fun EpisodeInfo(
             modifier = Modifier.fillMaxWidth(0.8f)
         )
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = episodeTime,
-                color = AppTheme.color.hint,
-                style = AppTheme.textStyle.label.small,
-            )
-
-            Box(
-                modifier =
-                    Modifier
-                        .size(4.dp)
-                        .clip(CircleShape)
-                        .background(color = AppTheme.color.stroke),
-            )
-
-            Text(
-                text = publishedAt,
-                color = AppTheme.color.hint,
-                style = AppTheme.textStyle.label.small,
-            )
-        }
+        DottedSeparatedRow(
+            episodeTime,
+            publishedAt,
+        )
     }
 }
 

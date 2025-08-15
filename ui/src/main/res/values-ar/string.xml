@@ -278,4 +278,20 @@
 
     <string name="oops_there_are_not_enough_points">لا توجد نقاط كافية</string>
 
+    <string name="minute">%1$s د</string>
+
+    <plurals name="season_count">
+        <item quantity="zero">لا مواسم</item>        <!-- 0 -->
+        <item quantity="one">%d موسم</item>          <!-- 1 -->
+        <item quantity="two">%d موسمان</item>        <!-- 2 -->
+        <item quantity="few">%d مواسم</item>         <!-- 3–10 -->
+        <item quantity="many">%d موسم</item>         <!-- 11–99 -->
+        <item quantity="other">%d موسم</item>        <!-- fallback -->
+    </plurals>
+
+    <string name="duration_hours_minutes">%1$s س %2$d د</string>
+    <string name="duration_hours">%1$s س</string>
+    <string name="duration_minutes">%1$s د</string>
+
+
 </resources>

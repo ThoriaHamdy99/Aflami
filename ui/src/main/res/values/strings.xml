@@ -272,4 +272,17 @@
 
     <string name="oops_there_are_not_enough_points">Oops, there are not enough points</string>
 
+    <string name="minute">%1$s m</string>
+
+    <plurals name="season_count">
+        <item quantity="one">%d Season</item>
+        <item quantity="other">%d Seasons</item>
+    </plurals>
+
+
+    <string name="duration_hours_minutes">%1$s h %2$d m</string>
+    <string name="duration_hours">%1$s h</string>
+    <string name="duration_minutes">%1$s m</string>
+
+
 </resources>
