@@ -9,13 +9,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.amsterdam.designsystem.R
+import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.buttons.IconButton
-import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.ui.R
 
 @Composable
 fun DefaultAppBar(
@@ -54,7 +54,7 @@ fun DefaultAppBar(
             if (showNavigateBackButton) {
                 {
                     IconButton(
-                        painter = painterResource(R.drawable.ic__back_arrow),
+                        painter = painterResource(com.amsterdam.designsystem.R.drawable.ic__back_arrow),
                         tint = AppTheme.color.title,
                         contentDescription = stringResource(R.string.back_to_menue),
                         onClick = onNavigateBackClicked,
@@ -96,8 +96,8 @@ private fun DefaultAppBarPreview() {
     AflamiTheme {
         DefaultAppBar(
             title = stringResource(R.string.my_account),
-            firstOption = painterResource(R.drawable.ic_outlined_star),
-            lastOption = painterResource(R.drawable.ic_sort),
+            firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
+            lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_sort),
             containerColor = AppTheme.color.surface,
         )
     }

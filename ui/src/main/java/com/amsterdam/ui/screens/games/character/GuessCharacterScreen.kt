@@ -90,7 +90,7 @@ private fun GameContent(
             .navigationBarsPadding(),
         bottomBar = {
             ConfirmButton(
-                title = stringResource(com.amsterdam.designsystem.R.string.next),
+                title = stringResource(R.string.next),
                 onClick = interactionListener::onMoveToNextQuestion,
                 isEnabled = state.isNextEnabled,
                 isLoading = false,

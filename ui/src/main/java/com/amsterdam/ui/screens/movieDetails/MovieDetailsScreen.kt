@@ -57,7 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.amsterdam.designsystem.R
+import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.LoadingContainer
@@ -488,8 +488,8 @@ fun MovieContent(
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .statusBarsPadding()
                     .zIndex(10f),
-                firstOption = painterResource(R.drawable.ic_outlined_star),
-                lastOption = painterResource(R.drawable.ic_outlined_add_to_favourite),
+                firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
+                lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_add_to_favourite),
                 onNavigateBackClicked = movieDetailsInteractionListener::onClickBack,
                 onFirstOptionClicked = movieDetailsInteractionListener::onClickRate,
                 onLastOptionClicked = movieDetailsInteractionListener::onClickAddToList,

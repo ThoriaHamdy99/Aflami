@@ -17,12 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.amsterdam.designsystem.components.Icon
+import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.designsystem.R
-import com.amsterdam.designsystem.components.Icon
-import com.amsterdam.designsystem.components.Text
+import com.amsterdam.ui.R
 
 @Composable
 fun AddToListItem(
@@ -34,7 +34,7 @@ fun AddToListItem(
 ) {
     val backgroundColor = if (isSelected) AppTheme.color.primaryVariant else AppTheme.color.surface
     val icon =
-        if (isSelected) painterResource(R.drawable.ic_checkmark_circle) else painterResource(R.drawable.ic_add_circle)
+        if (isSelected) painterResource(com.amsterdam.designsystem.R.drawable.ic_checkmark_circle) else painterResource(com.amsterdam.designsystem.R.drawable.ic_add_circle)
     val iconColor = if (isSelected) AppTheme.color.primary else AppTheme.color.body
     val borderColor = if (isSelected) Color.Unspecified else AppTheme.color.stroke
     val shape = RoundedCornerShape(16.dp)

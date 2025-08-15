@@ -37,7 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.amsterdam.designsystem.R
+import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
@@ -160,7 +160,7 @@ private fun ListsScreenContent(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     showNavigateBackButton = false,
                     title = stringResource(com.amsterdam.ui.R.string.lists),
-                    lastOption = painterResource(R.drawable.ic_add),
+                    lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_add),
                     onLastOptionClicked = interaction::onClickAddList,
                 )
 

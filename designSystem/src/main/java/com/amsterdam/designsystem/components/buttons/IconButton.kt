@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.R
@@ -80,7 +79,7 @@ private fun SearchIconPreview() {
     AflamiTheme {
         IconButton(
             painter = painterResource(R.drawable.ic_add),
-            contentDescription = stringResource(R.string.search),
+            contentDescription = "",
             containerColor = AppTheme.color.primaryVariant,
             tint = AppTheme.color.body,
             withBorder = true,
@@ -98,7 +97,7 @@ private fun BackIconPreview() {
     AflamiTheme {
         IconButton(
             painter = painterResource(R.drawable.ic__back_arrow),
-            contentDescription = stringResource(R.string.search),
+            contentDescription = "",
             containerColor = AppTheme.color.primaryVariant,
             tint = AppTheme.color.body,
             withBorder = true,

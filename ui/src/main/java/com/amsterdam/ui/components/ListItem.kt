@@ -17,13 +17,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.amsterdam.designsystem.R
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.theme.shapes.FolderShape
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.ripple
+import com.amsterdam.ui.R
 import com.amsterdam.viewmodel.shared.uiStates.UserListItemUiState
 
 @Composable

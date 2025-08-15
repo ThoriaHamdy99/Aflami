@@ -6,11 +6,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.amsterdam.designsystem.R
-import com.amsterdam.designsystem.components.buttons.IconButton
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.TopAppBar
+import com.amsterdam.designsystem.components.buttons.IconButton
 import com.amsterdam.designsystem.theme.AppTheme
+import com.amsterdam.ui.R
 import com.amsterdam.ui.components.guessGame.TimerComponent
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 
@@ -35,7 +35,7 @@ internal fun GameTopBar(
         },
         leadingIcon = {
             IconButton(
-                painter = painterResource(R.drawable.ic_cancel),
+                painter = painterResource(com.amsterdam.designsystem.R.drawable.ic_cancel),
                 tint = AppTheme.color.title,
                 contentDescription = stringResource(R.string.back_to_menue),
                 onClick = onCancelGameClick,
