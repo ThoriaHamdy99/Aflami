@@ -7,6 +7,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import coil.request.Parameters
 import com.amsterdam.imageviewer.classification.SafetyLevel
 import com.amsterdam.imageviewer.firebase.FirebaseNsfwModelManager
 import com.amsterdam.imageviewer.firebase.ModelDownloadState
@@ -20,6 +21,7 @@ fun SafeImageView(
     onLoading: (@Composable () -> Unit),
     onError: (@Composable () -> Unit),
     safetyLevel: SafetyLevel = SafetyLevel.STRICT,
+    isAdult: Boolean = false,
 ) {
     val state = FirebaseNsfwModelManager.downloadState
     val context = LocalContext.current.applicationContext
@@ -28,6 +30,11 @@ fun SafeImageView(
             .Builder(context)
             .allowHardware(false)
             .data(model)
+            .parameters(
+                Parameters.Builder()
+                    .set("is_adult", isAdult)
+                    .build()
+            )
             .build()
 
     when (safetyLevel) {
