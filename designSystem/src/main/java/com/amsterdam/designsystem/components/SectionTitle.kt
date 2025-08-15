@@ -80,7 +80,7 @@ fun SectionTitle(
 private fun SectionTitlePreview() {
     AflamiTheme {
         SectionTitle(
-            title = stringResource(R.string.movies_birthday),
+            title = "Movies Birthday",
             icon = painterResource(R.drawable.ic_birthday_cake),
             showAllLabel = true,
             tintColor = AppTheme.color.yellowAccent,

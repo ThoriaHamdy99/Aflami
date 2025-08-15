@@ -198,7 +198,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
     }
 
     private fun onError(error: AflamiException) {
-        when(error){
+        when (error) {
             is NotEnoughPointsException -> updateState { it.copy(isNotEnoughPointsDialogVisible = true) }
         }
     }
