@@ -2,20 +2,20 @@ package com.amsterdam.repository.repository
 
 import com.amsterdam.domain.exceptions.UnknownException
 import com.amsterdam.domain.repository.AppPreferencesRepository
-import com.amsterdam.domain.repository.UserListRepository
+import com.amsterdam.domain.repository.WishListRepository
 import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
-import com.amsterdam.entity.UserList
-import com.amsterdam.repository.datasource.remote.UserListRemoteDataSource
+import com.amsterdam.entity.WishList
+import com.amsterdam.repository.datasource.remote.WishListRemoteDataSource
 import com.amsterdam.repository.mapper.toMovieEntity
 import com.amsterdam.repository.mapper.toTvShowEntity
 import com.amsterdam.repository.mapper.toEntity
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class UserListRepositoryImpl @Inject constructor(
-    private val userListDataSource: UserListRemoteDataSource,
+class WishListRepositoryImpl @Inject constructor(
+    private val userListDataSource: WishListRemoteDataSource,
     private val preferences: AppPreferencesRepository,
-) : UserListRepository {
+) : WishListRepository {
 
     override suspend fun addMovieToList(listId: Long, movieId: Long) {
         val response = userListDataSource.addMovieToList(listId, movieId)
@@ -43,8 +43,8 @@ class UserListRepositoryImpl @Inject constructor(
 
     override suspend fun deleteList(listId: Long) = userListDataSource.deleteList(listId)
 
-    override suspend fun getUserLists(accountId: Int, page: Int): List<UserList> {
-        return userListDataSource.getUserLists(accountId, page).results
+    override suspend fun getWishLists(accountId: Int, page: Int): List<WishList> {
+        return userListDataSource.getWishLists(accountId, page).results
             .map { it.toEntity() }
     }
 

@@ -1,14 +1,14 @@
 package com.amsterdam.domain.useCase.list
 
-import com.amsterdam.domain.repository.UserListRepository
-import com.amsterdam.entity.UserList
+import com.amsterdam.domain.repository.WishListRepository
+import com.amsterdam.entity.WishList
 
-class GetUserListsUseCase(
-    private val userListRepository: UserListRepository,
+class GetWishListsUseCase(
+    private val wishListRepository: WishListRepository,
 ) {
     suspend operator fun invoke(
         page: Int = 1,
-    ): List<UserList> {
-        return userListRepository.getUserLists(page = page)
+    ): List<WishList> {
+        return wishListRepository.getWishLists(page = page)
     }
 }
