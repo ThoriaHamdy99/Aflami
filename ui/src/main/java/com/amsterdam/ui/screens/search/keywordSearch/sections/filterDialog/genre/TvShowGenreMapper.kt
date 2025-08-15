@@ -9,7 +9,7 @@ import com.amsterdam.entity.category.TvShowGenre
 
 internal val TvShowGenre.uiModel: GenreUiModel
     get() = when (this) {
-        TvShowGenre.ALL -> GenreUiModel(R.drawable.ic_nav_categories, R.string.all)
+        TvShowGenre.ALL -> GenreUiModel(com.amsterdam.designsystem.R.drawable.ic_nav_categories, R.string.all)
         TvShowGenre.ACTION_ADVENTURE -> GenreUiModel(
             R.drawable.ic_cat_action,
             R.string.action_adventure

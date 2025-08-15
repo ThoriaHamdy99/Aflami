@@ -475,7 +475,7 @@ fun SeriesDetailsContent(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .statusBarsPadding(),
-                firstOption = painterResource(R.drawable.ic_outlined_star),
+                firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
                 onNavigateBackClicked = seriesDetailsInteractionListener::onNavigateBack,
                 onFirstOptionClicked = seriesDetailsInteractionListener::onClickRate,
             )
@@ -599,8 +599,8 @@ private fun SeasonHeader(
             )
             Icon(
                 modifier = Modifier.size(20.dp),
-                painter = if (season.isExpanded) painterResource(R.drawable.ic_arrow_up) else painterResource(
-                    R.drawable.ic_arrow_down
+                painter = if (season.isExpanded) painterResource(com.amsterdam.designsystem.R.drawable.ic_arrow_up) else painterResource(
+                    com.amsterdam.designsystem.R.drawable.ic_arrow_down
                 ),
                 contentDescription = null,
                 tint = AppTheme.color.title,
