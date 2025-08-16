@@ -1,5 +1,6 @@
-package com.amsterdam.domain.timer
+package com.amsterdam.viewmodel.timer
 
+import com.amsterdam.viewmodel.utils.timer.TimerHandler
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -185,7 +186,8 @@ class TimerHandlerTest {
 
     @Test
     fun `startTimer should works when called with default nowMillis and dispatcher`() = runTest {
-        val handler = TimerHandler()
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
         val flow = handler.startTimer(totalSeconds = 1) {}
         advanceUntilIdle()
         assertThat(flow.value).isEqualTo(0)

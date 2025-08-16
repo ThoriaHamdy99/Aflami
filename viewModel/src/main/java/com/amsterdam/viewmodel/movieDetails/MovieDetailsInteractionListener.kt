@@ -14,7 +14,7 @@ interface MovieDetailsInteractionListener {
     fun onChangeListName(listName: String)
 
     fun onClickCreateNewList()
-    fun onSelectedListChange(selectedLists: List<UserListUiState>)
+    fun onSelectedListChange(selectedLists: List<WishListUiState>)
     fun onClickRate()
 
     fun onClickNavigateToLogin()

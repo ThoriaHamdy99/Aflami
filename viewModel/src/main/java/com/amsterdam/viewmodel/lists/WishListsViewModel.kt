@@ -3,7 +3,7 @@ package com.amsterdam.viewmodel.lists
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.list.CreateNewListUseCase
-import com.amsterdam.domain.useCase.list.GetUserListsUseCase
+import com.amsterdam.domain.useCase.list.GetWishListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserListsViewModel @Inject constructor(
-    private val getUserListsUseCase: GetUserListsUseCase,
+class WishListsViewModel @Inject constructor(
+    private val getWishListsUseCase: GetWishListsUseCase,
     private val createListUseCase: CreateNewListUseCase,
     private val getsSessionType: GetsSessionType,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
@@ -50,11 +50,11 @@ class UserListsViewModel @Inject constructor(
     fun loadCustomLists(startLoading: Boolean = true) {
         startLoading(startLoading)
         tryToExecute(
-            action = { getUserListsUseCase() },
+            action = { getWishListsUseCase() },
             onSuccess = { customLists ->
                 updateState {
                     it.copy(
-                        userLists = customLists.map { it.toUserListItemUiState() },
+                        userLists = customLists.map { it.toWishListItemUiState() },
                         isLoading = false,
                         errorUiState = null
                     )

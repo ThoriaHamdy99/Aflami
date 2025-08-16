@@ -4,10 +4,10 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.list.CreateNewListUseCase
-import com.amsterdam.domain.useCase.list.GetUserListsUseCase
+import com.amsterdam.domain.useCase.list.GetWishListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
-import com.amsterdam.entity.UserList
+import com.amsterdam.entity.WishList
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -28,10 +28,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class UserListsViewModelTest {
+class WishListsViewModelTest {
 
-    private lateinit var viewModel: UserListsViewModel
-    private lateinit var getUserListsUseCase: GetUserListsUseCase
+    private lateinit var viewModel: WishListsViewModel
+    private lateinit var getWishListsUseCase: GetWishListsUseCase
     private lateinit var createListUseCase: CreateNewListUseCase
     private lateinit var getsSessionType: GetsSessionType
     private lateinit var manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase
@@ -40,7 +40,7 @@ class UserListsViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        getUserListsUseCase = mockk(relaxed = true)
+        getWishListsUseCase = mockk(relaxed = true)
         createListUseCase = mockk(relaxed = true)
         getsSessionType = mockk(relaxed = true)
         manageLocaleLanguageUseCase = mockk(relaxed = true)
@@ -54,8 +54,8 @@ class UserListsViewModelTest {
             ManageLocaleLanguageUseCase.Language.ENGLISH
         )
 
-        viewModel = UserListsViewModel(
-            getUserListsUseCase = getUserListsUseCase,
+        viewModel = WishListsViewModel(
+            getWishListsUseCase = getWishListsUseCase,
             createListUseCase = createListUseCase,
             getsSessionType = getsSessionType,
             manageLocaleLanguageUseCase = manageLocaleLanguageUseCase,
@@ -72,7 +72,7 @@ class UserListsViewModelTest {
     fun `should initialize as logged in user when session type is not guest`() = testScope.runTest {
        
         coEvery { getsSessionType() } returns SessionType.LOGGED_IN
-        coEvery { getUserListsUseCase() } returns emptyList()
+        coEvery { getWishListsUseCase() } returns emptyList()
 
        
         advanceUntilIdle()
@@ -88,8 +88,8 @@ class UserListsViewModelTest {
        
         coEvery { getsSessionType() } returns SessionType.GUEST
 
-        viewModel = UserListsViewModel(
-           getUserListsUseCase=  getUserListsUseCase,
+        viewModel = WishListsViewModel(
+           getWishListsUseCase=  getWishListsUseCase,
         createListUseCase=createListUseCase,
         getsSessionType= getsSessionType,
         manageLocaleLanguageUseCase=manageLocaleLanguageUseCase,
@@ -107,10 +107,10 @@ class UserListsViewModelTest {
        
         coEvery { getsSessionType() } returns SessionType.LOGGED_IN
         val mockLists = listOf(
-            UserList(id = 1, name = "Favorites", description = "", itemCount = 5),
-            UserList(id = 2, name = "Watchlist", description = "", itemCount = 10)
+            WishList(id = 1, name = "Favorites", description = "", itemCount = 5),
+            WishList(id = 2, name = "Watchlist", description = "", itemCount = 10)
         )
-        coEvery { getUserListsUseCase() } returns mockLists
+        coEvery { getWishListsUseCase() } returns mockLists
 
        
         advanceUntilIdle()
@@ -128,7 +128,7 @@ class UserListsViewModelTest {
     fun `should handle empty custom lists`() = testScope.runTest {
        
         coEvery { getsSessionType() } returns SessionType.LOGGED_IN
-        coEvery { getUserListsUseCase() } returns emptyList()
+        coEvery { getWishListsUseCase() } returns emptyList()
 
        
         advanceUntilIdle()
@@ -144,7 +144,7 @@ class UserListsViewModelTest {
     fun `should handle network error when loading custom lists`() = testScope.runTest {
        
         coEvery { getsSessionType() } returns SessionType.LOGGED_IN
-        coEvery { getUserListsUseCase() } throws NetworkException()
+        coEvery { getWishListsUseCase() } throws NetworkException()
 
        
         advanceUntilIdle()
@@ -160,7 +160,7 @@ class UserListsViewModelTest {
     fun `should handle unknown error when loading custom lists`() = testScope.runTest {
        
         coEvery { getsSessionType() } returns SessionType.LOGGED_IN
-        coEvery { getUserListsUseCase() } throws AflamiException()
+        coEvery { getWishListsUseCase() } throws AflamiException()
 
        
         advanceUntilIdle()
@@ -282,7 +282,7 @@ class UserListsViewModelTest {
     fun `should retry loading lists when onClickRetryFetchList is called`() = testScope.runTest {
        
         coEvery { getsSessionType() } returns SessionType.LOGGED_IN
-        coEvery { getUserListsUseCase() } returns emptyList()
+        coEvery { getWishListsUseCase() } returns emptyList()
 
        
         advanceUntilIdle() // Wait for initial calls to complete
@@ -290,7 +290,7 @@ class UserListsViewModelTest {
         advanceUntilIdle()
 
        
-        coVerify(exactly = 3) { getUserListsUseCase() } // Once in init, once from language flow, once in retry
+        coVerify(exactly = 3) { getWishListsUseCase() } // Once in init, once from language flow, once in retry
     }
 
     @Test
