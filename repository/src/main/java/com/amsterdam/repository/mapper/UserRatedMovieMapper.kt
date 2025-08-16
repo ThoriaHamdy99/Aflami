@@ -10,5 +10,6 @@ fun MovieItemRemoteDto.toMovieUserRateEntity(dto: MovieItemRemoteDto): UserRated
     )
 }
 
-fun List<MovieItemRemoteDto>.toMovieUserRateEntityList(): List<UserRatedMovie> =
-    map { it.toMovieUserRateEntity(it) }
+fun List<MovieItemRemoteDto>.toMovieUserRateEntityList(): List<UserRatedMovie> {
+    return map { it.toMovieUserRateEntity(it) }
+}

@@ -10,4 +10,3 @@ data class WishListRemoteResponse(
     @SerialName("total_pages") val totalPages: Int,
     @SerialName("total_results") val totalResults: Int
 )
-
