@@ -28,7 +28,7 @@ import com.amsterdam.ui.R
 
 @Composable
 fun CompletionCard(
-    isWin: Boolean,
+    isVictory: Boolean,
     modifier: Modifier = Modifier
 ) {
     val isDarkTheme = LocalIsDarkTheme.current
@@ -72,13 +72,13 @@ fun CompletionCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            val resultImage = if (isWin) {
+            val resultImage = if (isVictory) {
                 R.drawable.img_cup
             } else {
                 R.drawable.alert
             }
 
-            val resultMessage = if (isWin) {
+            val resultMessage = if (isVictory) {
                 stringResource(R.string.finish_game_message)
             } else {
                 stringResource(R.string.lose_the_game_message)

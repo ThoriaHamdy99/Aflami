@@ -141,7 +141,7 @@ fun ResultScreenContent(
                         .padding(start = 12.dp, end = 12.dp, top = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CompletionCard(isWin = state.points > 0)
+                    CompletionCard(isVictory = state.isVictory)
 
                     Row(
                         modifier = Modifier
