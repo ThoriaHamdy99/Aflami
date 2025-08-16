@@ -117,6 +117,9 @@
     <string name="not_enough_points_description">عذرا، ليس لديك نقاط كافية للحصول على تلميح</string>
     <string name="ok">حسنا</string>
     <string name="cd_cancel">يلغي</string>
+    <string name="points_as_pts">نقاط</string>
+    <string name="seconds_as_sec">ثواني</string>
+
     <!-- -   -->
     <!-- -  -->
     <string name="loading">تحميل...</string>
