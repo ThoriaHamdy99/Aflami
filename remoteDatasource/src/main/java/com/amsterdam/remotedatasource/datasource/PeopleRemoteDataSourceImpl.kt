@@ -28,7 +28,7 @@ class PeopleRemoteDataSourceImpl @Inject constructor(
     }
 
     private fun onFilterHighQualityPeopleData(people: RemotePeopleItemDto): Boolean {
-        return people.name.isNotBlank() && !people.fullPosterUrl.isNullOrBlank()
+        return people.name.isNotBlank() && !people.profilePath.isNullOrBlank()
     }
 
     private suspend fun getTrendingPeople(page: Int): RemotePeopleResponse {

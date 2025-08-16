@@ -411,7 +411,7 @@ class MovieRemoteDataSourceImplTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithoutDateResponse andThen moviesWithDateResponse
 
             val result =
-                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullDate(3)
+                movieRemoteDataSourceImpl.getRandomMoviesWithReleaseDate(3)
 
             assertThat(result.size).isEqualTo(3)
             assertThat(result).containsNoDuplicates()
@@ -424,7 +424,7 @@ class MovieRemoteDataSourceImplTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithDateResponse
 
             val result =
-                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullDate(2)
+                movieRemoteDataSourceImpl.getRandomMoviesWithReleaseDate(2)
 
             assertThat(result.size).isEqualTo(2)
             coVerify(exactly = 1) { movieApiService.getPopularMovies(any()) }
@@ -434,7 +434,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getRandomMoviesWithNotNullDate should handle duplicates correctly`() = runTest {
         coEvery { movieApiService.getPopularMovies(any()) } returns responseWithDuplicates
 
-        val result = movieRemoteDataSourceImpl.getRandomMoviesWithNotNullDate(2)
+        val result = movieRemoteDataSourceImpl.getRandomMoviesWithReleaseDate(2)
 
         assertThat(result).containsNoDuplicates()
     }
@@ -445,7 +445,7 @@ class MovieRemoteDataSourceImplTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithoutPosterResponse andThen moviesWithPosterResponse
 
             val result =
-                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullPoster(3)
+                movieRemoteDataSourceImpl.getRandomMoviesWithPoster(3)
 
             assertThat(result.size).isEqualTo(3)
             coVerify(atLeast = 2) { movieApiService.getPopularMovies(any()) }
@@ -457,7 +457,7 @@ class MovieRemoteDataSourceImplTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithPosterResponse
 
             val result =
-                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullPoster(2)
+                movieRemoteDataSourceImpl.getRandomMoviesWithPoster(2)
 
             assertThat(result.size).isEqualTo(2)
             coVerify(exactly = 1) { movieApiService.getPopularMovies(any()) }
@@ -468,7 +468,7 @@ class MovieRemoteDataSourceImplTest {
         coEvery { movieApiService.getPopularMovies(any()) } returns responseWithDuplicates
 
         val result =
-            movieRemoteDataSourceImpl.getRandomMoviesWithNotNullPoster(2)
+            movieRemoteDataSourceImpl.getRandomMoviesWithPoster(2)
 
         assertThat(result).containsNoDuplicates()
     }
