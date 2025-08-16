@@ -1,14 +1,14 @@
 package com.amsterdam.domain.useCase.list
 
 import com.amsterdam.domain.repository.WishListRepository
+import com.amsterdam.entity.WishList
 
-class AddMovieToListUseCase(
+class GetWishListsUseCase(
     private val wishListRepository: WishListRepository,
 ) {
     suspend operator fun invoke(
-        listId: Long,
-        movieId: Long,
-    ) {
-        wishListRepository.addMovieToList(listId, movieId)
+        page: Int = 1,
+    ): List<WishList> {
+        return wishListRepository.getWishLists(page = page)
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
+import com.amsterdam.designsystem.components.RoundedShimmerPlaceholder
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.IconButton
 import com.amsterdam.designsystem.theme.AflamiTheme
@@ -39,6 +41,7 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalRestrictionLevel
+import com.amsterdam.ui.components.DottedSeparatedRow
 import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.utils.toSafetyLevel
 
@@ -154,30 +157,10 @@ private fun EpisodeInfo(
             modifier = Modifier.fillMaxWidth(0.8f)
         )
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = episodeTime,
-                color = AppTheme.color.hint,
-                style = AppTheme.textStyle.label.small,
-            )
-
-            Box(
-                modifier =
-                    Modifier
-                        .size(4.dp)
-                        .clip(CircleShape)
-                        .background(color = AppTheme.color.stroke),
-            )
-
-            Text(
-                text = publishedAt,
-                color = AppTheme.color.hint,
-                style = AppTheme.textStyle.label.small,
-            )
-        }
+        DottedSeparatedRow(
+            episodeTime,
+            publishedAt,
+        )
     }
 }
 
@@ -228,6 +211,44 @@ private fun PlayEpisodeButton(onPlayEpisodeClick: () -> Unit, isActive: Boolean)
                 .size(40.dp),
         shape = CircleShape
     )
+}
+
+
+@Composable
+fun EpisodeCardPlaceholder(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxWidth().padding(vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            RoundedShimmerPlaceholder(height = 78.dp, width = 116.dp, cornerRadius = 12.dp)
+
+            Column(
+                modifier = Modifier.padding(start = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                RoundedShimmerPlaceholder(height = 24.dp, width = 148.dp, cornerRadius = 8.dp)
+                RoundedShimmerPlaceholder(height = 16.dp, width = 148.dp, cornerRadius = 8.dp)
+
+                Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                    RoundedShimmerPlaceholder(height = 16.dp, width = 60.dp, cornerRadius = 8.dp)
+                    RoundedShimmerPlaceholder(height = 16.dp, width = 20.dp, cornerRadius = 8.dp)
+                }
+            }
+
+            Spacer(modifier.weight(1f))
+
+            RoundedShimmerPlaceholder(height = 40.dp, width = 40.dp, cornerRadius = 20.dp)
+
+        }
+
+         RoundedShimmerPlaceholder(height = 16.dp, width = 222.dp)
+         RoundedShimmerPlaceholder(height = 16.dp, width = 148.dp)
+
+    }
 }
 
 @ThemeAndLocalePreviews
