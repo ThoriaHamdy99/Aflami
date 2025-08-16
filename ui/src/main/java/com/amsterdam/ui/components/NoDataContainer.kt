@@ -29,7 +29,7 @@ fun NoDataContainer(
     modifier: Modifier = Modifier,
     title: String = "",
     description: String = "",
-    imageAlpha: Float = 1f,
+    imageAlpha: Float = .68f,
 ) {
     Column(
         modifier =
