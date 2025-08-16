@@ -1,9 +1,9 @@
 package com.amsterdam.repository.utils
 
-import com.amsterdam.repository.dto.remote.UserListDetailsRemoteResponse
-import com.amsterdam.repository.dto.remote.UserListItemRemoteDto
+import com.amsterdam.repository.dto.remote.WishListDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListItemRemoteDto
 
-val remoteListResponse = UserListDetailsRemoteResponse(
+val remoteListResponse = WishListDetailsRemoteResponse(
     id = 0,
     name = "",
     description = "",
@@ -13,7 +13,7 @@ val remoteListResponse = UserListDetailsRemoteResponse(
     items = emptyList(),
     posterPath = ""
 )
-val listItem = UserListItemRemoteDto(
+val listItem = WishListItemRemoteDto(
     id = 0,
     title = "",
     name = "",

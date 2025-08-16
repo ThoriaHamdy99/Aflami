@@ -5,14 +5,16 @@ import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.exceptions.ServerErrorException
 import com.amsterdam.domain.exceptions.UnknownException
 import com.amsterdam.domain.repository.AppPreferencesRepository
-import com.amsterdam.domain.repository.UserListRepository
-import com.amsterdam.entity.UserList
-import com.amsterdam.repository.datasource.remote.UserListRemoteDataSource
+import com.amsterdam.domain.repository.WishListRepository
+import com.amsterdam.entity.WishList
+import com.amsterdam.repository.datasource.remote.WishListRemoteDataSource
 import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListMovieItemStatusRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListRemoteDto
 import com.amsterdam.repository.dto.remote.UserListRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListRemoteDto
+import com.amsterdam.repository.dto.remote.WishListRemoteResponse
 import com.amsterdam.repository.mapper.toMovieEntity
 import com.amsterdam.repository.utils.listItems
 import com.amsterdam.repository.utils.remoteListResponse
@@ -28,37 +30,37 @@ import org.junit.jupiter.api.assertThrows
 import java.io.IOException
 import java.net.ConnectException
 
-class UserListRepositoryImplTest {
-    private val userListRemoteDataSource: UserListRemoteDataSource = mockk()
+class WishListRepositoryImplTest {
+    private val wishListRemoteDataSource: WishListRemoteDataSource = mockk()
     private val preferences: AppPreferencesRepository = mockk()
 
-    private val userListRepository: UserListRepository by lazy {
-        UserListRepositoryImpl(userListRemoteDataSource, preferences)
+    private val wishListRepository: WishListRepository by lazy {
+        WishListRepositoryImpl(wishListRemoteDataSource, preferences)
     }
 
     @Test
     fun `addMovieToList should call addMovieToList from userListRemoteSource`() =
         runTest {
             coEvery {
-                userListRemoteDataSource.addMovieToList(
+                wishListRemoteDataSource.addMovieToList(
                     listId,
                     movieId
                 )
             } returns AddItemToListRemoteResponse(1, "", true)
 
-            userListRepository.addMovieToList(listId, movieId)
+            wishListRepository.addMovieToList(listId, movieId)
 
-            coVerify { userListRemoteDataSource.addMovieToList(listId, movieId) }
+            coVerify { wishListRemoteDataSource.addMovieToList(listId, movieId) }
         }
 
     @Test
     fun `addMovieToList should throw UnknownException when addMovieToList fails`() =
         runTest {
             coEvery {
-                userListRemoteDataSource.addMovieToList(listId, movieId)
+                wishListRemoteDataSource.addMovieToList(listId, movieId)
             } returns AddItemToListRemoteResponse(1, "", false)
 
-            assertThrows<UnknownException> { userListRepository.addMovieToList(listId, movieId) }
+            assertThrows<UnknownException> { wishListRepository.addMovieToList(listId, movieId) }
         }
 
     @Test
@@ -66,16 +68,16 @@ class UserListRepositoryImplTest {
         runTest {
             coEvery { preferences.getAppLanguage() } returns flowOf(language)
             coEvery {
-                userListRemoteDataSource.createNewList(
+                wishListRemoteDataSource.createNewList(
                     listName,
                     language
                 )
             } returns fakeUserListResponse
 
-            val createdListId = userListRepository.createNewList(listName)
+            val createdListId = wishListRepository.createNewList(listName)
 
             assertThat(createdListId).isEqualTo(1)
-            coVerify { userListRemoteDataSource.createNewList(listName, language) }
+            coVerify { wishListRemoteDataSource.createNewList(listName, language) }
         }
 
 
@@ -97,50 +99,49 @@ class UserListRepositoryImplTest {
         assertThat(result).isFalse()
     }
 
-
     @Test
     fun `deleteList should call deleteList from userListRemoteSource when session id is not empty`() =
         runTest {
-            coEvery { userListRemoteDataSource.deleteList(listId) } returns Unit
+            coEvery { wishListRemoteDataSource.deleteList(listId) } returns Unit
 
-            userListRepository.deleteList(listId)
+            wishListRepository.deleteList(listId)
 
-            coVerify { userListRemoteDataSource.deleteList(listId) }
+            coVerify { wishListRemoteDataSource.deleteList(listId) }
         }
 
     @Test
     fun `deleteList should throw NoInternetException when deleteList failed`() = runTest {
-        coEvery { userListRemoteDataSource.deleteList(listId) } throws NoInternetException()
+        coEvery { wishListRemoteDataSource.deleteList(listId) } throws NoInternetException()
 
-        assertThrows<NoInternetException> { userListRepository.deleteList(listId) }
+        assertThrows<NoInternetException> { wishListRepository.deleteList(listId) }
     }
 
     @Test
     fun `should call getSessionId from authentication repository when removeFromList called is called`() =
         runTest {
-            coEvery { userListRemoteDataSource.deleteMovieFromList(listId, movieId) } returns Unit
+            coEvery { wishListRemoteDataSource.deleteMovieFromList(listId, movieId) } returns Unit
 
-            userListRepository.removeMovieFromList(listId, movieId)
+            wishListRepository.removeMovieFromList(listId, movieId)
 
-            coVerify { userListRemoteDataSource.deleteMovieFromList(listId, movieId) }
+            coVerify { wishListRemoteDataSource.deleteMovieFromList(listId, movieId) }
         }
 
     @Test
     fun `deleteList should call removeMovieFromList from listRemoteSource when session id is not empty`() =
         runTest {
-            coEvery { userListRemoteDataSource.deleteList(listId) } returns Unit
+            coEvery { wishListRemoteDataSource.deleteList(listId) } returns Unit
 
-            userListRepository.deleteList(listId)
+            wishListRepository.deleteList(listId)
 
-            coVerify { userListRemoteDataSource.deleteList(listId) }
+            coVerify { wishListRemoteDataSource.deleteList(listId) }
         }
 
     @Test
     fun `getMoviesAndTvShowsFromList should return list of movies when response return with results`() = runTest {
         val response = remoteListResponse.copy(items = listItems)
-        coEvery { userListRemoteDataSource.getMoviesAndTvShowsFromList(listId, 1) } returns response
+        coEvery { wishListRemoteDataSource.getMoviesAndTvShowsFromList(listId, 1) } returns response
 
-        val result = userListRepository.getMoviesAndTvShowsFromList(listId, 1)
+        val result = wishListRepository.getMoviesAndTvShowsFromList(listId, 1)
 
         assertThat(result.listDetailsMovies).containsExactlyElementsIn(listItems.map { it.toMovieEntity() })
     }
@@ -148,25 +149,25 @@ class UserListRepositoryImplTest {
     @Test
     fun `getMoviesAndTvShowsFromList should return empty list of movies when response returns empty list with`() = runTest {
         coEvery {
-            userListRemoteDataSource.getMoviesAndTvShowsFromList(
+            wishListRemoteDataSource.getMoviesAndTvShowsFromList(
                 listId,
                 1
             )
         } returns remoteListResponse
 
-        val result = userListRepository.getMoviesAndTvShowsFromList(listId, 1)
+        val result = wishListRepository.getMoviesAndTvShowsFromList(listId, 1)
 
         assertThat(result.listDetailsMovies).isEmpty()
     }
 
     @Test
     fun `getUserList should return list of users when response return with results`() = runTest {
-        coEvery { userListRemoteDataSource.getUserLists(accountId, page) } returns expectedResult
+        coEvery { wishListRemoteDataSource.getWishLists(accountId, page) } returns expectedResult
 
-        val result = userListRepository.getUserLists(accountId, page)
+        val result = wishListRepository.getWishLists(accountId, page)
 
-        assertThat(result).isEqualTo(expectedUserList)
-        coVerify { userListRemoteDataSource.getUserLists(accountId, page) }
+        assertThat(result).isEqualTo(expectedWishList)
+        coVerify { wishListRemoteDataSource.getWishLists(accountId, page) }
     }
 
     private val listId = 1L
@@ -175,8 +176,8 @@ class UserListRepositoryImplTest {
     private val language = "en"
     val accountId = 1
 
-    private val expectedUserList = listOf(
-        UserList(
+    private val expectedWishList = listOf(
+        WishList(
             id = 1,
             name = "List 1",
             description = "Description 1",
@@ -184,10 +185,10 @@ class UserListRepositoryImplTest {
         )
     )
 
-    private val expectedResult = UserListRemoteResponse(
+    private val expectedResult = WishListRemoteResponse(
         page = 1,
         results = listOf(
-            UserListRemoteDto(
+            WishListRemoteDto(
                 id = 1,
                 name = "List 1",
                 description = "Description 1",

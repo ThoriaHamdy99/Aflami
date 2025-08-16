@@ -5,11 +5,14 @@ import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.exceptions.ServerErrorException
 import com.amsterdam.remotedatasource.api.UserListApiService
+import com.amsterdam.remotedatasource.api.WishListApiService
 import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListMovieItemStatusRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListRemoteResponse
 import com.amsterdam.repository.dto.remote.authentication.AuthenticationRemoteResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -27,20 +30,20 @@ import retrofit2.Response
 import java.io.IOException
 import java.net.ConnectException
 
-class UserListRemoteDataSourceImplTest {
+class WishListRemoteDataSourceImplTest {
 
-    private val userListApiService: UserListApiService = mockk()
+    private val wishListApiService: WishListApiService = mockk()
     private val jsonMock: Json = mockk(relaxed = true)
-    private val userListRemoteDataSourceImpl: UserListRemoteDataSourceImpl =
-        UserListRemoteDataSourceImpl(
-            userListApiService = userListApiService,
+    private val userListRemoteDataSourceImpl: WishListRemoteDataSourceImpl =
+        WishListRemoteDataSourceImpl(
+            wishListApiService = wishListApiService,
             json = jsonMock
         )
 
     @Test
     fun `createNewList should return a new user list response on successful API call`() = runTest {
         coEvery {
-            userListApiService.createNewList(
+            wishListApiService.createNewList(
                 any(),
                 any(),
                 any()
@@ -56,7 +59,7 @@ class UserListRemoteDataSourceImplTest {
     fun `createNewList should call the API service exactly once with the correct parameters`() =
         runTest {
             coEvery {
-                userListApiService.createNewList(
+                wishListApiService.createNewList(
                     any(),
                     any(),
                     any()
@@ -66,7 +69,7 @@ class UserListRemoteDataSourceImplTest {
             userListRemoteDataSourceImpl.createNewList(listName, language)
 
             coVerify(exactly = 1) {
-                userListApiService.createNewList(
+                wishListApiService.createNewList(
                     listName = listName,
                     language = language
                 )
@@ -75,7 +78,7 @@ class UserListRemoteDataSourceImplTest {
 
     @Test
     fun `createNewList should throw NetworkException when the API call fails`() = runTest {
-        coEvery { userListApiService.createNewList(any(), any(), any()) } throws networkException
+        coEvery { wishListApiService.createNewList(any(), any(), any()) } throws networkException
 
         assertThrows<NetworkException> {
             userListRemoteDataSourceImpl.createNewList(
@@ -89,13 +92,13 @@ class UserListRemoteDataSourceImplTest {
     fun `getUserLists should return a remote user list response on successful API call`() =
         runTest {
             coEvery {
-                userListApiService.getUserLists(
+                wishListApiService.getWishLists(
                     any(),
                     any()
                 )
             } returns userListsSuccessResponse
 
-            val result = userListRemoteDataSourceImpl.getUserLists(accountId, page)
+            val result = userListRemoteDataSourceImpl.getWishLists(accountId, page)
 
             assertThat(result).isEqualTo(userListsSuccessResponse)
         }
@@ -104,22 +107,22 @@ class UserListRemoteDataSourceImplTest {
     fun `getUserLists should call the API service exactly once with the correct parameters`() =
         runTest {
             coEvery {
-                userListApiService.getUserLists(
+                wishListApiService.getWishLists(
                     any(),
                     any()
                 )
             } returns userListsSuccessResponse
 
-            userListRemoteDataSourceImpl.getUserLists(accountId, page)
+            userListRemoteDataSourceImpl.getWishLists(accountId, page)
 
-            coVerify(exactly = 1) { userListApiService.getUserLists(accountId, page) }
+            coVerify(exactly = 1) { wishListApiService.getWishLists(accountId, page) }
         }
 
     @Test
     fun `getUserLists should throw InvalidCredentialsException for 401 error with specific status code`() =
         runTest {
             coEvery {
-                userListApiService.getUserLists(
+                wishListApiService.getWishLists(
                     any(),
                     any()
                 )
@@ -127,7 +130,7 @@ class UserListRemoteDataSourceImplTest {
             coEvery { jsonMock.decodeFromString<AuthenticationRemoteResponse>(any<String>()) } returns authenticationRemoteResponse401
 
             assertThrows<InvalidCredentialsException> {
-                userListRemoteDataSourceImpl.getUserLists(
+                userListRemoteDataSourceImpl.getWishLists(
                     accountId,
                     page
                 )
@@ -137,7 +140,7 @@ class UserListRemoteDataSourceImplTest {
     @Test
     fun `addMovieToList should return a response on successful API call`() = runTest {
         coEvery {
-            userListApiService.addMediaItemToList(
+            wishListApiService.addMediaItemToList(
                 any(),
                 any()
             )
@@ -152,7 +155,7 @@ class UserListRemoteDataSourceImplTest {
     fun `addMovieToList should call the API service exactly once with the correct parameters`() =
         runTest {
             coEvery {
-                userListApiService.addMediaItemToList(
+                wishListApiService.addMediaItemToList(
                     any(),
                     any()
                 )
@@ -160,12 +163,12 @@ class UserListRemoteDataSourceImplTest {
 
             userListRemoteDataSourceImpl.addMovieToList(listId, movieId)
 
-            coVerify(exactly = 1) { userListApiService.addMediaItemToList(listId, movieId) }
+            coVerify(exactly = 1) { wishListApiService.addMediaItemToList(listId, movieId) }
         }
 
     @Test
     fun `addMovieToList should throw NetworkException when the API call fails`() = runTest {
-        coEvery { userListApiService.addMediaItemToList(any(), any()) } throws networkException
+        coEvery { wishListApiService.addMediaItemToList(any(), any()) } throws networkException
 
         assertThrows<NetworkException> {
             userListRemoteDataSourceImpl.addMovieToList(
@@ -179,7 +182,7 @@ class UserListRemoteDataSourceImplTest {
     fun `getMoviesAndTvShowsFromList should return a list of movies when the API call is successful`() =
         runTest {
             coEvery {
-                userListApiService.getMoviesAndTvShowsFromList(
+                wishListApiService.getMoviesAndTvShowsFromList(
                     any(),
                     any()
                 )
@@ -194,7 +197,7 @@ class UserListRemoteDataSourceImplTest {
     fun `getMoviesAndTvShowsFromList should call the API service exactly once with the correct parameters`() =
         runTest {
             coEvery {
-                userListApiService.getMoviesAndTvShowsFromList(
+                wishListApiService.getMoviesAndTvShowsFromList(
                     any(),
                     any()
                 )
@@ -202,14 +205,14 @@ class UserListRemoteDataSourceImplTest {
 
             userListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(listId, page)
 
-            coVerify(exactly = 1) { userListApiService.getMoviesAndTvShowsFromList(listId, page) }
+            coVerify(exactly = 1) { wishListApiService.getMoviesAndTvShowsFromList(listId, page) }
         }
 
     @Test
     fun `getMoviesAndTvShowsFromList should throw InvalidCredentialsException for 401 error with specific status code`() =
         runTest {
             coEvery {
-                userListApiService.getMoviesAndTvShowsFromList(
+                wishListApiService.getMoviesAndTvShowsFromList(
                     any(),
                     any()
                 )
@@ -228,7 +231,7 @@ class UserListRemoteDataSourceImplTest {
     fun `getMoviesAndTvShowsFromList should throw NetworkException when the API call fails`() =
         runTest {
             coEvery {
-                userListApiService.getMoviesAndTvShowsFromList(
+                wishListApiService.getMoviesAndTvShowsFromList(
                     any(),
                     any()
                 )
@@ -244,7 +247,7 @@ class UserListRemoteDataSourceImplTest {
 
     @Test
     fun `checkIsMovieInList should return true when API returns true`() = runTest {
-        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } returns movieInListResponse
+        coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } returns movieInListResponse
 
         val result = userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
 
@@ -253,7 +256,7 @@ class UserListRemoteDataSourceImplTest {
 
     @Test
     fun `checkIsMovieInList should return false when API returns false`() = runTest {
-        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } returns movieNotInListResponse
+        coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } returns movieNotInListResponse
 
         val result = userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
 
@@ -262,7 +265,7 @@ class UserListRemoteDataSourceImplTest {
 
     @Test
     fun `checkIsMovieInList should throw ServerErrorException when API service throws HttpException`() = runTest {
-        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } throws createHttpException(404, "")
+        coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } throws createHttpException(404, "")
 
         assertThrows<ServerErrorException> {
             userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
@@ -271,7 +274,7 @@ class UserListRemoteDataSourceImplTest {
 
     @Test
     fun `checkIsMovieInList should throw NoInternetException when API service throws ConnectException`() = runTest {
-        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } throws ConnectException()
+        coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } throws ConnectException()
 
         assertThrows<NoInternetException> {
             userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
@@ -280,7 +283,7 @@ class UserListRemoteDataSourceImplTest {
 
     @Test
     fun `checkIsMovieInList should throw ServerErrorException when API service throws SerializationException`() = runTest {
-        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } throws SerializationException()
+        coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } throws SerializationException()
 
         assertThrows<ServerErrorException> {
             userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
@@ -289,7 +292,7 @@ class UserListRemoteDataSourceImplTest {
 
     @Test
     fun `checkIsMovieInList should throw NetworkException when API service throws IOException`() = runTest {
-        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } throws IOException()
+        coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } throws IOException()
 
         assertThrows<NetworkException> {
             userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
@@ -298,17 +301,17 @@ class UserListRemoteDataSourceImplTest {
 
     @Test
     fun `deleteList should call the API service exactly once to delete the list`() = runTest {
-        coEvery { userListApiService.deleteList(any()) } returns Unit
+        coEvery { wishListApiService.deleteList(any()) } returns Unit
 
         userListRemoteDataSourceImpl.deleteList(listId)
 
-        coVerify(exactly = 1) { userListApiService.deleteList(listId) }
+        coVerify(exactly = 1) { wishListApiService.deleteList(listId) }
     }
 
     @Test
     fun `deleteList should throw InvalidCredentialsException for 401 error with specific status code`() =
         runTest {
-            coEvery { userListApiService.deleteList(any()) } throws createHttpException(
+            coEvery { wishListApiService.deleteList(any()) } throws createHttpException(
                 401,
                 errorBody401
             )
@@ -323,7 +326,7 @@ class UserListRemoteDataSourceImplTest {
 
     @Test
     fun `deleteList should throw NetworkException when the API call fails`() = runTest {
-        coEvery { userListApiService.deleteList(any()) } throws networkException
+        coEvery { wishListApiService.deleteList(any()) } throws networkException
 
         assertThrows<NetworkException> { userListRemoteDataSourceImpl.deleteList(listId) }
     }
@@ -331,18 +334,18 @@ class UserListRemoteDataSourceImplTest {
     @Test
     fun `deleteMovieFromList should call the API service exactly once to remove the movie from the list`() =
         runTest {
-            coEvery { userListApiService.removeMovieFromList(any(), any()) } returns Unit
+            coEvery { wishListApiService.removeMovieFromList(any(), any()) } returns Unit
 
             userListRemoteDataSourceImpl.deleteMovieFromList(listId, movieId)
 
-            coVerify(exactly = 1) { userListApiService.removeMovieFromList(listId, movieId) }
+            coVerify(exactly = 1) { wishListApiService.removeMovieFromList(listId, movieId) }
         }
 
     @Test
     fun `deleteMovieFromList should throw InvalidCredentialsException for 401 error with specific status code`() =
         runTest {
             coEvery {
-                userListApiService.removeMovieFromList(
+                wishListApiService.removeMovieFromList(
                     any(),
                     any()
                 )
@@ -359,7 +362,7 @@ class UserListRemoteDataSourceImplTest {
 
     @Test
     fun `deleteMovieFromList should throw NetworkException when the API call fails`() = runTest {
-        coEvery { userListApiService.removeMovieFromList(any(), any()) } throws networkException
+        coEvery { wishListApiService.removeMovieFromList(any(), any()) } throws networkException
 
         assertThrows<NetworkException> {
             userListRemoteDataSourceImpl.deleteMovieFromList(
@@ -376,7 +379,7 @@ class UserListRemoteDataSourceImplTest {
     private val accountId = 1
     private val page = 1
 
-    private val remoteListResponse = UserListDetailsRemoteResponse(
+    private val remoteListResponse = WishListDetailsRemoteResponse(
         id = listId,
         name = "Test List",
         description = "Test description",
@@ -394,7 +397,7 @@ class UserListRemoteDataSourceImplTest {
         success = true,
     )
 
-    private val userListsSuccessResponse = UserListRemoteResponse(
+    private val userListsSuccessResponse = WishListRemoteResponse(
         results = emptyList(),
         page = 1,
         totalPages = 1,

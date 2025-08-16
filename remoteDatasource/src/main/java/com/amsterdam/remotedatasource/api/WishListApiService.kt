@@ -6,6 +6,8 @@ import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListMovieItemStatusRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListDetailsRemoteResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -14,7 +16,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface UserListApiService {
+interface WishListApiService {
     @RequiresSessionId
     @FormUrlEncoded
     @POST("list")
@@ -26,17 +28,17 @@ interface UserListApiService {
 
     @RequiresSessionId
     @GET("account/{account_id}/lists")
-    suspend fun getUserLists(
+    suspend fun getWishLists(
         @Path("account_id") accountId: Int = 0,
         @Query("page") page: Int = 1,
-    ): UserListRemoteResponse
+    ): WishListRemoteResponse
 
     @RequiresSessionId
     @GET("list/{list_id}")
     suspend fun getMoviesAndTvShowsFromList(
         @Path("list_id") listId: Long,
         @Query("page") page: Int,
-    ): UserListDetailsRemoteResponse
+    ): WishListDetailsRemoteResponse
 
     @RequiresSessionId
     @DELETE("list/{list_id}")

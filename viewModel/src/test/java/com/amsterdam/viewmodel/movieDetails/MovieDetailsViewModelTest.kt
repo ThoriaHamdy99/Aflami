@@ -9,7 +9,7 @@ import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
 import com.amsterdam.domain.useCase.list.CheckIsMovieInListUseCase
 import com.amsterdam.domain.useCase.list.CreateNewListUseCase
-import com.amsterdam.domain.useCase.list.GetUserListsUseCase
+import com.amsterdam.domain.useCase.list.GetWishListsUseCase
 import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language
@@ -43,7 +43,7 @@ class MovieDetailsViewModelTest {
     private val getsSessionType: GetsSessionType = mockk(relaxed = true)
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase = mockk(relaxed = true)
     private val addMovieToListUseCase: AddMovieToListUseCase = mockk(relaxed = true)
-    private val getUserListsUseCase: GetUserListsUseCase = mockk(relaxed = true)
+    private val getWishListsUseCase: GetWishListsUseCase = mockk(relaxed = true)
     private val createNewListUseCase: CreateNewListUseCase = mockk(relaxed = true)
     private val setUserMovieRatingUseCase: SetUserMovieRatingUseCase = mockk(relaxed = true)
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase = mockk(relaxed = true)
@@ -55,7 +55,7 @@ class MovieDetailsViewModelTest {
             args = testArgs,
             getMovieDetailsUseCase = getMovieDetailsUseCase,
             addMovieToListUseCase = addMovieToListUseCase,
-            getUserListsUseCase = getUserListsUseCase,
+            getWishListsUseCase = getWishListsUseCase,
             createListUseCase = createNewListUseCase,
             getsSessionType = getsSessionType,
             setUserRatingUseCase = setUserMovieRatingUseCase,
@@ -282,7 +282,7 @@ class MovieDetailsViewModelTest {
     @Test
     fun `onClickAddToList should show add to list dialog when user is logged in`() = runTest {
         coEvery { getsSessionType.invoke() } returns SessionType.LOGGED_IN
-        coEvery { getUserListsUseCase.invoke() } returns emptyList()
+        coEvery { getWishListsUseCase.invoke() } returns emptyList()
         viewModel
         advanceUntilIdle()
 
@@ -638,7 +638,7 @@ class MovieDetailsViewModelTest {
         userRate = null
     )
 
-    private val selectedList = UserListUiState(id = 1L, name = "Test List")
+    private val selectedList = WishListUiState(id = 1L, name = "Test List")
     private val userList = UserList(
         id = 1,
         name = "Test List",

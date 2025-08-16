@@ -94,7 +94,7 @@ import com.amsterdam.viewmodel.movieDetails.MovieDetailsInteractionListener
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsViewModel
-import com.amsterdam.viewmodel.movieDetails.UserListUiState
+import com.amsterdam.viewmodel.movieDetails.WishListUiState
 import com.amsterdam.viewmodel.myRating.RateDialogInteractionListener
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import kotlinx.coroutines.delay
@@ -528,7 +528,7 @@ private fun SearchByActorContentPreview() {
                 override fun onClickCreateList() {}
                 override fun onChangeListName(listName: String) {}
                 override fun onClickCreateNewList() {}
-                override fun onSelectedListChange(selectedLists: List<UserListUiState>) {}
+                override fun onSelectedListChange(selectedLists: List<WishListUiState>) {}
                 override fun onClickRate() {}
                 override fun onClickNavigateToLogin() {}
                 override fun onClickCancel() {}

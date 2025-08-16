@@ -31,12 +31,12 @@ data class MovieDetailsUiState(
     val isDescriptionExpanded: Boolean = false,
     val isAddToListDialogVisible: Boolean = false,
     val isCreateNewListDialogVisible: Boolean = false,
-    val userLists: List<UserListUiState> = emptyList(),
+    val userLists: List<WishListUiState> = emptyList(),
     val listName: String = "",
     val isUserListsLoading: Boolean = true,
     val isCreateListLoading: Boolean = false,
     val isAddMovieToListLoading: Boolean = false,
-    val selectedLists: List<UserListUiState> = emptyList(),
+    val selectedLists: List<WishListUiState> = emptyList(),
 ) {
     data class SimilarMovieUiState(
         val movieId: Long,

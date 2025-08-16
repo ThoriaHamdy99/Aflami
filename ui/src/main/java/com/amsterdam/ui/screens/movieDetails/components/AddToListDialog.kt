@@ -36,14 +36,15 @@ import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.R
 import com.amsterdam.ui.components.EmptyStateText
 import com.amsterdam.viewmodel.movieDetails.UserListUiState
+import com.amsterdam.viewmodel.movieDetails.WishListUiState
 
 @Composable
 fun AddToListDialog(
-    userLists: List<UserListUiState>,
+    userLists: List<WishListUiState>,
     modifier: Modifier = Modifier,
-    selectedLists: List<UserListUiState> = emptyList(),
+    selectedLists: List<WishListUiState> = emptyList(),
     isAddMovieToListLoading: Boolean = false,
-    onSelectedListChange: (List<UserListUiState>) -> Unit = {},
+    onSelectedListChange: (List<WishListUiState>) -> Unit = {},
     onAddToSelectedList: (List<Long>) -> Unit = {},
     onCreateNewList: () -> Unit = {},
     onDismiss: () -> Unit = {},
@@ -180,7 +181,7 @@ private fun SelectionListItem(
 
 @Composable
 private fun ActionButtonsSection(
-    selectedList: List<UserListUiState>,
+    selectedList: List<WishListUiState>,
     isAddMovieToListLoading: Boolean,
     onAddToSelectedList: (List<Long>) -> Unit,
     onCreateNewList: () -> Unit,
