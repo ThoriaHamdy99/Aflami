@@ -3,10 +3,10 @@ package com.amsterdam.viewmodel.home
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.utils.Mood
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase.ContinueWatchingScreenData
-import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
-import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase.HomeScreenData
+import com.amsterdam.domain.useCase.home.GetContinueWatchingDataUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingDataUseCase.ContinueWatchingData
+import com.amsterdam.domain.useCase.home.GetHomeDataUseCase
+import com.amsterdam.domain.useCase.home.GetHomeDataUseCase.HomeData
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
@@ -30,9 +30,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getHomeScreenDataUseCase: GetHomeScreenDataUseCase,
+    private val getHomeScreenDataUseCase: GetHomeDataUseCase,
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
-    private val getContinueWatchingScreenDataUseCase: GetContinueWatchingScreenDataUseCase,
+    private val getContinueWatchingScreenDataUseCase: GetContinueWatchingDataUseCase,
     private val getMoviesByMoodUseCase: GetMoviesByMoodUseCase,
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     private val dispatcherProvider: DispatcherProvider,
@@ -73,7 +73,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun onGetHomeScreenDataSuccess(homeScreenData: HomeScreenData) {
+    private fun onGetHomeScreenDataSuccess(homeScreenData: HomeData) {
         updateState {
             homeScreenData.toHomeUiState(state.value.continueWatchingMediaSectionUiState.mediaItems)
         }
@@ -89,7 +89,7 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun onGetContinueWatchingScreenDataSuccess(continueWatchingData: Flow<ContinueWatchingScreenData>) {
+    private fun onGetContinueWatchingScreenDataSuccess(continueWatchingData: Flow<ContinueWatchingData>) {
         continueWatchingData.onEach {
             updateState { currentState ->
                 currentState.copy(

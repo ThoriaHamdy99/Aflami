@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.home
 
-import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase.HomeScreenData
+import com.amsterdam.domain.useCase.home.GetHomeDataUseCase.HomeData
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.MovieWatchHistory
 import com.amsterdam.entity.TvShow
@@ -115,7 +115,7 @@ fun TvShowWatchHistory.toContinueWatchingMediaItemUiState(): ContinueWatchingHom
     }
 }
 
-fun HomeScreenData.toHomeUiState(
+fun HomeData.toHomeUiState(
     continueWatchingItems: List<ContinueWatchingHomeItemUiState>
 ): HomeUiState {
     return HomeUiState(

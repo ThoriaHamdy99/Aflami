@@ -12,14 +12,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 
-class GetHomeScreenDataUseCaseTest {
+class GetHomeDataUseCaseTest {
     private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase = mockk(relaxed = true)
     private val getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase = mockk(relaxed = true)
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase = mockk(relaxed = true)
     private val getPopularTvShowsUseCase: GetPopularTvShowsUseCase = mockk(relaxed = true)
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase = mockk(relaxed = true)
-    private val getHomeScreenDataUseCase by lazy {
-        GetHomeScreenDataUseCase(
+    private val getHomeDataUseCase by lazy {
+        GetHomeDataUseCase(
             getTopRatedMoviesUseCase = getTopRatedMoviesUseCase,
             getTopRatedTvShowsUseCase = getTopRatedTvShowsUseCase,
             getPopularMoviesUseCase = getPopularMoviesUseCase,
@@ -37,10 +37,10 @@ class GetHomeScreenDataUseCaseTest {
         coEvery { getPopularTvShowsUseCase() } returns fakeTvShowList
         coEvery { getUpcomingMoviesUseCase(MovieGenre.ALL) } returns fakeMovieList
 
-        val result = getHomeScreenDataUseCase()
+        val result = getHomeDataUseCase()
 
         assertThat(result).isEqualTo(
-            GetHomeScreenDataUseCase.HomeScreenData(
+            GetHomeDataUseCase.HomeData(
                 topRatedMovies = fakeMovieList,
                 topRatedTvShows = fakeTvShowList,
                 popularMovies = fakeMovieList,
@@ -58,7 +58,7 @@ class GetHomeScreenDataUseCaseTest {
         coEvery { getPopularTvShowsUseCase() } returns emptyList()
         coEvery { getUpcomingMoviesUseCase(MovieGenre.ALL) } returns emptyList()
 
-        getHomeScreenDataUseCase()
+        getHomeDataUseCase()
 
         coVerify(exactly = 1) { getTopRatedMoviesUseCase() }
         coVerify(exactly = 1) { getTopRatedTvShowsUseCase() }
@@ -73,7 +73,7 @@ class GetHomeScreenDataUseCaseTest {
         coEvery { getTopRatedMoviesUseCase() } throws Exception(expectedMessage)
 
         val exception = assertThrows<Exception> {
-            getHomeScreenDataUseCase()
+            getHomeDataUseCase()
         }
 
         assertThat(exception).hasMessageThat().isEqualTo(expectedMessage)
@@ -86,7 +86,7 @@ class GetHomeScreenDataUseCaseTest {
         coEvery { getTopRatedTvShowsUseCase() } throws Exception(expectedMessage)
 
         val exception = assertThrows<Exception> {
-            getHomeScreenDataUseCase()
+            getHomeDataUseCase()
         }
 
         assertThat(exception).hasMessageThat().isEqualTo(expectedMessage)
@@ -100,7 +100,7 @@ class GetHomeScreenDataUseCaseTest {
         coEvery { getPopularMoviesUseCase() } throws Exception(expectedMessage)
 
         val exception = assertThrows<Exception> {
-            getHomeScreenDataUseCase()
+            getHomeDataUseCase()
         }
 
         assertThat(exception).hasMessageThat().isEqualTo(expectedMessage)
@@ -115,7 +115,7 @@ class GetHomeScreenDataUseCaseTest {
         coEvery { getPopularTvShowsUseCase() } throws Exception(expectedMessage)
 
         val exception = assertThrows<Exception> {
-            getHomeScreenDataUseCase()
+            getHomeDataUseCase()
         }
 
         assertThat(exception).hasMessageThat().isEqualTo(expectedMessage)
@@ -131,7 +131,7 @@ class GetHomeScreenDataUseCaseTest {
         coEvery { getUpcomingMoviesUseCase(MovieGenre.ALL) } throws Exception(expectedMessage)
 
         val exception = assertThrows<Exception> {
-            getHomeScreenDataUseCase()
+            getHomeDataUseCase()
         }
 
         assertThat(exception).hasMessageThat().isEqualTo(expectedMessage)

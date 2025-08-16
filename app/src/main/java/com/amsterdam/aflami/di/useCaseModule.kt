@@ -45,9 +45,9 @@ import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsU
 import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreUseCase
 import com.amsterdam.domain.useCase.game.whichGenre.SubmitGuessMovieGenreAnswerUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
-import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetHomeDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetPopularTvShowsUseCase
@@ -248,8 +248,8 @@ object UseCaseModule {
         getPopularMoviesUseCase: GetPopularMoviesUseCase,
         getPopularTvShowsUseCase: GetPopularTvShowsUseCase,
         getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
-    ): GetHomeScreenDataUseCase =
-        GetHomeScreenDataUseCase(
+    ): GetHomeDataUseCase =
+        GetHomeDataUseCase(
             getTopRatedMoviesUseCase,
             getTopRatedTvShowsUseCase,
             getPopularMoviesUseCase,
@@ -261,8 +261,8 @@ object UseCaseModule {
     fun provideGetContinueWatchingScreenDataUseCase(
         getContinueWatchingMoviesUseCase: GetContinueWatchingMoviesUseCase,
         getContinueWatchingTvShowsUseCase: GetContinueWatchingTvShowsUseCase,
-    ): GetContinueWatchingScreenDataUseCase =
-        GetContinueWatchingScreenDataUseCase(
+    ): GetContinueWatchingDataUseCase =
+        GetContinueWatchingDataUseCase(
             getContinueWatchingMoviesUseCase,
             getContinueWatchingTvShowsUseCase
         )

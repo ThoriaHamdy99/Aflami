@@ -3,8 +3,8 @@ package com.amsterdam.viewmodel.home
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.utils.Mood
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
-import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
+import com.amsterdam.domain.useCase.home.GetContinueWatchingDataUseCase
+import com.amsterdam.domain.useCase.home.GetHomeDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
@@ -39,14 +39,14 @@ import org.junit.jupiter.api.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
 
-    private val getHomeScreenDataUseCase: GetHomeScreenDataUseCase = mockk(relaxed = true)
+    private val getHomeScreenDataUseCase: GetHomeDataUseCase = mockk(relaxed = true)
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase = mockk(relaxed = true)
     private val getMoviesByMoodUseCase: GetMoviesByMoodUseCase = mockk(relaxed = true)
     private lateinit var dispatcherProvider: TestDispatcherProvider
     private lateinit var viewModel: HomeViewModel
     private lateinit var testScope: TestScope
     private lateinit var getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
-    private lateinit var getContinueWatchingScreenDataUseCase: GetContinueWatchingScreenDataUseCase
+    private lateinit var getContinueWatchingScreenDataUseCase: GetContinueWatchingDataUseCase
 
     @BeforeEach
     fun setUp() {
