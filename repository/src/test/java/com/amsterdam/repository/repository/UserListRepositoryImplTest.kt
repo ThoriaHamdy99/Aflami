@@ -1,6 +1,8 @@
 package com.amsterdam.repository.repository
 
+import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.exceptions.NoInternetException
+import com.amsterdam.domain.exceptions.ServerErrorException
 import com.amsterdam.domain.exceptions.UnknownException
 import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.UserListRepository
@@ -8,6 +10,7 @@ import com.amsterdam.entity.UserList
 import com.amsterdam.repository.datasource.remote.UserListRemoteDataSource
 import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
+import com.amsterdam.repository.dto.remote.UserListMovieItemStatusRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListRemoteDto
 import com.amsterdam.repository.dto.remote.UserListRemoteResponse
 import com.amsterdam.repository.mapper.toMovieEntity
@@ -19,8 +22,11 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.SerializationException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.io.IOException
+import java.net.ConnectException
 
 class UserListRepositoryImplTest {
     private val userListRemoteDataSource: UserListRemoteDataSource = mockk()
@@ -72,8 +78,28 @@ class UserListRepositoryImplTest {
             coVerify { userListRemoteDataSource.createNewList(listName, language) }
         }
 
+
     @Test
-    fun `should call deleteList from userListRemoteSource when session id is not empty`() =
+    fun `checkIsMovieInList should return true when service returns true`() = runTest {
+        coEvery { userListRemoteDataSource.checkIsMovieInList(movieId, listId) } returns movieInListResponse
+
+        val result = userListRepository.checkIsMovieInList(movieId, listId)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `checkIsMovieInList should return false when service returns false`() = runTest {
+        coEvery { userListRemoteDataSource.checkIsMovieInList(movieId, listId) } returns movieNotInListResponse
+
+        val result = userListRepository.checkIsMovieInList(movieId, listId)
+
+        assertThat(result).isFalse()
+    }
+
+
+    @Test
+    fun `deleteList should call deleteList from userListRemoteSource when session id is not empty`() =
         runTest {
             coEvery { userListRemoteDataSource.deleteList(listId) } returns Unit
 
@@ -83,7 +109,7 @@ class UserListRepositoryImplTest {
         }
 
     @Test
-    fun `should throw NoInternetException when deleteList failed`() = runTest {
+    fun `deleteList should throw NoInternetException when deleteList failed`() = runTest {
         coEvery { userListRemoteDataSource.deleteList(listId) } throws NoInternetException()
 
         assertThrows<NoInternetException> { userListRepository.deleteList(listId) }
@@ -100,7 +126,7 @@ class UserListRepositoryImplTest {
         }
 
     @Test
-    fun `should call removeMovieFromList from listRemoteSource when session id is not empty`() =
+    fun `deleteList should call removeMovieFromList from listRemoteSource when session id is not empty`() =
         runTest {
             coEvery { userListRemoteDataSource.deleteList(listId) } returns Unit
 
@@ -110,7 +136,7 @@ class UserListRepositoryImplTest {
         }
 
     @Test
-    fun `should return list of movies when response return with results`() = runTest {
+    fun `getMoviesAndTvShowsFromList should return list of movies when response return with results`() = runTest {
         val response = remoteListResponse.copy(items = listItems)
         coEvery { userListRemoteDataSource.getMoviesAndTvShowsFromList(listId, 1) } returns response
 
@@ -120,7 +146,7 @@ class UserListRepositoryImplTest {
     }
 
     @Test
-    fun `should return empty list of movies when response returns empty list with`() = runTest {
+    fun `getMoviesAndTvShowsFromList should return empty list of movies when response returns empty list with`() = runTest {
         coEvery {
             userListRemoteDataSource.getMoviesAndTvShowsFromList(
                 listId,
@@ -171,6 +197,17 @@ class UserListRepositoryImplTest {
         totalPages = 1,
         totalResults = 1
     )
+
+    private val movieInListResponse = UserListMovieItemStatusRemoteResponse(
+        id = listId.toString(),
+        itemPresent = true
+    )
+
+    private val movieNotInListResponse = UserListMovieItemStatusRemoteResponse(
+        id = listId.toString(),
+        itemPresent = false
+    )
+
 
     private val page = 1
 
