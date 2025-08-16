@@ -20,7 +20,7 @@ class GameRepositoryImpl @Inject constructor(
 ) : GameRepository {
 
     override suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<Movie> {
-        return movieRemoteDataSource.getRandomMoviesWithNotNullDate(requiredMoviesNumber)
+        return movieRemoteDataSource.getRandomMoviesWithReleaseDate(requiredMoviesNumber)
             .toMovieEntityList()
     }
 

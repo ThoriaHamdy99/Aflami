@@ -97,7 +97,7 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         responseCall(execute = { movieApiService.deleteMovieRate(movieId = movieId) })
     }
 
-    override suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<MovieItemRemoteDto> {
+    override suspend fun getRandomMoviesWithReleaseDate(requiredMoviesNumber: Int): List<MovieItemRemoteDto> {
         val totalPages = 500
         val collectedMovies = mutableListOf<MovieItemRemoteDto>()
         val usedPages = mutableSetOf<Int>()
