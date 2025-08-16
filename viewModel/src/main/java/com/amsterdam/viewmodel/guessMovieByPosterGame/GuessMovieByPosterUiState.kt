@@ -6,6 +6,7 @@ import com.amsterdam.viewmodel.sharedGame.TimerUiState
 data class GuessMovieByPosterUiState(
     val isLoading: Boolean = true,
     val totalCollectedPoints: Int = 0,
+    val gameSessionId : Long = 0,
     val questions: List<QuestionUiState> = emptyList(),
     val selectedAnswerIndex: Int? = null,
     val isAnswerCorrect: Boolean? = null,

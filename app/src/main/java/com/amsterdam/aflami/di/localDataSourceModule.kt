@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.amsterdam.localdatasource.dataStore.AppPreferencesImpl
 import com.amsterdam.localdatasource.dataStore.AuthenticationLocalDataSourceImpl
+import com.amsterdam.localdatasource.inMemory.GameInMemoryDataSource
 import com.amsterdam.localdatasource.roomDataBase.AflamiDatabase
 import com.amsterdam.localdatasource.roomDataBase.datasource.CategoryLocalDataSourceImpl
 import com.amsterdam.localdatasource.roomDataBase.datasource.CountryLocalDataSourceImpl
@@ -21,6 +22,7 @@ import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
 import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
 import com.amsterdam.repository.datasource.local.CountryLocalDataSource
 import com.amsterdam.repository.datasource.local.GameLocalDataSource
+import com.amsterdam.repository.datasource.local.GameSessionLocalDataSource
 import com.amsterdam.repository.datasource.local.MovieLocalDataSource
 import com.amsterdam.repository.datasource.local.ProfileLocalDataSource
 import com.amsterdam.repository.datasource.local.RecentSearchLocalDataSource
@@ -153,5 +155,11 @@ abstract class LocalDataSourceBindsModule {
     abstract fun bindGameLocalDataSource(
         gameLocalDataSource: GameLocalDataSourceImpl
     ): GameLocalDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindGameInMemoryDataSource(
+        gameInMemoryDataSource: GameInMemoryDataSource
+    ): GameSessionLocalDataSource
 
 }
