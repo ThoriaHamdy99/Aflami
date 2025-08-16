@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,6 +26,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.LoadingContainer
+import com.amsterdam.designsystem.components.divider.HorizontalDivider
 import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
@@ -115,12 +119,24 @@ private fun ListDetailsContent(
             title = shortenedTitle,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp),
             lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_delete),
             lastOptionIconTint = AppTheme.color.redAccent,
             onLastOptionClicked = listener::onClickDeleteList,
             onNavigateBackClicked = listener::onClickBack,
         )
+
+        val gridState = rememberLazyGridState()
+        val isScrolled by remember {
+            derivedStateOf {
+                gridState.firstVisibleItemIndex > 0 ||
+                        gridState.firstVisibleItemScrollOffset > 0
+            }
+        }
+
+        if (isScrolled) {
+            HorizontalDivider(color = AppTheme.color.stroke)
+        }
 
         with(state) {
             when {
@@ -159,6 +175,7 @@ private fun ListDetailsContent(
                 else -> {
                     ListDetailsItemsGrid(
                         listMediaItems = listMediaItems,
+                        gridState = gridState,
                         modifier = Modifier.weight(1f),
                         onClickMovie = listener::onClickMovie,
                         onClickTvShow = listener::onClickTvShow,
