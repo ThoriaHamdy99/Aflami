@@ -160,8 +160,13 @@ private fun CategoriesTvShowsDetailsContent(
                                             contentDescription = tvShow.name,
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier.fillMaxWidth(),
-                                            onLoading = { ImageLoadingIndicator() },
-                                            onError = { ImageErrorIndicator() },
+                                            onLoading = {
+                                                ImageLoadingIndicator()
+                                            },
+                                            onError = {
+                                                ImageErrorIndicator()
+                                            },
+                                            isAdult = tvShow.isAdult
                                         )
                                     },
                                     movieTitle = tvShow.name,

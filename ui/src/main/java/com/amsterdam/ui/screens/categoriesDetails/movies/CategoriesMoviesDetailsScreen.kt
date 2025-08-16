@@ -182,6 +182,37 @@ private fun CategoriesMoviesDetailsContent(
                                     onClick = { interaction.onClickMovieCard(movie.id) }
                                 )
                             }
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(movies.itemCount) { index ->
+                            val movie = movies[index] ?: return@items
+                            MediaCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                movieImage = {
+                                    SafeImageView(
+                                        model = movie.posterImageUrl,
+                                        contentDescription = movie.name,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxWidth(),
+                                        onLoading = {
+                                            ImageLoadingIndicator()
+                                        },
+                                        onError = {
+                                            ImageErrorIndicator()
+                                        },
+                                        isAdult = movie.isAdult
+                                    )
+                                },
+                                movieTitle = movie.name,
+                                movieType = stringResource(R.string.movie),
+                                movieYear = movie.yearOfRelease,
+                                movieRating = movie.rate,
+                                onClick = { interaction.onClickMovieCard(movie.id) }
+                            )
+
                         }
                     }
                 }

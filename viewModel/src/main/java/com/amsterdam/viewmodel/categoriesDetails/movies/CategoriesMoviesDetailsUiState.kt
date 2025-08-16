@@ -22,6 +22,7 @@ data class CategoriesMoviesDetailsUiState(
         val posterImageUrl: String = "",
         val rate: String = "",
         val yearOfRelease: String = "",
-        val mediaType: MediaType = MediaType.MOVIE
+        val mediaType: MediaType = MediaType.MOVIE,
+        val isAdult : Boolean = false
     )
 }

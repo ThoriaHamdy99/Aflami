@@ -169,6 +169,7 @@ private fun MyRatingContent(
                                     safetyLevel = safetyLevel,
                                     onLoading = { ImageLoadingIndicator() },
                                     onError = { ImageErrorIndicator() },
+                                    isAdult = isAdult
                                 )
                             },
                             movieType = stringResource(R.string.movies),
@@ -196,6 +197,7 @@ private fun MyRatingContent(
                                     model = posterImageUrl,
                                     onLoading = { ImageLoadingIndicator() },
                                     onError = { ImageErrorIndicator() },
+                                    isAdult = isAdult
                                 )
                             },
                             movieType = stringResource(R.string.tv_shows),

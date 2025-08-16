@@ -79,6 +79,7 @@ fun PopularMediaItemCard(
                     onLoading = { ImageLoadingIndicator() },
                     safetyLevel = safetyLevel,
                     onError = { ImageErrorIndicator() },
+                    isAdult = popularMediaItem.isAdult
                 )
 
                 RatingChip(

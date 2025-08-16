@@ -16,7 +16,8 @@ data class MyRatingUiState(
         val name: String = "",
         val posterImageUrl: String = "",
         val yearOfRelease: String = "",
-        val rate: String = ""
+        val rate: String = "",
+        val isAdult: Boolean = false
     )
 
     data class RatingMovieUiState(
@@ -24,6 +25,7 @@ data class MyRatingUiState(
         val name: String = "",
         val posterImageUrl: String = "",
         val yearOfRelease: String = "",
-        val rate: String = ""
+        val rate: String = "",
+        val isAdult: Boolean = false
     )
 }

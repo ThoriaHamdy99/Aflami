@@ -68,6 +68,7 @@ data class HomeUiState(
         val posterUrl: String = "",
         val type: MediaType = MediaType.MOVIE,
         val categories: List<String> = emptyList(),
+        val isAdult: Boolean = false
     )
 
     data class TopRatedMoviesUiState(
@@ -76,7 +77,8 @@ data class HomeUiState(
         val posterImageUrl: String = "",
         val rate: String = "",
         val yearOfRelease: String = "",
-        val mediaType: MediaType = MediaType.MOVIE
+        val mediaType: MediaType = MediaType.MOVIE,
+        val isAdult: Boolean = false
     )
 
     data class UpcomingMoviesUiState(
@@ -85,7 +87,8 @@ data class HomeUiState(
         val posterImageUrl: String = "",
         val rate: String = "",
         val yearOfRelease: String = "",
-        val mediaType: MediaType = MediaType.MOVIE
+        val mediaType: MediaType = MediaType.MOVIE,
+        val isAdult: Boolean = false
     )
 
     data class MoodPickerItemUiState(
@@ -94,7 +97,8 @@ data class HomeUiState(
         val posterImageUrl: String = "",
         val rate: String = "",
         val yearOfRelease: String = "",
-        val mediaType: MediaType = MediaType.MOVIE
+        val mediaType: MediaType = MediaType.MOVIE,
+        val isAdult: Boolean = false
     )
 
     data class ContinueWatchingHomeItemUiState(
@@ -104,6 +108,7 @@ data class HomeUiState(
         val yearOfRelease: String = "",
         val rate: String = "",
         val dateAdded: Instant = Clock.System.now(),
-        val mediaType: MediaType = MediaType.MOVIE
+        val mediaType: MediaType = MediaType.MOVIE,
+        val isAdult: Boolean = false
     )
 }
