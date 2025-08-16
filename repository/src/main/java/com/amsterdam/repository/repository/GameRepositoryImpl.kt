@@ -2,7 +2,7 @@ package com.amsterdam.repository.repository
 
 import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.People
+import com.amsterdam.entity.Character
 import com.amsterdam.repository.datasource.local.GameLocalDataSource
 import com.amsterdam.repository.datasource.local.GameSessionLocalDataSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
@@ -39,7 +39,7 @@ class GameRepositoryImpl @Inject constructor(
 
     override suspend fun getCharacterDataQuestions(
         requiredNumber: Int,
-    ): List<People> {
+    ): List<Character> {
         return peopleRemoteDataSource.getRandomizedTrendingPeople(requiredNumber = requiredNumber)
             .toEntityList()
     }
