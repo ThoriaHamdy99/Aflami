@@ -7,8 +7,8 @@ import com.amsterdam.repository.datasource.local.GameLocalDataSource
 import com.amsterdam.repository.datasource.local.GameSessionLocalDataSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
 import com.amsterdam.repository.datasource.remote.PeopleRemoteDataSource
-import com.amsterdam.repository.mapper.toMovieEntityList
 import com.amsterdam.repository.mapper.toEntityList
+import com.amsterdam.repository.mapper.toMovieEntityList
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
