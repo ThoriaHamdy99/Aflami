@@ -181,7 +181,8 @@ private fun ListDetailsContent(
                             NoDataContainer(
                                 modifier = Modifier.padding(top = 12.dp),
                                 imageRes = painterResource(R.drawable.no_saved_items),
-                                title = stringResource(R.string.no_saved_items_here)
+                                title = stringResource(R.string.no_saved_items_here),
+                                imageAlpha = 0.68f
                             )
                         }
                     }
