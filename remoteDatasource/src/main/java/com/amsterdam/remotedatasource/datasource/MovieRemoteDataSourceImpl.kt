@@ -98,14 +98,23 @@ class MovieRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getRandomMoviesWithReleaseDate(requiredMoviesNumber: Int): List<MovieItemRemoteDto> {
-        return getRandomMovies(withRelease = true, requiredMoviesNumber = requiredMoviesNumber)
+        return getRandomMovies(
+            onFilter = ::onFilterHighQualityReleaseDate,
+            requiredMoviesNumber = requiredMoviesNumber
+        )
     }
 
     override suspend fun getRandomMoviesWithPoster(requiredMoviesNumber: Int): List<MovieItemRemoteDto> {
-        return getRandomMovies(withRelease = false, requiredMoviesNumber = requiredMoviesNumber)
+        return getRandomMovies(
+            onFilter = ::onFilterHighQualityPoster,
+            requiredMoviesNumber = requiredMoviesNumber
+        )
     }
 
-    private suspend fun getRandomMovies(withRelease: Boolean, requiredMoviesNumber: Int): List<MovieItemRemoteDto> {
+    private suspend fun getRandomMovies(
+        onFilter: (MovieItemRemoteDto) -> Boolean,
+        requiredMoviesNumber: Int
+    ): List<MovieItemRemoteDto> {
         val totalPages = 500
 
         return (FIRST_PAGE..totalPages)
@@ -113,7 +122,7 @@ class MovieRemoteDataSourceImpl @Inject constructor(
                 .fold(emptyList()) { accumulatedMovies, page ->
                     accumulatedMovies.takeIf { it.size >= requiredMoviesNumber }
                     ?: getPopularMoviesByPage(page)
-                            .filter { movieDto -> onFilterHighQualityData(withRelease, movieDto) }
+                            .filter { movieDto -> onFilter(movieDto) }
                             .shuffled()
                             .distinctBy(MovieItemRemoteDto::id)
                             .plus(accumulatedMovies)
@@ -125,9 +134,11 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         return getPopularMovies(page = page).results
     }
 
-    private fun onFilterHighQualityData(withRelease: Boolean, movieDto: MovieItemRemoteDto): Boolean {
-        return if (withRelease) movieDto.releaseDate != null else movieDto.posterPath != null
-    }
+    private fun onFilterHighQualityReleaseDate(movieDto: MovieItemRemoteDto) =
+        movieDto.releaseDate != null
+
+    private fun onFilterHighQualityPoster(movieDto: MovieItemRemoteDto) =
+        movieDto.posterPath != null
 
     private companion object {
         private const val FIRST_PAGE = 1
