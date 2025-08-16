@@ -19,50 +19,16 @@ class PeopleRemoteDataSourceImplTest {
         PeopleRemoteDataSourceImpl(peopleApiService)
 
     @Test
-    fun `getTrendingPeople should return a list of people on successful API call`() = runTest {
-        coEvery { peopleApiService.getTrendingPeople(any()) } returns trendingPeopleResponse
-
-        val people = peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
-
-        assertThat(people).isEqualTo(trendingPeopleResponse)
-    }
-
-    @Test
-    fun `getTrendingPeople should call getTrendingPeople exactly once on a successful API call`() =
-        runTest {
-            coEvery { peopleApiService.getTrendingPeople(any()) } returns trendingPeopleResponse
-
-            peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
-
-            coVerify(exactly = 1) { peopleApiService.getTrendingPeople(any()) }
-        }
-
-    @Test
     fun `getTrendingPeople should rethrow a NetworkException when the service provider throws one`() =
         runTest {
-            coEvery { peopleApiService.getTrendingPeople(any()) } throws networkException
+            coEvery { peopleApiService.getTrendingPeople(any()) } throws NetworkException()
 
-            assertThrows<NetworkException> { peopleRemoteDataSourceImpl.getTrendingPeople(page = 1) }
+            assertThrows<NetworkException> {
+                peopleRemoteDataSourceImpl.getRandomizedTrendingPeople(
+                    requiredNumber = 5
+                )
+            }
         }
-
-    @Test
-    fun `getTrendingPeople should return an empty list when the API service returns an empty list`() =
-        runTest {
-            coEvery { peopleApiService.getTrendingPeople(any()) } returns emptyPeopleResponse
-
-            val people = peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
-
-            assertThat(people.results).isEmpty()
-        }
-
-    @Test
-    fun `getTrendingPeople should call the API exactly once when it returns an empty list`() = runTest {
-        coEvery { peopleApiService.getTrendingPeople(any()) } returns emptyPeopleResponse
-
-        peopleRemoteDataSourceImpl.getTrendingPeople(page = 1)
-
-        coVerify(exactly = 1) { peopleApiService.getTrendingPeople(any()) }
-    }
 
     @Test
     fun `getRandomizedTrendingPeople should return the required number of people`() = runTest {
@@ -127,24 +93,6 @@ class PeopleRemoteDataSourceImplTest {
             assertThat(people).isEmpty()
         }
 
-    private val networkException = NetworkException()
-
-    private val trendingPeopleResponse = RemotePeopleResponse(
-        page = 1,
-        totalPages = 2,
-        totalResults = 4,
-        results = listOf(
-            createPeopleItemDto(id = 1, name = "Person A", profilePath = "path/a.jpg"),
-            createPeopleItemDto(id = 2, name = "Person B", profilePath = "path/b.jpg")
-        )
-    )
-
-    private val emptyPeopleResponse = RemotePeopleResponse(
-        page = 1,
-        totalPages = 1,
-        totalResults = 0,
-        results = emptyList()
-    )
 
     private fun createPeopleItemDto(
         id: Int,
@@ -201,7 +149,8 @@ class PeopleRemoteDataSourceImplTest {
         createPeopleItemDto(id = 2, name = "Jerry", profilePath = null)
     )
 
-    private val firstPageForRandomizedTest = createMockPeopleResponse(totalPages = 2, results = peopleForRandomizedTest)
+    private val firstPageForRandomizedTest =
+        createMockPeopleResponse(totalPages = 2, results = peopleForRandomizedTest)
     private val secondPageForRandomizedTest = createMockPeopleResponse(
         totalPages = 2, results = listOf(
             createPeopleItemDto(id = 3, name = "Spike", profilePath = "path3"),
@@ -220,7 +169,8 @@ class PeopleRemoteDataSourceImplTest {
         totalPages = 1, results = peopleWithExtraData
     )
     private val firstPageWithDuplicateId = createMockPeopleResponse(
-        totalPages = 2, results = listOf(createPeopleItemDto(id = 1, name = "Tom", profilePath = "path1"))
+        totalPages = 2,
+        results = listOf(createPeopleItemDto(id = 1, name = "Tom", profilePath = "path1"))
     )
     private val secondPageWithDuplicateId = createMockPeopleResponse(
         totalPages = 2, results = peopleWithDuplicateId

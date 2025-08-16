@@ -107,7 +107,7 @@ fun LazyListScope.upcomingMoviesSection(
                                 isAdult = movie.isAdult
                             )
                         },
-                        movieType = stringResource(R.string.movies),
+                        movieType = stringResource(R.string.movie),
                         movieYear = movie.yearOfRelease,
                         movieTitle = movie.name,
                         movieRating = movie.rate,

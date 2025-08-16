@@ -2,7 +2,7 @@ package com.amsterdam.viewmodel.home
 
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.models.Mood
+import com.amsterdam.domain.utils.Mood
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase.ContinueWatchingScreenData
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
