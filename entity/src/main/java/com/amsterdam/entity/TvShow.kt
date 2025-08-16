@@ -15,4 +15,5 @@ data class TvShow(
     val seasonCount: Int,
     val originCountry: String,
     val videoUrl: String? = null,
+    val isAdult: Boolean = false
 )

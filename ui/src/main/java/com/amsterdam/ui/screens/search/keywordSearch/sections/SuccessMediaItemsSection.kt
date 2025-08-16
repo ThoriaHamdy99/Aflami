@@ -54,6 +54,7 @@ fun SuccessMediaItemsSection(
                                 contentScale = ContentScale.Crop,
                                 onLoading = { ImageLoadingIndicator() },
                                 onError = { ImageErrorIndicator() },
+                                isAdult = mediaItem.isAdult
                             )
                         },
                         movieType = stringResource(R.string.movies),
@@ -74,6 +75,7 @@ fun SuccessMediaItemsSection(
                                 contentScale = ContentScale.Crop,
                                 onLoading = { ImageLoadingIndicator() },
                                 onError = { ImageErrorIndicator() },
+                                isAdult = mediaItem.isAdult
                             )
                         },
                         movieType = stringResource(R.string.tv_shows),
