@@ -186,7 +186,8 @@ class TimerHandlerTest {
 
     @Test
     fun `startTimer should works when called with default nowMillis and dispatcher`() = runTest {
-        val handler = TimerHandler()
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
         val flow = handler.startTimer(totalSeconds = 1) {}
         advanceUntilIdle()
         assertThat(flow.value).isEqualTo(0)
