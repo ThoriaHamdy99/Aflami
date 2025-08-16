@@ -405,7 +405,7 @@ fun SeriesDetailsContent(
                                 modifier = Modifier
                                     .padding(top = 8.dp)
                                     .padding(horizontal = 16.dp),
-                                )
+                            )
 
                             DescriptionSection(
                                 modifier = Modifier
@@ -531,17 +531,16 @@ private fun LazyListScope.seasonsSection(
         item { EmptyStateText(stringResource(R.string.there_is_no_seasons)) }
     } else {
         seasons.forEachIndexed { index, season ->
-                stickyHeader {
-                    SeasonHeader(
-                        season = season,
-                        onClickSeasonMenu = { seasonNumber ->
-                            interaction.onClickSeasonMenu(seasonNumber)
-                        })
-                }
+            stickyHeader {
+                SeasonHeader(
+                    season = season,
+                    onClickSeasonMenu = { seasonNumber ->
+                        interaction.onClickSeasonMenu(seasonNumber)
+                    })
+            }
 
             val episodes = if (season.isExpanded) season.episodes else emptyList()
-            items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
-                    EpisodesMenu(season.seasonNumber, it, interaction::onPlayEpisodeClicked)
+
             if (season.isLoading) {
                 item { EpisodeCardPlaceholder() }
             } else {
@@ -551,7 +550,6 @@ private fun LazyListScope.seasonsSection(
             }
 
             if (index != seasons.lastIndex) item { HorizontalDivider(color = AppTheme.color.stroke) }
-
         }
     }
 }

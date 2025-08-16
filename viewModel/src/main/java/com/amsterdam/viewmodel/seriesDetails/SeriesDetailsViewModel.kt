@@ -128,12 +128,13 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     private fun onGetEpisodesSuccess(seasonNumber: Int, episodes: List<Episode>) {
-        if (episodes.isEmpty()) {
-            return
-        }
         val updatedSeasons = state.value.seasons.map {
             if (it.seasonNumber == seasonNumber) {
-                it.copy(episodes = episodes.toUiState(), isExpanded = true, isLoading = false)
+                it.copy(
+                    episodes = episodes.toUiState(state.value.currentLanguage),
+                    isExpanded = true,
+                    isLoading = false
+                )
             } else {
                 it
             }
@@ -195,7 +196,10 @@ class SeriesDetailsViewModel @Inject constructor(
 
         if (currentSeason?.episodes?.isNotEmpty() == true) {
             val updatedSeasons = state.value.seasons.map {
-                if (it.seasonNumber == seasonNumber) it.copy(isExpanded = !it.isExpanded, isLoading = false)
+                if (it.seasonNumber == seasonNumber) it.copy(
+                    isExpanded = !it.isExpanded,
+                    isLoading = false
+                )
                 else it
             }
             updateState { it.copy(seasons = updatedSeasons) }
@@ -203,22 +207,6 @@ class SeriesDetailsViewModel @Inject constructor(
         }
 
         return getEpisodesBySeasonNumberUseCase(state.value.tvShowId, seasonNumber)
-    }
-
-    private fun onGetEpisodesSuccess(seasonNumber: Int, episodes: List<Episode>) {
-        if (episodes.isEmpty()) {
-            return
-        }
-        val updatedSeasons = state.value.seasons.map {
-            if (it.seasonNumber == seasonNumber) {
-                it.copy(episodes = episodes.toUiState(currentLanguage = state.value.currentLanguage), isExpanded = true)
-            } else {
-                it
-            }
-        }
-        updateState {
-            it.copy(seasons = updatedSeasons)
-        }
     }
 
     private suspend fun runIfLoggedIn(
