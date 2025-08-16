@@ -5,6 +5,7 @@ import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.UserListMovieItemStatusRemoteResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -42,6 +43,12 @@ interface UserListApiService {
     suspend fun deleteList(
         @Path("list_id") listId: Long,
     )
+
+    @GET("list/{list_id}/item_status")
+    suspend fun checkIsMovieInList(
+        @Path("list_id") listId: Long,
+        @Query("movie_id") movieId: Long,
+    ): UserListMovieItemStatusRemoteResponse
 
     @RequiresSessionId
     @FormUrlEncoded
