@@ -1,4 +1,4 @@
-package com.amsterdam.ui.screens.profile.components
+package com.amsterdam.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
