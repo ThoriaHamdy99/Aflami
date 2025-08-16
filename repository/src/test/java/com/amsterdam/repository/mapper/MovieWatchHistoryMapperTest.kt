@@ -37,7 +37,8 @@ class MovieWatchHistoryMapperTest {
         rating = 8.5f,
         popularity = 1500.0,
         movieLength = 120,
-        originCountry = "US"
+        originCountry = "US",
+        isAdult = false
     )
 
     private val movieWatchHistoryDto = MovieWatchHistoryDto(

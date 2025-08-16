@@ -45,7 +45,8 @@ class MovieWithCategoriesMapperTest {
         popularity = 1500.0,
         rating = 8.5f,
         originCountry = "US",
-        movieLength = 120
+        movieLength = 120,
+        isAdult = false
     )
 
     private val movieWithCategories = MovieWithCategories(
