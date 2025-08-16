@@ -268,12 +268,12 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun setMovieRate(rate: Int, movieId: Long) {
         movieRemoteDataSource.setMovieRate(
-            rate = rate.toFloat(), movieId = movieId
+            rate = rate.toFloat() * 2, movieId = movieId
         )
     }
 
     override suspend fun getUserRatedMovies(): List<UserRatedMovie> {
-        return movieRemoteDataSource.getRatedMovies().results.toMovieUserRateEntityList()
+        return movieRemoteDataSource.getRatedMovies().results.toMovieUserRateEntityList().map { UserRatedMovie(it.movie, it.userRate * 2) }
     }
 
     override suspend fun deleteMovieRate(movieId: Long) {
@@ -286,7 +286,7 @@ class MovieRepositoryImpl @Inject constructor(
             .map { movieLocalDataSource.incrementGenreInterest(it.toLong()) }
     }
 
-    suspend fun cacheMovieCategoriesIfNotCached() {
+    private suspend fun cacheMovieCategoriesIfNotCached() {
         getMovieCategoriesFromLocal().takeIf { it.isNotEmpty() }
             ?: saveMovieCategoriesToDatabase(categoryRemoteDataSource.getMovieCategories())
     }

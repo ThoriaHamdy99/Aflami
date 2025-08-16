@@ -232,7 +232,9 @@
     <string name="search_error_unknown">حدث خطأ غير متوقع.</string>
     <string name="there_is_no_production_company">لا توجد شركة إنتاج!</string>
     <string name="there_is_no_seasons">يبدو أنه لم تصدر مواسم بعد</string>
+    <string name="added">مضاف</string>
     <string name="there_is_no_reviews">لا توجد مراجعات!</string>
+    <string name="there_are_no_lists">لا توجد قوائم، يمكنك إنشاء قائمة جديدة!</string>
     <string name="there_is_no_similar_content">لا يوجد محتوى مشابه!</string>
 
     <!-- - Home  -->
@@ -247,7 +249,6 @@
     <string name="video_launch_error">خطأ في تشغيل الفيديو</string>
 
     <!-- List -->
-    <string name="remove_from_list">حذف عنصر</string>
     <string name="no_saved_items_here">لا توجد عناصر محفوظة</string>
     <string name="no_items_here">لا توجد عناصر هنا</string>
     <string name="confirm_delete">هل أنت متأكد من مواصلة الحذف؟</string>
