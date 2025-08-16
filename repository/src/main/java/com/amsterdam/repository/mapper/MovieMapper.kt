@@ -16,7 +16,8 @@ fun MovieLocalDto.toEntity(): Movie {
         categories = emptyList(),
         popularity = popularity,
         runTimeInMinutes = movieLength,
-        originCountry = originCountry
+        originCountry = originCountry,
+        isAdult = isAdult
     )
 }
 
@@ -38,7 +39,8 @@ fun MovieItemRemoteDto.toEntity(
         popularity = popularity,
         originCountry = originCountry.firstOrNull() ?: "",
         runTimeInMinutes = runtime,
-        videoUrl = videoUrl
+        videoUrl = videoUrl,
+        isAdult = adult
     )
 }
 
@@ -59,7 +61,8 @@ fun MovieItemRemoteDto.toLocalDto(isPoster: Boolean = true, storedLanguage: Stri
         rating = voteAverage.toFloat(),
         popularity = popularity,
         movieLength = runtime,
-        originCountry = originCountry.firstOrNull() ?: ""
+        originCountry = originCountry.firstOrNull() ?: "",
+        isAdult = adult
     )
 }
 

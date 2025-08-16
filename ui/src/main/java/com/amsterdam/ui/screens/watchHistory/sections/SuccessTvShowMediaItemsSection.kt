@@ -45,6 +45,7 @@ fun SuccessTvShowMediaItemsSection(
                         contentScale = ContentScale.Crop, safetyLevel = safetyLevel,
                         onLoading = { ImageLoadingIndicator() },
                         onError = { ImageErrorIndicator() },
+                        isAdult = selectedItem.isAdult
                     )
                 },
                 movieType = stringResource(com.amsterdam.ui.R.string.tv),
