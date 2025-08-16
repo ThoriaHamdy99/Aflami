@@ -9,7 +9,7 @@ import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
 import com.amsterdam.domain.useCase.list.CreateNewListUseCase
-import com.amsterdam.domain.useCase.list.GetUserListsUseCase
+import com.amsterdam.domain.useCase.list.GetWishListsUseCase
 import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
@@ -31,7 +31,7 @@ class MovieDetailsViewModel @Inject constructor(
     args: MovieDetailsArgs,
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val addMovieToListUseCase: AddMovieToListUseCase,
-    private val getUserListsUseCase: GetUserListsUseCase,
+    private val getWishListsUseCase: GetWishListsUseCase,
     private val createListUseCase: CreateNewListUseCase,
     private val getsSessionType: GetsSessionType,
     private val setUserRatingUseCase: SetUserMovieRatingUseCase,
@@ -165,7 +165,7 @@ class MovieDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             runIfLoggedIn(
                 onLoggedIn = {
-                    val userList = getUserListsUseCase()
+                    val userList = getWishListsUseCase()
                     updateState {
                         it.copy(
                             isAddToListDialogVisible = true,
@@ -247,7 +247,7 @@ class MovieDetailsViewModel @Inject constructor(
         )
     }
 
-    override fun onSelectedListChange(selectedLists: List<UserListUiState>) {
+    override fun onSelectedListChange(selectedLists: List<WishListUiState>) {
         updateState { it.copy(selectedLists = selectedLists) }
     }
 

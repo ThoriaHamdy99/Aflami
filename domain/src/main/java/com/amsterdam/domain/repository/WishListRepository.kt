@@ -1,11 +1,11 @@
 package com.amsterdam.domain.repository
 
 import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
-import com.amsterdam.entity.UserList
+import com.amsterdam.entity.WishList
 
-interface UserListRepository {
+interface WishListRepository {
     suspend fun createNewList(listName: String): Int
-    suspend fun getUserLists(accountId: Int = 0, page: Int = 1, ): List<UserList>
+    suspend fun getWishLists(accountId: Int = 0, page: Int = 1, ): List<WishList>
     suspend fun deleteList(listId: Long)
 
     suspend fun addMovieToList(listId: Long, movieId: Long)

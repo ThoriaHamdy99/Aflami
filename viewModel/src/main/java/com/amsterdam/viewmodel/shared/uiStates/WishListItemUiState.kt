@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.shared.uiStates
 
-data class UserListItemUiState(
+data class WishListItemUiState(
     val id: Int,
     val name: String,
     val description: String,

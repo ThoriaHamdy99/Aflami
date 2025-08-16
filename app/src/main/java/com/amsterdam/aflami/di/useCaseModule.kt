@@ -8,7 +8,7 @@ import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.repository.ProfileRepository
 import com.amsterdam.domain.repository.RecentSearchRepository
 import com.amsterdam.domain.repository.TvShowRepository
-import com.amsterdam.domain.repository.UserListRepository
+import com.amsterdam.domain.repository.WishListRepository
 import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.viewmodel.utils.timer.TimerHandler
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
@@ -59,7 +59,7 @@ import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
 import com.amsterdam.domain.useCase.list.CreateNewListUseCase
 import com.amsterdam.domain.useCase.list.DeleteListUseCase
 import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
-import com.amsterdam.domain.useCase.list.GetUserListsUseCase
+import com.amsterdam.domain.useCase.list.GetWishListsUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.myRating.movie.DeleteUserRatedMovieUseCase
 import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase
@@ -74,6 +74,11 @@ import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
 import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
+import com.amsterdam.domain.useCase.game.AddPointsToGameUseCase
+import com.amsterdam.domain.useCase.game.AddSecondToGameTimeUseCase
+import com.amsterdam.domain.useCase.game.CreateGameSessionIdUseCase
+import com.amsterdam.domain.useCase.game.GetCollectedPointsUseCase
+import com.amsterdam.domain.useCase.game.GetSpentSecondsUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
@@ -215,13 +220,13 @@ object UseCaseModule {
 
     @Provides
     fun provideGetMoviesFromListUseCase(
-        userListRepository: UserListRepository,
-    ): GetListMediaItemsFromListUseCase = GetListMediaItemsFromListUseCase(userListRepository)
+        wishListRepository: WishListRepository,
+    ): GetListMediaItemsFromListUseCase = GetListMediaItemsFromListUseCase(wishListRepository)
 
     @Provides
     fun provideDeleteListUseCase(
-        userListRepository: UserListRepository,
-    ): DeleteListUseCase = DeleteListUseCase(userListRepository)
+        wishListRepository: WishListRepository,
+    ): DeleteListUseCase = DeleteListUseCase(wishListRepository)
 
     @Provides
     fun provideGetTopRatedTvShowsUseCase(tvShowRepository: TvShowRepository): GetTopRatedTvShowsUseCase =
@@ -233,8 +238,8 @@ object UseCaseModule {
 
     @Provides
     fun provideRemoveMovieFromListUseCase(
-        userListRepository: UserListRepository,
-    ): RemoveMovieFromListUseCase = RemoveMovieFromListUseCase(userListRepository)
+        wishListRepository: WishListRepository,
+    ): RemoveMovieFromListUseCase = RemoveMovieFromListUseCase(wishListRepository)
 
     @Provides
     fun provideGetHomeScreenDataUseCase(
@@ -278,17 +283,17 @@ object UseCaseModule {
 
     @Provides
     fun provideGetUserListsUseCase(
-        userListRepository: UserListRepository,
-    ): GetUserListsUseCase =
-        GetUserListsUseCase(userListRepository)
+        wishListRepository: WishListRepository,
+    ): GetWishListsUseCase =
+        GetWishListsUseCase(wishListRepository)
 
     @Provides
-    fun provideAddMovieToListUseCase(userListRepository: UserListRepository): AddMovieToListUseCase =
-        AddMovieToListUseCase(userListRepository)
+    fun provideAddMovieToListUseCase(wishListRepository: WishListRepository): AddMovieToListUseCase =
+        AddMovieToListUseCase(wishListRepository)
 
     @Provides
-    fun provideCreateNewListUseCase(userListRepository: UserListRepository): CreateNewListUseCase =
-        CreateNewListUseCase(userListRepository)
+    fun provideCreateNewListUseCase(wishListRepository: WishListRepository): CreateNewListUseCase =
+        CreateNewListUseCase(wishListRepository)
 
 
     @Provides
@@ -464,6 +469,30 @@ object UseCaseModule {
         updatePoints: UpdateUserGamePointsUseCase,
     ): DoGuessMovieByPosterHintUseCase =
         DoGuessMovieByPosterHintUseCase(getTotalUserPointsUseCase, updatePoints)
+
+    @Provides
+    fun provideCreateGameSessionIdUseCase() = CreateGameSessionIdUseCase()
+
+    @Provides
+    fun provideAddSecondToGameTimeUseCase(
+        gameRepository: GameRepository
+    ): AddSecondToGameTimeUseCase = AddSecondToGameTimeUseCase(gameRepository)
+
+    @Provides
+    fun provideGetSpentSecondsUseCase(
+        gameRepository: GameRepository
+    ): GetSpentSecondsUseCase = GetSpentSecondsUseCase(gameRepository)
+
+    @Provides
+    fun provideAddPointsToGameUseCase(
+        gameRepository: GameRepository
+    ): AddPointsToGameUseCase = AddPointsToGameUseCase(gameRepository)
+
+    @Provides
+    fun provideGetCollectedPointsUseCase(
+        gameRepository: GameRepository
+    ): GetCollectedPointsUseCase = GetCollectedPointsUseCase(gameRepository)
+
 }
 
 
