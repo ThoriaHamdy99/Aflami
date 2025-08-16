@@ -79,6 +79,7 @@ import com.amsterdam.domain.useCase.game.AddSecondToGameTimeUseCase
 import com.amsterdam.domain.useCase.game.CreateGameSessionIdUseCase
 import com.amsterdam.domain.useCase.game.GetCollectedPointsUseCase
 import com.amsterdam.domain.useCase.game.GetSpentSecondsUseCase
+import com.amsterdam.domain.useCase.list.CheckIsMovieInListUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
@@ -240,6 +241,11 @@ object UseCaseModule {
     fun provideRemoveMovieFromListUseCase(
         wishListRepository: WishListRepository,
     ): RemoveMovieFromListUseCase = RemoveMovieFromListUseCase(wishListRepository)
+
+    @Provides
+    fun provideCheckIsMovieInListUseCase(
+        wishListRepository: WishListRepository
+    ): CheckIsMovieInListUseCase = CheckIsMovieInListUseCase(wishListRepository)
 
     @Provides
     fun provideGetHomeScreenDataUseCase(

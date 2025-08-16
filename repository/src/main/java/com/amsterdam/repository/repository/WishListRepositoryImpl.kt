@@ -13,24 +13,34 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class WishListRepositoryImpl @Inject constructor(
-    private val userListDataSource: WishListRemoteDataSource,
+    private val wishListRemoteDataSource: WishListRemoteDataSource,
     private val preferences: AppPreferencesRepository,
 ) : WishListRepository {
 
     override suspend fun addMovieToList(listId: Long, movieId: Long) {
-        val response = userListDataSource.addMovieToList(listId, movieId)
+        val response = wishListRemoteDataSource.addMovieToList(listId, movieId)
         if (!response.success) throw UnknownException()
     }
 
     override suspend fun createNewList(listName: String): Int {
-        return userListDataSource.createNewList(
+        return wishListRemoteDataSource.createNewList(
             listName = listName,
             language = preferences.getAppLanguage().first(),
         ).listId
     }
 
-    override suspend fun getMoviesAndTvShowsFromList(listId: Long, page: Int): GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems {
-        val items = userListDataSource.getMoviesAndTvShowsFromList(listId, page).items
+    override suspend fun checkIsMovieInList(movieId: Long, listId: Long): Boolean {
+        return wishListRemoteDataSource.checkIsMovieInList(
+            movieId = movieId,
+            listId = listId
+        ).itemPresent
+    }
+
+    override suspend fun getMoviesAndTvShowsFromList(
+        listId: Long,
+        page: Int
+    ): GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems {
+        val items = wishListRemoteDataSource.getMoviesAndTvShowsFromList(listId, page).items
 
         val tvShows = items.filter { it.mediaType == "tv" }.map { it.toTvShowEntity() }
         val movies = items.filter { it.mediaType == "movie" }.map { it.toMovieEntity() }
@@ -41,14 +51,14 @@ class WishListRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun deleteList(listId: Long) = userListDataSource.deleteList(listId)
+    override suspend fun deleteList(listId: Long) = wishListRemoteDataSource.deleteList(listId)
 
     override suspend fun getWishLists(accountId: Int, page: Int): List<WishList> {
-        return userListDataSource.getWishLists(accountId, page).results
+        return wishListRemoteDataSource.getWishLists(accountId, page).results
             .map { it.toEntity() }
     }
 
     override suspend fun removeMovieFromList(listId: Long, movieId: Long) {
-        userListDataSource.deleteMovieFromList(listId, movieId)
+        wishListRemoteDataSource.deleteMovieFromList(listId, movieId)
     }
 }

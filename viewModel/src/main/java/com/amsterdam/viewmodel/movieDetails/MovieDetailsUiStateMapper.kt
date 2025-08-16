@@ -14,7 +14,7 @@ import com.amsterdam.viewmodel.shared.mappers.toFormattedRating
 import com.amsterdam.viewmodel.utils.movieLengthToHourMinuteString
 import com.amsterdam.viewmodel.utils.toFormattedString
 
-fun MovieDetails.toUiState(): MovieDetailsUiState {
+fun MovieDetails.toUiState(uiState: MovieDetailsUiState): MovieDetailsUiState {
     return MovieDetailsUiState(
         movieId = movie.id,
         rating = movie.rating.toFormattedRating(),
@@ -32,7 +32,21 @@ fun MovieDetails.toUiState(): MovieDetailsUiState {
         productionCompany = productionCompanies.toProductionMovieCompaniesUiState(),
         gallery = movieGallery,
         reviews = reviews.map(Review::toUiState),
-        rateDialogUiState = RateDialogUiState(selectedStarIndex = userRate)
+        rateDialogUiState = RateDialogUiState(selectedStarIndex = userRate),
+        isVideoLauncherFailed = uiState.isVideoLauncherFailed,
+        isLoading = uiState.isLoading,
+        networkError = uiState.networkError,
+        isLoginDialogVisible = uiState.isLoginDialogVisible,
+        dialogType = uiState.dialogType,
+        isDescriptionExpanded = uiState.isDescriptionExpanded,
+        isAddToListDialogVisible = uiState.isAddToListDialogVisible,
+        isCreateNewListDialogVisible = uiState.isCreateNewListDialogVisible,
+        userLists = uiState.userLists,
+        listName = uiState.listName,
+        isCreateListLoading = uiState.isCreateListLoading,
+        isAddMovieToListLoading = uiState.isAddMovieToListLoading,
+        isUserListsLoading = uiState.isUserListsLoading,
+        selectedLists = uiState.selectedLists,
     )
 }
 

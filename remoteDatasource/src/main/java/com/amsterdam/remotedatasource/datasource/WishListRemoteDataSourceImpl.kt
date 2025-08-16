@@ -5,6 +5,7 @@ import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.WishListRemoteDataSource
 import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListMovieItemStatusRemoteResponse
 import com.amsterdam.repository.dto.remote.WishListRemoteResponse
 import com.amsterdam.repository.dto.remote.WishListDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.authentication.AuthenticationRemoteResponse
@@ -43,6 +44,10 @@ class WishListRemoteDataSourceImpl @Inject constructor(
             val response = json.decodeFromString<AuthenticationRemoteResponse>(it)
             response.statusCode!!
         }
+    }
+
+    override suspend fun checkIsMovieInList(movieId: Long, listId: Long): WishListMovieItemStatusRemoteResponse {
+        return responseCall( execute = {wishListApiService.checkIsMovieInList(movieId = movieId, listId = listId)} )
     }
 
     override suspend fun deleteList(listId: Long) {

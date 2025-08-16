@@ -4,12 +4,12 @@ import com.amsterdam.entity.Movie
 import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.entity.category.TvShowGenre
-import com.amsterdam.repository.dto.remote.UserListItemRemoteDto
+import com.amsterdam.repository.dto.remote.WishListItemRemoteDto
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.Test
 
-class UserListItemMapperTest {
+class WishListItemMapperTest {
     @Test
     fun `toMovieEntity should map movie Dto with poster image`() {
         val result = movieDto.toMovieEntity()
@@ -52,7 +52,7 @@ class UserListItemMapperTest {
         assertThat(result).isEqualTo(expectedTvShowWithNulls)
     }
 
-    private val movieDto = UserListItemRemoteDto(
+    private val movieDto = WishListItemRemoteDto(
         id = 101L,
         title = "Test Movie",
         name = null,
@@ -69,7 +69,7 @@ class UserListItemMapperTest {
         adult = false
     )
 
-    private val tvShowDto = UserListItemRemoteDto(
+    private val tvShowDto = WishListItemRemoteDto(
         id = 201L,
         title = null,
         name = "Test TV Show",
@@ -86,7 +86,7 @@ class UserListItemMapperTest {
         adult = false
     )
 
-    private val dtoWithNulls = UserListItemRemoteDto(
+    private val dtoWithNulls = WishListItemRemoteDto(
         id = 301L,
         title = null,
         name = null,

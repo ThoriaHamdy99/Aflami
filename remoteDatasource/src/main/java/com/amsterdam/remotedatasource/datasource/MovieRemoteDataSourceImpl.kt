@@ -25,8 +25,8 @@ class MovieRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getActorIdsByName(name: String, page: Int): List<Int> {
         return responseCall(execute = { movieApiService.getActorIdByName(name, page) })
-            .actors
-            .map { it.id }
+                .actors
+                .map { it.id }
     }
 
     override suspend fun getMoviesByCountryIsoCode(
@@ -98,47 +98,49 @@ class MovieRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getRandomMoviesWithReleaseDate(requiredMoviesNumber: Int): List<MovieItemRemoteDto> {
-        val totalPages = 500
-        val collectedMovies = mutableListOf<MovieItemRemoteDto>()
-        val usedPages = mutableSetOf<Int>()
-
-        while (collectedMovies.size < requiredMoviesNumber && usedPages.size < totalPages) {
-            val randomPage = (1..totalPages).random().also { usedPages.add(it) }
-            val pageMovies = getPopularMoviesByPage(randomPage)
-                .filter { it.releaseDate != null }
-
-            for (movie in pageMovies) {
-                if (!collectedMovies.contains(movie)) {
-                    collectedMovies.add(movie)
-                    if (collectedMovies.size == requiredMoviesNumber) break
-                }
-            }
-        }
-
-        return collectedMovies
+        return getRandomMovies(
+            onFilter = ::onFilterHighQualityReleaseDate,
+            requiredMoviesNumber = requiredMoviesNumber
+        )
     }
 
     override suspend fun getRandomMoviesWithPoster(requiredMoviesNumber: Int): List<MovieItemRemoteDto> {
+        return getRandomMovies(
+            onFilter = ::onFilterHighQualityPoster,
+            requiredMoviesNumber = requiredMoviesNumber
+        )
+    }
+
+    private suspend fun getRandomMovies(
+        onFilter: (MovieItemRemoteDto) -> Boolean,
+        requiredMoviesNumber: Int
+    ): List<MovieItemRemoteDto> {
         val totalPages = 500
-        val collectedMovies = mutableListOf<MovieItemRemoteDto>()
-        val usedPages = mutableSetOf<Int>()
 
-        while (collectedMovies.size < requiredMoviesNumber && usedPages.size < totalPages) {
-            val randomPage = (1..totalPages).random().also { usedPages.add(it) }
-            val pageMovies = getPopularMoviesByPage(randomPage)
-                .filter { it.posterPath != null }
-
-            for (movie in pageMovies) {
-                if (!collectedMovies.contains(movie)) {
-                    collectedMovies.add(movie)
-                    if (collectedMovies.size == requiredMoviesNumber) break
+        return (FIRST_PAGE..totalPages)
+                .shuffled()
+                .fold(emptyList()) { accumulatedMovies, page ->
+                    accumulatedMovies.takeIf { it.size >= requiredMoviesNumber }
+                    ?: getPopularMoviesByPage(page)
+                            .filter { movieDto -> onFilter(movieDto) }
+                            .shuffled()
+                            .distinctBy(MovieItemRemoteDto::id)
+                            .plus(accumulatedMovies)
+                            .take(requiredMoviesNumber)
                 }
-            }
-        }
-        return collectedMovies
     }
 
     private suspend fun getPopularMoviesByPage(page: Int): List<MovieItemRemoteDto> {
         return getPopularMovies(page = page).results
+    }
+
+    private fun onFilterHighQualityReleaseDate(movieDto: MovieItemRemoteDto) =
+        movieDto.releaseDate != null
+
+    private fun onFilterHighQualityPoster(movieDto: MovieItemRemoteDto) =
+        movieDto.posterPath != null
+
+    private companion object {
+        private const val FIRST_PAGE = 1
     }
 }

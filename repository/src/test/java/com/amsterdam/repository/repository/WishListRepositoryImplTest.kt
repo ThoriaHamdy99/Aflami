@@ -8,6 +8,7 @@ import com.amsterdam.entity.WishList
 import com.amsterdam.repository.datasource.remote.WishListRemoteDataSource
 import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListMovieItemStatusRemoteResponse
 import com.amsterdam.repository.dto.remote.WishListRemoteDto
 import com.amsterdam.repository.dto.remote.WishListRemoteResponse
 import com.amsterdam.repository.mapper.toMovieEntity
@@ -72,8 +73,27 @@ class WishListRepositoryImplTest {
             coVerify { wishListRemoteDataSource.createNewList(listName, language) }
         }
 
+
     @Test
-    fun `should call deleteList from userListRemoteSource when session id is not empty`() =
+    fun `checkIsMovieInList should return true when service returns true`() = runTest {
+        coEvery { wishListRemoteDataSource.checkIsMovieInList(movieId, listId) } returns movieInListResponse
+
+        val result = wishListRepository.checkIsMovieInList(movieId, listId)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `checkIsMovieInList should return false when service returns false`() = runTest {
+        coEvery { wishListRemoteDataSource.checkIsMovieInList(movieId, listId) } returns movieNotInListResponse
+
+        val result = wishListRepository.checkIsMovieInList(movieId, listId)
+
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `deleteList should call deleteList from userListRemoteSource when session id is not empty`() =
         runTest {
             coEvery { wishListRemoteDataSource.deleteList(listId) } returns Unit
 
@@ -83,7 +103,7 @@ class WishListRepositoryImplTest {
         }
 
     @Test
-    fun `should throw NoInternetException when deleteList failed`() = runTest {
+    fun `deleteList should throw NoInternetException when deleteList failed`() = runTest {
         coEvery { wishListRemoteDataSource.deleteList(listId) } throws NoInternetException()
 
         assertThrows<NoInternetException> { wishListRepository.deleteList(listId) }
@@ -100,7 +120,7 @@ class WishListRepositoryImplTest {
         }
 
     @Test
-    fun `should call removeMovieFromList from listRemoteSource when session id is not empty`() =
+    fun `deleteList should call removeMovieFromList from listRemoteSource when session id is not empty`() =
         runTest {
             coEvery { wishListRemoteDataSource.deleteList(listId) } returns Unit
 
@@ -110,7 +130,7 @@ class WishListRepositoryImplTest {
         }
 
     @Test
-    fun `should return list of movies when response return with results`() = runTest {
+    fun `getMoviesAndTvShowsFromList should return list of movies when response return with results`() = runTest {
         val response = remoteListResponse.copy(items = listItems)
         coEvery { wishListRemoteDataSource.getMoviesAndTvShowsFromList(listId, 1) } returns response
 
@@ -120,7 +140,7 @@ class WishListRepositoryImplTest {
     }
 
     @Test
-    fun `should return empty list of movies when response returns empty list with`() = runTest {
+    fun `getMoviesAndTvShowsFromList should return empty list of movies when response returns empty list with`() = runTest {
         coEvery {
             wishListRemoteDataSource.getMoviesAndTvShowsFromList(
                 listId,
@@ -147,7 +167,7 @@ class WishListRepositoryImplTest {
     private val movieId = 456L
     private val listName = "New List"
     private val language = "en"
-    val accountId = 1
+    private val accountId = 1
 
     private val expectedWishList = listOf(
         WishList(
@@ -172,7 +192,18 @@ class WishListRepositoryImplTest {
         totalResults = 1
     )
 
+    private val movieInListResponse = WishListMovieItemStatusRemoteResponse(
+        id = listId.toString(),
+        itemPresent = true
+    )
+
+    private val movieNotInListResponse = WishListMovieItemStatusRemoteResponse(
+        id = listId.toString(),
+        itemPresent = false
+    )
+
+
     private val page = 1
 
-    val fakeUserListResponse = CreateUserListRemoteResponse(1, 1, "", true)
+    private val fakeUserListResponse = CreateUserListRemoteResponse(1, 1, "", true)
 }
