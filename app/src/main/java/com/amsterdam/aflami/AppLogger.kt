@@ -2,6 +2,7 @@ package com.amsterdam.aflami
 
 import android.util.Log
 import com.amsterdam.domain.logger.Logger
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 class AppLogger(
     private val tag: String,
@@ -31,6 +32,15 @@ class AppLogger(
 
     override fun error(message: String, throwable: Throwable?) {
         log(Log.ERROR, "🔥", message, throwable)
+        recordTheProblemInFirebaseCrashlytics(throwable, message)
+    }
+
+    private fun recordTheProblemInFirebaseCrashlytics(throwable: Throwable?, message: String) {
+        if (throwable != null) {
+            val crashlytics = FirebaseCrashlytics.getInstance()
+            crashlytics.log(message)
+            crashlytics.recordException(throwable)
+        }
     }
 
     private fun getDetailedSourceInfo(): String {
