@@ -9,7 +9,7 @@ import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.api.PeopleApiService
 import com.amsterdam.remotedatasource.api.ProfileApiService
 import com.amsterdam.remotedatasource.api.TvShowsApiService
-import com.amsterdam.remotedatasource.api.UserListApiService
+import com.amsterdam.remotedatasource.api.WishListApiService
 import com.amsterdam.remotedatasource.utils.RequiresSessionId
 import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
 import com.amsterdam.repository.security.CryptoManager
@@ -97,7 +97,7 @@ class RetrofitClient(
     fun categoryApiService(): CategoryApiService = retrofit.create(CategoryApiService::class.java)
     fun countryApiService(): CountryApiService = retrofit.create(CountryApiService::class.java)
     fun tvApiService(): TvShowsApiService = retrofit.create(TvShowsApiService::class.java)
-    fun userListApiService(): UserListApiService = retrofit.create(UserListApiService::class.java)
+    fun userListApiService(): WishListApiService = retrofit.create(WishListApiService::class.java)
     fun profileApiService(): ProfileApiService = retrofit.create(ProfileApiService::class.java)
 
     fun peopleApiService(): PeopleApiService = retrofit.create(PeopleApiService::class.java)

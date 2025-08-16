@@ -3,7 +3,7 @@ package com.amsterdam.viewmodel.guessReleseDateGame
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
-import com.amsterdam.domain.timer.TimerHandler
+import com.amsterdam.viewmodel.utils.timer.TimerHandler
 import com.amsterdam.domain.useCase.game.AddPointsToGameUseCase
 import com.amsterdam.domain.useCase.game.AddSecondToGameTimeUseCase
 import com.amsterdam.domain.useCase.game.CreateGameSessionIdUseCase

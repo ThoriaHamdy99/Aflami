@@ -1,4 +1,4 @@
-package com.amsterdam.domain.timer
+package com.amsterdam.viewmodel.utils.timer
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -8,11 +8,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlin.math.max
 
 class TimerHandler(
     dispatcher: CoroutineDispatcher = Dispatchers.Default,
-    private val nowMillis: () -> Long = { System.currentTimeMillis() }
+    private val nowMillis: () -> Long = { Clock.System.now().toEpochMilliseconds()}
 ) {
 
     private val job = Job()

@@ -1,6 +1,6 @@
 package com.amsterdam.entity
 
-data class People(
+data class Character(
     val id: Long,
     val name: String,
     val imageUrl: String,
