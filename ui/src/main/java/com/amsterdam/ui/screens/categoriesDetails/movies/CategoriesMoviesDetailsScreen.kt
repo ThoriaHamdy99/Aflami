@@ -2,7 +2,6 @@ package com.amsterdam.ui.screens.categoriesDetails.movies
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -133,58 +132,29 @@ private fun CategoriesMoviesDetailsContent(
                     )
                 }
 
+            }
+            when {
+                state.isLoading -> {
+                    CenterOfScreenContainer(
+                        unneededSpace = 0.dp
+                    ) {
+                        AnimatedVisibility(visible = state.isLoading) {
+                            LoadingIndicator()
+                        }
+                    }
                 }
-                when {
-                    state.isLoading -> {
-                        CenterOfScreenContainer(
-                            unneededSpace = 0.dp
-                        ) {
-                            AnimatedVisibility(visible = state.isLoading) {
-                                LoadingIndicator()
-                            }
-                        }
-                    }
-                    errorState is ErrorUiState.NoInternetError -> {
-                        CenterOfScreenContainer(unneededSpace = 0.dp) {
-                            NoNetworkContainer(onClickRetry = interaction::onClickRetryRequest )
-                        }
-                    }
 
-                    else -> {
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(movies.itemCount) { index ->
-                                val movie = movies[index] ?: return@items
-                                MediaCard(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    movieImage = {
-                                        SafeImageView(
-                                            model = movie.posterImageUrl,
-                                            contentDescription = movie.name,
-                                            contentScale = ContentScale.Crop,
-                                            modifier = Modifier.fillMaxWidth(),
-                                            onLoading = {
-                                                ImageLoadingIndicator()
-                                            },
-                                            onError = {
-                                                ImageErrorIndicator()
-                                            },
-                                        )
-                                    },
-                                    movieTitle = movie.name,
-                                    movieType = stringResource(R.string.movie),
-                                    movieYear = movie.yearOfRelease,
-                                    movieRating = movie.rate,
-                                    onClick = { interaction.onClickMovieCard(movie.id) }
-                                )
-                            }
+                errorState is ErrorUiState.NoInternetError -> {
+                    CenterOfScreenContainer(unneededSpace = 0.dp) {
+                        NoNetworkContainer(onClickRetry = interaction::onClickRetryRequest)
+                    }
+                }
+
                 else -> {
                     LazyColumn(
-                        modifier = Modifier.fillMaxHeight(),
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(movies.itemCount) { index ->
@@ -203,7 +173,6 @@ private fun CategoriesMoviesDetailsContent(
                                         onError = {
                                             ImageErrorIndicator()
                                         },
-                                        isAdult = movie.isAdult
                                     )
                                 },
                                 movieTitle = movie.name,
@@ -212,7 +181,6 @@ private fun CategoriesMoviesDetailsContent(
                                 movieRating = movie.rate,
                                 onClick = { interaction.onClickMovieCard(movie.id) }
                             )
-
                         }
                     }
                 }
