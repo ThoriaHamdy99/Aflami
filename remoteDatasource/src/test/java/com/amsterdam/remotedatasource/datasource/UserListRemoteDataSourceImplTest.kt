@@ -2,10 +2,13 @@ package com.amsterdam.remotedatasource.datasource
 
 import com.amsterdam.domain.exceptions.InvalidCredentialsException
 import com.amsterdam.domain.exceptions.NetworkException
+import com.amsterdam.domain.exceptions.NoInternetException
+import com.amsterdam.domain.exceptions.ServerErrorException
 import com.amsterdam.remotedatasource.api.UserListApiService
 import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.UserListMovieItemStatusRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListRemoteResponse
 import com.amsterdam.repository.dto.remote.authentication.AuthenticationRemoteResponse
 import com.google.common.truth.Truth.assertThat
@@ -13,6 +16,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -20,6 +24,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
+import java.net.ConnectException
 
 class UserListRemoteDataSourceImplTest {
 
@@ -237,6 +243,60 @@ class UserListRemoteDataSourceImplTest {
         }
 
     @Test
+    fun `checkIsMovieInList should return true when API returns true`() = runTest {
+        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } returns movieInListResponse
+
+        val result = userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+
+        assertThat(result.itemPresent).isTrue()
+    }
+
+    @Test
+    fun `checkIsMovieInList should return false when API returns false`() = runTest {
+        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } returns movieNotInListResponse
+
+        val result = userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+
+        assertThat(result.itemPresent).isFalse()
+    }
+
+    @Test
+    fun `checkIsMovieInList should throw ServerErrorException when API service throws HttpException`() = runTest {
+        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } throws createHttpException(404, "")
+
+        assertThrows<ServerErrorException> {
+            userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+        }
+    }
+
+    @Test
+    fun `checkIsMovieInList should throw NoInternetException when API service throws ConnectException`() = runTest {
+        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } throws ConnectException()
+
+        assertThrows<NoInternetException> {
+            userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+        }
+    }
+
+    @Test
+    fun `checkIsMovieInList should throw ServerErrorException when API service throws SerializationException`() = runTest {
+        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } throws SerializationException()
+
+        assertThrows<ServerErrorException> {
+            userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+        }
+    }
+
+    @Test
+    fun `checkIsMovieInList should throw NetworkException when API service throws IOException`() = runTest {
+        coEvery { userListApiService.checkIsMovieInList(listId, movieId) } throws IOException()
+
+        assertThrows<NetworkException> {
+            userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+        }
+    }
+
+    @Test
     fun `deleteList should call the API service exactly once to delete the list`() = runTest {
         coEvery { userListApiService.deleteList(any()) } returns Unit
 
@@ -345,6 +405,16 @@ class UserListRemoteDataSourceImplTest {
         statusCode = 1,
         statusMessage = "success",
         success = true
+    )
+
+    private val movieInListResponse = UserListMovieItemStatusRemoteResponse(
+        id = listId.toString(),
+        itemPresent = true
+    )
+
+    private val movieNotInListResponse = UserListMovieItemStatusRemoteResponse(
+        id = listId.toString(),
+        itemPresent = false
     )
 
     private val networkException = NetworkException()
