@@ -20,9 +20,9 @@ import com.amsterdam.viewmodel.utils.toFormattedString
 import com.amsterdam.viewmodel.utils.toShortMonthString
 import kotlin.collections.map
 
-fun List<Episode>.toUiState() = map(Episode::toUiState)
+fun List<Episode>.toUiState(currentLanguage: String) = map { it.toUiState(currentLanguage) }
 
-fun TvShowDetails.toUiState(): SeriesDetailsUiState {
+fun TvShowDetails.toUiState(currentLanguage: String): SeriesDetailsUiState {
     return SeriesDetailsUiState(
         videoUrl = tvShow.videoUrl,
         tvShowId = tvShow.id,
@@ -38,13 +38,14 @@ fun TvShowDetails.toUiState(): SeriesDetailsUiState {
         isRateDialogVisible = false,
         isAddToListDialogVisible = false,
         extraItem = SeriesDetailsUiState.defaultSeriesExtrasItems,
-        seasons = seasons.toSeasonUiState(),
+        seasons = seasons.toSeasonUiState(currentLanguage = currentLanguage),
         similarSeries = similarTvShows.toSimilarTvShowUiStates(),
         reviews = reviews.toReviewTvShowUiStates(),
         gallery = gallery,
         postersUrls = posters,
         productionCompanies = productionsCompanies.toProductionTvShowCompanyUiStates(),
-        rateDialogUiState = RateDialogUiState(selectedStarIndex = userRate)
+        rateDialogUiState = RateDialogUiState(selectedStarIndex = userRate),
+        currentLanguage = currentLanguage
     )
 }
 
@@ -74,22 +75,22 @@ private fun TvShow.toSimilarTvShowUiState(): SimilarTvShowUiState {
 
 
 private fun List<Season>.toSeasonUiState(
-    episodesBySeason: Map<Int, List<Episode>> = emptyMap()
+    episodesBySeason: Map<Int, List<Episode>> = emptyMap(), currentLanguage: String
 ): List<SeasonUiState> {
-    return map { it.toUiState(episodesBySeason[it.seasonNumber].orEmpty()) }
+    return map { it.toUiState(episodesBySeason[it.seasonNumber].orEmpty(), currentLanguage) }
 }
 
-private fun Season.toUiState(episodes: List<Episode>): SeasonUiState {
+private fun Season.toUiState(episodes: List<Episode>, currentLanguage: String): SeasonUiState {
     return SeasonUiState(
         id = id,
         seasonNumber = seasonNumber,
         title = title,
         episodeCount = episodeCount,
-        episodes = episodes.map(Episode::toUiState)
+        episodes = episodes.map { it.toUiState(currentLanguage) }
     )
 }
 
-private fun Episode.toUiState(): EpisodeUiState {
+private fun Episode.toUiState(currentLanguage: String): EpisodeUiState {
     return EpisodeUiState(
         id = id,
         number = episodeNumber,
@@ -99,7 +100,7 @@ private fun Episode.toUiState(): EpisodeUiState {
         imageNumber = episodeNumber,
         description = description,
         duration = runTimeInMinutes.toDurationUiState(),
-        airDate = airDate.toShortMonthString()
+        airDate = airDate.toShortMonthString(language = currentLanguage)
     )
 }
 

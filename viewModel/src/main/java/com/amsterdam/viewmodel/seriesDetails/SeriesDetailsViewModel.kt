@@ -45,7 +45,8 @@ class SeriesDetailsViewModel @Inject constructor(
         updateState { it.copy(tvShowId = tvShowId, isLoading = true) }
 
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach {
+            .onEach { language ->
+                updateState { it.copy(currentLanguage = language.value) }
                 loadTvShowDetails()
             }.launchIn(viewModelScope)
     }
@@ -64,7 +65,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     private fun onGetTvShowDetailsSuccess(tvShowDetails: TvShowDetails) {
-        updateState { tvShowDetails.toUiState() }
+        updateState { tvShowDetails.toUiState(state.value.currentLanguage) }
     }
 
     override fun onClickSeriesExtraItem(seriesExtras: SeriesExtras) {
@@ -186,7 +187,7 @@ class SeriesDetailsViewModel @Inject constructor(
         }
         val updatedSeasons = state.value.seasons.map {
             if (it.seasonNumber == seasonNumber) {
-                it.copy(episodes = episodes.toUiState(), isExpanded = true)
+                it.copy(episodes = episodes.toUiState(currentLanguage = state.value.currentLanguage), isExpanded = true)
             } else {
                 it
             }

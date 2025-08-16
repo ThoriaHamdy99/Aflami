@@ -1,6 +1,9 @@
 package com.amsterdam.viewmodel.utils
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toJavaLocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun LocalDate?.toFormattedString(): String {
     return this?.let { date ->
@@ -10,22 +13,21 @@ fun LocalDate?.toFormattedString(): String {
         "$day-$month-$year"
     } ?: ""
 }
+
 fun LocalDate?.toYearString(): String {
     return this?.year?.toString() ?: ""
 }
+
 fun movieLengthToHourMinuteString(movieLength: Int): String {
     val hours = movieLength / 60
     val minutes = movieLength % 60
     return "${hours}h ${minutes}m"
 }
 
-fun LocalDate?.toShortMonthString(): String {
+fun LocalDate?.toShortMonthString(language: String): String {
     return this?.let {
-        val dayOfMonth = this.dayOfMonth
-        val month = this.month.name.lowercase().replaceFirstChar { it.uppercase() }.substring(0, 3)
-        val year = this.year
-
-        "$dayOfMonth $month $year"
+        val formatter = DateTimeFormatter.ofPattern("d MMM yyyy", Locale(language))
+        it.toJavaLocalDate().format(formatter)
     } ?: ""
 
 
