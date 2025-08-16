@@ -499,7 +499,7 @@ fun MovieContent(
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .statusBarsPadding()
                     .zIndex(10f),
-                firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
+                firstOption = if (state.isLoading) null else painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
                 lastOption = if (state.isUserListsLoading) null else painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_add_to_favourite),
                 onNavigateBackClicked = movieDetailsInteractionListener::onClickBack,
                 onFirstOptionClicked = movieDetailsInteractionListener::onClickRate,

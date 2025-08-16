@@ -68,7 +68,7 @@ class MovieDetailsViewModel @Inject constructor(
     private fun loadUserLists() {
         tryToExecute(
             action = ::getUserLists,
-            onSuccess =  { onGetUserListsSuccess() }
+            onCompletion = ::onGetUserListsComplete
         )
     }
 
@@ -79,20 +79,22 @@ class MovieDetailsViewModel @Inject constructor(
                 val userLists = list
                     .map { lists ->
                         lists.copy(
-                            isMovieInList = checkIsMovieInListUseCase(movieId = state.value.movieId, listId = lists.id)
+                            isMovieInList = checkIsMovieInListUseCase(
+                                movieId = state.value.movieId,
+                                listId = lists.id
+                            )
                         )
                     }
                 updateState {
                     it.copy(
                         userLists = userLists,
-                        isUserListsLoading = false
                     )
                 }
             },
         )
     }
 
-    private fun onGetUserListsSuccess() {
+    private fun onGetUserListsComplete() {
         updateState {
             it.copy(
                 isUserListsLoading = false

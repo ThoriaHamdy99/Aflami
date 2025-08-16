@@ -34,6 +34,7 @@ import com.amsterdam.designsystem.components.buttons.OutlinedButton
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.R
+import com.amsterdam.ui.components.EmptyStateText
 import com.amsterdam.viewmodel.movieDetails.UserListUiState
 
 @Composable
@@ -59,26 +60,30 @@ fun AddToListDialog(
             DialogHeaderSection(
                 onDismiss = onDismiss,
             )
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(userLists) { userList ->
-                    SelectionListItem(
-                        listName = userList.name,
-                        itemCount = userList.itemCount,
-                        isSelected = selectedLists.contains(userList),
-                        isItemInList = userList.isMovieInList,
-                        onSelectItem = {
-                            val updatedSelection = if (selectedLists.contains(userList)) {
-                                selectedLists - userList
-                            } else {
-                                selectedLists + userList
-                            }
-                            onSelectedListChange(updatedSelection)
-                        },
-                    )
+            if (userLists.isNotEmpty()) {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    items(userLists) { userList ->
+                        SelectionListItem(
+                            listName = userList.name,
+                            itemCount = userList.itemCount,
+                            isSelected = selectedLists.contains(userList),
+                            isItemInList = userList.isMovieInList,
+                            onSelectItem = {
+                                val updatedSelection = if (selectedLists.contains(userList)) {
+                                    selectedLists - userList
+                                } else {
+                                    selectedLists + userList
+                                }
+                                onSelectedListChange(updatedSelection)
+                            },
+                        )
+                    }
                 }
+            } else {
+                EmptyStateText(stringResource(R.string.there_are_no_lists))
             }
             ActionButtonsSection(
                 selectedList = selectedLists,

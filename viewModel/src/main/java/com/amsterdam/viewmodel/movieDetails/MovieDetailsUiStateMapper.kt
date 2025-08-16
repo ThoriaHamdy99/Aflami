@@ -45,6 +45,7 @@ fun MovieDetails.toUiState(uiState: MovieDetailsUiState): MovieDetailsUiState {
         listName = uiState.listName,
         isCreateListLoading = uiState.isCreateListLoading,
         isAddMovieToListLoading = uiState.isAddMovieToListLoading,
+        isUserListsLoading = uiState.isUserListsLoading,
         selectedLists = uiState.selectedLists,
     )
 }
