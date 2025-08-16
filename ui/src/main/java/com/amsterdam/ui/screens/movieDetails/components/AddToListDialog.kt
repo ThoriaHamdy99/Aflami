@@ -1,4 +1,4 @@
-package com.amsterdam.ui.components.movieAndTvShowDetails
+package com.amsterdam.ui.screens.movieDetails.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,10 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,6 +46,7 @@ fun AddToListDialog(
 ) {
     Dialog(
         onDismiss = onDismiss,
+        scrollable = false,
         modifier = modifier,
     ) {
         Column(
@@ -63,8 +61,6 @@ fun AddToListDialog(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .height(320.dp)
-                        .nestedScroll(rememberNestedScrollInteropConnection()),
             ) {
                 items(userLists) { userList ->
                     SelectionListItem(
@@ -127,11 +123,9 @@ private fun SelectionListItem(
                 color = AppTheme.color.body,
             )
 
-            val context = LocalContext.current
-            val itemCount =
-                context.resources.getQuantityString(R.plurals.item_count, itemCount, itemCount)
+            val listItemCount = pluralStringResource(R.plurals.item_count, itemCount, itemCount)
             Text(
-                text = itemCount,
+                text = listItemCount,
                 style = AppTheme.textStyle.label.small,
                 color = AppTheme.color.hint,
             )
