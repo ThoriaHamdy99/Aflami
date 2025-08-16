@@ -58,7 +58,6 @@ import com.amsterdam.viewmodel.lists.WishListsViewModel
 import com.amsterdam.viewmodel.shared.uiStates.WishListItemUiState
 import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState.NoInternetError
-import com.amsterdam.viewmodel.shared.uiStates.UserListItemUiState
 
 @Composable
 fun ListsScreen(

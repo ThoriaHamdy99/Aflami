@@ -57,7 +57,8 @@ class TopRatedViewModel @Inject constructor(
                 ).flow
                     .cachedIn(viewModelScope)
             },
-            onSuccess = ::onGetTopRatedMoviesSuccess
+            onSuccess = ::onGetTopRatedMoviesSuccess,
+            onCompletion = ::onGetTopRatedMoviesCompletion
         )
     }
 
@@ -101,6 +102,5 @@ class TopRatedViewModel @Inject constructor(
         sendNewNavigationEffect(TopRatedEffect.NavigateBack)
     }
 
-    private fun showLoadingState() = updateState { it.copy(isLoading = true, error = null) }
-    private fun onCompletion() = updateState { it.copy(isLoading = false, error = null) }
+    private fun showLoadingState() = updateState { it.copy(isLoading = true) }
 }

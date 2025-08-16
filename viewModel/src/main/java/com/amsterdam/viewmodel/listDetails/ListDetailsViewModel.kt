@@ -13,7 +13,6 @@ import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.paging.PagingSource
-import com.amsterdam.viewmodel.listDetails.ListDetailsUiState.ListDetailsError
 import com.amsterdam.viewmodel.listDetails.ListDetailsUiState.ListDetailsItemsUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
