@@ -406,7 +406,7 @@ class MovieRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getRandomMoviesWithNotNullDate should return the required number of movies, handling null dates and duplicates, and call the API at least twice`() =
+    fun `getRandomMoviesWithReleaseDate should return the required number of movies, handling null dates and duplicates, and call the API at least twice`() =
         runTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithoutDateResponse andThen moviesWithDateResponse
 
@@ -419,7 +419,7 @@ class MovieRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getRandomMoviesWithNotNullDate should break the loop and call the API exactly once when enough movies are collected`() =
+    fun `getRandomMoviesWithReleaseDate should break the loop and call the API exactly once when enough movies are collected`() =
         runTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithDateResponse
 
@@ -431,7 +431,7 @@ class MovieRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getRandomMoviesWithNotNullDate should handle duplicates correctly`() = runTest {
+    fun `getRandomMoviesWithReleaseDate should handle duplicates correctly`() = runTest {
         coEvery { movieApiService.getPopularMovies(any()) } returns responseWithDuplicates
 
         val result = movieRemoteDataSourceImpl.getRandomMoviesWithReleaseDate(2)
@@ -440,7 +440,7 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `getRandomMoviesWithNotNullPoster should return the required number of movies, handling null posters, and call the API at least twice`() =
+    fun `getRandomMoviesWithPoster should return the required number of movies, handling null posters, and call the API at least twice`() =
         runTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithoutPosterResponse andThen moviesWithPosterResponse
 
@@ -452,7 +452,7 @@ class MovieRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getRandomMoviesWithNotNullPoster should break the loop and call the API exactly once when enough movies are collected`() =
+    fun `getRandomMoviesWithPoster should break the loop and call the API exactly once when enough movies are collected`() =
         runTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithPosterResponse
 
@@ -464,7 +464,7 @@ class MovieRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getRandomMoviesWithNotNullPoster should handle duplicates correctly`() = runTest {
+    fun `getRandomMoviesWithPoster should handle duplicates correctly`() = runTest {
         coEvery { movieApiService.getPopularMovies(any()) } returns responseWithDuplicates
 
         val result =
