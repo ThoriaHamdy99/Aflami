@@ -76,6 +76,7 @@ import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
 import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.AddPointsToGameUseCase
 import com.amsterdam.domain.useCase.game.AddSecondToGameTimeUseCase
+import com.amsterdam.domain.useCase.game.EvaluateWinConditionUseCase
 import com.amsterdam.domain.useCase.game.CreateGameSessionIdUseCase
 import com.amsterdam.domain.useCase.game.GetCollectedPointsUseCase
 import com.amsterdam.domain.useCase.game.GetSpentSecondsUseCase
@@ -493,6 +494,10 @@ object UseCaseModule {
         gameRepository: GameRepository
     ): GetCollectedPointsUseCase = GetCollectedPointsUseCase(gameRepository)
 
+    @Provides
+    fun provideEvaluateWinConditionUseCase(
+        gameRepository: GameRepository
+    ): EvaluateWinConditionUseCase = EvaluateWinConditionUseCase(gameRepository)
 }
 
 

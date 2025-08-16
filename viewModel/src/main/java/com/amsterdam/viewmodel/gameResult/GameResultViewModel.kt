@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.gameResult
 
+import com.amsterdam.domain.useCase.game.EvaluateWinConditionUseCase
 import com.amsterdam.domain.useCase.game.GetCollectedPointsUseCase
 import com.amsterdam.domain.useCase.game.GetSpentSecondsUseCase
 import com.amsterdam.entity.Game.GameType
@@ -11,6 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameResultViewModel @Inject constructor(
+    checkGameWinUseCase: EvaluateWinConditionUseCase,
     getCollectedPointsUseCase: GetCollectedPointsUseCase,
     getSpentSecondsUseCase: GetSpentSecondsUseCase,
     gameResultArgs: GameResultArgs,
@@ -28,7 +30,8 @@ class GameResultViewModel @Inject constructor(
         updateState {
             it.copy(
                 points = getCollectedPointsUseCase(gameSessionId),
-                timeInSeconds = getSpentSecondsUseCase(gameSessionId)
+                timeInSeconds = getSpentSecondsUseCase(gameSessionId),
+                isVictory = checkGameWinUseCase(gameSessionId)
             )
         }
     }
