@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface GameRepository {
-    suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<Movie>
+    suspend fun getRandomMoviesWithReleaseDate(requiredMoviesNumber: Int): List<Movie>
     suspend fun getRandomMoviesWithPoster(requiredMoviesNumber: Int): List<Movie>
     suspend fun updatePoints(points: Int)
     fun getUserPoints(): Flow<Int>
