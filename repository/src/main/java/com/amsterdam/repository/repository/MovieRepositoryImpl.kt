@@ -7,7 +7,7 @@ import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.repository.datasource.local.AppPreferences
+import com.amsterdam.repository.datasource.local.AppLocalPreferences
 import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
 import com.amsterdam.repository.datasource.local.MovieLocalDataSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteDataSource
@@ -40,7 +40,7 @@ class MovieRepositoryImpl @Inject constructor(
     private val movieLocalDataSource: MovieLocalDataSource,
     private val categoryRemoteDataSource: CategoryRemoteDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
-    private val preferences: AppPreferences,
+    private val preferences: AppLocalPreferences,
 ) : MovieRepository {
     override suspend fun getMoviesByKeyword(
         keyword: String,
@@ -103,14 +103,15 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getTopRatedMovies(
         page: Int,
     ): List<Movie> {
-        return getCachedOrRemoteData<MovieLocalDto, MovieItemRemoteDto, Movie>(
-            deleteExpired = ::deleteExpiredTopRatedMovies,
-            getFromLocal = ::getTopRatedMoviesFromLocal,
-            getFromRemote = { getTopRatedMoviesFromRemote(page) },
-            saveRemoteToDatabase = ::saveTopRatedMovies,
-            mapFromLocalToEntity = MovieLocalDto::toEntity,
-            mapFromRemoteToEntity = { it.toEntity(isPoster = true) }
-        )
+        return if (page > 1) getTopRatedMoviesFromRemote(page).toMovieEntityList(isPoster = true)
+        else getCachedOrRemoteData<MovieLocalDto, MovieItemRemoteDto, Movie>(
+                deleteExpired = ::deleteExpiredTopRatedMovies,
+                getFromLocal = ::getTopRatedMoviesFromLocal,
+                getFromRemote = { getTopRatedMoviesFromRemote(page) },
+                saveRemoteToDatabase = ::saveTopRatedMovies,
+                mapFromLocalToEntity = MovieLocalDto::toEntity,
+                mapFromRemoteToEntity = { it.toEntity(isPoster = true) }
+            )
     }
 
     override suspend fun getMoviesByGenres(movieGenres: List<MovieGenre>, page: Int): List<Movie> {
