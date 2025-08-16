@@ -77,6 +77,12 @@ fun CompletionCard(
             } else {
                 R.drawable.alert
             }
+
+            val resultMessage = if (isWin) {
+                stringResource(R.string.finish_game_message)
+            } else {
+                stringResource(R.string.lose_the_game_message)
+            }
             Image(
                 painter = painterResource(id = resultImage),
                 contentDescription = "Trophy",
@@ -85,7 +91,7 @@ fun CompletionCard(
             )
             Text(
                 modifier = Modifier.padding(top = 12.dp),
-                text = stringResource(R.string.finish_game_message),
+                text = resultMessage,
                 color = AppTheme.color.title,
                 style = AppTheme.textStyle.title.medium,
                 textAlign = TextAlign.Center
