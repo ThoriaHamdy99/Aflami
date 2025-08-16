@@ -5,11 +5,11 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.authentication.LogoutUseCase
+import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageAppThemeUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
-import com.amsterdam.domain.useCase.profile.GetUserPointsUseCase
 import com.amsterdam.domain.utils.AppVersionProvider
 import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.domain.utils.SessionType
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val getSessionTypeUseCase: GetsSessionType,
     private val getAccountDetailsUseCase: GetAccountDetailsUseCase,
-    private val getUserPointsUseCase: GetUserPointsUseCase,
+    private val getTotalUserPointsUseCase: GetTotalUserPointsUseCase,
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     private val manageAppThemeUseCase: ManageAppThemeUseCase,
     private val logoutUseCase: LogoutUseCase,
@@ -128,7 +128,7 @@ class ProfileViewModel @Inject constructor(
             state.copy(
                 userInfo = state.userInfo.copy(
                     username = accountDetails.username,
-                    userAvatarUrl = accountDetails.avatarUrl
+                    userAvatarUrl = accountDetails.avatarUrl ?: ""
                 )
             )
         }
@@ -136,7 +136,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getUserPoints() {
         viewModelScope.launch {
-            getUserPointsUseCase().collect { points ->
+            getTotalUserPointsUseCase().collect { points ->
                 updateState { uiState ->
                     uiState.copy(
                         userInfo = state.value.userInfo.copy(userPoints = points)
@@ -233,7 +233,6 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    //region Settings
     override fun onClickSettings() {
         updateState {
             it.copy(settingsState = it.settingsState.copy(isSettingsDialogVisible = true))
@@ -356,6 +355,4 @@ class ProfileViewModel @Inject constructor(
             )
         }
     }
-
-    //endregion
 }

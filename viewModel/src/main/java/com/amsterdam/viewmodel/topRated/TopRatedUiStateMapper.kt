@@ -27,7 +27,7 @@ fun getTopRatedMediaItems(
 }
 
 @SuppressLint("DefaultLocale")
-fun Movie.toTopRatedMediaItemUiState(): TopRatedMediaItemUiState {
+private fun Movie.toTopRatedMediaItemUiState(): TopRatedMediaItemUiState {
     return TopRatedMediaItemUiState(
         id = id,
         name = name,
@@ -39,7 +39,7 @@ fun Movie.toTopRatedMediaItemUiState(): TopRatedMediaItemUiState {
 }
 
 @SuppressLint("DefaultLocale")
-fun TvShow.toTopRatedMediaItemUiState(): TopRatedMediaItemUiState {
+private fun TvShow.toTopRatedMediaItemUiState(): TopRatedMediaItemUiState {
     return TopRatedMediaItemUiState(
         id = id,
         name = name,

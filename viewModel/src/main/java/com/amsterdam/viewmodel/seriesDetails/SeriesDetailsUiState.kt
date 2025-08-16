@@ -12,7 +12,7 @@ data class SeriesDetailsUiState(
     val title: String = "",
     val categories: List<TvShowGenre> = emptyList(),
     val airDate: String = "",
-    val seasonCount: String = "",
+    val seasonCount: Int = 0,
     val originCountry: String = "",
     val description: String = "",
     val videoUrl: String = "",
@@ -31,7 +31,8 @@ data class SeriesDetailsUiState(
     val isLoginDialogVisible: Boolean = false,
     val dialogType: MovieAndSeriesDetailsDialogType? = null,
     val rateDialogUiState: RateDialogUiState = RateDialogUiState(),
-    val isDescriptionExpanded: Boolean = false
+    val isDescriptionExpanded: Boolean = false,
+    val currentLanguage: String = "en"
 ) {
     enum class SeriesExtras {
         SEASONS,
@@ -40,6 +41,7 @@ data class SeriesDetailsUiState(
         GALLERY,
         COMPANY_PRODUCTION
     }
+
     data class SimilarTvShowUiState(
         val movieId: Long,
         val rate: String = "",
@@ -47,6 +49,7 @@ data class SeriesDetailsUiState(
         val productionYear: String = "",
         val posterUrl: String = ""
     )
+
     data class SeasonUiState(
         val id: Long = 0,
         val title: String = "",
@@ -64,11 +67,14 @@ data class SeriesDetailsUiState(
             val imageUrl: String = "",
             val imageNumber: Int = 0,
             val description: String = "",
-            val duration: String = "",
+            val duration: DurationUiState = DurationUiState(),
             val airDate: String = "",
             val videoUrl: String = ""
         )
+
+        data class DurationUiState(val hour: Int = 0, val minute: Int = 0)
     }
+
     data class ActorTvShowUiState(
         val photo: String = "",
         val name: String = ""

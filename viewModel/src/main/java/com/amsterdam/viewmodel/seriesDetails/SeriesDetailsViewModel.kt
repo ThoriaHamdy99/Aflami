@@ -43,7 +43,10 @@ class SeriesDetailsViewModel @Inject constructor(
         updateState { it.copy(tvShowId = tvShowId, isLoading = true) }
 
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach { getTvShowDetails() }
+            .onEach {
+                updateState { it.copy(currentLanguage = language.value) }
+                getTvShowDetails()
+            }
             .launchIn(viewModelScope)
     }
 
@@ -58,7 +61,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     private fun onGetTvShowDetailsSuccess(tvShowDetails: TvShowDetails) {
-        updateState { tvShowDetails.toUiState() }
+        updateState { tvShowDetails.toUiState(state.value.currentLanguage) }
     }
 
     private fun onCompletion() = updateState { it.copy(isLoading = false) }
@@ -107,11 +110,36 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     override fun onClickSeasonMenu(seasonNumber: Int) {
+        updateState { state ->
+            val updatedSeasons = state.seasons.map {
+                if (it.seasonNumber == seasonNumber) it.copy(isLoading = true)
+                else it
+            }
+            state.copy(seasons = updatedSeasons)
+        }
+
         tryToExecute(
             action = { getEpisodesForSeason(seasonNumber) },
             onSuccess = { episodes -> onGetEpisodesSuccess(seasonNumber, episodes) },
             onCompletion = ::onCompletion
         )
+    }
+
+    private fun onGetEpisodesSuccess(seasonNumber: Int, episodes: List<Episode>) {
+        val updatedSeasons = state.value.seasons.map {
+            if (it.seasonNumber == seasonNumber) {
+                it.copy(
+                    episodes = episodes.toUiState(state.value.currentLanguage),
+                    isExpanded = true,
+                    isLoading = false
+                )
+            } else {
+                it
+            }
+        }
+        updateState {
+            it.copy(seasons = updatedSeasons)
+        }
     }
 
     override fun onNavigateToLoginClicked() {
@@ -156,40 +184,27 @@ class SeriesDetailsViewModel @Inject constructor(
             ).takeIf { it.isNotEmpty() }?.let {
                 sendNewNavigationEffect(SeriesDetailsEffect.LaunchSeriesVideoEffect(it))
             }
-                ?:  sendNewNavigationEffect(SeriesDetailsEffect.ShowEpisodeTrailerNotFound)
+                ?: sendNewNavigationEffect(SeriesDetailsEffect.ShowEpisodeTrailerNotFound)
         }
     }
 
 
     private suspend fun getEpisodesForSeason(seasonNumber: Int): List<Episode> {
-        val updatedSeasons = state.value.seasons.map {
-            if (it.seasonNumber == seasonNumber && it.episodes.isNotEmpty()) {
-                it.copy(isExpanded = !it.isExpanded)
-            } else {
-                it
+        val currentSeason = state.value.seasons.find { it.seasonNumber == seasonNumber }
+
+        if (currentSeason?.episodes?.isNotEmpty() == true) {
+            val updatedSeasons = state.value.seasons.map {
+                if (it.seasonNumber == seasonNumber) it.copy(
+                    isExpanded = !it.isExpanded,
+                    isLoading = false
+                )
+                else it
             }
-        }
-        if (updatedSeasons != state.value.seasons) {
             updateState { it.copy(seasons = updatedSeasons) }
             return emptyList()
         }
-        return getEpisodesBySeasonNumberUseCase(state.value.tvShowId, seasonNumber)
-    }
 
-    private fun onGetEpisodesSuccess(seasonNumber: Int, episodes: List<Episode>) {
-        if (episodes.isEmpty()) {
-            return
-        }
-        val updatedSeasons = state.value.seasons.map {
-            if (it.seasonNumber == seasonNumber) {
-                it.copy(episodes = episodes.toUiState(), isExpanded = true)
-            } else {
-                it
-            }
-        }
-        updateState {
-            it.copy(seasons = updatedSeasons)
-        }
+        return getEpisodesBySeasonNumberUseCase(state.value.tvShowId, seasonNumber)
     }
 
     private suspend fun runIfLoggedIn(

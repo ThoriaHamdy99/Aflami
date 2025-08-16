@@ -13,6 +13,7 @@ import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.paging.PagingSource
+import com.amsterdam.viewmodel.listDetails.ListDetailsUiState.ListDetailsError
 import com.amsterdam.viewmodel.listDetails.ListDetailsUiState.ListDetailsItemsUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -37,10 +38,12 @@ class ListDetailsViewModel @Inject constructor(
 ), ListDetailsInteractionListener {
 
     init {
-        updateState { it.copy(
-            listId = args.listId,
-            listName = args.listName
-        ) }
+        updateState {
+            it.copy(
+                listId = args.listId,
+                listName = args.listName
+            )
+        }
         manageLocaleLanguageUseCase.getAppLanguage()
             .onEach { loadListDetails() }
             .launchIn(viewModelScope)
@@ -48,7 +51,7 @@ class ListDetailsViewModel @Inject constructor(
         loadListDetails()
     }
 
-    private var currentPagingSource: PagingSource<ListDetailsItemsUiState>?  = null
+    private var currentPagingSource: PagingSource<ListDetailsItemsUiState>? = null
 
     private fun loadListDetails() {
         updateState { it.copy(isLoading = true) }
@@ -57,9 +60,9 @@ class ListDetailsViewModel @Inject constructor(
                 Pager(
                     config = PagingConfig(pageSize = 10),
                     pagingSourceFactory = {
-                        currentPagingSource =  PagingSource { page ->
-                           getListMediaItemsFromListUseCase(state.value.listId, page)
-                               .toListDetailsItemUiState()
+                        currentPagingSource = PagingSource { page ->
+                            getListMediaItemsFromListUseCase(state.value.listId, page)
+                                .toListDetailsItemUiState()
                         }
                         currentPagingSource!!
                     }

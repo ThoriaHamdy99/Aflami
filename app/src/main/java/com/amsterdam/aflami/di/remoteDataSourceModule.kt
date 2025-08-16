@@ -4,10 +4,10 @@ import com.amsterdam.remotedatasource.datasource.AuthenticationRemoteDataSourceI
 import com.amsterdam.remotedatasource.datasource.CategoryRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.CountryRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.MovieRemoteDataSourceImpl
-import com.amsterdam.remotedatasource.datasource.PeopleRemoteDataDataSourceImpl
+import com.amsterdam.remotedatasource.datasource.PeopleRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.ProfileRemoteDataSourceImpl
 import com.amsterdam.remotedatasource.datasource.TvRemoteDataSourceImpl
-import com.amsterdam.remotedatasource.datasource.UserListRemoteDataSourceImpl
+import com.amsterdam.remotedatasource.datasource.WishListRemoteDataSourceImpl
 import com.amsterdam.repository.datasource.remote.AuthenticationRemoteDataSource
 import com.amsterdam.repository.datasource.remote.CategoryRemoteDataSource
 import com.amsterdam.repository.datasource.remote.CountryRemoteDataSource
@@ -15,7 +15,7 @@ import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
 import com.amsterdam.repository.datasource.remote.PeopleRemoteDataSource
 import com.amsterdam.repository.datasource.remote.ProfileRemoteDataSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
-import com.amsterdam.repository.datasource.remote.UserListRemoteDataSource
+import com.amsterdam.repository.datasource.remote.WishListRemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -54,7 +54,7 @@ abstract class RemoteDataSourceBindModule {
     @Binds
     @Singleton
     abstract fun bindPeopleRemoteSource(
-        peopleRemoteDataSourceImpl: PeopleRemoteDataDataSourceImpl
+        peopleRemoteDataSourceImpl: PeopleRemoteDataSourceImpl
     ): PeopleRemoteDataSource
 
     @Binds
@@ -66,8 +66,8 @@ abstract class RemoteDataSourceBindModule {
     @Binds
     @Singleton
     abstract fun bindUserListRemoteSource(
-        impl: UserListRemoteDataSourceImpl
-    ): UserListRemoteDataSource
+        impl: WishListRemoteDataSourceImpl
+    ): WishListRemoteDataSource
 
     @Binds
     @Singleton

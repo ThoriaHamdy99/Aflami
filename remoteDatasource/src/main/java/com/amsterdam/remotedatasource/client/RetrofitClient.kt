@@ -9,7 +9,7 @@ import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.api.PeopleApiService
 import com.amsterdam.remotedatasource.api.ProfileApiService
 import com.amsterdam.remotedatasource.api.TvShowsApiService
-import com.amsterdam.remotedatasource.api.UserListApiService
+import com.amsterdam.remotedatasource.api.WishListApiService
 import com.amsterdam.remotedatasource.utils.RequiresSessionId
 import com.amsterdam.repository.datasource.local.AuthenticationLocalDataSource
 import com.amsterdam.repository.security.CryptoManager
@@ -33,11 +33,11 @@ class RetrofitClient(
     private val cryptoManager: CryptoManager
 
 ) {
-    private val TOKEN_HEADER_NAME = "Authorization"
-    private val LANGUAGE_PARAM_NAME = "language"
-    private val SESSION_PARAM_NAME = "session_id"
-
-    private val token = BuildConfig.BEARER_TOKEN
+    private companion object {
+        private const val TOKEN_HEADER_NAME = "Authorization"
+        private const val LANGUAGE_PARAM_NAME = "language"
+        private const val SESSION_PARAM_NAME = "session_id"
+    }
 
     private val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
@@ -74,7 +74,7 @@ class RetrofitClient(
 
             val newRequest = originalRequest.newBuilder()
                 .url(originalHttpUrlBuilder.build())
-                .header(TOKEN_HEADER_NAME, "Bearer $token")
+                .header(TOKEN_HEADER_NAME, "Bearer ${BuildConfig.BEARER_TOKEN}")
                 .build()
 
             chain.proceed(newRequest)
@@ -97,7 +97,7 @@ class RetrofitClient(
     fun categoryApiService(): CategoryApiService = retrofit.create(CategoryApiService::class.java)
     fun countryApiService(): CountryApiService = retrofit.create(CountryApiService::class.java)
     fun tvApiService(): TvShowsApiService = retrofit.create(TvShowsApiService::class.java)
-    fun userListApiService(): UserListApiService = retrofit.create(UserListApiService::class.java)
+    fun userListApiService(): WishListApiService = retrofit.create(WishListApiService::class.java)
     fun profileApiService(): ProfileApiService = retrofit.create(ProfileApiService::class.java)
 
     fun peopleApiService(): PeopleApiService = retrofit.create(PeopleApiService::class.java)
