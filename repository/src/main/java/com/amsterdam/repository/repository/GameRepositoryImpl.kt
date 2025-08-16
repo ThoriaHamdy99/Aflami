@@ -19,13 +19,13 @@ class GameRepositoryImpl @Inject constructor(
     private val peopleRemoteDataSource: PeopleRemoteDataSource
 ) : GameRepository {
 
-    override suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<Movie> {
-        return movieRemoteDataSource.getRandomMoviesWithNotNullDate(requiredMoviesNumber)
+    override suspend fun getRandomMoviesWithReleaseDate(requiredMoviesNumber: Int): List<Movie> {
+        return movieRemoteDataSource.getRandomMoviesWithReleaseDate(requiredMoviesNumber)
             .toMovieEntityList()
     }
 
-    override suspend fun getRandomMoviesWithNotNullPoster(requiredMoviesNumber: Int): List<Movie> {
-        return movieRemoteDataSource.getRandomMoviesWithNotNullPoster(requiredMoviesNumber)
+    override suspend fun getRandomMoviesWithPoster(requiredMoviesNumber: Int): List<Movie> {
+        return movieRemoteDataSource.getRandomMoviesWithPoster(requiredMoviesNumber)
             .toMovieEntityList()
     }
 
