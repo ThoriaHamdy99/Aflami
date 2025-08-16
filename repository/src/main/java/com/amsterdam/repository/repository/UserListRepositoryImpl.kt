@@ -29,6 +29,13 @@ class UserListRepositoryImpl @Inject constructor(
         ).listId
     }
 
+    override suspend fun checkIsMovieInList(movieId: Long, listId: Long): Boolean {
+        return userListDataSource.checkIsMovieInList(
+            movieId = movieId,
+            listId = listId
+        ).itemPresent
+    }
+
     override suspend fun getMoviesAndTvShowsFromList(listId: Long, page: Int): GetListMediaItemsFromListUseCase.ListScreenDetailsMediaItems {
         val items = userListDataSource.getMoviesAndTvShowsFromList(listId, page).items
 
