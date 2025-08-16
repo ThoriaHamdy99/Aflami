@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test
 class MovieWatchHistoryMapperTest {
     @Nested
     inner class ToEntityTest {
-
         @Test
         fun `toEntity should map DTOs to MovieWatchHistory entity`() {
             val expectedMovieEntity = movieLocalDto.toEntity()

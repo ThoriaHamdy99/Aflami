@@ -3,8 +3,6 @@ package com.amsterdam.repository.mapper
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.dto.local.MovieCategoryLocalDto
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -12,63 +10,49 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
 class MovieGenreMapperTest {
-    @Nested
-    @DisplayName("ID-based to Entity Mapping")
-    inner class IdToEntityMapping {
-
-        @ParameterizedTest(name = "toEntity should map ID {0} to {1}")
-        @MethodSource("com.amsterdam.repository.mapper.MovieGenreMapperTest#idToGenreProvider")
-        fun `toEntity should map every possible categoryId to its correct MovieGenre`(
-            id: Long,
-            expectedGenre: MovieGenre
-        ) {
-            val dto = MovieCategoryLocalDto(categoryId = id)
-            val result = dto.toEntity()
-            assertThat(result).isEqualTo(expectedGenre)
-        }
-
-        @ParameterizedTest(name = "toMovieGenre should map ID {0} to {1}")
-        @MethodSource("com.amsterdam.repository.mapper.MovieGenreMapperTest#idToGenreProvider")
-        fun `toMovieGenre should map every possible Long ID to its correct MovieGenre`(
-            id: Long,
-            expectedGenre: MovieGenre
-        ) {
-            val result = toMovieGenre(id)
-            assertThat(result).isEqualTo(expectedGenre)
-        }
+    @ParameterizedTest(name = "toEntity should map ID {0} to {1}")
+    @MethodSource("idToGenreProvider")
+    fun `toEntity should map every possible categoryId to its correct MovieGenre`(
+        id: Long,
+        expectedGenre: MovieGenre
+    ) {
+        val dto = MovieCategoryLocalDto(categoryId = id)
+        val result = dto.toEntity()
+        assertThat(result).isEqualTo(expectedGenre)
     }
 
-    @Nested
-    @DisplayName("Entity to DTO Mapping")
-    inner class EntityToDtoMapping {
+    @ParameterizedTest(name = "toMovieGenre should map ID {0} to {1}")
+    @MethodSource("idToGenreProvider")
+    fun `toMovieGenre should map every possible Long ID to its correct MovieGenre`(
+        id: Long,
+        expectedGenre: MovieGenre
+    ) {
+        val result = toMovieGenre(id)
+        assertThat(result).isEqualTo(expectedGenre)
+    }
 
-        @ParameterizedTest(name = "toDto should map {0} to ID {1}")
-        @MethodSource("com.amsterdam.repository.mapper.MovieGenreMapperTest#genreToIdProvider")
-        fun `toDto should map every MovieGenre to its correct Long ID`(
-            genre: MovieGenre,
-            expectedId: Long
-        ) {
-            val result = genre.toDto()
-            assertThat(result).isEqualTo(expectedId)
-        }
+    @ParameterizedTest(name = "toDto should map {0} to ID {1}")
+    @MethodSource("genreToIdProvider")
+    fun `toDto should map every MovieGenre to its correct Long ID`(
+        genre: MovieGenre,
+        expectedId: Long
+    ) {
+        val result = genre.toDto()
+        assertThat(result).isEqualTo(expectedId)
+    }
 
-        @Test
-        fun `toDtoList should map a list of MovieGenre to a list of Longs`() {
-            val genreList = listOf(MovieGenre.ACTION, MovieGenre.DRAMA, MovieGenre.ALL)
+    @Test
+    fun `toDtoList should map a list of MovieGenre to a list of Longs`() {
+        val genreList = listOf(MovieGenre.ACTION, MovieGenre.DRAMA, MovieGenre.ALL)
+        val result = genreList.toDtoList()
+        assertThat(result).containsExactly(28L, 18L, 35L).inOrder()
+    }
 
-            val result = genreList.toDtoList()
-
-            assertThat(result).containsExactly(28L, 18L, 35L).inOrder()
-        }
-
-        @Test
-        fun `toDtoList should return an empty list when given an empty list`() {
-            val emptyGenreList = emptyList<MovieGenre>()
-
-            val result = emptyGenreList.toDtoList()
-
-            assertThat(result).isEmpty()
-        }
+    @Test
+    fun `toDtoList should return an empty list when given an empty list`() {
+        val emptyGenreList = emptyList<MovieGenre>()
+        val result = emptyGenreList.toDtoList()
+        assertThat(result).isEmpty()
     }
 
     companion object {

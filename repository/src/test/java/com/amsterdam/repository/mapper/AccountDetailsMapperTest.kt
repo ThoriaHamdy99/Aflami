@@ -9,67 +9,37 @@ import org.junit.jupiter.api.Test
 class AccountDetailsMapperTest {
     @Test
     fun `toEntity should map AccountDetailsLocalDto to AccountDetails entity`() {
-        val expectedEntity = AccountDetails(
-            accountId = 1,
-            username = "localUser",
-            avatarUrl = "/local_avatar.jpg"
-        )
-
         val resultEntity = localDto.toEntity()
 
-        assertThat(resultEntity).isEqualTo(expectedEntity)
+        assertThat(resultEntity).isEqualTo(expectedEntityFromLocal)
     }
 
     @Test
     fun `toEntity should map AccountDetailsRemoteDto to AccountDetails entity`() {
-        val expectedEntity = AccountDetails(
-            accountId = 123,
-            username = "remoteUser",
-            avatarUrl = "https://image.tmdb.org/t/p/w500/remote_avatar.png"
-        )
-
         val resultEntity = remoteDto.toEntity()
 
-        assertThat(resultEntity).isEqualTo(expectedEntity)
+        assertThat(resultEntity).isEqualTo(expectedEntityFromRemote)
     }
 
     @Test
     fun `toEntity should map avatarUrl to empty string if remote avatar path is null`() {
-        val expectedEntity = AccountDetails(
-            accountId = 456,
-            username = "noAvatarUser",
-            avatarUrl = ""
-        )
-
         val resultEntity = remoteDtoWithNullAvatar.toEntity()
 
-        assertThat(resultEntity).isEqualTo(expectedEntity)
+        assertThat(resultEntity).isEqualTo(expectedEntityWithEmptyAvatar)
     }
 
     @Test
     fun `toLocalDto should map AccountDetailsRemoteDto to AccountDetailsLocalDto`() {
-        val expectedLocalDto = AccountDetailsLocalDto(
-            accountId = 123,
-            username = "remoteUser",
-            avatarUrl = "https://image.tmdb.org/t/p/w500/remote_avatar.png"
-        )
-
         val resultLocalDto = remoteDto.toLocalDto()
 
-        assertThat(resultLocalDto).isEqualTo(expectedLocalDto)
+        assertThat(resultLocalDto).isEqualTo(expectedLocalDtoFromRemote)
     }
 
     @Test
     fun `toLocalDto should map avatarUrl to empty string if remote avatar path is null`() {
-        val expectedLocalDto = AccountDetailsLocalDto(
-            accountId = 456,
-            username = "noAvatarUser",
-            avatarUrl = ""
-        )
-
         val resultLocalDto = remoteDtoWithNullAvatar.toLocalDto()
 
-        assertThat(resultLocalDto).isEqualTo(expectedLocalDto)
+        assertThat(resultLocalDto).isEqualTo(expectedLocalDtoWithEmptyAvatar)
     }
 
     private val localDto = AccountDetailsLocalDto(
@@ -102,5 +72,35 @@ class AccountDetailsMapperTest {
             gravatar = AccountDetailsRemoteDto.Gravatar(hash = "another_hash"),
             movieDBData = AccountDetailsRemoteDto.MovieDBData(avatarPath = null)
         )
+    )
+
+    private val expectedEntityFromLocal = AccountDetails(
+        accountId = 1,
+        username = "localUser",
+        avatarUrl = "/local_avatar.jpg"
+    )
+
+    private val expectedEntityFromRemote = AccountDetails(
+        accountId = 123,
+        username = "remoteUser",
+        avatarUrl = "https://image.tmdb.org/t/p/w500/remote_avatar.png"
+    )
+
+    private val expectedEntityWithEmptyAvatar = AccountDetails(
+        accountId = 456,
+        username = "noAvatarUser",
+        avatarUrl = ""
+    )
+
+    private val expectedLocalDtoFromRemote = AccountDetailsLocalDto(
+        accountId = 123,
+        username = "remoteUser",
+        avatarUrl = "https://image.tmdb.org/t/p/w500/remote_avatar.png"
+    )
+
+    private val expectedLocalDtoWithEmptyAvatar = AccountDetailsLocalDto(
+        accountId = 456,
+        username = "noAvatarUser",
+        avatarUrl = ""
     )
 }

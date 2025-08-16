@@ -4,93 +4,44 @@ import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Gender
 import com.amsterdam.repository.dto.remote.CastRemoteDto
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class CastMapperTest {
-    @Nested
-    inner class ToEntityTest {
-        @Test
-        fun `toEntity should map Dto to Actor entity for Male actor`() {
-            val expectedActor = Actor(
-                id = 1L,
-                name = "Keanu Reeves",
-                imageUrl = "https://image.tmdb.org/t/p/w500/keanu_reeves.jpg",
-                popularity = 90.0,
-                gender = Gender.Male
-            )
+    @Test
+    fun `toEntity should map Dto to Actor entity for Male actor`() {
+        val result = maleActorDto.toEntity()
 
-            val result = maleActorDto.toEntity()
-
-            assertThat(result).isEqualTo(expectedActor)
-        }
-
-        @Test
-        fun `toEntity should map Dto to Actor entity for Female actor`() {
-            val expectedActor = Actor(
-                id = 2L,
-                name = "Carrie-Anne Moss",
-                imageUrl = "https://image.tmdb.org/t/p/w500/carrie_anne_moss.jpg",
-                popularity = 85.5,
-                gender = Gender.Female
-            )
-
-            val result = femaleActorDto.toEntity()
-
-            assertThat(result).isEqualTo(expectedActor)
-        }
-
-        @Test
-        fun `toEntity should map imageUrl to a string containing null when profilePath is null`() {
-            val expectedActor = Actor(
-                id = 3L,
-                name = "Laurence Fishburne",
-                imageUrl = "https://image.tmdb.org/t/p/w500null",
-                popularity = 82.1,
-                gender = Gender.Male
-            )
-
-            val result = actorDtoWithNullImage.toEntity()
-
-            assertThat(result).isEqualTo(expectedActor)
-        }
+        assertThat(result).isEqualTo(expectedMaleActor)
     }
 
-    @Nested
-    inner class ToEntityListTest {
-        @Test
-        fun `toEntityList should map list of Dtos to list of Actor entities`() {
-            val dtoList = listOf(maleActorDto, actorDtoWithNullImage)
-            val expectedList = listOf(
-                Actor(
-                    id = 1L,
-                    name = "Keanu Reeves",
-                    imageUrl = "https://image.tmdb.org/t/p/w500/keanu_reeves.jpg",
-                    popularity = 90.0,
-                    gender = Gender.Male
-                ),
-                Actor(
-                    id = 3L,
-                    name = "Laurence Fishburne",
-                    imageUrl = "https://image.tmdb.org/t/p/w500null",
-                    popularity = 82.1,
-                    gender = Gender.Male
-                )
-            )
+    @Test
+    fun `toEntity should map Dto to Actor entity for Female actor`() {
+        val result = femaleActorDto.toEntity()
 
-            val result = dtoList.toEntityList()
+        assertThat(result).isEqualTo(expectedFemaleActor)
+    }
 
-            assertThat(result).isEqualTo(expectedList)
-        }
+    @Test
+    fun `toEntity should map imageUrl to a string containing null when profilePath is null`() {
+        val result = actorDtoWithNullImage.toEntity()
 
-        @Test
-        fun `toEntityList should return an empty list when given an empty list`() {
-            val emptyDtoList = emptyList<CastRemoteDto>()
+        assertThat(result).isEqualTo(expectedActorWithNullImage)
+    }
 
-            val result = emptyDtoList.toEntityList()
+    @Test
+    fun `toEntityList should map list of Dtos to list of Actor entities`() {
+        val dtoList = listOf(maleActorDto, actorDtoWithNullImage)
+        val result = dtoList.toEntityList()
 
-            assertThat(result).isEmpty()
-        }
+        assertThat(result).isEqualTo(expectedActorList)
+    }
+
+    @Test
+    fun `toEntityList should return an empty list when given an empty list`() {
+        val emptyDtoList = emptyList<CastRemoteDto>()
+        val result = emptyDtoList.toEntityList()
+
+        assertThat(result).isEmpty()
     }
 
     private val maleActorDto = CastRemoteDto(
@@ -133,5 +84,34 @@ class CastMapperTest {
         character = "Morpheus",
         creditId = "credit3",
         order = 2
+    )
+
+    private val expectedMaleActor = Actor(
+        id = 1L,
+        name = "Keanu Reeves",
+        imageUrl = "https://image.tmdb.org/t/p/w500/keanu_reeves.jpg",
+        popularity = 90.0,
+        gender = Gender.Male
+    )
+
+    private val expectedFemaleActor = Actor(
+        id = 2L,
+        name = "Carrie-Anne Moss",
+        imageUrl = "https://image.tmdb.org/t/p/w500/carrie_anne_moss.jpg",
+        popularity = 85.5,
+        gender = Gender.Female
+    )
+
+    private val expectedActorWithNullImage = Actor(
+        id = 3L,
+        name = "Laurence Fishburne",
+        imageUrl = "https://image.tmdb.org/t/p/w500null",
+        popularity = 82.1,
+        gender = Gender.Male
+    )
+
+    private val expectedActorList = listOf(
+        expectedMaleActor,
+        expectedActorWithNullImage
     )
 }

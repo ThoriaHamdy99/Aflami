@@ -13,79 +13,55 @@ import com.amsterdam.repository.dto.remote.movieGallery.GalleryRemoteResponse
 import com.amsterdam.repository.dto.remote.review.ReviewsRemoteResponse
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDate
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class MovieDetailsMapperTest {
-    @Nested
-    inner class ToEntityTest {
-        @Test
-        fun `toEntity should map response with null user rate when not rated`() {
-            val remoteResponse = baseRemoteResponse.copy(
-                accountStates = AccountStatesRemoteDto(rated = Rated.NotRated)
-            )
-            val result = remoteResponse.toEntity()
+    @Test
+    fun `toEntity should map response with null user rate when not rated`() {
+        val remoteResponse = baseRemoteResponse.copy(
+            accountStates = AccountStatesRemoteDto(rated = Rated.NotRated)
+        )
+        val result = remoteResponse.toEntity()
 
-            assertThat(result.userRate).isNull()
-            assertThat(result.movie.name).isEqualTo("Test Movie")
-        }
-
-        @Test
-        fun `toEntity should map response with null user rate when accountStates is null`() {
-            val remoteResponse = baseRemoteResponse.copy(accountStates = null)
-
-            val result = remoteResponse.toEntity()
-
-            assertThat(result.userRate).isNull()
-        }
+        assertThat(result.userRate).isNull()
+        assertThat(result.movie.name).isEqualTo("Test Movie")
     }
 
-    @Nested
-    inner class ToMovieItemDtoTest {
-        @Test
-        fun `toMovieItemDto should map response to MovieItemRemoteDto`() {
-            val result = baseRemoteResponse.toMovieItemDto()
+    @Test
+    fun `toEntity should map response with null user rate when accountStates is null`() {
+        val remoteResponse = baseRemoteResponse.copy(accountStates = null)
+        val result = remoteResponse.toEntity()
 
-            assertThat(result.id).isEqualTo(101L)
-            assertThat(result.title).isEqualTo("Test Movie")
-            assertThat(result.runtime).isEqualTo(120)
-            assertThat(result.genres).isEqualTo(baseRemoteResponse.genres)
-        }
+        assertThat(result.userRate).isNull()
     }
 
-    @Nested
-    inner class ToLocalDtoTest {
-        @Test
-        fun `toLocalDto should map response to MovieLocalDto`() {
-            val result = baseRemoteResponse.toLocalDto("en")
+    @Test
+    fun `toMovieItemDto should map response to MovieItemRemoteDto`() {
+        val result = baseRemoteResponse.toMovieItemDto()
 
-            assertThat(result).isEqualTo(
-                MovieLocalDto(
-                    movieId = 101L,
-                    storedLanguage = "en",
-                    name = "Test Movie",
-                    description = "An overview.",
-                    poster = "/poster.jpg",
-                    releaseDate = LocalDate.parse("2023-01-01"),
-                    rating = 8.0f,
-                    popularity = 100.0,
-                    movieLength = 120,
-                    originCountry = "US"
-                )
-            )
-        }
+        assertThat(result.id).isEqualTo(101L)
+        assertThat(result.title).isEqualTo("Test Movie")
+        assertThat(result.runtime).isEqualTo(120)
+        assertThat(result.genres).isEqualTo(baseRemoteResponse.genres)
+    }
 
-        @Test
-        fun `toLocalDto should handle null poster and empty country list`() {
-            val remoteResponseWithNulls = baseRemoteResponse.copy(
-                posterPath = null,
-                originCountry = emptyList()
-            )
-            val result = remoteResponseWithNulls.toLocalDto("ar")
+    @Test
+    fun `toLocalDto should map response to MovieLocalDto`() {
+        val result = baseRemoteResponse.toLocalDto("en")
 
-            assertThat(result.poster).isEmpty()
-            assertThat(result.originCountry).isEmpty()
-        }
+        assertThat(result).isEqualTo(expectedMovieLocalDto)
+    }
+
+    @Test
+    fun `toLocalDto should handle null poster and empty country list`() {
+        val remoteResponseWithNulls = baseRemoteResponse.copy(
+            posterPath = null,
+            originCountry = emptyList()
+        )
+        val result = remoteResponseWithNulls.toLocalDto("ar")
+
+        assertThat(result.poster).isEmpty()
+        assertThat(result.originCountry).isEmpty()
     }
 
     private val baseRemoteResponse = MovieDetailsRemoteResponse(
@@ -140,5 +116,18 @@ class MovieDetailsMapperTest {
                 name = "Action"
             )
         )
+    )
+
+    private val expectedMovieLocalDto = MovieLocalDto(
+        movieId = 101L,
+        storedLanguage = "en",
+        name = "Test Movie",
+        description = "An overview.",
+        poster = "/poster.jpg",
+        releaseDate = LocalDate.parse("2023-01-01"),
+        rating = 8.0f,
+        popularity = 100.0,
+        movieLength = 120,
+        originCountry = "US"
     )
 }

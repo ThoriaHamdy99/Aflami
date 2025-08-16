@@ -3,64 +3,40 @@ package com.amsterdam.repository.mapper
 import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase.UserRatedMovie
 import com.amsterdam.repository.dto.remote.MovieItemRemoteDto
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class UserRatedMovieMapperTest {
-    @Nested
-    inner class ToMovieUserRateEntityTest {
-        @Test
-        fun `toMovieUserRateEntity should map Dto to UserRatedMovie entity`() {
-            val expectedMovie = ratedMovieDto.toEntity()
+    @Test
+    fun `toMovieUserRateEntity should map Dto to UserRatedMovie entity`() {
+        val result = ratedMovieDto.toMovieUserRateEntity(ratedMovieDto)
 
-            val result = ratedMovieDto.toMovieUserRateEntity(ratedMovieDto)
-
-            assertThat(result).isEqualTo(
-                UserRatedMovie(
-                    movie = expectedMovie,
-                    userRate = 8
-                )
-            )
-        }
-
-        @Test
-        fun `toMovieUserRateEntity should map zero rating correctly`() {
-            val expectedMovie = ratedMovieDtoWithZeroRating.toEntity()
-
-            val result = ratedMovieDtoWithZeroRating.toMovieUserRateEntity(ratedMovieDtoWithZeroRating)
-
-            assertThat(result).isEqualTo(
-                UserRatedMovie(
-                    movie = expectedMovie,
-                    userRate = 0
-                )
-            )
-        }
+        assertThat(result).isEqualTo(expectedUserRatedMovie)
     }
 
-    @Nested
-    inner class ToMovieUserRateEntityListTest {
-        @Test
-        fun `toMovieUserRateEntityList should map a list of Dtos correctly`() {
-            val dtoList = listOf(ratedMovieDto, ratedMovieDtoWithZeroRating)
+    @Test
+    fun `toMovieUserRateEntity should map zero rating correctly`() {
+        val result = ratedMovieDtoWithZeroRating.toMovieUserRateEntity(ratedMovieDtoWithZeroRating)
 
-            val result = dtoList.toMovieUserRateEntityList()
+        assertThat(result).isEqualTo(expectedUserRatedMovieWithZeroRating)
+    }
 
-            assertThat(result).hasSize(2)
-            assertThat(result[0].userRate).isEqualTo(8)
-            assertThat(result[0].movie.id).isEqualTo(101L)
-            assertThat(result[1].userRate).isEqualTo(0)
-            assertThat(result[1].movie.id).isEqualTo(102L)
-        }
+    @Test
+    fun `toMovieUserRateEntityList should map a list of Dtos correctly`() {
+        val dtoList = listOf(ratedMovieDto, ratedMovieDtoWithZeroRating)
+        val result = dtoList.toMovieUserRateEntityList()
 
-        @Test
-        fun `toMovieUserRateEntityList should return an empty list when given an empty list`() {
-            val emptyDtoList = emptyList<MovieItemRemoteDto>()
+        assertThat(result).isEqualTo(expectedRatedMovieList)
+        assertThat(result).hasSize(2)
+        assertThat(result[0].userRate).isEqualTo(8)
+        assertThat(result[1].movie.id).isEqualTo(102L)
+    }
 
-            val result = emptyDtoList.toMovieUserRateEntityList()
+    @Test
+    fun `toMovieUserRateEntityList should return an empty list when given an empty list`() {
+        val emptyDtoList = emptyList<MovieItemRemoteDto>()
+        val result = emptyDtoList.toMovieUserRateEntityList()
 
-            assertThat(result).isEmpty()
-        }
+        assertThat(result).isEmpty()
     }
 
     private val ratedMovieDto = MovieItemRemoteDto(
@@ -75,5 +51,20 @@ class UserRatedMovieMapperTest {
     private val ratedMovieDtoWithZeroRating = ratedMovieDto.copy(
         id = 102L,
         rating = 0f
+    )
+
+    private val expectedUserRatedMovie = UserRatedMovie(
+        movie = ratedMovieDto.toEntity(),
+        userRate = 8
+    )
+
+    private val expectedUserRatedMovieWithZeroRating = UserRatedMovie(
+        movie = ratedMovieDtoWithZeroRating.toEntity(),
+        userRate = 0
+    )
+
+    private val expectedRatedMovieList = listOf(
+        expectedUserRatedMovie,
+        expectedUserRatedMovieWithZeroRating
     )
 }

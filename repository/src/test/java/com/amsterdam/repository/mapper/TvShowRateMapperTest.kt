@@ -3,64 +3,40 @@ package com.amsterdam.repository.mapper
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
 import com.amsterdam.repository.dto.remote.TvShowItemRemoteDto
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class TvShowRateMapperTest {
-    @Nested
-    inner class ToTvShowUserRateEntityTest {
-        @Test
-        fun `toTvShowUserRateEntity should map Dto to UserRatedTvShow entity`() {
-            val expectedTvShow = ratedTvShowDto.toEntity()
+    @Test
+    fun `toTvShowUserRateEntity should map Dto to UserRatedTvShow entity`() {
+        val result = ratedTvShowDto.toTvShowUserRateEntity(ratedTvShowDto)
 
-            val result = ratedTvShowDto.toTvShowUserRateEntity(ratedTvShowDto)
-
-            assertThat(result).isEqualTo(
-                UserRatedTvShow(
-                    tvShow = expectedTvShow,
-                    userRate = 9
-                )
-            )
-        }
-
-        @Test
-        fun `toTvShowUserRateEntity should map zero rating correctly`() {
-            val expectedTvShow = ratedTvShowDtoWithZeroRating.toEntity()
-
-            val result = ratedTvShowDtoWithZeroRating.toTvShowUserRateEntity(ratedTvShowDtoWithZeroRating)
-
-            assertThat(result).isEqualTo(
-                UserRatedTvShow(
-                    tvShow = expectedTvShow,
-                    userRate = 0
-                )
-            )
-        }
+        assertThat(result).isEqualTo(expectedUserRatedTvShow)
     }
 
-    @Nested
-    inner class ToTvShowUserRateEntityListTest {
-        @Test
-        fun `toTvShowUserRateEntityList should map a list of Dtos correctly`() {
-            val dtoList = listOf(ratedTvShowDto, ratedTvShowDtoWithZeroRating)
+    @Test
+    fun `toTvShowUserRateEntity should map zero rating correctly`() {
+        val result = ratedTvShowDtoWithZeroRating.toTvShowUserRateEntity(ratedTvShowDtoWithZeroRating)
 
-            val result = dtoList.toTvShowUserRateEntityList()
+        assertThat(result).isEqualTo(expectedUserRatedTvShowWithZeroRating)
+    }
 
-            assertThat(result).hasSize(2)
-            assertThat(result[0].userRate).isEqualTo(9)
-            assertThat(result[0].tvShow.id).isEqualTo(201L)
-            assertThat(result[1].userRate).isEqualTo(0)
-            assertThat(result[1].tvShow.id).isEqualTo(202L)
-        }
+    @Test
+    fun `toTvShowUserRateEntityList should map a list of Dtos correctly`() {
+        val dtoList = listOf(ratedTvShowDto, ratedTvShowDtoWithZeroRating)
+        val result = dtoList.toTvShowUserRateEntityList()
 
-        @Test
-        fun `toTvShowUserRateEntityList should return an empty list when given an empty list`() {
-            val emptyDtoList = emptyList<TvShowItemRemoteDto>()
+        assertThat(result).isEqualTo(expectedUserRatedList)
+        assertThat(result).hasSize(2)
+        assertThat(result[0].userRate).isEqualTo(9)
+        assertThat(result[1].userRate).isEqualTo(0)
+    }
 
-            val result = emptyDtoList.toTvShowUserRateEntityList()
+    @Test
+    fun `toTvShowUserRateEntityList should return an empty list when given an empty list`() {
+        val emptyDtoList = emptyList<TvShowItemRemoteDto>()
+        val result = emptyDtoList.toTvShowUserRateEntityList()
 
-            assertThat(result).isEmpty()
-        }
+        assertThat(result).isEmpty()
     }
 
     private val ratedTvShowDto = TvShowItemRemoteDto(
@@ -85,5 +61,20 @@ class TvShowRateMapperTest {
     private val ratedTvShowDtoWithZeroRating = ratedTvShowDto.copy(
         id = 202L,
         rating = 0f
+    )
+
+    private val expectedUserRatedTvShow = UserRatedTvShow(
+        tvShow = ratedTvShowDto.toEntity(),
+        userRate = 9
+    )
+
+    private val expectedUserRatedTvShowWithZeroRating = UserRatedTvShow(
+        tvShow = ratedTvShowDtoWithZeroRating.toEntity(),
+        userRate = 0
+    )
+
+    private val expectedUserRatedList = listOf(
+        expectedUserRatedTvShow,
+        expectedUserRatedTvShowWithZeroRating
     )
 }

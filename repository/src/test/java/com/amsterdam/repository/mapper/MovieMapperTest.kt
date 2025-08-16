@@ -18,7 +18,7 @@ class MovieMapperTest {
 
             assertThat(result.id).isEqualTo(1L)
             assertThat(result.name).isEqualTo("Local Movie")
-            assertThat(result.categories).isEmpty() // Always maps to empty list
+            assertThat(result.categories).isEmpty()
         }
     }
 

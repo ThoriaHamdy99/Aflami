@@ -6,25 +6,14 @@ import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class TvShowWatchHistoryMapperTest {
-    @Nested
-    inner class ToEntityTest {
-        @Test
-        fun `toEntity should map DTOs to TvShowWatchHistory entity`() {
-            val expectedTvShowEntity = tvShowLocalDto.toEntity()
+    @Test
+    fun `toEntity should map DTOs to TvShowWatchHistory entity`() {
+        val result = tvShowWatchHistoryDto.toEntity(tvShowLocalDto)
 
-            val result = tvShowWatchHistoryDto.toEntity(tvShowLocalDto)
-
-            assertThat(result).isEqualTo(
-                TvShowWatchHistory(
-                    tvShow = expectedTvShowEntity,
-                    lastWatchedTime = tvShowWatchHistoryDto.watchedDate
-                )
-            )
-        }
+        assertThat(result).isEqualTo(expectedWatchHistory)
     }
 
     private val tvShowLocalDto = TvShowLocalDto(
@@ -43,5 +32,10 @@ class TvShowWatchHistoryMapperTest {
     private val tvShowWatchHistoryDto = TvShowWatchHistoryDto(
         tvShowId = 201L,
         watchedDate = Instant.parse("2024-01-20T12:00:00Z")
+    )
+
+    private val expectedWatchHistory = TvShowWatchHistory(
+        tvShow = tvShowLocalDto.toEntity(),
+        lastWatchedTime = tvShowWatchHistoryDto.watchedDate
     )
 }

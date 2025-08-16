@@ -3,63 +3,37 @@ package com.amsterdam.repository.mapper
 import com.amsterdam.entity.People
 import com.amsterdam.repository.dto.remote.RemotePeopleItemDto
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class PeopleMapperTest {
-    @Nested
-    inner class ToEntityTest {
-        @Test
-        fun `toEntity should map RemotePeopleItemDto to People entity`() {
-            val expectedEntity = People(
-                id = 1L,
-                name = "Tom Holland",
-                imageUrl = "https://image.tmdb.org/t/p/w300/tom_holland.jpg" // Uses w300
-            )
+    @Test
+    fun `toEntity should map RemotePeopleItemDto to People entity`() {
+        val result = remotePersonDto.toEntity()
 
-            val result = remotePersonDto.toEntity()
-
-            assertThat(result).isEqualTo(expectedEntity)
-        }
-
-        @Test
-        fun `toEntity should map imageUrl to empty string when profilePath is null`() {
-            val expectedEntity = People(
-                id = 2L,
-                name = "Zendaya",
-                imageUrl = ""
-            )
-
-            val result = remotePersonDtoWithNullImage.toEntity()
-
-            assertThat(result).isEqualTo(expectedEntity)
-        }
+        assertThat(result).isEqualTo(expectedPersonEntity)
     }
 
-    @Nested
-    inner class ToEntityListTest {
-        @Test
-        fun `toEntityList should map a list of Dtos to a list of People entities`() {
-            val dtoList = listOf(remotePersonDto, remotePersonDtoWithNullImage)
+    @Test
+    fun `toEntity should map imageUrl to empty string when profilePath is null`() {
+        val result = remotePersonDtoWithNullImage.toEntity()
 
-            val result = dtoList.toEntityList()
+        assertThat(result).isEqualTo(expectedPersonWithNullImage)
+    }
 
-            assertThat(result).isEqualTo(
-                listOf(
-                    remotePersonDto.toEntity(),
-                    remotePersonDtoWithNullImage.toEntity()
-                )
-            )
-        }
+    @Test
+    fun `toEntityList should map a list of Dtos to a list of People entities`() {
+        val dtoList = listOf(remotePersonDto, remotePersonDtoWithNullImage)
+        val result = dtoList.toEntityList()
 
-        @Test
-        fun `toEntityList should return an empty list when given an empty list`() {
-            val emptyDtoList = emptyList<RemotePeopleItemDto>()
+        assertThat(result).isEqualTo(expectedPeopleList)
+    }
 
-            val result = emptyDtoList.toEntityList()
+    @Test
+    fun `toEntityList should return an empty list when given an empty list`() {
+        val emptyDtoList = emptyList<RemotePeopleItemDto>()
+        val result = emptyDtoList.toEntityList()
 
-            assertThat(result).isEmpty()
-        }
+        assertThat(result).isEmpty()
     }
 
     private val remotePersonDto = RemotePeopleItemDto(
@@ -78,5 +52,22 @@ class PeopleMapperTest {
         id = 2,
         name = "Zendaya",
         profilePath = null
+    )
+
+    private val expectedPersonEntity = People(
+        id = 1L,
+        name = "Tom Holland",
+        imageUrl = "https://image.tmdb.org/t/p/w300/tom_holland.jpg"
+    )
+
+    private val expectedPersonWithNullImage = People(
+        id = 2L,
+        name = "Zendaya",
+        imageUrl = ""
+    )
+
+    private val expectedPeopleList = listOf(
+        expectedPersonEntity,
+        expectedPersonWithNullImage
     )
 }

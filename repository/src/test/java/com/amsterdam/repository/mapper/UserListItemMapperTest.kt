@@ -1,64 +1,55 @@
 package com.amsterdam.repository.mapper
 
+import com.amsterdam.entity.Movie
+import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.repository.dto.remote.UserListItemRemoteDto
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDate
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class UserListItemMapperTest {
-    @Nested
-    inner class ToMovieEntityTest {
-        @Test
-        fun `toMovieEntity should map movie Dto with poster image`() {
-            val result = movieDto.toMovieEntity()
+    @Test
+    fun `toMovieEntity should map movie Dto with poster image`() {
+        val result = movieDto.toMovieEntity()
 
-            assertThat(result.id).isEqualTo(101L)
-            assertThat(result.name).isEqualTo("Test Movie")
-            assertThat(result.releaseDate).isEqualTo(LocalDate.parse("2023-10-26"))
-            assertThat(result.posterUrl).isEqualTo("https://image.tmdb.org/t/p/w500/poster.jpg")
-            assertThat(result.categories).containsExactly(MovieGenre.ACTION)
-        }
-
-        @Test
-        fun `toMovieEntity should map with backdrop image when isPoster is false`() {
-            val result = movieDto.toMovieEntity(isPoster = false)
-
-            assertThat(result.posterUrl).isEqualTo("https://image.tmdb.org/t/p/w300/backdrop.jpg")
-        }
-
-        @Test
-        fun `toMovieEntity should handle null values and map to default values`() {
-            val result = dtoWithNulls.toMovieEntity()
-
-            assertThat(result.name).isEmpty()
-            assertThat(result.posterUrl).isEmpty()
-            assertThat(result.releaseDate).isEqualTo(LocalDate.fromEpochDays(0))
-            assertThat(result.rating).isEqualTo(0f)
-            assertThat(result.categories).isEmpty()
-        }
+        assertThat(result).isEqualTo(expectedMovie)
     }
 
-    @Nested
-    inner class ToTvShowEntityTest {
-        @Test
-        fun `toTvShowEntity should map with backdrop image when isPoster is false`() {
-            val result = tvShowDto.toTvShowEntity(isPoster = false)
+    @Test
+    fun `toMovieEntity should map with backdrop image when isPoster is false`() {
+        val result = movieDto.toMovieEntity(isPoster = false)
 
-            assertThat(result.posterUrl).isEqualTo("https://image.tmdb.org/t/p/w300/tv_backdrop.jpg")
-        }
+        assertThat(result.posterUrl).isEqualTo("https://image.tmdb.org/t/p/w300/backdrop.jpg")
+    }
 
-        @Test
-        fun `toTvShowEntity should handle null values and map to default values`() {
-            val result = dtoWithNulls.toTvShowEntity()
+    @Test
+    fun `toMovieEntity should handle null values and map to default values`() {
+        val result = dtoWithNulls.toMovieEntity()
 
-            assertThat(result.name).isEmpty()
-            assertThat(result.posterUrl).isEmpty()
-            assertThat(result.airDate).isEqualTo(LocalDate.fromEpochDays(0))
-            assertThat(result.rating).isEqualTo(0f)
-            assertThat(result.categories).isEmpty()
-        }
+        assertThat(result).isEqualTo(expectedMovieWithNulls)
+    }
+
+    @Test
+    fun `toTvShowEntity should map tv show Dto with poster image`() {
+        val result = tvShowDto.toTvShowEntity()
+
+        assertThat(result).isEqualTo(expectedTvShow)
+    }
+
+    @Test
+    fun `toTvShowEntity should map with backdrop image when isPoster is false`() {
+        val result = tvShowDto.toTvShowEntity(isPoster = false)
+
+        assertThat(result.posterUrl).isEqualTo("https://image.tmdb.org/t/p/w300/tv_backdrop.jpg")
+    }
+
+    @Test
+    fun `toTvShowEntity should handle null values and map to default values`() {
+        val result = dtoWithNulls.toTvShowEntity()
+
+        assertThat(result).isEqualTo(expectedTvShowWithNulls)
     }
 
     private val movieDto = UserListItemRemoteDto(
@@ -110,5 +101,57 @@ class UserListItemMapperTest {
         originalLanguage = "de",
         mediaType = "person",
         adult = true
+    )
+
+    private val expectedMovie = Movie(
+        id = 101L,
+        name = "Test Movie",
+        posterUrl = "https://image.tmdb.org/t/p/w500/poster.jpg",
+        releaseDate = LocalDate.parse("2023-10-26"),
+        rating = 8.8f,
+        categories = listOf(MovieGenre.ACTION),
+        description = "",
+        popularity = 0.0,
+        runTimeInMinutes = 0,
+        originCountry = ""
+    )
+
+    private val expectedTvShow = TvShow(
+        id = 201L,
+        name = "Test TV Show",
+        posterUrl = "https://image.tmdb.org/t/p/w500/tv_poster.jpg",
+        airDate = LocalDate.parse("2022-12-25"),
+        rating = 9.1f,
+        categories = listOf(TvShowGenre.ACTION_ADVENTURE),
+        description = "",
+        popularity = 0.0,
+        seasonCount = 0,
+        originCountry = ""
+    )
+
+    private val expectedMovieWithNulls = Movie(
+        id = 301L,
+        name = "",
+        posterUrl = "",
+        releaseDate = LocalDate.fromEpochDays(0),
+        rating = 0f,
+        categories = emptyList(),
+        description = "",
+        popularity = 0.0,
+        runTimeInMinutes = 0,
+        originCountry = ""
+    )
+
+    private val expectedTvShowWithNulls = TvShow(
+        id = 301L,
+        name = "",
+        posterUrl = "",
+        airDate = LocalDate.fromEpochDays(0),
+        rating = 0f,
+        categories = emptyList(),
+        description = "",
+        popularity = 0.0,
+        seasonCount = 0,
+        originCountry = ""
     )
 }
