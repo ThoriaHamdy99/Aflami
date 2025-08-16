@@ -39,6 +39,7 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalRestrictionLevel
+import com.amsterdam.ui.components.DottedSeparatedRow
 import com.amsterdam.ui.components.RatingChip
 import com.amsterdam.ui.utils.toSafetyLevel
 

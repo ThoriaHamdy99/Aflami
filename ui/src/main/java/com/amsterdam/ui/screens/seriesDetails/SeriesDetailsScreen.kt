@@ -77,8 +77,6 @@ import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.CategoryChip
 import com.amsterdam.ui.components.DottedSeparatedRow
 import com.amsterdam.ui.components.EmptyStateText
-import com.amsterdam.ui.components.EpisodeCard
-import com.amsterdam.ui.screens.seriesDetails.component.EpisodeCard
 import com.amsterdam.ui.components.MustLoginDialog
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.RatingChip
@@ -92,6 +90,7 @@ import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.openYouTubeVideo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
+import com.amsterdam.ui.screens.seriesDetails.component.EpisodeCard
 import com.amsterdam.ui.screens.seriesDetails.component.TvShowCastSection
 import com.amsterdam.ui.screens.seriesDetails.component.companyProductionTvShowSection
 import com.amsterdam.ui.screens.seriesDetails.component.moreTvShowLikeSection
@@ -150,13 +149,13 @@ fun SeriesDetailsScreen(
                 }
 
                 is SeriesDetailsEffect.ShowEpisodeTrailerNotFound -> {
-                    SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
+                    SnackBarManager.showError(context.getString(R.string.video_launch_error))
                 }
 
                 is SeriesDetailsEffect.LaunchSeriesVideoEffect -> openYouTubeVideo(
                     context, effect.url
                 ) {
-                    SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
+                    SnackBarManager.showError(context.getString(R.string.video_launch_error))
                 }
 
                 SeriesDetailsEffect.ShowRatingSuccessSnackBar -> SnackBarManager.showSuccess(message = successRateMessage)
