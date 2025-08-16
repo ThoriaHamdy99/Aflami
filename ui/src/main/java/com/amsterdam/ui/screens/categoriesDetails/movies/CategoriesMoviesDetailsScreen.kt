@@ -174,6 +174,7 @@ private fun CategoriesMoviesDetailsContent(
                                         onError = {
                                             ImageErrorIndicator()
                                         },
+                                        isAdult = movie.isAdult
                                     )
                                 },
                                 movieTitle = movie.name,
