@@ -6,6 +6,7 @@ data class UserListUiState(
     val id: Long = 0,
     val name: String = "",
     val itemCount: Int = 0,
+    val isMovieInList: Boolean = false
 )
 
 fun UserList.toUiState() =
