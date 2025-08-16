@@ -3,9 +3,10 @@ package com.amsterdam.viewmodel.lists
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.list.CreateNewListUseCase
-import com.amsterdam.domain.useCase.list.GetUserListsUseCase
+import com.amsterdam.domain.useCase.list.GetWishListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
+import com.amsterdam.entity.WishList
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.map
 
 @HiltViewModel
 class WishListsViewModel @Inject constructor(
@@ -49,17 +51,17 @@ class WishListsViewModel @Inject constructor(
     fun getCustomLists(startLoading: Boolean = true) {
         startLoading(startLoading)
         tryToExecute(
-            action = getUserListsUseCase::invoke,
+            action = getWishListsUseCase::invoke,
             onSuccess = ::onGetCustomListsSuccess,
             onCompletion = ::onGetCustomListsCompletion
         )
     }
 
-    private fun onGetCustomListsSuccess(customLists: List<UserList>){
+    private fun onGetCustomListsSuccess(customLists: List<WishList>){
         resetErrorStateToNull()
         updateState {
             it.copy(
-                userLists = customLists.map { it.toUserListItemUiState() },
+                userLists = customLists.map { it.toWishListItemUiState() },
                 isLoading = false,
             )
         }
