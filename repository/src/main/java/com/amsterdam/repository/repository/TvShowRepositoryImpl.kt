@@ -16,12 +16,12 @@ import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
 import com.amsterdam.repository.dto.local.TvShowCategoryLocalDto
 import com.amsterdam.repository.dto.local.TvShowLocalDto
 import com.amsterdam.repository.dto.local.relation.TvShowWithCategories
-import com.amsterdam.repository.dto.remote.EpisodeRemoteDto
 import com.amsterdam.repository.dto.remote.CategoryRemoteDto
 import com.amsterdam.repository.dto.remote.CategoryRemoteResponse
+import com.amsterdam.repository.dto.remote.EpisodeRemoteDto
+import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.TvShowItemRemoteDto
 import com.amsterdam.repository.dto.remote.TvShowRemoteResponse
-import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
 import com.amsterdam.repository.mapper.toDto
 import com.amsterdam.repository.mapper.toEntity
 import com.amsterdam.repository.mapper.toEntityList
@@ -62,7 +62,8 @@ class TvShowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getTopRatedTvShows(page: Int): List<TvShow> {
-        return getCachedOrRemoteData<TvShowLocalDto, TvShowItemRemoteDto, TvShow>(
+        return if (page > 1) getTopRatedTvShowsFromRemote(page).toEntityList()
+        else getCachedOrRemoteData<TvShowLocalDto, TvShowItemRemoteDto, TvShow>(
             deleteExpired = ::deleteExpiredTopRatedTvShows,
             getFromLocal = ::getTopRatedTvShowsFromLocal,
             getFromRemote = { getTopRatedTvShowsFromRemote(page) },

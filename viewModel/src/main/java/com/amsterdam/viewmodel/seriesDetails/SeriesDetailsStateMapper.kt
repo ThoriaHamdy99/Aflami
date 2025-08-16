@@ -16,9 +16,12 @@ import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState.
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SimilarTvShowUiState
 import com.amsterdam.viewmodel.shared.RateDialogUiState
 import com.amsterdam.viewmodel.shared.mappers.toFormattedRating
+import com.amsterdam.viewmodel.utils.formatDuration
 import com.amsterdam.viewmodel.utils.toFormattedString
 import com.amsterdam.viewmodel.utils.toShortMonthString
 import kotlin.collections.map
+
+fun List<Episode>.toUiState() = map(Episode::toUiState)
 
 fun TvShowDetails.toUiState(): SeriesDetailsUiState {
     return SeriesDetailsUiState(
@@ -46,6 +49,20 @@ fun TvShowDetails.toUiState(): SeriesDetailsUiState {
     )
 }
 
+private fun List<TvShow>.toSimilarTvShowUiStates(): List<SimilarTvShowUiState> {
+    return this.map { it.toSimilarTvShowUiState() }
+}
+
+private fun List<Review>.toReviewTvShowUiStates(): List<ReviewTvShowUiState> {
+    return this.map { it.toReviewTvShowUiState() }
+}
+
+private fun List<Actor>.toActorsUiState(): List<ActorTvShowUiState> = map { it.toActorUiState() }
+
+private fun List<ProductionCompany>.toProductionTvShowCompanyUiStates(): List<ProductionTvShowCompanyUiState> {
+    return this.map { it.toProductionTvShowCompanyUiState() }
+}
+
 private fun TvShow.toSimilarTvShowUiState(): SimilarTvShowUiState {
     return SimilarTvShowUiState(
         movieId = id,
@@ -55,9 +72,7 @@ private fun TvShow.toSimilarTvShowUiState(): SimilarTvShowUiState {
         posterUrl = posterUrl
     )
 }
-fun List<TvShow>.toSimilarTvShowUiStates(): List<SimilarTvShowUiState> {
-    return this.map { it.toSimilarTvShowUiState() }
-}
+
 
 private fun List<Season>.toSeasonUiState(
     episodesBySeason: Map<Int, List<Episode>> = emptyMap()
@@ -74,8 +89,6 @@ private fun Season.toUiState(episodes: List<Episode>): SeasonUiState {
         episodes = episodes.map(Episode::toUiState)
     )
 }
-
-fun List<Episode>.toUiState() = map(Episode::toUiState)
 
 private fun Episode.toUiState(): EpisodeUiState {
     return EpisodeUiState(
@@ -108,23 +121,14 @@ fun Review.toReviewTvShowUiState(): ReviewTvShowUiState {
         imageUrl = imageUrl.takeIf { it.isNotBlank() }
     )
 }
-fun List<Review>.toReviewTvShowUiStates(): List<ReviewTvShowUiState> {
-    return this.map { it.toReviewTvShowUiState() }
-}
 
-fun Actor.toActorUiState(): ActorTvShowUiState = ActorTvShowUiState(photo = imageUrl, name = name)
+private fun Actor.toActorUiState(): ActorTvShowUiState =
+    ActorTvShowUiState(photo = imageUrl, name = name)
 
-fun List<Actor>.toActorsUiState() : List<ActorTvShowUiState> = map { it.toActorUiState() }
-
-fun ProductionCompany.toProductionTvShowCompanyUiState(): ProductionTvShowCompanyUiState {
+private fun ProductionCompany.toProductionTvShowCompanyUiState(): ProductionTvShowCompanyUiState {
     return ProductionTvShowCompanyUiState(
         image = imageUrl,
         name = name,
         country = country
     )
 }
-
-fun List<ProductionCompany>.toProductionTvShowCompanyUiStates(): List<ProductionTvShowCompanyUiState> {
-    return this.map { it.toProductionTvShowCompanyUiState() }
-}
-

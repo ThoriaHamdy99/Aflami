@@ -160,7 +160,7 @@ class SeriesDetailsViewModel @Inject constructor(
             ).takeIf { it.isNotEmpty() }?.let {
                 sendNewNavigationEffect(SeriesDetailsEffect.LaunchSeriesVideoEffect(it))
             }
-                ?:  sendNewNavigationEffect(SeriesDetailsEffect.ShowEpisodeTrailerNotFound)
+                ?: sendNewNavigationEffect(SeriesDetailsEffect.ShowEpisodeTrailerNotFound)
         }
     }
 

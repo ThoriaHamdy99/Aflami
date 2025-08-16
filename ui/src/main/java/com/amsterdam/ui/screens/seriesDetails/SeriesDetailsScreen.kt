@@ -61,7 +61,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.amsterdam.designsystem.R
+import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.Icon
 import com.amsterdam.designsystem.components.ImageErrorIndicator
@@ -78,6 +78,7 @@ import com.amsterdam.ui.components.CategoryChip
 import com.amsterdam.ui.components.DottedSeparatedRow
 import com.amsterdam.ui.components.EmptyStateText
 import com.amsterdam.ui.components.EpisodeCard
+import com.amsterdam.ui.screens.seriesDetails.component.EpisodeCard
 import com.amsterdam.ui.components.MustLoginDialog
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.RatingChip
@@ -478,7 +479,7 @@ fun SeriesDetailsContent(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .statusBarsPadding(),
-                firstOption = painterResource(R.drawable.ic_outlined_star),
+                firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
                 onNavigateBackClicked = seriesDetailsInteractionListener::onNavigateBack,
                 onFirstOptionClicked = seriesDetailsInteractionListener::onClickRate,
             )
@@ -569,8 +570,8 @@ private fun SeasonHeader(
             )
             Icon(
                 modifier = Modifier.size(20.dp),
-                painter = if (season.isExpanded) painterResource(R.drawable.ic_arrow_up) else painterResource(
-                    R.drawable.ic_arrow_down
+                painter = if (season.isExpanded) painterResource(com.amsterdam.designsystem.R.drawable.ic_arrow_up) else painterResource(
+                    com.amsterdam.designsystem.R.drawable.ic_arrow_down
                 ),
                 contentDescription = null,
                 tint = AppTheme.color.title,

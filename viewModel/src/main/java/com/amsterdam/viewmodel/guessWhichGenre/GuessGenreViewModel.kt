@@ -4,10 +4,11 @@ import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.timer.TimerHandler
-import com.amsterdam.domain.useCase.game.whichGenre.GenerateMovieGenreQuestionsUseCase.MovieGenreQuestion
 import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreUseCase
-import com.amsterdam.domain.useCase.game.whichGenre.SubmitGuessMovieGenreAnswerUseCase
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.gameResult.ResultScreenData
 import com.amsterdam.viewmodel.gameResult.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -23,7 +24,7 @@ class GuessGenreViewModel @Inject constructor(
     private val timerHandler: TimerHandler,
     private val dispatcherProvider: DispatcherProvider,
     args: GameGenreArgs,
-): BaseViewModel<GenreGameUiState, GenreGameEffect>(
+) : BaseViewModel<GenreGameUiState, GenreGameEffect>(
     GenreGameUiState(),
     dispatcherProvider
 ), GenreGameInteractionListener {
@@ -46,22 +47,25 @@ class GuessGenreViewModel @Inject constructor(
         )
     }
 
-    private suspend fun startTheGame(): List<MovieGenreQuestion> {
+    private suspend fun startTheGame(): List<GameQuestion<MovieGenre>> {
         return guessMovieGenreUseCase.startGame(difficultyType)
     }
 
-    private fun onSuccessGetQuestions(questions: List<MovieGenreQuestion>) {
+    private fun onSuccessGetQuestions(questions: List<GameQuestion<MovieGenre>>) {
         viewModelScope.launch {
             updateState { it.copy(questions = questions.map { it.toUiState() }) }
             startTheTimer()
         }
     }
 
-    private fun startTheTimer(){
+    private fun startTheTimer() {
         val currentQuestion =
             state.value.questions[state.value.currentQuestionIndex]
         viewModelScope.launch(dispatcherProvider.Default) {
-            timerHandler.startTimer( currentQuestion.questionTime, onTimerFinish = ::onMoveToNextQuestion)
+            timerHandler.startTimer(
+                currentQuestion.questionTime,
+                onTimerFinish = ::onMoveToNextQuestion
+            )
                 .collect(::onTimerUpdate)
         }
     }
@@ -72,7 +76,7 @@ class GuessGenreViewModel @Inject constructor(
             it.copy(
                 timerUiState = state.value.timerUiState.copy(
                     currentTimerCount = remainingSeconds,
-                    currentTimerColor = if(remainingSeconds > 5) TimerUiState.TimerColor.GREEN
+                    currentTimerColor = if (remainingSeconds > 5) TimerUiState.TimerColor.GREEN
                     else TimerUiState.TimerColor.RED,
                     progress = remainingSeconds.toFloat() / it.questions[it.currentQuestionIndex].questionTime
                 )
@@ -90,21 +94,23 @@ class GuessGenreViewModel @Inject constructor(
 
     override fun onChooseAnswerClick(answerIndex: Int) {
         timerHandler.stopTimer()
-        val currentQuestion =  state.value.questions[state.value.currentQuestionIndex]
+        val currentQuestion = state.value.questions[state.value.currentQuestionIndex]
         tryToExecute(
-            action = { guessMovieGenreUseCase.checkAnswer(
-                answer = currentQuestion.answers[answerIndex],
-                question = currentQuestion.toQuestion(),
-                difficultyType = difficultyType
-            ) },
+            action = {
+                guessMovieGenreUseCase.checkAnswer(
+                    answer = currentQuestion.answers[answerIndex],
+                    question = currentQuestion.toQuestion(),
+                    difficultyType = difficultyType
+                )
+            },
             onSuccess = { answer -> onAnswerCorrect(answer, answerIndex) },
-           onCompletion = timerHandler::stopTimer
+            onCompletion = timerHandler::stopTimer
 
         )
     }
 
     private fun onAnswerCorrect(
-        answerResult: SubmitGuessMovieGenreAnswerUseCase.AnswerResult,
+        answerResult: AnswerResult,
         answerIndex: Int
     ) {
         updateState {
@@ -129,7 +135,7 @@ class GuessGenreViewModel @Inject constructor(
         )
     }
 
-    private fun onUseHintSuccess(newQuestions: MovieGenreQuestion) {
+    private fun onUseHintSuccess(newQuestions: GameQuestion<MovieGenre>) {
         val updatedQuestions = state.value.questions.toMutableList().apply {
             set(state.value.currentQuestionIndex, newQuestions.toUiState())
         }
@@ -173,7 +179,7 @@ class GuessGenreViewModel @Inject constructor(
     }
 
     private fun onError(error: AflamiException) {
-        when(error){
+        when (error) {
             is NotEnoughPointsException -> updateState { it.copy(isNotEnoughPointsDialogVisible = true) }
         }
     }

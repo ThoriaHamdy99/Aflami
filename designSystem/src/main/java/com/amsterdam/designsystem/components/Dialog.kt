@@ -85,7 +85,7 @@ private fun Modifier.surfaceWidthBasedOnDeviceMode(isLandscape: Boolean) = if (i
 
 @Composable
 @ThemeAndLocalePreviews
-fun DialogPreview() {
+private fun DialogPreview() {
     AflamiTheme {
         Dialog(
             content = {},
