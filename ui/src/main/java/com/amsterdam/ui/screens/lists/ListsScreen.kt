@@ -206,9 +206,9 @@ private fun ListsScreenContent(
                                         .fillMaxSize(),
                                 columns = GridCells.Adaptive(minSize = 156.dp),
                                 state = rememberLazyGridState(),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
                             ) {
                                 items(lists) { userList ->
                                     ListItem(

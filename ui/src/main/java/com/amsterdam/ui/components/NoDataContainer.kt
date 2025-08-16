@@ -51,6 +51,7 @@ fun NoDataContainer(
                 text = title,
                 style = AppTheme.textStyle.title.medium,
                 color = AppTheme.color.title,
+                textAlign = TextAlign.Center
             )
         }
         if (description.isNotEmpty()) {
