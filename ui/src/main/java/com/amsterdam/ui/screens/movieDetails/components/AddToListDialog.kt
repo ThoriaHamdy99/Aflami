@@ -21,6 +21,9 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.component1
+import androidx.core.graphics.component2
+import androidx.core.graphics.component3
 import com.amsterdam.designsystem.components.Dialog
 import com.amsterdam.designsystem.components.Icon
 import com.amsterdam.designsystem.components.buttons.IconButton
@@ -58,16 +61,15 @@ fun AddToListDialog(
             )
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 items(userLists) { userList ->
                     SelectionListItem(
                         listName = userList.name,
                         itemCount = userList.itemCount,
                         isSelected = selectedLists.contains(userList),
-                        onSelectItem = { 
+                        isItemInList = userList.isMovieInList,
+                        onSelectItem = {
                             val updatedSelection = if (selectedLists.contains(userList)) {
                                 selectedLists - userList
                             } else {
@@ -95,23 +97,41 @@ private fun SelectionListItem(
     itemCount: Int,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
+    isItemInList: Boolean = false,
     onSelectItem: () -> Unit = {},
 ) {
+
+    val (backgroundColor, borderColor, tint) = if (isItemInList) {
+        Triple(
+            AppTheme.color.disable, AppTheme.color.stroke, AppTheme.color.stroke
+        )
+    } else if (isSelected) {
+        Triple(
+            AppTheme.color.primaryVariant, Color.Transparent, AppTheme.color.primary
+        )
+    } else {
+        Triple(
+            AppTheme.color.surface, AppTheme.color.stroke, AppTheme.color.hint
+        )
+    }
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    color = if (isSelected) Color.Transparent else AppTheme.color.stroke,
-                    shape = RoundedCornerShape(16.dp),
-                )
-                .clip(RoundedCornerShape(16.dp))
-                .background(if (isSelected) AppTheme.color.primaryVariant else AppTheme.color.surface)
-                .clickable(onClick = onSelectItem)
-                .padding(horizontal = 12.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(16.dp),
+            )
+            .clip(RoundedCornerShape(16.dp))
+            .background(backgroundColor)
+            .clickable(
+                enabled = !isItemInList,
+                onClick = onSelectItem
+            )
+            .padding(horizontal = 12.dp),
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -131,19 +151,25 @@ private fun SelectionListItem(
             )
         }
 
-        val icon =
-            if (isSelected) {
-                com.amsterdam.designsystem.R.drawable.ic_checkmark_circle
-            } else {
-                com.amsterdam.designsystem.R.drawable.ic_add_circle
-            }
+        val icon = if (isSelected) {
+            com.amsterdam.designsystem.R.drawable.ic_checkmark_circle
+        } else {
+            com.amsterdam.designsystem.R.drawable.ic_add_circle
+        }
 
-        Icon(
-            painter =
-                painterResource(icon),
-            contentDescription = null,
-            tint = if (isSelected) AppTheme.color.primary else AppTheme.color.hint,
-        )
+        if (isItemInList) {
+            Text(
+                text = stringResource(R.string.added),
+                style = AppTheme.textStyle.label.small,
+                color = AppTheme.color.hint
+            )
+        } else {
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = null,
+                tint = tint,
+            )
+        }
     }
 }
 
