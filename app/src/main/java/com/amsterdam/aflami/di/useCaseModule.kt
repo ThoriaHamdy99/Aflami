@@ -244,8 +244,8 @@ object UseCaseModule {
 
     @Provides
     fun provideCheckIsMovieInListUseCase(
-        userListRepository: UserListRepository
-    ): CheckIsMovieInListUseCase = CheckIsMovieInListUseCase(userListRepository)
+        wishListRepository: WishListRepository
+    ): CheckIsMovieInListUseCase = CheckIsMovieInListUseCase(wishListRepository)
 
     @Provides
     fun provideGetHomeScreenDataUseCase(

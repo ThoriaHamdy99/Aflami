@@ -73,6 +73,11 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     private suspend fun getWishLists() {
+        updateState {
+            it.copy(
+                isUserListsLoading = true,
+            )
+        }
         runIfLoggedIn(
             onLoggedIn = {
                 val list = getWishListsUseCase().toUiState()
@@ -285,6 +290,7 @@ class MovieDetailsViewModel @Inject constructor(
             onSuccess = { listId ->
                 sendNewEffect(MovieDetailsEffect.ListCreatedSuccessfully)
                 onSaveMovieToList(state.value.movieId, listOf(listId.toLong()))
+                loadWishLists()
             },
             onError = {
                 sendNewEffect(MovieDetailsEffect.FailedToCreateList)
