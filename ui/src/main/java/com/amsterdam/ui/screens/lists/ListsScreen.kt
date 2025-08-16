@@ -54,13 +54,13 @@ import com.amsterdam.ui.screens.profile.components.NotLoggedInContent
 import com.amsterdam.viewmodel.lists.ListsEffect
 import com.amsterdam.viewmodel.lists.ListsInteractionListener
 import com.amsterdam.viewmodel.lists.ListsUiState
-import com.amsterdam.viewmodel.lists.UserListsViewModel
-import com.amsterdam.viewmodel.shared.uiStates.UserListItemUiState
+import com.amsterdam.viewmodel.lists.WishListsViewModel
+import com.amsterdam.viewmodel.shared.uiStates.WishListItemUiState
 
 @Composable
 fun ListsScreen(
     modifier: Modifier = Modifier,
-    viewModel: UserListsViewModel = hiltViewModel(),
+    viewModel: WishListsViewModel = hiltViewModel(),
 ) {
     val navigationManager = LocalNavManager.current
     val uiState = viewModel.state.collectAsStateWithLifecycle()
@@ -315,25 +315,25 @@ private fun ListsScreenPreview_WithData() {
                     isLoading = false,
                     userLists =
                         listOf(
-                            UserListItemUiState(
+                            WishListItemUiState(
                                 id = 1,
                                 name = "Favorite Movies",
                                 description = "My favorite movies collection",
                                 itemCount = 15,
                             ),
-                            UserListItemUiState(
+                            WishListItemUiState(
                                 id = 2,
                                 name = "Watch Later",
                                 description = "Movies to watch later",
                                 itemCount = 8,
                             ),
-                            UserListItemUiState(
+                            WishListItemUiState(
                                 id = 3,
                                 name = "Action Movies",
                                 description = "Action genre movies",
                                 itemCount = 23,
                             ),
-                            UserListItemUiState(
+                            WishListItemUiState(
                                 id = 4,
                                 name = "Comedy Collection",
                                 description = "Funny movies",

@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserListItemRemoteDto(
+data class WishListItemRemoteDto(
     @SerialName("id") val id: Long,
     @SerialName("title") val title: String? = null,
     @SerialName("name") val name: String? = null,
