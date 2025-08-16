@@ -12,31 +12,19 @@ class PeopleRemoteDataSourceImpl @Inject constructor(
 ) : PeopleRemoteDataSource {
 
     override suspend fun getRandomizedTrendingPeople(requiredNumber: Int): List<RemotePeopleItemDto> {
-
         val totalPages = getTrendingPeople(FIRST_PAGE).totalPages
-        val usedPages = mutableSetOf<Int>()
-        val collectedPeople = mutableListOf<RemotePeopleItemDto>()
 
-
-        while (collectedPeople.size < requiredNumber && usedPages.size < totalPages) {
-            val peoples = (FIRST_PAGE..totalPages)
-                    .random()
-                    .also { usedPages.add(it) }
-                    .let { page -> getTrendingPeople(page).results }
-                    .filter(::onFilterHighQualityPeopleData)
-                    .shuffled()
-                    .distinctBy(RemotePeopleItemDto::id)
-
-
-            for (people in peoples) {
-                if (!collectedPeople.contains(people)) {
-                    collectedPeople.add(people)
-                    if (collectedPeople.size == requiredNumber) break
+        return (FIRST_PAGE..totalPages)
+                .shuffled()
+                .fold(emptyList()) { accumulatedPeople, page ->
+                    accumulatedPeople.takeIf { it.size >= requiredNumber }
+                    ?: getTrendingPeople(page).results
+                            .filter(::onFilterHighQualityPeopleData)
+                            .shuffled()
+                            .distinctBy(RemotePeopleItemDto::id)
+                            .plus(accumulatedPeople)
+                            .take(requiredNumber)
                 }
-            }
-        }
-
-        return collectedPeople
     }
 
     private fun onFilterHighQualityPeopleData(people: RemotePeopleItemDto): Boolean {
