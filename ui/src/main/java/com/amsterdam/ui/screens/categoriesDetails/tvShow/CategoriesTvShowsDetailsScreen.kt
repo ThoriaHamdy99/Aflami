@@ -170,6 +170,7 @@ private fun CategoriesTvShowsDetailsContent(
                                             onError = {
                                                 ImageErrorIndicator()
                                             },
+                                            isAdult = tvShow.isAdult
                                         )
                                     },
                                     movieTitle = tvShow.name,

@@ -82,6 +82,7 @@ internal fun ListDetailsItemsGrid(
                         safetyLevel = safetyLevel,
                         onLoading = { ImageLoadingIndicator() },
                         onError = { ImageErrorIndicator() },
+                        isAdult = listMediaItem.isAdult
                     )
                 },
                 movieType = movieType,
@@ -96,7 +97,7 @@ internal fun ListDetailsItemsGrid(
 
         if (
             listMediaItems.loadState.append is LoadState.Loading
-                && listMediaItems.itemCount > 1
+            && listMediaItems.itemCount > 1
         ) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 LoadingIndicator(

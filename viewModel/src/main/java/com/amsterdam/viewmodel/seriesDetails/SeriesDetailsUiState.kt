@@ -48,7 +48,8 @@ data class SeriesDetailsUiState(
         val rate: String = "",
         val name: String = "",
         val productionYear: String = "",
-        val posterUrl: String = ""
+        val posterUrl: String = "",
+        val isAdult: Boolean = false
     )
 
     data class SeasonUiState(
