@@ -11,10 +11,6 @@ class PeopleRemoteDataSourceImpl @Inject constructor(
     private val peopleApiService: PeopleApiService
 ) : PeopleRemoteDataSource {
 
-    override suspend fun getTrendingPeople(page: Int): RemotePeopleResponse {
-        return responseCall(execute = { peopleApiService.getTrendingPeople(page = page) })
-    }
-
     override suspend fun getRandomizedTrendingPeople(requiredNumber: Int): List<RemotePeopleItemDto> {
 
         val totalPages = getTrendingPeople(FIRST_PAGE).totalPages
@@ -24,12 +20,12 @@ class PeopleRemoteDataSourceImpl @Inject constructor(
 
         while (collectedPeople.size < requiredNumber && usedPages.size < totalPages) {
             val peoples = (FIRST_PAGE..totalPages)
-                .random()
-                .also { usedPages.add(it) }
-                .let { page -> getTrendingPeople(page).results }
-                .filter(::onFilterHighQualityPeopleData)
-                .shuffled()
-                .distinctBy(RemotePeopleItemDto::id)
+                    .random()
+                    .also { usedPages.add(it) }
+                    .let { page -> getTrendingPeople(page).results }
+                    .filter(::onFilterHighQualityPeopleData)
+                    .shuffled()
+                    .distinctBy(RemotePeopleItemDto::id)
 
 
             for (people in peoples) {
@@ -45,6 +41,14 @@ class PeopleRemoteDataSourceImpl @Inject constructor(
 
     private fun onFilterHighQualityPeopleData(people: RemotePeopleItemDto): Boolean {
         return people.name.isNotBlank() && !people.fullPosterUrl.isNullOrBlank()
+    }
+
+    private suspend fun getTrendingPeople(page: Int): RemotePeopleResponse {
+        return responseCall(
+            execute = {
+                peopleApiService.getTrendingPeople(page = page)
+            }
+        )
     }
 
     private companion object {
