@@ -82,7 +82,6 @@ import com.amsterdam.ui.screens.movieDetails.components.MovieExtrasSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieInfoSection
 import com.amsterdam.ui.components.movieAndTvShowDetails.PlayButton
 import com.amsterdam.ui.components.movieAndTvShowDetails.RateDialog
-import com.amsterdam.ui.screens.movieDetails.components.RemoveFromListsDialog
 import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.gallerySection
 import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
@@ -337,25 +336,6 @@ fun MovieContent(
         }
 
         AnimatedVisibility(
-            modifier = Modifier,
-            visible = state.isRemoveFromListDialogVisible
-        ) {
-            RemoveFromListsDialog(
-                userLists = state.userLists,
-                selectedLists = state.selectedLists,
-                isRemoveMovieFromListLoading = state.isRemoveFromListLoading,
-                onSelectedListChange = movieDetailsInteractionListener::onSelectedListChange,
-                onRemoveFromSelectedList = { listIds ->
-                    movieDetailsInteractionListener.onRemoveMovieFromList(
-                        movieId = state.movieId,
-                        listIds = listIds
-                    )
-                },
-                onDismiss = movieDetailsInteractionListener::onClickCancel
-            )
-        }
-
-        AnimatedVisibility(
             visible = state.rateDialogUiState.isVisible, enter = expandIn(), exit = shrinkOut()
         ) {
             with(state.rateDialogUiState) {
@@ -520,16 +500,10 @@ fun MovieContent(
                     .statusBarsPadding()
                     .zIndex(10f),
                 firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
-                lastOption = if (state.isMovieInList) {
-                    painterResource(com.amsterdam.designsystem.R.drawable.ic_sort)
-                } else {
-                    painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_add_to_favourite)
-                },
+                lastOption = if (state.isUserListsLoading) null else painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_add_to_favourite),
                 onNavigateBackClicked = movieDetailsInteractionListener::onClickBack,
                 onFirstOptionClicked = movieDetailsInteractionListener::onClickRate,
-                onLastOptionClicked = if (state.isMovieInList)
-                    movieDetailsInteractionListener::onClickRemoveFromList
-                else movieDetailsInteractionListener::onClickAddToList,
+                onLastOptionClicked = movieDetailsInteractionListener::onClickAddToList
             )
 
             HorizontalDivider(color = dividerColor)
@@ -549,10 +523,8 @@ private fun SearchByActorContentPreview() {
                 override fun onClickShowAllCast() {}
                 override fun onClickBack() {}
                 override fun onClickRetryRequest() {}
-                override fun onClickRemoveFromList() {}
                 override fun onClickAddToList() {}
                 override fun onSaveMovieToList(movieId: Long, listIds: List<Long>) {}
-                override fun onRemoveMovieFromList(movieId: Long, listIds: List<Long>) {}
                 override fun onClickCreateList() {}
                 override fun onChangeListName(listName: String) {}
                 override fun onClickCreateNewList() {}
