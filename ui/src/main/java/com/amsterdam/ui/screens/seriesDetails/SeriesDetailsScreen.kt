@@ -93,6 +93,7 @@ import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.openYouTubeVideo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
+import com.amsterdam.ui.screens.seriesDetails.component.EpisodeCardPlaceholder
 import com.amsterdam.ui.screens.seriesDetails.component.TvShowCastSection
 import com.amsterdam.ui.screens.seriesDetails.component.companyProductionTvShowSection
 import com.amsterdam.ui.screens.seriesDetails.component.moreTvShowLikeSection
@@ -124,7 +125,12 @@ fun SeriesDetailsScreen(
     val successRateMessage = stringResource(R.string.your_rating_has_been_saved)
     val failedRateMessage = stringResource(R.string.failed_to_save_your_rating)
 
-    BackHandler { navigationManager.navigateUpWithFlag(flagName = REFRESH_AFTER_RATING, value = true) }
+    BackHandler {
+        navigationManager.navigateUpWithFlag(
+            flagName = REFRESH_AFTER_RATING,
+            value = true
+        )
+    }
 
     SeriesDetailsContent(
         state = state,
@@ -135,11 +141,17 @@ fun SeriesDetailsScreen(
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 SeriesDetailsEffect.NavigateBack -> {
-                    navigationManager.navigateUpWithFlag(flagName = REFRESH_AFTER_RATING, value = true)
+                    navigationManager.navigateUpWithFlag(
+                        flagName = REFRESH_AFTER_RATING,
+                        value = true
+                    )
                 }
 
                 SeriesDetailsEffect.NavigateToCastScreen -> {
-                    navigationManager.toCast(mediaType = MediaType.TV_SHOW.name, mediaId = state.tvShowId)
+                    navigationManager.toCast(
+                        mediaType = MediaType.TV_SHOW.name,
+                        mediaId = state.tvShowId
+                    )
                 }
 
                 SeriesDetailsEffect.NavigateToLoginScreenEffect -> navigationManager.toLogin()
@@ -149,13 +161,13 @@ fun SeriesDetailsScreen(
                 }
 
                 is SeriesDetailsEffect.ShowEpisodeTrailerNotFound -> {
-                    SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
+                    SnackBarManager.showError(context.getString(R.string.video_launch_error))
                 }
 
                 is SeriesDetailsEffect.LaunchSeriesVideoEffect -> openYouTubeVideo(
                     context, effect.url
                 ) {
-                    SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
+                    SnackBarManager.showError(context.getString(R.string.video_launch_error))
                 }
 
                 SeriesDetailsEffect.ShowRatingSuccessSnackBar -> SnackBarManager.showSuccess(message = successRateMessage)
@@ -561,8 +573,12 @@ private fun LazyListScope.seasonsSection(
                     })
             }
             val episodes = if (season.isExpanded) season.episodes else emptyList()
-            items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
-                EpisodesMenu(season.seasonNumber, it, interaction::onPlayEpisodeClicked)
+            if (season.isLoading) {
+                item { EpisodeCardPlaceholder() }
+            } else {
+                items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
+                    EpisodesMenu(season.seasonNumber, it, interaction::onPlayEpisodeClicked)
+                }
             }
         }
     }
