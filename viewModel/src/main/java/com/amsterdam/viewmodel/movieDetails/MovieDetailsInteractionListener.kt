@@ -13,9 +13,6 @@ interface MovieDetailsInteractionListener {
     fun onClickCreateList()
     fun onChangeListName(listName: String)
 
-    fun onClickRemoveFromList()
-    fun onRemoveMovieFromList(movieId: Long, listIds: List<Long>)
-
     fun onClickCreateNewList()
     fun onSelectedListChange(selectedLists: List<UserListUiState>)
     fun onClickRate()
