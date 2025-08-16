@@ -47,7 +47,8 @@ fun NoDataContainer(
         )
         if (title.isNotEmpty()) {
             Text(
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                    .alpha(.68f),
                 text = title,
                 style = AppTheme.textStyle.title.medium,
                 color = AppTheme.color.title,
@@ -55,6 +56,7 @@ fun NoDataContainer(
         }
         if (description.isNotEmpty()) {
             Text(
+                modifier = Modifier.alpha(.68f),
                 text = description,
                 style = AppTheme.textStyle.body.small,
                 color = AppTheme.color.body,
