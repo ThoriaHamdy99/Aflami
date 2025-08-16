@@ -3,8 +3,6 @@ package com.amsterdam.remotedatasource.api
 import com.amsterdam.remotedatasource.utils.RequiresSessionId
 import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
-import com.amsterdam.repository.dto.remote.UserListRemoteResponse
-import com.amsterdam.repository.dto.remote.UserListDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.UserListMovieItemStatusRemoteResponse
 import com.amsterdam.repository.dto.remote.WishListRemoteResponse
 import com.amsterdam.repository.dto.remote.WishListDetailsRemoteResponse

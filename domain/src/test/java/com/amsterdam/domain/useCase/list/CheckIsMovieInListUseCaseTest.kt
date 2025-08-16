@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.list
 
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.repository.UserListRepository
+import com.amsterdam.domain.repository.WishListRepository
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -11,23 +11,23 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class CheckIsMovieInListUseCaseTest {
-    private val userListRepository: UserListRepository = mockk()
+    private val wishListRepository: WishListRepository = mockk()
     private val checkIsMovieInListUseCase by lazy {
-        CheckIsMovieInListUseCase(userListRepository)
+        CheckIsMovieInListUseCase(wishListRepository)
     }
 
     @Test
     fun `should call checkIsMovieInList when invoked`() = runTest {
-        coEvery { userListRepository.checkIsMovieInList(movieId, listId) } returns true
+        coEvery { wishListRepository.checkIsMovieInList(movieId, listId) } returns true
 
         checkIsMovieInListUseCase(movieId, listId)
 
-        coVerify(exactly = 1) { userListRepository.checkIsMovieInList(movieId, listId) }
+        coVerify(exactly = 1) { wishListRepository.checkIsMovieInList(movieId, listId) }
     }
 
     @Test
     fun `should return false when checkIsMovieInList returns false`() = runTest {
-        coEvery { userListRepository.checkIsMovieInList(movieId, listId) } returns false
+        coEvery { wishListRepository.checkIsMovieInList(movieId, listId) } returns false
 
         val result = checkIsMovieInListUseCase(movieId, listId)
 
@@ -36,7 +36,7 @@ class CheckIsMovieInListUseCaseTest {
 
     @Test
     fun `should return true when checkIsMovieInList returns true`() = runTest {
-        coEvery { userListRepository.checkIsMovieInList(movieId, listId) } returns true
+        coEvery { wishListRepository.checkIsMovieInList(movieId, listId) } returns true
 
         val result = checkIsMovieInListUseCase(movieId, listId)
 
@@ -45,7 +45,7 @@ class CheckIsMovieInListUseCaseTest {
 
     @Test
     fun `should throw exception when getMoviesFromList failed`() = runTest {
-        coEvery { userListRepository.checkIsMovieInList(movieId, listId) } throws AflamiException()
+        coEvery { wishListRepository.checkIsMovieInList(movieId, listId) } throws AflamiException()
 
         assertThrows<AflamiException> { checkIsMovieInListUseCase(movieId, listId) }
     }

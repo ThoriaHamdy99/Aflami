@@ -4,13 +4,10 @@ import com.amsterdam.domain.exceptions.InvalidCredentialsException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.exceptions.ServerErrorException
-import com.amsterdam.remotedatasource.api.UserListApiService
 import com.amsterdam.remotedatasource.api.WishListApiService
 import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
-import com.amsterdam.repository.dto.remote.UserListDetailsRemoteResponse
-import com.amsterdam.repository.dto.remote.UserListMovieItemStatusRemoteResponse
-import com.amsterdam.repository.dto.remote.UserListRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListMovieItemStatusRemoteResponse
 import com.amsterdam.repository.dto.remote.WishListDetailsRemoteResponse
 import com.amsterdam.repository.dto.remote.WishListRemoteResponse
 import com.amsterdam.repository.dto.remote.authentication.AuthenticationRemoteResponse
@@ -34,7 +31,7 @@ class WishListRemoteDataSourceImplTest {
 
     private val wishListApiService: WishListApiService = mockk()
     private val jsonMock: Json = mockk(relaxed = true)
-    private val userListRemoteDataSourceImpl: WishListRemoteDataSourceImpl =
+    private val wishListRemoteDataSourceImpl: WishListRemoteDataSourceImpl =
         WishListRemoteDataSourceImpl(
             wishListApiService = wishListApiService,
             json = jsonMock
@@ -50,7 +47,7 @@ class WishListRemoteDataSourceImplTest {
             )
         } returns createListSuccessResponse
 
-        val result = userListRemoteDataSourceImpl.createNewList(listName, language)
+        val result = wishListRemoteDataSourceImpl.createNewList(listName, language)
 
         assertThat(result).isEqualTo(createListSuccessResponse)
     }
@@ -66,7 +63,7 @@ class WishListRemoteDataSourceImplTest {
                 )
             } returns createListSuccessResponse
 
-            userListRemoteDataSourceImpl.createNewList(listName, language)
+            wishListRemoteDataSourceImpl.createNewList(listName, language)
 
             coVerify(exactly = 1) {
                 wishListApiService.createNewList(
@@ -81,7 +78,7 @@ class WishListRemoteDataSourceImplTest {
         coEvery { wishListApiService.createNewList(any(), any(), any()) } throws networkException
 
         assertThrows<NetworkException> {
-            userListRemoteDataSourceImpl.createNewList(
+            wishListRemoteDataSourceImpl.createNewList(
                 listName,
                 language
             )
@@ -96,11 +93,11 @@ class WishListRemoteDataSourceImplTest {
                     any(),
                     any()
                 )
-            } returns userListsSuccessResponse
+            } returns wishListsSuccessResponse
 
-            val result = userListRemoteDataSourceImpl.getWishLists(accountId, page)
+            val result = wishListRemoteDataSourceImpl.getWishLists(accountId, page)
 
-            assertThat(result).isEqualTo(userListsSuccessResponse)
+            assertThat(result).isEqualTo(wishListsSuccessResponse)
         }
 
     @Test
@@ -111,9 +108,9 @@ class WishListRemoteDataSourceImplTest {
                     any(),
                     any()
                 )
-            } returns userListsSuccessResponse
+            } returns wishListsSuccessResponse
 
-            userListRemoteDataSourceImpl.getWishLists(accountId, page)
+            wishListRemoteDataSourceImpl.getWishLists(accountId, page)
 
             coVerify(exactly = 1) { wishListApiService.getWishLists(accountId, page) }
         }
@@ -130,7 +127,7 @@ class WishListRemoteDataSourceImplTest {
             coEvery { jsonMock.decodeFromString<AuthenticationRemoteResponse>(any<String>()) } returns authenticationRemoteResponse401
 
             assertThrows<InvalidCredentialsException> {
-                userListRemoteDataSourceImpl.getWishLists(
+                wishListRemoteDataSourceImpl.getWishLists(
                     accountId,
                     page
                 )
@@ -146,7 +143,7 @@ class WishListRemoteDataSourceImplTest {
             )
         } returns addItemSuccessResponse
 
-        val result = userListRemoteDataSourceImpl.addMovieToList(listId, movieId)
+        val result = wishListRemoteDataSourceImpl.addMovieToList(listId, movieId)
 
         assertThat(result).isEqualTo(addItemSuccessResponse)
     }
@@ -161,7 +158,7 @@ class WishListRemoteDataSourceImplTest {
                 )
             } returns addItemSuccessResponse
 
-            userListRemoteDataSourceImpl.addMovieToList(listId, movieId)
+            wishListRemoteDataSourceImpl.addMovieToList(listId, movieId)
 
             coVerify(exactly = 1) { wishListApiService.addMediaItemToList(listId, movieId) }
         }
@@ -171,7 +168,7 @@ class WishListRemoteDataSourceImplTest {
         coEvery { wishListApiService.addMediaItemToList(any(), any()) } throws networkException
 
         assertThrows<NetworkException> {
-            userListRemoteDataSourceImpl.addMovieToList(
+            wishListRemoteDataSourceImpl.addMovieToList(
                 listId,
                 movieId
             )
@@ -188,7 +185,7 @@ class WishListRemoteDataSourceImplTest {
                 )
             } returns remoteListResponse
 
-            val result = userListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(listId, page)
+            val result = wishListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(listId, page)
 
             assertThat(result).isEqualTo(remoteListResponse)
         }
@@ -203,7 +200,7 @@ class WishListRemoteDataSourceImplTest {
                 )
             } returns remoteListResponse
 
-            userListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(listId, page)
+            wishListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(listId, page)
 
             coVerify(exactly = 1) { wishListApiService.getMoviesAndTvShowsFromList(listId, page) }
         }
@@ -220,7 +217,7 @@ class WishListRemoteDataSourceImplTest {
             coEvery { jsonMock.decodeFromString<AuthenticationRemoteResponse>(any<String>()) } returns authenticationRemoteResponse401
 
             assertThrows<InvalidCredentialsException> {
-                userListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(
+                wishListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(
                     listId,
                     page
                 )
@@ -238,7 +235,7 @@ class WishListRemoteDataSourceImplTest {
             } throws networkException
 
             assertThrows<NetworkException> {
-                userListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(
+                wishListRemoteDataSourceImpl.getMoviesAndTvShowsFromList(
                     listId,
                     page
                 )
@@ -249,7 +246,7 @@ class WishListRemoteDataSourceImplTest {
     fun `checkIsMovieInList should return true when API returns true`() = runTest {
         coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } returns movieInListResponse
 
-        val result = userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+        val result = wishListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
 
         assertThat(result.itemPresent).isTrue()
     }
@@ -258,7 +255,7 @@ class WishListRemoteDataSourceImplTest {
     fun `checkIsMovieInList should return false when API returns false`() = runTest {
         coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } returns movieNotInListResponse
 
-        val result = userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+        val result = wishListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
 
         assertThat(result.itemPresent).isFalse()
     }
@@ -268,7 +265,7 @@ class WishListRemoteDataSourceImplTest {
         coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } throws createHttpException(404, "")
 
         assertThrows<ServerErrorException> {
-            userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+            wishListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
         }
     }
 
@@ -277,7 +274,7 @@ class WishListRemoteDataSourceImplTest {
         coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } throws ConnectException()
 
         assertThrows<NoInternetException> {
-            userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+            wishListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
         }
     }
 
@@ -286,7 +283,7 @@ class WishListRemoteDataSourceImplTest {
         coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } throws SerializationException()
 
         assertThrows<ServerErrorException> {
-            userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+            wishListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
         }
     }
 
@@ -295,7 +292,7 @@ class WishListRemoteDataSourceImplTest {
         coEvery { wishListApiService.checkIsMovieInList(listId, movieId) } throws IOException()
 
         assertThrows<NetworkException> {
-            userListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
+            wishListRemoteDataSourceImpl.checkIsMovieInList(movieId, listId)
         }
     }
 
@@ -303,7 +300,7 @@ class WishListRemoteDataSourceImplTest {
     fun `deleteList should call the API service exactly once to delete the list`() = runTest {
         coEvery { wishListApiService.deleteList(any()) } returns Unit
 
-        userListRemoteDataSourceImpl.deleteList(listId)
+        wishListRemoteDataSourceImpl.deleteList(listId)
 
         coVerify(exactly = 1) { wishListApiService.deleteList(listId) }
     }
@@ -318,7 +315,7 @@ class WishListRemoteDataSourceImplTest {
             coEvery { jsonMock.decodeFromString<AuthenticationRemoteResponse>(any<String>()) } returns authenticationRemoteResponse401
 
             assertThrows<InvalidCredentialsException> {
-                userListRemoteDataSourceImpl.deleteList(
+                wishListRemoteDataSourceImpl.deleteList(
                     listId
                 )
             }
@@ -328,7 +325,7 @@ class WishListRemoteDataSourceImplTest {
     fun `deleteList should throw NetworkException when the API call fails`() = runTest {
         coEvery { wishListApiService.deleteList(any()) } throws networkException
 
-        assertThrows<NetworkException> { userListRemoteDataSourceImpl.deleteList(listId) }
+        assertThrows<NetworkException> { wishListRemoteDataSourceImpl.deleteList(listId) }
     }
 
     @Test
@@ -336,7 +333,7 @@ class WishListRemoteDataSourceImplTest {
         runTest {
             coEvery { wishListApiService.removeMovieFromList(any(), any()) } returns Unit
 
-            userListRemoteDataSourceImpl.deleteMovieFromList(listId, movieId)
+            wishListRemoteDataSourceImpl.deleteMovieFromList(listId, movieId)
 
             coVerify(exactly = 1) { wishListApiService.removeMovieFromList(listId, movieId) }
         }
@@ -353,7 +350,7 @@ class WishListRemoteDataSourceImplTest {
             coEvery { jsonMock.decodeFromString<AuthenticationRemoteResponse>(any<String>()) } returns authenticationRemoteResponse401
 
             assertThrows<InvalidCredentialsException> {
-                userListRemoteDataSourceImpl.deleteMovieFromList(
+                wishListRemoteDataSourceImpl.deleteMovieFromList(
                     listId,
                     movieId
                 )
@@ -365,7 +362,7 @@ class WishListRemoteDataSourceImplTest {
         coEvery { wishListApiService.removeMovieFromList(any(), any()) } throws networkException
 
         assertThrows<NetworkException> {
-            userListRemoteDataSourceImpl.deleteMovieFromList(
+            wishListRemoteDataSourceImpl.deleteMovieFromList(
                 listId,
                 movieId
             )
@@ -397,7 +394,7 @@ class WishListRemoteDataSourceImplTest {
         success = true,
     )
 
-    private val userListsSuccessResponse = WishListRemoteResponse(
+    private val wishListsSuccessResponse = WishListRemoteResponse(
         results = emptyList(),
         page = 1,
         totalPages = 1,
@@ -410,12 +407,12 @@ class WishListRemoteDataSourceImplTest {
         success = true
     )
 
-    private val movieInListResponse = UserListMovieItemStatusRemoteResponse(
+    private val movieInListResponse = WishListMovieItemStatusRemoteResponse(
         id = listId.toString(),
         itemPresent = true
     )
 
-    private val movieNotInListResponse = UserListMovieItemStatusRemoteResponse(
+    private val movieNotInListResponse = WishListMovieItemStatusRemoteResponse(
         id = listId.toString(),
         itemPresent = false
     )

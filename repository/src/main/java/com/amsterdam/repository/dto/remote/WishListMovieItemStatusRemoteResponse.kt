@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserListMovieItemStatusRemoteResponse(
+data class WishListMovieItemStatusRemoteResponse(
     @SerialName("id") val id: String,
     @SerialName("item_present") val itemPresent: Boolean
 )

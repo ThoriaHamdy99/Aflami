@@ -16,7 +16,7 @@ import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Lang
 import com.amsterdam.domain.utils.SessionType
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.Review
-import com.amsterdam.entity.UserList
+import com.amsterdam.entity.WishList
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
@@ -109,7 +109,7 @@ class MovieDetailsViewModelTest {
     fun `init should set isMovieInList to true when checkIsMovieInListUseCase returns true`() =
         runTest {
             coEvery { testArgs.movieId } returns movieId
-            coEvery { getUserListsUseCase() } returns listOf(userList)
+            coEvery { getWishListsUseCase() } returns listOf(wishList)
             coEvery { checkIsMovieInListUseCase.invoke(movieId, listId) } returns true
 
             viewModel
@@ -122,7 +122,7 @@ class MovieDetailsViewModelTest {
     fun `init should set isMovieInList to false when checkIsMovieInListUseCase returns false`() =
         runTest {
             coEvery { testArgs.movieId } returns movieId
-            coEvery { getUserListsUseCase() } returns listOf(userList)
+            coEvery { getWishListsUseCase() } returns listOf(wishList)
             coEvery { checkIsMovieInListUseCase.invoke(movieId, listId) } returns false
 
             viewModel
@@ -295,7 +295,7 @@ class MovieDetailsViewModelTest {
     @Test
     fun `onClickAddToList should return early when screen is loading`() = runTest {
         coEvery { getsSessionType.invoke() } returns SessionType.LOGGED_IN
-        coEvery { getUserListsUseCase.invoke() } returns emptyList()
+        coEvery { getWishListsUseCase() } returns emptyList()
         viewModel
 
         viewModel.onClickAddToList()
@@ -346,7 +346,7 @@ class MovieDetailsViewModelTest {
     @Test
     fun `onSaveMovieToList should increase item count in list if success`() = runTest {
         coEvery { addMovieToListUseCase.invoke(any(), any()) } just Runs
-        coEvery { getUserListsUseCase() } returns userLists
+        coEvery { getWishListsUseCase() } returns wishLists
 
         viewModel.onSaveMovieToList(movieId, listOf(1L, 2L))
         advanceUntilIdle()
@@ -357,7 +357,7 @@ class MovieDetailsViewModelTest {
     @Test
     fun `onSaveMovieToList should not increase item count in list if not selected`() = runTest {
         coEvery { addMovieToListUseCase.invoke(any(), any()) } just Runs
-        coEvery { getUserListsUseCase() } returns userLists
+        coEvery { getWishListsUseCase() } returns wishLists
 
         viewModel.onSaveMovieToList(movieId, listOf(2L))
         advanceUntilIdle()
@@ -639,15 +639,15 @@ class MovieDetailsViewModelTest {
     )
 
     private val selectedList = WishListUiState(id = 1L, name = "Test List")
-    private val userList = UserList(
+    private val wishList = WishList(
         id = 1,
         name = "Test List",
         description = "",
         itemCount = 1
     )
-    private val userLists = listOf(
-        userList,
-        userList.copy(id = 2)
+    private val wishLists = listOf(
+        wishList,
+        wishList.copy(id = 2)
     )
     private val newListId = 5
     private val listId = 1L

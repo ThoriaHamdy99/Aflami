@@ -1,8 +1,6 @@
 package com.amsterdam.repository.repository
 
-import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.exceptions.NoInternetException
-import com.amsterdam.domain.exceptions.ServerErrorException
 import com.amsterdam.domain.exceptions.UnknownException
 import com.amsterdam.domain.repository.AppPreferencesRepository
 import com.amsterdam.domain.repository.WishListRepository
@@ -10,9 +8,7 @@ import com.amsterdam.entity.WishList
 import com.amsterdam.repository.datasource.remote.WishListRemoteDataSource
 import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
-import com.amsterdam.repository.dto.remote.UserListMovieItemStatusRemoteResponse
-import com.amsterdam.repository.dto.remote.UserListRemoteDto
-import com.amsterdam.repository.dto.remote.UserListRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListMovieItemStatusRemoteResponse
 import com.amsterdam.repository.dto.remote.WishListRemoteDto
 import com.amsterdam.repository.dto.remote.WishListRemoteResponse
 import com.amsterdam.repository.mapper.toMovieEntity
@@ -24,11 +20,8 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.SerializationException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.io.IOException
-import java.net.ConnectException
 
 class WishListRepositoryImplTest {
     private val wishListRemoteDataSource: WishListRemoteDataSource = mockk()
@@ -83,18 +76,18 @@ class WishListRepositoryImplTest {
 
     @Test
     fun `checkIsMovieInList should return true when service returns true`() = runTest {
-        coEvery { userListRemoteDataSource.checkIsMovieInList(movieId, listId) } returns movieInListResponse
+        coEvery { wishListRemoteDataSource.checkIsMovieInList(movieId, listId) } returns movieInListResponse
 
-        val result = userListRepository.checkIsMovieInList(movieId, listId)
+        val result = wishListRepository.checkIsMovieInList(movieId, listId)
 
         assertThat(result).isTrue()
     }
 
     @Test
     fun `checkIsMovieInList should return false when service returns false`() = runTest {
-        coEvery { userListRemoteDataSource.checkIsMovieInList(movieId, listId) } returns movieNotInListResponse
+        coEvery { wishListRemoteDataSource.checkIsMovieInList(movieId, listId) } returns movieNotInListResponse
 
-        val result = userListRepository.checkIsMovieInList(movieId, listId)
+        val result = wishListRepository.checkIsMovieInList(movieId, listId)
 
         assertThat(result).isFalse()
     }
@@ -174,7 +167,7 @@ class WishListRepositoryImplTest {
     private val movieId = 456L
     private val listName = "New List"
     private val language = "en"
-    val accountId = 1
+    private val accountId = 1
 
     private val expectedWishList = listOf(
         WishList(
@@ -199,12 +192,12 @@ class WishListRepositoryImplTest {
         totalResults = 1
     )
 
-    private val movieInListResponse = UserListMovieItemStatusRemoteResponse(
+    private val movieInListResponse = WishListMovieItemStatusRemoteResponse(
         id = listId.toString(),
         itemPresent = true
     )
 
-    private val movieNotInListResponse = UserListMovieItemStatusRemoteResponse(
+    private val movieNotInListResponse = WishListMovieItemStatusRemoteResponse(
         id = listId.toString(),
         itemPresent = false
     )
@@ -212,5 +205,5 @@ class WishListRepositoryImplTest {
 
     private val page = 1
 
-    val fakeUserListResponse = CreateUserListRemoteResponse(1, 1, "", true)
+    private val fakeUserListResponse = CreateUserListRemoteResponse(1, 1, "", true)
 }

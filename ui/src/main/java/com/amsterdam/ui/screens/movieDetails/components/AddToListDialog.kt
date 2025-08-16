@@ -21,21 +21,17 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.component1
-import androidx.core.graphics.component2
-import androidx.core.graphics.component3
 import com.amsterdam.designsystem.components.Dialog
 import com.amsterdam.designsystem.components.Icon
-import com.amsterdam.designsystem.components.buttons.IconButton
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.ButtonDefaults
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
+import com.amsterdam.designsystem.components.buttons.IconButton
 import com.amsterdam.designsystem.components.buttons.OutlinedButton
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.R
 import com.amsterdam.ui.components.EmptyStateText
-import com.amsterdam.viewmodel.movieDetails.UserListUiState
 import com.amsterdam.viewmodel.movieDetails.WishListUiState
 
 @Composable

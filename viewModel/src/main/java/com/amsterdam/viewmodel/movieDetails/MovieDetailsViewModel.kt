@@ -51,7 +51,7 @@ class MovieDetailsViewModel @Inject constructor(
         manageLocaleLanguageUseCase.getAppLanguage()
             .onEach {
                 loadMovieDetails()
-                loadUserLists()
+                loadWishLists()
             }.launchIn(viewModelScope)
     }
 
@@ -65,17 +65,17 @@ class MovieDetailsViewModel @Inject constructor(
         )
     }
 
-    private fun loadUserLists() {
+    private fun loadWishLists() {
         tryToExecute(
-            action = ::getUserLists,
-            onCompletion = ::onGetUserListsComplete
+            action = ::getWishLists,
+            onCompletion = ::onGetWishListsComplete
         )
     }
 
-    private suspend fun getUserLists() {
+    private suspend fun getWishLists() {
         runIfLoggedIn(
             onLoggedIn = {
-                val list = getUserListsUseCase().toUiState()
+                val list = getWishListsUseCase().toUiState()
                 val userLists = list
                     .map { lists ->
                         lists.copy(
@@ -94,7 +94,7 @@ class MovieDetailsViewModel @Inject constructor(
         )
     }
 
-    private fun onGetUserListsComplete() {
+    private fun onGetWishListsComplete() {
         updateState {
             it.copy(
                 isUserListsLoading = false
@@ -129,7 +129,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     override fun onClickRetryRequest() {
         loadMovieDetails()
-        loadUserLists()
+        loadWishLists()
     }
 
     override fun onClickRate() {
