@@ -49,6 +49,7 @@ fun LazyListScope.moreTvShowLikeSection(
                         contentScale = ContentScale.Crop,
                         onLoading = { ImageLoadingIndicator() },
                         onError = { ImageErrorIndicator() },
+                        isAdult = similarMovie.isAdult
                     )
                 },
                 movieTitle = similarMovie.name,

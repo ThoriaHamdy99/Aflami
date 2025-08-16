@@ -3,16 +3,19 @@ package com.amsterdam.viewmodel.guessMovieByPosterGame
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
-import com.amsterdam.domain.timer.TimerHandler
+import com.amsterdam.domain.useCase.game.AddPointsToGameUseCase
+import com.amsterdam.domain.useCase.game.AddSecondToGameTimeUseCase
+import com.amsterdam.domain.useCase.game.CreateGameSessionIdUseCase
 import com.amsterdam.domain.useCase.game.guessByPoster.GuessMovieByPosterGameUseCase
 import com.amsterdam.domain.utils.AnswerResult
 import com.amsterdam.domain.utils.GameQuestion
+import com.amsterdam.entity.Game
 import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.viewmodel.gameResult.ResultScreenData
-import com.amsterdam.viewmodel.gameResult.ResultSideEffect
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
+import com.amsterdam.viewmodel.utils.timer.TimerHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,23 +23,24 @@ import javax.inject.Inject
 @HiltViewModel
 class GuessMovieByPosterGameViewModel @Inject constructor(
     private val guessMovieByPosterGameUseCase: GuessMovieByPosterGameUseCase,
-    args: GuessMovieByPosterGameArgs,
+    private val createGameSessionIdUseCase: CreateGameSessionIdUseCase,
+    private val addPointsToGameUseCase: AddPointsToGameUseCase,
+    private val addSecondToGameTimeUseCase: AddSecondToGameTimeUseCase,
+    private val timerHandler: TimerHandler,
     private val dispatcherProvider: DispatcherProvider,
-    private val timerHandler: TimerHandler
+    args: GuessMovieByPosterGameArgs
 ) : BaseViewModel<GuessMovieByPosterUiState, GuessMovieByPosterGameEffect>(
     GuessMovieByPosterUiState(),
     dispatcherProvider
 ), GuessMovieByPosterInteractionListener {
 
     private val difficultyType = GameDifficulty.DifficultyType.valueOf(args.difficulty)
-    private var spentTimeSeconds: Int = 0
-    private var totalCollectedPoints: Int = 0
 
     init {
-        fetchQuestions()
+        getQuestions()
     }
 
-    private fun fetchQuestions() {
+    private fun getQuestions() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             action = ::startTheGame,
@@ -47,6 +51,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
     }
 
     private suspend fun startTheGame(): List<GameQuestion<String>> {
+        updateState { it.copy(gameSessionId = createGameSessionIdUseCase()) }
         return guessMovieByPosterGameUseCase.startGame(difficultyType)
     }
 
@@ -64,7 +69,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
                 currentQuestion.questionTimeSeconds,
                 onTimerFinish = ::onMoveToNextQuestion
             )
-                .collect(::onTimerUpdate)
+                    .collect(::onTimerUpdate)
         }
     }
 
@@ -139,7 +144,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
                 selectedAnswerIndex = selectedAnswerIndex
             )
         }
-        totalCollectedPoints += answerResult.earnedPoints
+        addPointsToGameUseCase(answerResult.earnedPoints, state.value.gameSessionId)
     }
 
     private fun onSubmitTheAnswerComplete() {
@@ -173,10 +178,9 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
             startTheTimer()
         } else {
             val resultData = ResultScreenData(
-                totalCollectedPoints = totalCollectedPoints,
-                totalSpentSeconds = spentTimeSeconds,
                 difficulty = difficultyType.name,
-                gameType = ResultSideEffect.GameType.GUESS_MOVIE_BY_POSTER.name
+                gameType = Game.GameType.GUESS_MOVIE_BY_POSTER.name,
+                gameSessionId = state.value.gameSessionId
             )
             sendNewNavigationEffect(
                 GuessMovieByPosterGameEffect.NavigateToGameResult(resultData)
@@ -189,7 +193,7 @@ class GuessMovieByPosterGameViewModel @Inject constructor(
     }
 
     private fun increaseSpentTimeSecondsByOne() {
-        spentTimeSeconds += 1
+        addSecondToGameTimeUseCase(state.value.gameSessionId)
     }
 
     override fun onCloseButtonClicked() {
