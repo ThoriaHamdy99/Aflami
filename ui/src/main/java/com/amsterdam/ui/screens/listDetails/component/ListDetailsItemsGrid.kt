@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
@@ -38,12 +39,12 @@ import kotlinx.coroutines.flow.emptyFlow
 @Composable
 internal fun ListDetailsItemsGrid(
     listMediaItems: LazyPagingItems<ListDetailsItemsUiState>,
+    gridState: LazyGridState,
     modifier: Modifier = Modifier,
     onClickMovie: (Long) -> Unit,
     onClickTvShow: (Long) -> Unit,
     onClickRemoveItem: (Long) -> Unit = {}
 ) {
-    val gridState = rememberLazyGridState()
     val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 160.dp),
@@ -130,6 +131,7 @@ private fun MediaItemsGridPreview() {
     AflamiTheme {
         ListDetailsItemsGrid(
             listMediaItems = emptyFlow<PagingData<ListDetailsItemsUiState>>().collectAsLazyPagingItems(),
+            gridState = rememberLazyGridState(),
             onClickMovie = {},
             onClickTvShow = {},
             onClickRemoveItem = {}

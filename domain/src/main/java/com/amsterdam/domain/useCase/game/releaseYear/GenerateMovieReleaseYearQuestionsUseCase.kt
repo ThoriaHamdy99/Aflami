@@ -11,7 +11,7 @@ class GenerateMovieReleaseYearQuestionsUseCase(
 ) {
     suspend operator fun invoke(difficultyType: DifficultyType): List<GameQuestion<Int>> {
       val gameDifficulty =  getGameDifficultyByDifficultyTypeUseCase(difficultyType)
-        val movies = gameRepository.getRandomMoviesWithNotNullDate(gameDifficulty.totalQuestions)
+        val movies = gameRepository.getRandomMoviesWithReleaseDate(gameDifficulty.totalQuestions)
 
         return movies.map { movie ->
             val correctYear = movie.releaseDate!!.year

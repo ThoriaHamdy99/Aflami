@@ -24,11 +24,11 @@ import com.amsterdam.designsystem.theme.shapes.FolderShape
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.ripple
 import com.amsterdam.ui.R
-import com.amsterdam.viewmodel.shared.uiStates.UserListItemUiState
+import com.amsterdam.viewmodel.shared.uiStates.WishListItemUiState
 
 @Composable
 fun ListItem(
-    list: UserListItemUiState,
+    list: WishListItemUiState,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
@@ -77,7 +77,7 @@ private fun ListItemPreview() {
     AflamiTheme {
         ListItem(
             modifier = Modifier.size(160.dp, 147.dp),
-            list = UserListItemUiState(1, "list", "description", 10),
+            list = WishListItemUiState(1, "list", "description", 10),
             onClick = {}
         )
     }

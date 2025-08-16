@@ -1,6 +1,6 @@
 package com.amsterdam.entity
 
-data class UserList(
+data class WishList(
     val id: Int,
     val name: String,
     val description: String,
