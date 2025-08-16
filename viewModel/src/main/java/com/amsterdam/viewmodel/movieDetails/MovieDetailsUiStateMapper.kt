@@ -25,7 +25,7 @@ fun MovieDetails.toUiState(): MovieDetailsUiState {
         movieLength = movieLengthToHourMinuteString(movie.runTimeInMinutes),
         originCountry = movie.originCountry,
         description = movie.description,
-        videoUrl = movie.videoUrl,
+        videoUrl = movie.videoUrl ?: "",
         actors = actors.toActorsMovieUiState(),
         extraItem = MovieDetailsUiState.defaultMovieExtras,
         similarMovies = similarMovies.toSimilarMoviesUiState(),
@@ -35,9 +35,11 @@ fun MovieDetails.toUiState(): MovieDetailsUiState {
         rateDialogUiState = RateDialogUiState(selectedStarIndex = userRate)
     )
 }
-fun Actor.toActorMovieUiState(): ActorMovieUiState = ActorMovieUiState(photo = imageUrl, name = name)
 
-fun List<Actor>.toActorsMovieUiState() : List<ActorMovieUiState> = map { it.toActorMovieUiState() }
+fun Actor.toActorMovieUiState(): ActorMovieUiState =
+    ActorMovieUiState(photo = imageUrl, name = name)
+
+fun List<Actor>.toActorsMovieUiState(): List<ActorMovieUiState> = map { it.toActorMovieUiState() }
 
 private fun Movie.toSimilarMovieUiState(): SimilarMovieUiState {
     return SimilarMovieUiState(
@@ -70,4 +72,5 @@ fun ProductionCompany.toProductionMovieCompanyUiState(): ProductionMovieCompanyU
     )
 }
 
-fun List<ProductionCompany>.toProductionMovieCompaniesUiState() = map { it.toProductionMovieCompanyUiState() }
+fun List<ProductionCompany>.toProductionMovieCompaniesUiState() =
+    map { it.toProductionMovieCompanyUiState() }
