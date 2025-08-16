@@ -1,6 +1,7 @@
 package com.amsterdam.ui.screens.watchHistory
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -98,7 +99,7 @@ fun WatchHistoryContent(
                 title = stringResource(R.string.watch_history),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 5.dp),
                 onNavigateBackClicked = interactionListener::onClickBack
             )
 
