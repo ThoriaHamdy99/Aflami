@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.timer.TimerHandler
-import com.amsterdam.domain.useCase.game.releaseYear.GenerateMovieReleaseYearQuestionsUseCase.MovieReleasedDateQuestion
 import com.amsterdam.domain.useCase.game.releaseYear.GuessReleaseYearGameUseCase
-import com.amsterdam.domain.useCase.game.releaseYear.SubmitGuessReleaseYearAnswerUseCase.AnswerResult
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
 import com.amsterdam.viewmodel.gameResult.ResultScreenData
 import com.amsterdam.viewmodel.gameResult.ResultSideEffect
@@ -45,11 +45,11 @@ class GuessReleaseYearGameViewModel @Inject constructor(
         )
     }
 
-    private suspend fun startTheGame(): List<MovieReleasedDateQuestion> {
+    private suspend fun startTheGame(): List<GameQuestion<Int>> {
         return guessReleaseYearForMovieGameUseCase.startGame(difficultyType)
     }
 
-    private fun onSuccessGetQuestions(questions: List<MovieReleasedDateQuestion>) {
+    private fun onSuccessGetQuestions(questions: List<GameQuestion<Int>>) {
         viewModelScope.launch {
             updateState { it.copy(questions = questions.toQuestionsUiStateUiState()) }
             startTheTimer()
@@ -114,7 +114,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
     override fun onSelectAnswer(selectedAnswerIndex: Int) {
         val question =
             state.value.questions[state.value.currentQuestionIndex].toMovieReleasedDateQuestion()
-        val selectedAnswer = question.releaseYearChoices[selectedAnswerIndex]
+        val selectedAnswer = question.choices[selectedAnswerIndex]
         tryToExecute(
             action = {
                 guessReleaseYearForMovieGameUseCase.answer(

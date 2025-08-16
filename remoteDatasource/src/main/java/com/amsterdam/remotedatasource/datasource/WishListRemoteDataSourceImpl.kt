@@ -19,9 +19,9 @@ class WishListRemoteDataSourceImpl @Inject constructor(
         listName: String,
         language: String,
     ): CreateUserListRemoteResponse {
-        return responseCall {
+        return responseCall(execute = {
             wishListApiService.createNewList(listName = listName, language = language)
-        }
+        })
     }
 
     override suspend fun getWishLists(accountId: Int, page: Int): WishListRemoteResponse {
@@ -32,7 +32,7 @@ class WishListRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun addMovieToList(listId: Long, movieId: Long): AddItemToListRemoteResponse {
-        return responseCall { wishListApiService.addMediaItemToList(listId, movieId) }
+        return responseCall(execute = { wishListApiService.addMediaItemToList(listId, movieId) })
     }
 
     override suspend fun getMoviesAndTvShowsFromList(
