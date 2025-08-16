@@ -74,6 +74,7 @@ import com.amsterdam.domain.useCase.preferences.ManageRestrictionLevelUseCase
 import com.amsterdam.domain.useCase.preferences.SetOnboardingCompletedUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
 import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
+import com.amsterdam.domain.useCase.list.CheckIsMovieInListUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
@@ -235,6 +236,11 @@ object UseCaseModule {
     fun provideRemoveMovieFromListUseCase(
         userListRepository: UserListRepository,
     ): RemoveMovieFromListUseCase = RemoveMovieFromListUseCase(userListRepository)
+
+    @Provides
+    fun provideCheckIsMovieInListUseCase(
+        userListRepository: UserListRepository
+    ): CheckIsMovieInListUseCase = CheckIsMovieInListUseCase(userListRepository)
 
     @Provides
     fun provideGetHomeScreenDataUseCase(
