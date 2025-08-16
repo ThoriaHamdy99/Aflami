@@ -20,7 +20,7 @@ class TimerHandlerTest {
     @Test
     fun `startTimer should return correct start time when called`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
         val startTime = 5
 
         val flow = handler.startTimer(totalSeconds = startTime) {}
@@ -31,7 +31,7 @@ class TimerHandlerTest {
     @Test
     fun `startTime should decrease remaining time go down by one when one real second passes`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
 
         val startTime = 5
 
@@ -46,7 +46,7 @@ class TimerHandlerTest {
     @Test
     fun `startTimer counts down to zero when all time has passed`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
 
         val startTime = 5
 
@@ -62,7 +62,7 @@ class TimerHandlerTest {
     fun `startTimer should not call onTimerFinish when time reaches 0`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         var finishCalls = 0
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
 
         val startTime = 5
 
@@ -78,7 +78,7 @@ class TimerHandlerTest {
     fun `startTimer should not call onTimerFinish when time has not ended`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         var finishCalls = 0
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
 
         val startTime = 5
 
@@ -93,7 +93,7 @@ class TimerHandlerTest {
     @Test
     fun `startTimer should not keep advancing old timer when new timer is created`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
 
         val flow = handler.startTimer(totalSeconds = 10) {}
 
@@ -111,7 +111,7 @@ class TimerHandlerTest {
     @Test
     fun `startTimer should keep advance new timer when new timer is created`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
 
         handler.startTimer(totalSeconds = 10) {}
 
@@ -130,7 +130,7 @@ class TimerHandlerTest {
     fun `startTimer should not call finish when another timer gets started`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         var finishCalls = 0
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
 
         handler.startTimer(totalSeconds = 10) { finishCalls++ }
 
@@ -148,7 +148,7 @@ class TimerHandlerTest {
     @Test
     fun `startTime should set start time as 0 when given zero`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
 
         val flow = handler.startTimer(totalSeconds = 0) {}
 
@@ -158,7 +158,7 @@ class TimerHandlerTest {
     @Test
     fun `startTime should set start time as 0 when given negative start`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
 
         val flow = handler.startTimer(totalSeconds = -5) {}
 
@@ -171,7 +171,7 @@ class TimerHandlerTest {
     @Test
     fun `stopTimer should cancel timer early when called`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
         val flow = handler.startTimer(totalSeconds = 5) {}
 
         advanceTimeBy(2000)
@@ -195,7 +195,7 @@ class TimerHandlerTest {
     @Test
     fun `startTimer should count down to 0 when system time jumps to large number`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
         val flow = handler.startTimer(totalSeconds = 10) {}
 
         advanceTimeBy(15_000)
@@ -207,7 +207,7 @@ class TimerHandlerTest {
     @Test
     fun `stopTimer should do nothing when no timer was started`() = runTest{
         val dispatcher = StandardTestDispatcher(testScheduler)
-        val handler = TimerHandler(dispatcher)
+        val handler = TimerHandler(dispatcher) { testScheduler.currentTime }
         val mockJob = mockk<Job>()
 
         handler.stopTimer()

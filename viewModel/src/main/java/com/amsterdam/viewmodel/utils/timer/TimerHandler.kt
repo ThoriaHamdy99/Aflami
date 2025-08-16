@@ -12,7 +12,8 @@ import kotlinx.datetime.Clock
 import kotlin.math.max
 
 class TimerHandler(
-    dispatcher: CoroutineDispatcher = Dispatchers.Default
+    dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val nowMillis: () -> Long = { Clock.System.now().toEpochMilliseconds()}
 ) {
 
     private val job = Job()
@@ -26,13 +27,13 @@ class TimerHandler(
         onTimerFinish: () -> Unit
     ): StateFlow<Int> {
         timerJob?.cancel()
-        endTimeMillis =  Clock.System.now().toEpochMilliseconds() + totalSeconds * 1000L
+        endTimeMillis = nowMillis() + totalSeconds * 1000L
 
         val remainingTimeFlow = MutableStateFlow(totalSeconds.coerceAtLeast(0))
 
         timerJob = scope.launch {
             while (true) {
-                val remainingMillis = endTimeMillis - Clock.System.now().toEpochMilliseconds()
+                val remainingMillis = endTimeMillis - nowMillis()
                 val remainingSeconds = max(0, (remainingMillis / 1000).toInt())
 
                 remainingTimeFlow.value = remainingSeconds
