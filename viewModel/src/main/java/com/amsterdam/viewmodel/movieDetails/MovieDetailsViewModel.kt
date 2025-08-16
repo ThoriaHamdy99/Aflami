@@ -127,6 +127,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     override fun onClickRetryRequest() {
         loadMovieDetails()
+        loadUserLists()
     }
 
     override fun onClickRate() {
