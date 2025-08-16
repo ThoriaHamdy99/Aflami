@@ -63,6 +63,5 @@ fun MovieItemRemoteDto.toLocalDto(isPoster: Boolean = true, storedLanguage: Stri
     )
 }
 
-fun List<MovieItemRemoteDto>.toLocalMovieDtoList(isPoster: Boolean = true, storedLanguage: String) {
+fun List<MovieItemRemoteDto>.toLocalMovieDtoList(isPoster: Boolean = true, storedLanguage: String) =
     map { it.toLocalDto(isPoster, storedLanguage) }
-}
