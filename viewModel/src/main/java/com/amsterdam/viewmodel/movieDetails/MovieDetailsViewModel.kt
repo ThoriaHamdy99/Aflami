@@ -129,6 +129,7 @@ class MovieDetailsViewModel @Inject constructor(
                 isLoginDialogVisible = false,
                 isAddToListDialogVisible = false,
                 isCreateNewListDialogVisible = false,
+                isRemoveFromListDialogVisible = false,
                 selectedLists = emptyList(),
                 listName = "",
             )
@@ -185,7 +186,6 @@ class MovieDetailsViewModel @Inject constructor(
         updateState { it.copy(isAddMovieToListLoading = true) }
         tryToExecute(
             action = {
-                // Add movie to all selected lists
                 listIds.forEach { listId ->
                     addMovieToListUseCase(movieId = movieId, listId = listId)
                 }
@@ -207,6 +207,28 @@ class MovieDetailsViewModel @Inject constructor(
                 }
             },
         )
+    }
+
+    override fun onClickRemoveFromList() {
+        if (state.value.isLoading) return
+        viewModelScope.launch {
+            runIfLoggedIn(
+                onLoggedIn = {
+                    val userList = getUserListsUseCase()
+                    updateState {
+                        it.copy(
+                            isRemoveFromListDialogVisible = true,
+                            userLists = userList.toUiState()
+                        )
+                    }
+                },
+                onGuest = { showMustLoginDialog(MovieAndSeriesDetailsDialogType.AddToList) },
+            )
+        }
+    }
+
+    override fun onRemoveMovieFromList(movieId: Long, listIds: List<Long>) {
+        TODO("Not yet implemented")
     }
 
     override fun onClickCreateList() {

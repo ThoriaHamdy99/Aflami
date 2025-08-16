@@ -68,7 +68,7 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.application.LocalNavManager
-import com.amsterdam.ui.components.movieAndTvShowDetails.AddToListDialog
+import com.amsterdam.ui.screens.movieDetails.components.AddToListDialog
 import com.amsterdam.ui.components.CreateNewListDialog
 import com.amsterdam.ui.components.MustLoginDialog
 import com.amsterdam.ui.components.NoNetworkContainer
@@ -82,6 +82,7 @@ import com.amsterdam.ui.screens.movieDetails.components.MovieExtrasSection
 import com.amsterdam.ui.screens.movieDetails.components.MovieInfoSection
 import com.amsterdam.ui.components.movieAndTvShowDetails.PlayButton
 import com.amsterdam.ui.components.movieAndTvShowDetails.RateDialog
+import com.amsterdam.ui.screens.movieDetails.components.RemoveFromListsDialog
 import com.amsterdam.ui.screens.movieDetails.components.companyProductionSection
 import com.amsterdam.ui.screens.movieDetails.components.gallerySection
 import com.amsterdam.ui.screens.movieDetails.components.moreLikeSection
@@ -113,17 +114,28 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
 
     val context = LocalContext.current
 
-    BackHandler { navigationManager.navigateUpWithFlag(flagName = REFRESH_AFTER_RATING, value = true) }
+    BackHandler {
+        navigationManager.navigateUpWithFlag(
+            flagName = REFRESH_AFTER_RATING,
+            value = true
+        )
+    }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 MovieDetailsEffect.NavigateBackEffect -> {
-                    navigationManager.navigateUpWithFlag(flagName = REFRESH_AFTER_RATING, value = true)
+                    navigationManager.navigateUpWithFlag(
+                        flagName = REFRESH_AFTER_RATING,
+                        value = true
+                    )
                 }
 
                 MovieDetailsEffect.NavigateToCastsScreenEffect -> {
-                    navigationManager.toCast(mediaType = MediaType.MOVIE.name, mediaId = state.value.movieId)
+                    navigationManager.toCast(
+                        mediaType = MediaType.MOVIE.name,
+                        mediaId = state.value.movieId
+                    )
                 }
 
                 MovieDetailsEffect.NavigateToLoginScreenEffect -> navigationManager.toLogin()
@@ -139,18 +151,18 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                 is MovieDetailsEffect.LaunchMovieVideoEffect -> openYouTubeVideo(
                     context, effect.url
                 ) {
-                    SnackBarManager.showError(context.getString(com.amsterdam.ui.R.string.video_launch_error))
+                    SnackBarManager.showError(context.getString(R.string.video_launch_error))
                 }
 
                 MovieDetailsEffect.MovieAddedToListError -> {
                     SnackBarManager.showError(
-                        context.getString(com.amsterdam.ui.R.string.failed_to_add_to_list),
+                        context.getString(R.string.failed_to_add_to_list),
                     )
                 }
 
                 MovieDetailsEffect.MovieAddedToListSuccessfully -> {
                     SnackBarManager.showSuccess(
-                        context.getString(com.amsterdam.ui.R.string.added_to_list_successfully),
+                        context.getString(R.string.added_to_list_successfully),
                     )
                 }
 
@@ -181,7 +193,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
 fun MovieContent(
     state: MovieDetailsUiState,
     movieDetailsInteractionListener: MovieDetailsInteractionListener,
-    rateDialogInteractionListener: RateDialogInteractionListener
+    rateDialogInteractionListener: RateDialogInteractionListener,
 ) {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
@@ -321,6 +333,25 @@ fun MovieContent(
                 },
                 onCreateNewList = movieDetailsInteractionListener::onClickCreateList,
                 onDismiss = movieDetailsInteractionListener::onClickCancel,
+            )
+        }
+
+        AnimatedVisibility(
+            modifier = Modifier,
+            visible = state.isRemoveFromListDialogVisible
+        ) {
+            RemoveFromListsDialog(
+                userLists = state.userLists,
+                selectedLists = state.selectedLists,
+                isRemoveMovieFromListLoading = state.isRemoveFromListLoading,
+                onSelectedListChange = movieDetailsInteractionListener::onSelectedListChange,
+                onRemoveFromSelectedList = { listIds ->
+                    movieDetailsInteractionListener.onRemoveMovieFromList(
+                        movieId = state.movieId,
+                        listIds = listIds
+                    )
+                },
+                onDismiss = movieDetailsInteractionListener::onClickCancel
             )
         }
 
@@ -489,10 +520,16 @@ fun MovieContent(
                     .statusBarsPadding()
                     .zIndex(10f),
                 firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
-                lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_add_to_favourite),
+                lastOption = if (state.isMovieInList) {
+                    painterResource(com.amsterdam.designsystem.R.drawable.ic_sort)
+                } else {
+                    painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_add_to_favourite)
+                },
                 onNavigateBackClicked = movieDetailsInteractionListener::onClickBack,
                 onFirstOptionClicked = movieDetailsInteractionListener::onClickRate,
-                onLastOptionClicked = movieDetailsInteractionListener::onClickAddToList,
+                onLastOptionClicked = if (state.isMovieInList)
+                    movieDetailsInteractionListener::onClickRemoveFromList
+                else movieDetailsInteractionListener::onClickAddToList,
             )
 
             HorizontalDivider(color = dividerColor)
@@ -512,38 +549,26 @@ private fun SearchByActorContentPreview() {
                 override fun onClickShowAllCast() {}
                 override fun onClickBack() {}
                 override fun onClickRetryRequest() {}
-
+                override fun onClickRemoveFromList() {}
                 override fun onClickAddToList() {}
-
-                override fun onSaveMovieToList(
-                    movieId: Long, listIds: List<Long>
-                ) {
-                }
-
+                override fun onSaveMovieToList(movieId: Long, listIds: List<Long>) {}
+                override fun onRemoveMovieFromList(movieId: Long, listIds: List<Long>) {}
                 override fun onClickCreateList() {}
-
                 override fun onChangeListName(listName: String) {}
-
                 override fun onClickCreateNewList() {}
-
                 override fun onSelectedListChange(selectedLists: List<UserListUiState>) {}
-
                 override fun onClickRate() {}
-
                 override fun onClickNavigateToLogin() {}
-
                 override fun onClickCancel() {}
                 override fun onClickSimilarMovie(movieId: Long) {}
                 override fun onDescriptionExpansionToggled() {}
                 override fun onReviewExpansionToggled(reviewId: String) {}
-
                 override fun onClickPlayVideo() {}
             },
             rateDialogInteractionListener = object : RateDialogInteractionListener {
                 override fun onClickCancelRateDialog() {}
                 override fun onClickSubmit() {}
                 override fun onChangeRating(newRate: Int) {}
-
             })
     }
 }
