@@ -41,9 +41,6 @@ class TvShowGenreMapperTest {
 
     @Nested
     inner class EntityToDtoMapping {
-
-        // --- START: UPDATED SECTION ---
-        // تم استبدال الاختبارات الفردية بهذا الاختبار الممنهج الشامل
         @ParameterizedTest(name = "toDto should map {0} to ID {1}")
         @CsvSource(
             "ACTION_ADVENTURE, 28",
@@ -68,13 +65,10 @@ class TvShowGenreMapperTest {
             genre: TvShowGenre,
             expectedId: Long
         ) {
-            // When
             val result = genre.toDto()
-            // Then
+
             assertThat(result).isEqualTo(expectedId)
         }
-        // --- END: UPDATED SECTION ---
-
 
         @Test
         fun `toDtoList should map a list of TvShowGenre to a list of Longs`() {

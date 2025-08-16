@@ -10,23 +10,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class MovieMapperTest {
-    private val localDto = MovieLocalDto(
-        movieId = 1L, storedLanguage = "en", name = "Local Movie",
-        description = "A movie from local.", poster = "/local.jpg",
-        releaseDate = LocalDate.parse("2023-01-01"), rating = 7.5f,
-        popularity = 150.0, movieLength = 90, originCountry = "US"
-    )
-
-    private val remoteDto = MovieItemRemoteDto(
-        id = 101L, title = "Remote Movie", overview = "An overview.",
-        posterPath = "/poster.jpg", backdropPath = "/backdrop.jpg",
-        releaseDate = "2023-10-26", voteAverage = 8.8,
-        genreIds = listOf(28), genres = emptyList(),
-        popularity = 1234.5, originCountry = listOf("GB"), runtime = 120,
-        adult = false, originalLanguage = "en", originalTitle = "Remote Movie",
-        video = false, voteCount = 1000
-    )
-
     @Nested
     inner class LocalDtoToEntityTest {
         @Test
@@ -125,4 +108,21 @@ class MovieMapperTest {
             assertThat(result[1].movieId).isEqualTo(102L)
         }
     }
+
+    private val localDto = MovieLocalDto(
+        movieId = 1L, storedLanguage = "en", name = "Local Movie",
+        description = "A movie from local.", poster = "/local.jpg",
+        releaseDate = LocalDate.parse("2023-01-01"), rating = 7.5f,
+        popularity = 150.0, movieLength = 90, originCountry = "US"
+    )
+
+    private val remoteDto = MovieItemRemoteDto(
+        id = 101L, title = "Remote Movie", overview = "An overview.",
+        posterPath = "/poster.jpg", backdropPath = "/backdrop.jpg",
+        releaseDate = "2023-10-26", voteAverage = 8.8,
+        genreIds = listOf(28), genres = emptyList(),
+        popularity = 1234.5, originCountry = listOf("GB"), runtime = 120,
+        adult = false, originalLanguage = "en", originalTitle = "Remote Movie",
+        video = false, voteCount = 1000
+    )
 }

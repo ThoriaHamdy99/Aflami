@@ -10,24 +10,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class MovieWatchHistoryMapperTest {
-    private val movieLocalDto = MovieLocalDto(
-        movieId = 101L,
-        storedLanguage = "en",
-        name = "Test Movie",
-        description = "An overview.",
-        poster = "/poster.jpg",
-        releaseDate = LocalDate.parse("2023-10-26"),
-        rating = 8.5f,
-        popularity = 1500.0,
-        movieLength = 120,
-        originCountry = "US"
-    )
-
-    private val movieWatchHistoryDto = MovieWatchHistoryDto(
-        movieId = 101L,
-        watchedDate = Instant.parse("2024-01-15T10:30:00Z")
-    )
-
     @Nested
     inner class ToEntityTest {
 
@@ -45,4 +27,22 @@ class MovieWatchHistoryMapperTest {
             )
         }
     }
+
+    private val movieLocalDto = MovieLocalDto(
+        movieId = 101L,
+        storedLanguage = "en",
+        name = "Test Movie",
+        description = "An overview.",
+        poster = "/poster.jpg",
+        releaseDate = LocalDate.parse("2023-10-26"),
+        rating = 8.5f,
+        popularity = 1500.0,
+        movieLength = 120,
+        originCountry = "US"
+    )
+
+    private val movieWatchHistoryDto = MovieWatchHistoryDto(
+        movieId = 101L,
+        watchedDate = Instant.parse("2024-01-15T10:30:00Z")
+    )
 }

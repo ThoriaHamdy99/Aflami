@@ -7,6 +7,28 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class GalleryMapperTest {
+    @Nested
+    inner class ToEntityListTest {
+        @Test
+        fun `toEntityList should map ONLY backdrops to a list of full image paths`() {
+            val result = fullGalleryResponse.toEntityList()
+
+            assertThat(result).isEqualTo(
+                listOf(
+                    "https://image.tmdb.org/t/p/w500/backdrop1.jpg",
+                    "https://image.tmdb.org/t/p/w500/backdrop2.png"
+                )
+            )
+        }
+
+        @Test
+        fun `toEntityList should return an empty list when backdrops list is empty`() {
+            val result = responseWithNoBackdrops.toEntityList()
+
+            assertThat(result).isEmpty()
+        }
+    }
+
     private fun createDummyImageDto(path: String) = GalleryImageRemoteDto(
         filePath = path,
         aspectRatio = 1.778,
@@ -33,26 +55,4 @@ class GalleryMapperTest {
         logos = listOf(createDummyImageDto("/logo1.svg")),
         posters = listOf(createDummyImageDto("/poster1.jpg"))
     )
-
-    @Nested
-    inner class ToEntityListTest {
-        @Test
-        fun `toEntityList should map ONLY backdrops to a list of full image paths`() {
-            val result = fullGalleryResponse.toEntityList()
-
-            assertThat(result).isEqualTo(
-                listOf(
-                    "https://image.tmdb.org/t/p/w500/backdrop1.jpg",
-                    "https://image.tmdb.org/t/p/w500/backdrop2.png"
-                )
-            )
-        }
-
-        @Test
-        fun `toEntityList should return an empty list when backdrops list is empty`() {
-            val result = responseWithNoBackdrops.toEntityList()
-
-            assertThat(result).isEmpty()
-        }
-    }
 }

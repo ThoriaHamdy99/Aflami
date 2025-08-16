@@ -7,22 +7,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class SeasonMapperTest {
-    private val season1Dto = SeasonRemoteDto(
-        id = 1001L,
-        title = "Season 1: The Beginning",
-        airDate = "2022-01-01",
-        seasonNumber = 1,
-        episodeCount = 10
-    )
-
-    private val season2DtoWithNullDate = SeasonRemoteDto(
-        id = 1002L,
-        title = "Season 2: The Rise",
-        airDate = null,
-        seasonNumber = 2,
-        episodeCount = 8
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -79,4 +63,20 @@ class SeasonMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val season1Dto = SeasonRemoteDto(
+        id = 1001L,
+        title = "Season 1: The Beginning",
+        airDate = "2022-01-01",
+        seasonNumber = 1,
+        episodeCount = 10
+    )
+
+    private val season2DtoWithNullDate = SeasonRemoteDto(
+        id = 1002L,
+        title = "Season 2: The Rise",
+        airDate = null,
+        seasonNumber = 2,
+        episodeCount = 8
+    )
 }

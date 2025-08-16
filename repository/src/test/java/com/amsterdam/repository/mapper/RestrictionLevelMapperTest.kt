@@ -10,10 +10,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class RestrictionLevelMapperTest {
-    private val strictLevel = RestrictionLevel.STRICT
-    private val moderateLevel = RestrictionLevel.MODERATE
-    private val offLevel = RestrictionLevel.OFF
-
     @Nested
     inner class ToLocalDtoTest {
         @Test
@@ -69,4 +65,8 @@ class RestrictionLevelMapperTest {
             ).inOrder()
         }
     }
+
+    private val strictLevel = RestrictionLevel.STRICT
+    private val moderateLevel = RestrictionLevel.MODERATE
+    private val offLevel = RestrictionLevel.OFF
 }

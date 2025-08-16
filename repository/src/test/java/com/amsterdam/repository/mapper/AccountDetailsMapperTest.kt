@@ -7,38 +7,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 class AccountDetailsMapperTest {
-    private val localDto = AccountDetailsLocalDto(
-        accountId = 1,
-        username = "localUser",
-        avatarUrl = "/local_avatar.jpg"
-    )
-
-    private val remoteDto = AccountDetailsRemoteDto(
-        id = 123,
-        username = "remoteUser",
-        name = "Remote User Name",
-        includeAdult = false,
-        countryIsoCode = "US",
-        languageCode = "en",
-        accountAvatar = AccountDetailsRemoteDto.AccountAvatar(
-            gravatar = AccountDetailsRemoteDto.Gravatar(hash = "some_hash_value"),
-            movieDBData = AccountDetailsRemoteDto.MovieDBData(avatarPath = "/remote_avatar.png")
-        )
-    )
-
-    private val remoteDtoWithNullAvatar = AccountDetailsRemoteDto(
-        id = 456,
-        username = "noAvatarUser",
-        name = "No Avatar User Name",
-        includeAdult = true,
-        countryIsoCode = "EG",
-        languageCode = "ar",
-        accountAvatar = AccountDetailsRemoteDto.AccountAvatar(
-            gravatar = AccountDetailsRemoteDto.Gravatar(hash = "another_hash"),
-            movieDBData = AccountDetailsRemoteDto.MovieDBData(avatarPath = null)
-        )
-    )
-
     @Test
     fun `toEntity should map AccountDetailsLocalDto to AccountDetails entity`() {
         val expectedEntity = AccountDetails(
@@ -103,4 +71,36 @@ class AccountDetailsMapperTest {
 
         assertThat(resultLocalDto).isEqualTo(expectedLocalDto)
     }
+
+    private val localDto = AccountDetailsLocalDto(
+        accountId = 1,
+        username = "localUser",
+        avatarUrl = "/local_avatar.jpg"
+    )
+
+    private val remoteDto = AccountDetailsRemoteDto(
+        id = 123,
+        username = "remoteUser",
+        name = "Remote User Name",
+        includeAdult = false,
+        countryIsoCode = "US",
+        languageCode = "en",
+        accountAvatar = AccountDetailsRemoteDto.AccountAvatar(
+            gravatar = AccountDetailsRemoteDto.Gravatar(hash = "some_hash_value"),
+            movieDBData = AccountDetailsRemoteDto.MovieDBData(avatarPath = "/remote_avatar.png")
+        )
+    )
+
+    private val remoteDtoWithNullAvatar = AccountDetailsRemoteDto(
+        id = 456,
+        username = "noAvatarUser",
+        name = "No Avatar User Name",
+        includeAdult = true,
+        countryIsoCode = "EG",
+        languageCode = "ar",
+        accountAvatar = AccountDetailsRemoteDto.AccountAvatar(
+            gravatar = AccountDetailsRemoteDto.Gravatar(hash = "another_hash"),
+            movieDBData = AccountDetailsRemoteDto.MovieDBData(avatarPath = null)
+        )
+    )
 }

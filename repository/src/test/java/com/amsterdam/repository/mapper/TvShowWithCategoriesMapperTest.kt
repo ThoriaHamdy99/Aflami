@@ -11,19 +11,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class TvShowWithCategoriesMapperTest {
-    private val baseTvShowLocalDto = TvShowLocalDto(
-        tvShowId = 201L,
-        storedLanguage = "en",
-        name = "Test TV Show",
-        description = "An overview.",
-        poster = "/poster.jpg",
-        airDate = LocalDate.parse("2023-10-26"),
-        rating = 8.5f,
-        popularity = 1500.0,
-        seasonCount = 5,
-        originCountry = "US"
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -87,4 +74,17 @@ class TvShowWithCategoriesMapperTest {
             assertThat(result.categories).isEmpty()
         }
     }
+
+    private val baseTvShowLocalDto = TvShowLocalDto(
+        tvShowId = 201L,
+        storedLanguage = "en",
+        name = "Test TV Show",
+        description = "An overview.",
+        poster = "/poster.jpg",
+        airDate = LocalDate.parse("2023-10-26"),
+        rating = 8.5f,
+        popularity = 1500.0,
+        seasonCount = 5,
+        originCountry = "US"
+    )
 }

@@ -7,20 +7,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class UserRatedMovieMapperTest {
-    private val ratedMovieDto = MovieItemRemoteDto(
-        id = 101L, title = "Rated Movie", overview = "An overview.",
-        posterPath = "/poster.jpg", backdropPath = null, releaseDate = "2023-10-26",
-        voteAverage = 8.8, genreIds = listOf(28), popularity = 1234.5,
-        originCountry = listOf("GB"), runtime = 120, adult = false,
-        originalLanguage = "en", originalTitle = "Rated Movie", video = false,
-        voteCount = 1000, rating = 8.5f
-    )
-
-    private val ratedMovieDtoWithZeroRating = ratedMovieDto.copy(
-        id = 102L,
-        rating = 0f
-    )
-
     @Nested
     inner class ToMovieUserRateEntityTest {
         @Test
@@ -76,4 +62,18 @@ class UserRatedMovieMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val ratedMovieDto = MovieItemRemoteDto(
+        id = 101L, title = "Rated Movie", overview = "An overview.",
+        posterPath = "/poster.jpg", backdropPath = null, releaseDate = "2023-10-26",
+        voteAverage = 8.8, genreIds = listOf(28), popularity = 1234.5,
+        originCountry = listOf("GB"), runtime = 120, adult = false,
+        originalLanguage = "en", originalTitle = "Rated Movie", video = false,
+        voteCount = 1000, rating = 8.5f
+    )
+
+    private val ratedMovieDtoWithZeroRating = ratedMovieDto.copy(
+        id = 102L,
+        rating = 0f
+    )
 }

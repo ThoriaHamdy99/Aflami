@@ -7,20 +7,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class ProductionCompanyMapperTest {
-    private val remoteDtoWithLogo = ProductionCompanyRemoteDto(
-        id = 1L,
-        logoPath = "/disney.png",
-        name = "Walt Disney Pictures",
-        originCountry = "US"
-    )
-
-    private val remoteDtoWithoutLogo = ProductionCompanyRemoteDto(
-        id = 2L,
-        logoPath = null,
-        name = "Marvel Studios",
-        originCountry = "US"
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -77,4 +63,18 @@ class ProductionCompanyMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val remoteDtoWithLogo = ProductionCompanyRemoteDto(
+        id = 1L,
+        logoPath = "/disney.png",
+        name = "Walt Disney Pictures",
+        originCountry = "US"
+    )
+
+    private val remoteDtoWithoutLogo = ProductionCompanyRemoteDto(
+        id = 2L,
+        logoPath = null,
+        name = "Marvel Studios",
+        originCountry = "US"
+    )
 }

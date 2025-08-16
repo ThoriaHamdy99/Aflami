@@ -7,30 +7,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class TvShowRateMapperTest {
-    private val ratedTvShowDto = TvShowItemRemoteDto(
-        id = 201L,
-        title = "Rated TV Show",
-        overview = "An overview.",
-        posterPath = "/poster.jpg",
-        backdropPath = null,
-        releaseDate = "2023-10-26",
-        voteAverage = 8.8,
-        genreIds = emptyList(),
-        popularity = 1234.5,
-        seasonCount = 3,
-        originCountry = listOf("US"),
-        adult = false,
-        originalLanguage = "en",
-        originalTitle = "Rated TV Show",
-        voteCount = 1000,
-        rating = 9.5f
-    )
-
-    private val ratedTvShowDtoWithZeroRating = ratedTvShowDto.copy(
-        id = 202L,
-        rating = 0f
-    )
-
     @Nested
     inner class ToTvShowUserRateEntityTest {
         @Test
@@ -86,4 +62,28 @@ class TvShowRateMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val ratedTvShowDto = TvShowItemRemoteDto(
+        id = 201L,
+        title = "Rated TV Show",
+        overview = "An overview.",
+        posterPath = "/poster.jpg",
+        backdropPath = null,
+        releaseDate = "2023-10-26",
+        voteAverage = 8.8,
+        genreIds = emptyList(),
+        popularity = 1234.5,
+        seasonCount = 3,
+        originCountry = listOf("US"),
+        adult = false,
+        originalLanguage = "en",
+        originalTitle = "Rated TV Show",
+        voteCount = 1000,
+        rating = 9.5f
+    )
+
+    private val ratedTvShowDtoWithZeroRating = ratedTvShowDto.copy(
+        id = 202L,
+        rating = 0f
+    )
 }

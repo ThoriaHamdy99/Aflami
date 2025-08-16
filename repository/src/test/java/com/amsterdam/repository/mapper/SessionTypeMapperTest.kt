@@ -6,10 +6,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class SessionTypeMapperTest {
-    private val loggedInSession = SessionType.LOGGED_IN
-    private val guestSession = SessionType.GUEST
-    private val notLoggedInSession = SessionType.NOT_LOGGED_IN
-
     @Nested
     inner class ToLocalDtoTest {
         @Test
@@ -66,4 +62,8 @@ class SessionTypeMapperTest {
             assertThat(resultFromEmpty).isEqualTo(SessionType.NOT_LOGGED_IN)
         }
     }
+
+    private val loggedInSession = SessionType.LOGGED_IN
+    private val guestSession = SessionType.GUEST
+    private val notLoggedInSession = SessionType.NOT_LOGGED_IN
 }

@@ -10,6 +10,23 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class TvShowWatchHistoryMapperTest {
+    @Nested
+    inner class ToEntityTest {
+        @Test
+        fun `toEntity should map DTOs to TvShowWatchHistory entity`() {
+            val expectedTvShowEntity = tvShowLocalDto.toEntity()
+
+            val result = tvShowWatchHistoryDto.toEntity(tvShowLocalDto)
+
+            assertThat(result).isEqualTo(
+                TvShowWatchHistory(
+                    tvShow = expectedTvShowEntity,
+                    lastWatchedTime = tvShowWatchHistoryDto.watchedDate
+                )
+            )
+        }
+    }
+
     private val tvShowLocalDto = TvShowLocalDto(
         tvShowId = 201L,
         storedLanguage = "en",
@@ -27,21 +44,4 @@ class TvShowWatchHistoryMapperTest {
         tvShowId = 201L,
         watchedDate = Instant.parse("2024-01-20T12:00:00Z")
     )
-
-    @Nested
-    inner class ToEntityTest {
-        @Test
-        fun `toEntity should map DTOs to TvShowWatchHistory entity`() {
-            val expectedTvShowEntity = tvShowLocalDto.toEntity()
-
-            val result = tvShowWatchHistoryDto.toEntity(tvShowLocalDto)
-
-            assertThat(result).isEqualTo(
-                TvShowWatchHistory(
-                    tvShow = expectedTvShowEntity,
-                    lastWatchedTime = tvShowWatchHistoryDto.watchedDate
-                )
-            )
-        }
-    }
 }

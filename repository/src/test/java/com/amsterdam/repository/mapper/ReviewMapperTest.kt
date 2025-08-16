@@ -10,35 +10,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class ReviewMapperTest {
-    private val fullReviewDto = ReviewRemoteDto(
-        id = "61e3d3c7a0924c0043813136",
-        author = "John Doe",
-        authorDetails = AuthorDetailsRemoteDto(
-            name = "John D.",
-            username = "johndoe123",
-            rating = 8.5f,
-            avatarPath = "/avatar.jpg"
-        ),
-        content = "This is a great movie!",
-        createdAt = Instant.parse("2023-10-26T10:30:00Z"),
-        updatedAt = Instant.parse("2023-10-26T11:00:00Z"),
-        url = "http://example.com/review1"
-    )
-
-    private val minimalReviewDto = ReviewRemoteDto(
-        id = "5a9f3b3d92514104f0000e31",
-        author = "Jane Smith",
-        authorDetails = AuthorDetailsRemoteDto(
-            username = "janesmith",
-            rating = null,
-            avatarPath = null
-        ),
-        content = "An interesting film.",
-        createdAt = Instant.parse("2024-01-15T00:00:00Z"),
-        updatedAt = Instant.parse("2024-01-15T00:00:00Z"),
-        url = "http://example.com/review2"
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -101,4 +72,33 @@ class ReviewMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val fullReviewDto = ReviewRemoteDto(
+        id = "61e3d3c7a0924c0043813136",
+        author = "John Doe",
+        authorDetails = AuthorDetailsRemoteDto(
+            name = "John D.",
+            username = "johndoe123",
+            rating = 8.5f,
+            avatarPath = "/avatar.jpg"
+        ),
+        content = "This is a great movie!",
+        createdAt = Instant.parse("2023-10-26T10:30:00Z"),
+        updatedAt = Instant.parse("2023-10-26T11:00:00Z"),
+        url = "http://example.com/review1"
+    )
+
+    private val minimalReviewDto = ReviewRemoteDto(
+        id = "5a9f3b3d92514104f0000e31",
+        author = "Jane Smith",
+        authorDetails = AuthorDetailsRemoteDto(
+            username = "janesmith",
+            rating = null,
+            avatarPath = null
+        ),
+        content = "An interesting film.",
+        createdAt = Instant.parse("2024-01-15T00:00:00Z"),
+        updatedAt = Instant.parse("2024-01-15T00:00:00Z"),
+        url = "http://example.com/review2"
+    )
 }

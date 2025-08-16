@@ -7,24 +7,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class PeopleMapperTest {
-    private val remotePersonDto = RemotePeopleItemDto(
-        id = 1,
-        name = "Tom Holland",
-        profilePath = "/tom_holland.jpg",
-        adult = false,
-        gender = 2,
-        popularity = 150.0,
-        mediaType = "person",
-        originalName = "Tom Holland",
-        knownForDepartment = "Acting"
-    )
-
-    private val remotePersonDtoWithNullImage = remotePersonDto.copy(
-        id = 2,
-        name = "Zendaya",
-        profilePath = null
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -79,4 +61,22 @@ class PeopleMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val remotePersonDto = RemotePeopleItemDto(
+        id = 1,
+        name = "Tom Holland",
+        profilePath = "/tom_holland.jpg",
+        adult = false,
+        gender = 2,
+        popularity = 150.0,
+        mediaType = "person",
+        originalName = "Tom Holland",
+        knownForDepartment = "Acting"
+    )
+
+    private val remotePersonDtoWithNullImage = remotePersonDto.copy(
+        id = 2,
+        name = "Zendaya",
+        profilePath = null
+    )
 }

@@ -11,19 +11,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class MovieWithCategoriesMapperTest {
-    private val baseMovieLocalDto = MovieLocalDto(
-        movieId = 101L,
-        storedLanguage = "en",
-        name = "Test Movie",
-        description = "An overview.",
-        poster = "/poster.jpg",
-        releaseDate = LocalDate.parse("2023-10-26"),
-        popularity = 1500.0,
-        rating = 8.5f,
-        originCountry = "US",
-        movieLength = 120
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -84,4 +71,17 @@ class MovieWithCategoriesMapperTest {
             assertThat(result.categories).isEmpty()
         }
     }
+
+    private val baseMovieLocalDto = MovieLocalDto(
+        movieId = 101L,
+        storedLanguage = "en",
+        name = "Test Movie",
+        description = "An overview.",
+        poster = "/poster.jpg",
+        releaseDate = LocalDate.parse("2023-10-26"),
+        popularity = 1500.0,
+        rating = 8.5f,
+        originCountry = "US",
+        movieLength = 120
+    )
 }

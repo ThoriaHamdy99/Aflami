@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class RecentSearchMapperTest {
-    private val searchDto1 = SearchLocalDto(searchKeyword = "The Matrix")
-    private val searchDto2 = SearchLocalDto(searchKeyword = "Inception")
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -39,4 +36,7 @@ class RecentSearchMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val searchDto1 = SearchLocalDto(searchKeyword = "The Matrix")
+    private val searchDto2 = SearchLocalDto(searchKeyword = "Inception")
 }

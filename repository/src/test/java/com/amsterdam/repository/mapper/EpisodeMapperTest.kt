@@ -9,30 +9,6 @@ import org.junit.jupiter.api.Test
 
 
 class EpisodeMapperTest {
-    private val fullEpisodeDto = EpisodeRemoteDto(
-        id = 1L,
-        title = "Winter Is Coming",
-        episodeNumber = 1,
-        overview = "The first episode of the series.",
-        stillPath = "/winter_is_coming.jpg",
-        voteAverage = 9.1,
-        airDate = "2011-04-17",
-        seasonNumber = 1,
-        runtime = "62"
-    )
-
-    private val minimalEpisodeDto = EpisodeRemoteDto(
-        id = 2L,
-        title = "The Iron Throne",
-        episodeNumber = 6,
-        overview = "The final episode of the series.",
-        stillPath = null,
-        voteAverage = 4.0,
-        airDate = null,
-        seasonNumber = 8,
-        runtime = null
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -101,4 +77,28 @@ class EpisodeMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val fullEpisodeDto = EpisodeRemoteDto(
+        id = 1L,
+        title = "Winter Is Coming",
+        episodeNumber = 1,
+        overview = "The first episode of the series.",
+        stillPath = "/winter_is_coming.jpg",
+        voteAverage = 9.1,
+        airDate = "2011-04-17",
+        seasonNumber = 1,
+        runtime = "62"
+    )
+
+    private val minimalEpisodeDto = EpisodeRemoteDto(
+        id = 2L,
+        title = "The Iron Throne",
+        episodeNumber = 6,
+        overview = "The final episode of the series.",
+        stillPath = null,
+        voteAverage = 4.0,
+        airDate = null,
+        seasonNumber = 8,
+        runtime = null
+    )
 }

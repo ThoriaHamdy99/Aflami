@@ -8,57 +8,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class UserListItemMapperTest {
-    private val movieDto = UserListItemRemoteDto(
-        id = 101L,
-        title = "Test Movie",
-        name = null,
-        overview = "An overview.",
-        posterPath = "/poster.jpg",
-        backdropPath = "/backdrop.jpg",
-        releaseDate = "2023-10-26",
-        firstAirDate = null,
-        voteAverage = 8.8,
-        genreIds = listOf(28),
-        popularity = 1234.5,
-        originalLanguage = "en",
-        mediaType = "movie",
-        adult = false
-    )
-
-    private val tvShowDto = UserListItemRemoteDto(
-        id = 201L,
-        title = null,
-        name = "Test TV Show",
-        overview = "A TV overview.",
-        posterPath = "/tv_poster.jpg",
-        backdropPath = "/tv_backdrop.jpg",
-        releaseDate = null,
-        firstAirDate = "2022-12-25",
-        voteAverage = 9.1,
-        genreIds = listOf(10759),
-        popularity = 567.8,
-        originalLanguage = "fr",
-        mediaType = "tv",
-        adult = false
-    )
-
-    private val dtoWithNulls = UserListItemRemoteDto(
-        id = 301L,
-        title = null,
-        name = null,
-        overview = "Another overview.",
-        posterPath = null,
-        backdropPath = null,
-        releaseDate = null,
-        firstAirDate = null,
-        voteAverage = null,
-        genreIds = null,
-        popularity = null,
-        originalLanguage = "de",
-        mediaType = "person",
-        adult = true
-    )
-
     @Nested
     inner class ToMovieEntityTest {
         @Test
@@ -111,4 +60,55 @@ class UserListItemMapperTest {
             assertThat(result.categories).isEmpty()
         }
     }
+
+    private val movieDto = UserListItemRemoteDto(
+        id = 101L,
+        title = "Test Movie",
+        name = null,
+        overview = "An overview.",
+        posterPath = "/poster.jpg",
+        backdropPath = "/backdrop.jpg",
+        releaseDate = "2023-10-26",
+        firstAirDate = null,
+        voteAverage = 8.8,
+        genreIds = listOf(28),
+        popularity = 1234.5,
+        originalLanguage = "en",
+        mediaType = "movie",
+        adult = false
+    )
+
+    private val tvShowDto = UserListItemRemoteDto(
+        id = 201L,
+        title = null,
+        name = "Test TV Show",
+        overview = "A TV overview.",
+        posterPath = "/tv_poster.jpg",
+        backdropPath = "/tv_backdrop.jpg",
+        releaseDate = null,
+        firstAirDate = "2022-12-25",
+        voteAverage = 9.1,
+        genreIds = listOf(10759),
+        popularity = 567.8,
+        originalLanguage = "fr",
+        mediaType = "tv",
+        adult = false
+    )
+
+    private val dtoWithNulls = UserListItemRemoteDto(
+        id = 301L,
+        title = null,
+        name = null,
+        overview = "Another overview.",
+        posterPath = null,
+        backdropPath = null,
+        releaseDate = null,
+        firstAirDate = null,
+        voteAverage = null,
+        genreIds = null,
+        popularity = null,
+        originalLanguage = "de",
+        mediaType = "person",
+        adult = true
+    )
 }

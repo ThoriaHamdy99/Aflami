@@ -17,60 +17,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class MovieDetailsMapperTest {
-    private val baseRemoteResponse = MovieDetailsRemoteResponse(
-        id = 101L,
-        title = "Test Movie",
-        overview = "An overview.",
-        posterPath = "/poster.jpg",
-        backdropPath = "/backdrop.jpg",
-        releaseDate = "2023-01-01",
-        voteAverage = 8.0,
-        runtime = 120,
-        originCountry = listOf("US"),
-        videos = VideoRemoteResponse(
-            results = listOf(
-                VideoRemoteDto(
-                    key = "12345", name = "Official Trailer", site = "YouTube", id = "videoId1",
-                    languageCode = "en", countryCode = "US", size = 1080, type = "Trailer",
-                    official = true, publishedAt = "2023-01-01T00:00:00.000Z"
-                )
-            )
-        ),
-        reviews = ReviewsRemoteResponse(
-            id = 1L,
-            page = 1,
-            results = emptyList(),
-            totalPages = 1,
-            totalResults = 0
-        ),
-        similar = MovieRemoteResponse(
-            page = 1,
-            results = emptyList(),
-            totalPages = 1,
-            totalResults = 0
-        ),
-        credits = CastAndCrewRemoteResponse(cast = emptyList()),
-        images = GalleryRemoteResponse(
-            id = 1,
-            backdrops = emptyList(),
-            logos = emptyList(),
-            posters = emptyList()
-        ),
-        productionCompanies = emptyList(),
-        adult = false,
-        originalLanguage = "en",
-        originalTitle = "Test Movie Original",
-        popularity = 100.0,
-        video = false,
-        voteCount = 500,
-        genres = listOf(
-            CategoryRemoteDto(
-                id = 28,
-                name = "Action"
-            )
-        )
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -141,4 +87,58 @@ class MovieDetailsMapperTest {
             assertThat(result.originCountry).isEmpty()
         }
     }
+
+    private val baseRemoteResponse = MovieDetailsRemoteResponse(
+        id = 101L,
+        title = "Test Movie",
+        overview = "An overview.",
+        posterPath = "/poster.jpg",
+        backdropPath = "/backdrop.jpg",
+        releaseDate = "2023-01-01",
+        voteAverage = 8.0,
+        runtime = 120,
+        originCountry = listOf("US"),
+        videos = VideoRemoteResponse(
+            results = listOf(
+                VideoRemoteDto(
+                    key = "12345", name = "Official Trailer", site = "YouTube", id = "videoId1",
+                    languageCode = "en", countryCode = "US", size = 1080, type = "Trailer",
+                    official = true, publishedAt = "2023-01-01T00:00:00.000Z"
+                )
+            )
+        ),
+        reviews = ReviewsRemoteResponse(
+            id = 1L,
+            page = 1,
+            results = emptyList(),
+            totalPages = 1,
+            totalResults = 0
+        ),
+        similar = MovieRemoteResponse(
+            page = 1,
+            results = emptyList(),
+            totalPages = 1,
+            totalResults = 0
+        ),
+        credits = CastAndCrewRemoteResponse(cast = emptyList()),
+        images = GalleryRemoteResponse(
+            id = 1,
+            backdrops = emptyList(),
+            logos = emptyList(),
+            posters = emptyList()
+        ),
+        productionCompanies = emptyList(),
+        adult = false,
+        originalLanguage = "en",
+        originalTitle = "Test Movie Original",
+        popularity = 100.0,
+        video = false,
+        voteCount = 500,
+        genres = listOf(
+            CategoryRemoteDto(
+                id = 28,
+                name = "Action"
+            )
+        )
+    )
 }

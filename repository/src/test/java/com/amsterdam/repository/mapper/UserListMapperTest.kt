@@ -7,13 +7,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class UserListMapperTest {
-    private val userListRemoteDto = UserListRemoteDto(
-        id = 1,
-        name = "My Favorite Movies",
-        description = "A collection of the best movies ever.",
-        itemCount = 25
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -30,4 +23,11 @@ class UserListMapperTest {
             assertThat(result).isEqualTo(expectedEntity)
         }
     }
+
+    private val userListRemoteDto = UserListRemoteDto(
+        id = 1,
+        name = "My Favorite Movies",
+        description = "A collection of the best movies ever.",
+        itemCount = 25
+    )
 }

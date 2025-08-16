@@ -8,20 +8,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class CountryMapperTest {
-    private val countryEntity = Country(countryName = "Egypt", countryIsoCode = "EG")
-
-    private val countryLocalDto = CountryLocalDto(
-        name = "Egypt",
-        isoCode = "EG",
-        storedLanguage = "en"
-    )
-
-    private val countryRemoteDto = CountryRemoteDto(
-        isoCode = "EG",
-        englishName = "Egypt",
-        nativeName = "مصر"
-    )
-
     @Nested
     inner class LocalMappers {
         @Test
@@ -104,4 +90,18 @@ class CountryMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val countryEntity = Country(countryName = "Egypt", countryIsoCode = "EG")
+
+    private val countryLocalDto = CountryLocalDto(
+        name = "Egypt",
+        isoCode = "EG",
+        storedLanguage = "en"
+    )
+
+    private val countryRemoteDto = CountryRemoteDto(
+        isoCode = "EG",
+        englishName = "Egypt",
+        nativeName = "مصر"
+    )
 }

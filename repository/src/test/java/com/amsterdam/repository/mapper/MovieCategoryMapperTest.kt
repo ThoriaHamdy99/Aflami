@@ -7,9 +7,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class MovieCategoryMapperTest {
-    private val remoteCategory1 = CategoryRemoteDto(id = 28, name = "Action")
-    private val remoteCategory2 = CategoryRemoteDto(id = 12, name = "Adventure")
-
     @Nested
     inner class ToLocalMovieCategoryDtoTest {
         @Test
@@ -47,4 +44,7 @@ class MovieCategoryMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val remoteCategory1 = CategoryRemoteDto(id = 28, name = "Action")
+    private val remoteCategory2 = CategoryRemoteDto(id = 12, name = "Adventure")
 }

@@ -9,31 +9,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class TvShowMapperTest {
-    private val localDto = TvShowLocalDto(
-        tvShowId = 1L, storedLanguage = "en", name = "Local Show",
-        description = "A show from local.", poster = "/local.jpg",
-        airDate = LocalDate.parse("2023-01-01"), rating = 7.5f,
-        popularity = 150.0, seasonCount = 2, originCountry = "US"
-    )
-
-    private val remoteDto = TvShowItemRemoteDto(
-        id = 101L,
-        title = "Remote Show",
-        overview = "An overview.",
-        posterPath = "/poster.jpg",
-        backdropPath = "/backdrop.jpg",
-        releaseDate = "2023-10-26",
-        voteAverage = 8.8,
-        genreIds = listOf(28),
-        popularity = 1234.5,
-        seasonCount = 5,
-        originCountry = listOf("GB"),
-        adult = false,
-        originalLanguage = "en",
-        originalTitle = "Remote Show Original",
-        voteCount = 500
-    )
-
     @Nested
     inner class LocalToEntityTest {
         @Test
@@ -114,4 +89,29 @@ class TvShowMapperTest {
             assertThat(result[1].tvShowId).isEqualTo(102L)
         }
     }
+
+    private val localDto = TvShowLocalDto(
+        tvShowId = 1L, storedLanguage = "en", name = "Local Show",
+        description = "A show from local.", poster = "/local.jpg",
+        airDate = LocalDate.parse("2023-01-01"), rating = 7.5f,
+        popularity = 150.0, seasonCount = 2, originCountry = "US"
+    )
+
+    private val remoteDto = TvShowItemRemoteDto(
+        id = 101L,
+        title = "Remote Show",
+        overview = "An overview.",
+        posterPath = "/poster.jpg",
+        backdropPath = "/backdrop.jpg",
+        releaseDate = "2023-10-26",
+        voteAverage = 8.8,
+        genreIds = listOf(28),
+        popularity = 1234.5,
+        seasonCount = 5,
+        originCountry = listOf("GB"),
+        adult = false,
+        originalLanguage = "en",
+        originalTitle = "Remote Show Original",
+        voteCount = 500
+    )
 }

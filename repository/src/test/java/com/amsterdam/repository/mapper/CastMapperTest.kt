@@ -8,48 +8,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class CastMapperTest {
-    private val maleActorDto = CastRemoteDto(
-        id = 1L,
-        name = "Keanu Reeves",
-        gender = 2,
-        popularity = 90.0,
-        profilePath = "/keanu_reeves.jpg",
-        adult = false,
-        knownForDepartment = "Acting",
-        originalName = "Keanu Reeves",
-        character = "Neo",
-        creditId = "credit1",
-        order = 0
-    )
-
-    private val femaleActorDto = CastRemoteDto(
-        id = 2L,
-        name = "Carrie-Anne Moss",
-        gender = 1,
-        popularity = 85.5,
-        profilePath = "/carrie_anne_moss.jpg",
-        adult = false,
-        knownForDepartment = "Acting",
-        originalName = "Carrie-Anne Moss",
-        character = "Trinity",
-        creditId = "credit2",
-        order = 1
-    )
-
-    private val actorDtoWithNullImage = CastRemoteDto(
-        id = 3L,
-        name = "Laurence Fishburne",
-        gender = 2,
-        popularity = 82.1,
-        profilePath = null,
-        adult = false,
-        knownForDepartment = "Acting",
-        originalName = "Laurence Fishburne",
-        character = "Morpheus",
-        creditId = "credit3",
-        order = 2
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -134,4 +92,46 @@ class CastMapperTest {
             assertThat(result).isEmpty()
         }
     }
+
+    private val maleActorDto = CastRemoteDto(
+        id = 1L,
+        name = "Keanu Reeves",
+        gender = 2,
+        popularity = 90.0,
+        profilePath = "/keanu_reeves.jpg",
+        adult = false,
+        knownForDepartment = "Acting",
+        originalName = "Keanu Reeves",
+        character = "Neo",
+        creditId = "credit1",
+        order = 0
+    )
+
+    private val femaleActorDto = CastRemoteDto(
+        id = 2L,
+        name = "Carrie-Anne Moss",
+        gender = 1,
+        popularity = 85.5,
+        profilePath = "/carrie_anne_moss.jpg",
+        adult = false,
+        knownForDepartment = "Acting",
+        originalName = "Carrie-Anne Moss",
+        character = "Trinity",
+        creditId = "credit2",
+        order = 1
+    )
+
+    private val actorDtoWithNullImage = CastRemoteDto(
+        id = 3L,
+        name = "Laurence Fishburne",
+        gender = 2,
+        popularity = 82.1,
+        profilePath = null,
+        adult = false,
+        knownForDepartment = "Acting",
+        originalName = "Laurence Fishburne",
+        character = "Morpheus",
+        creditId = "credit3",
+        order = 2
+    )
 }

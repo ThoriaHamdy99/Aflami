@@ -10,50 +10,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class TvShowDetailsMapperTest {
-    private val baseRemoteResponse = TvShowDetailsRemoteResponse(
-        id = 201L,
-        title = "Test TV Show",
-        overview = "A great TV show overview.",
-        posterPath = "/tv_poster.jpg",
-        backdropPath = "/tv_backdrop.jpg",
-        releaseDate = "2022-01-01",
-        voteAverage = 9.0,
-        popularity = 200.0,
-        seasonCount = 3,
-        originCountry = listOf("CA"),
-        videos = VideoRemoteResponse(
-            results = listOf(
-                VideoRemoteDto(
-                    key = "67890", name = "Official TV Trailer", site = "YouTube", id = "tvVideoId1",
-                    languageCode = "en", countryCode = "US", size = 1080, type = "Trailer",
-                    official = true, publishedAt = "2022-01-01T00:00:00.000Z"
-                )
-            )
-        ),
-        genres = listOf(CategoryRemoteDto(id = 10759, name = "Action & Adventure")),
-        credits = CastAndCrewRemoteResponse(cast = emptyList()),
-        seasons = emptyList(),
-        reviews = ReviewsRemoteResponse(
-            id = 201L,
-            page = 1,
-            results = emptyList(),
-            totalPages = 1,
-            totalResults = 0
-        ),
-        similar = TvShowRemoteResponse(
-            page = 1,
-            results = emptyList(),
-            totalPages = 1,
-            totalResults = 0
-        ),
-        images = GalleryRemoteResponse(id = 2, backdrops = emptyList(), logos = emptyList(), posters = emptyList()),
-        productionCompanies = emptyList(),
-        accountStates = null,
-        adult = false,
-        originalLanguage = "en",
-        originalTitle = "Test TV Show Original"
-    )
-
     @Nested
     inner class ToEntityTest {
         @Test
@@ -110,4 +66,48 @@ class TvShowDetailsMapperTest {
             )
         }
     }
+
+    private val baseRemoteResponse = TvShowDetailsRemoteResponse(
+        id = 201L,
+        title = "Test TV Show",
+        overview = "A great TV show overview.",
+        posterPath = "/tv_poster.jpg",
+        backdropPath = "/tv_backdrop.jpg",
+        releaseDate = "2022-01-01",
+        voteAverage = 9.0,
+        popularity = 200.0,
+        seasonCount = 3,
+        originCountry = listOf("CA"),
+        videos = VideoRemoteResponse(
+            results = listOf(
+                VideoRemoteDto(
+                    key = "67890", name = "Official TV Trailer", site = "YouTube", id = "tvVideoId1",
+                    languageCode = "en", countryCode = "US", size = 1080, type = "Trailer",
+                    official = true, publishedAt = "2022-01-01T00:00:00.000Z"
+                )
+            )
+        ),
+        genres = listOf(CategoryRemoteDto(id = 10759, name = "Action & Adventure")),
+        credits = CastAndCrewRemoteResponse(cast = emptyList()),
+        seasons = emptyList(),
+        reviews = ReviewsRemoteResponse(
+            id = 201L,
+            page = 1,
+            results = emptyList(),
+            totalPages = 1,
+            totalResults = 0
+        ),
+        similar = TvShowRemoteResponse(
+            page = 1,
+            results = emptyList(),
+            totalPages = 1,
+            totalResults = 0
+        ),
+        images = GalleryRemoteResponse(id = 2, backdrops = emptyList(), logos = emptyList(), posters = emptyList()),
+        productionCompanies = emptyList(),
+        accountStates = null,
+        adult = false,
+        originalLanguage = "en",
+        originalTitle = "Test TV Show Original"
+    )
 }
