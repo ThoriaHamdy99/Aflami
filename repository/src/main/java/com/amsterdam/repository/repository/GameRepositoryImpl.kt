@@ -25,7 +25,7 @@ class GameRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getRandomMoviesWithNotNullPoster(requiredMoviesNumber: Int): List<Movie> {
-        return movieRemoteDataSource.getRandomMoviesWithNotNullPoster(requiredMoviesNumber)
+        return movieRemoteDataSource.getRandomMoviesWithPoster(requiredMoviesNumber)
             .toMovieEntityList()
     }
 

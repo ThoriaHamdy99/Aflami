@@ -118,7 +118,7 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         return collectedMovies
     }
 
-    override suspend fun getRandomMoviesWithNotNullPoster(requiredMoviesNumber: Int): List<MovieItemRemoteDto> {
+    override suspend fun getRandomMoviesWithPoster(requiredMoviesNumber: Int): List<MovieItemRemoteDto> {
         val totalPages = 500
         val collectedMovies = mutableListOf<MovieItemRemoteDto>()
         val usedPages = mutableSetOf<Int>()
