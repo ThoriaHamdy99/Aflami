@@ -2,15 +2,14 @@ package com.amsterdam.viewmodel.home
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.domain.utils.Mood
 import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseCase
 import com.amsterdam.domain.useCase.mood.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.popular.GetPopularMoviesUseCase
 import com.amsterdam.domain.useCase.popular.GetPopularTvShowsUseCase
+import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.upcoming.GetUpcomingMoviesUseCase
-import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToMovieDetailsEffect
 import com.amsterdam.viewmodel.home.HomeUiState.HomeError
@@ -447,7 +446,7 @@ class HomeViewModelTest {
 
     private val defaultMovieId = 101L
     private val defaultTvId = 101L
-    private val defaultSelectedMood = Mood.ROMANTIC
+    private val defaultSelectedMood = GetMoviesByMoodUseCase.Mood.ROMANTIC
     private val defaultComedyGenre = MovieGenre.COMEDY
     private val defaultActionGenre = MovieGenre.ACTION
 
