@@ -14,4 +14,5 @@ data class Movie(
     val originCountry: String,
     val runTimeInMinutes: Int,
     val videoUrl: String? = null,
+    val isAdult: Boolean = false
 )

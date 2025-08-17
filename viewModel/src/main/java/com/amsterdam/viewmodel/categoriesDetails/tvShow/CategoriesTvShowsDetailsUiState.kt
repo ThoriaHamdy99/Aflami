@@ -33,5 +33,6 @@ data class CategoriesTvShowsDetailsUiState(
         val posterImageUrl: String = "",
         val rate: String = "",
         val yearOfRelease: String = "",
+        val isAdult : Boolean = false
     )
 }

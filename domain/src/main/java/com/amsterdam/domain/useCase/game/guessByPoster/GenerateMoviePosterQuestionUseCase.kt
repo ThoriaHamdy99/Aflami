@@ -14,7 +14,7 @@ class GenerateMoviePosterQuestionsUseCase(
     suspend operator fun invoke(difficultyType: GameDifficulty.DifficultyType): List<GameQuestion<String>> {
         val gameDifficulty = getGameDifficultyByDifficultyTypeUseCase(difficultyType)
 
-        val movies = gameRepository.getRandomMoviesWithNotNullPoster(gameDifficulty.totalQuestions * 4)
+        val movies = gameRepository.getRandomMoviesWithPoster(gameDifficulty.totalQuestions * 4)
 
         return movies.chunked(4).map { group ->
             val correctMovie = group.random()

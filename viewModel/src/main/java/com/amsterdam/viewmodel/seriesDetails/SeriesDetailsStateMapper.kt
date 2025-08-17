@@ -12,16 +12,18 @@ import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ActorTvShowUiS
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ProductionTvShowCompanyUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.ReviewTvShowUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState
+import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState.DurationUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState.EpisodeUiState
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SimilarTvShowUiState
 import com.amsterdam.viewmodel.shared.RateDialogUiState
 import com.amsterdam.viewmodel.shared.mappers.toFormattedRating
-import com.amsterdam.viewmodel.utils.formatDuration
 import com.amsterdam.viewmodel.utils.toFormattedString
+import com.amsterdam.viewmodel.utils.toShortMonthString
+import kotlin.collections.map
 
-fun List<Episode>.toUiState() = map(Episode::toUiState)
+fun List<Episode>.toUiState(currentLanguage: String) = map { it.toUiState(currentLanguage) }
 
-fun TvShowDetails.toUiState(): SeriesDetailsUiState {
+fun TvShowDetails.toUiState(currentLanguage: String): SeriesDetailsUiState {
     return SeriesDetailsUiState(
         videoUrl = tvShow.videoUrl ?: "",
         tvShowId = tvShow.id,
@@ -30,20 +32,21 @@ fun TvShowDetails.toUiState(): SeriesDetailsUiState {
         title = tvShow.name,
         airDate = tvShow.airDate.toFormattedString(),
         categories = tvShow.categories.toTvShowGenres(),
-        seasonCount = formatSeasonCount(seasons.size),
+        seasonCount = seasons.size,
         originCountry = tvShow.originCountry,
         description = tvShow.description,
         cast = actors.toActorsUiState(),
         isRateDialogVisible = false,
         isAddToListDialogVisible = false,
         extraItem = SeriesDetailsUiState.defaultSeriesExtrasItems,
-        seasons = seasons.toSeasonUiState(),
+        seasons = seasons.toSeasonUiState(currentLanguage = currentLanguage),
         similarSeries = similarTvShows.toSimilarTvShowUiStates(),
         reviews = reviews.toReviewTvShowUiStates(),
         gallery = gallery,
         postersUrls = posters,
         productionCompanies = productionsCompanies.toProductionTvShowCompanyUiStates(),
-        rateDialogUiState = RateDialogUiState(selectedStarIndex = userRate)
+        rateDialogUiState = RateDialogUiState(selectedStarIndex = userRate),
+        currentLanguage = currentLanguage
     )
 }
 
@@ -67,28 +70,29 @@ private fun TvShow.toSimilarTvShowUiState(): SimilarTvShowUiState {
         rate = rating.toFormattedRating(),
         name = name,
         productionYear = airDate?.year?.toString() ?: "",
-        posterUrl = posterUrl
+        posterUrl = posterUrl,
+        isAdult = isAdult
     )
 }
 
 
 private fun List<Season>.toSeasonUiState(
-    episodesBySeason: Map<Int, List<Episode>> = emptyMap()
+    episodesBySeason: Map<Int, List<Episode>> = emptyMap(), currentLanguage: String
 ): List<SeasonUiState> {
-    return map { it.toUiState(episodesBySeason[it.seasonNumber].orEmpty()) }
+    return map { it.toUiState(episodesBySeason[it.seasonNumber].orEmpty(), currentLanguage) }
 }
 
-private fun Season.toUiState(episodes: List<Episode>): SeasonUiState {
+private fun Season.toUiState(episodes: List<Episode>, currentLanguage: String): SeasonUiState {
     return SeasonUiState(
         id = id,
         seasonNumber = seasonNumber,
         title = title,
         episodeCount = episodeCount,
-        episodes = episodes.map(Episode::toUiState)
+        episodes = episodes.map { it.toUiState(currentLanguage) }
     )
 }
 
-private fun Episode.toUiState(): EpisodeUiState {
+private fun Episode.toUiState(currentLanguage: String): EpisodeUiState {
     return EpisodeUiState(
         id = id,
         number = episodeNumber,
@@ -97,12 +101,19 @@ private fun Episode.toUiState(): EpisodeUiState {
         imageUrl = episodeImageUrl,
         imageNumber = episodeNumber,
         description = description,
-        duration = formatDuration(runTimeInMinutes),
-        airDate = airDate.toFormattedString()
+        duration = runTimeInMinutes.toDurationUiState(),
+        airDate = airDate.toShortMonthString(language = currentLanguage)
     )
 }
 
-private fun Review.toReviewTvShowUiState(): ReviewTvShowUiState {
+fun Int.toDurationUiState(): DurationUiState {
+    return DurationUiState(
+        hour = this / 60,
+        minute = this % 60
+    )
+}
+
+fun Review.toReviewTvShowUiState(): ReviewTvShowUiState {
     return ReviewTvShowUiState(
         author = reviewerName,
         username = reviewerUsername,
@@ -115,8 +126,6 @@ private fun Review.toReviewTvShowUiState(): ReviewTvShowUiState {
 
 private fun Actor.toActorUiState(): ActorTvShowUiState =
     ActorTvShowUiState(photo = imageUrl, name = name)
-
-private fun formatSeasonCount(count: Int) = "$count Season"
 
 private fun ProductionCompany.toProductionTvShowCompanyUiState(): ProductionTvShowCompanyUiState {
     return ProductionTvShowCompanyUiState(

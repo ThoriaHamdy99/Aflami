@@ -2,13 +2,13 @@ package com.amsterdam.repository.repository
 
 import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.People
+import com.amsterdam.entity.Character
 import com.amsterdam.repository.datasource.local.GameLocalDataSource
 import com.amsterdam.repository.datasource.local.GameSessionLocalDataSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
-import com.amsterdam.repository.datasource.remote.PeopleRemoteDataSource
-import com.amsterdam.repository.mapper.toMovieEntityList
+import com.amsterdam.repository.datasource.remote.CharacterRemoteDataSource
 import com.amsterdam.repository.mapper.toEntityList
+import com.amsterdam.repository.mapper.toMovieEntityList
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -16,16 +16,16 @@ class GameRepositoryImpl @Inject constructor(
     private val gameLocalDataSource: GameLocalDataSource,
     private val gameSessionLocalDataSource : GameSessionLocalDataSource,
     private val movieRemoteDataSource: MovieRemoteDataSource,
-    private val peopleRemoteDataSource: PeopleRemoteDataSource
+    private val characterRemoteDataSource: CharacterRemoteDataSource
 ) : GameRepository {
 
-    override suspend fun getRandomMoviesWithNotNullDate(requiredMoviesNumber: Int): List<Movie> {
-        return movieRemoteDataSource.getRandomMoviesWithNotNullDate(requiredMoviesNumber)
+    override suspend fun getRandomMoviesWithReleaseDate(requiredMoviesNumber: Int): List<Movie> {
+        return movieRemoteDataSource.getRandomMoviesWithReleaseDate(requiredMoviesNumber)
             .toMovieEntityList()
     }
 
-    override suspend fun getRandomMoviesWithNotNullPoster(requiredMoviesNumber: Int): List<Movie> {
-        return movieRemoteDataSource.getRandomMoviesWithNotNullPoster(requiredMoviesNumber)
+    override suspend fun getRandomMoviesWithPoster(requiredMoviesNumber: Int): List<Movie> {
+        return movieRemoteDataSource.getRandomMoviesWithPoster(requiredMoviesNumber)
             .toMovieEntityList()
     }
 
@@ -39,8 +39,8 @@ class GameRepositoryImpl @Inject constructor(
 
     override suspend fun getCharacterDataQuestions(
         requiredNumber: Int,
-    ): List<People> {
-        return peopleRemoteDataSource.getRandomizedTrendingPeople(requiredNumber = requiredNumber)
+    ): List<Character> {
+        return characterRemoteDataSource.getRandomizedTrendingCharacter(requiredNumber = requiredNumber)
             .toEntityList()
     }
 
