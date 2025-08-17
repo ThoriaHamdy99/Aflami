@@ -113,7 +113,7 @@ class MovieMapperTest {
         movieId = 1L, storedLanguage = "en", name = "Local Movie",
         description = "A movie from local.", poster = "/local.jpg",
         releaseDate = LocalDate.parse("2023-01-01"), rating = 7.5f,
-        popularity = 150.0, movieLength = 90, originCountry = "US"
+        popularity = 150.0, movieLength = 90, originCountry = "US", isAdult = false
     )
 
     private val remoteDto = MovieItemRemoteDto(

@@ -128,6 +128,7 @@ class MovieDetailsMapperTest {
         rating = 8.0f,
         popularity = 100.0,
         movieLength = 120,
-        originCountry = "US"
+        originCountry = "US",
+        isAdult = false
     )
 }

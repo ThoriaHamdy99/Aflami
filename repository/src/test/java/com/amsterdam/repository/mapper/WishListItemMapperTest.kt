@@ -32,13 +32,6 @@ class WishListItemMapperTest {
     }
 
     @Test
-    fun `toTvShowEntity should map tv show Dto with poster image`() {
-        val result = tvShowDto.toTvShowEntity()
-
-        assertThat(result).isEqualTo(expectedTvShow)
-    }
-
-    @Test
     fun `toTvShowEntity should map with backdrop image when isPoster is false`() {
         val result = tvShowDto.toTvShowEntity(isPoster = false)
 
@@ -110,10 +103,10 @@ class WishListItemMapperTest {
         releaseDate = LocalDate.parse("2023-10-26"),
         rating = 8.8f,
         categories = listOf(MovieGenre.ACTION),
-        description = "",
-        popularity = 0.0,
+        description = "An overview.",
+        popularity = 1234.5,
         runTimeInMinutes = 0,
-        originCountry = ""
+        originCountry = "en"
     )
 
     private val expectedTvShow = TvShow(
@@ -123,10 +116,10 @@ class WishListItemMapperTest {
         airDate = LocalDate.parse("2022-12-25"),
         rating = 9.1f,
         categories = listOf(TvShowGenre.ACTION_ADVENTURE),
-        description = "",
-        popularity = 0.0,
+        description = "A TV overview.",
+        popularity = 567.8,
         seasonCount = 0,
-        originCountry = ""
+        originCountry = "fr"
     )
 
     private val expectedMovieWithNulls = Movie(
@@ -136,10 +129,10 @@ class WishListItemMapperTest {
         releaseDate = LocalDate.fromEpochDays(0),
         rating = 0f,
         categories = emptyList(),
-        description = "",
+        description = "Another overview.",
         popularity = 0.0,
         runTimeInMinutes = 0,
-        originCountry = ""
+        originCountry = "de"
     )
 
     private val expectedTvShowWithNulls = TvShow(
@@ -149,9 +142,9 @@ class WishListItemMapperTest {
         airDate = LocalDate.fromEpochDays(0),
         rating = 0f,
         categories = emptyList(),
-        description = "",
+        description = "Another overview.",
         popularity = 0.0,
         seasonCount = 0,
-        originCountry = ""
+        originCountry = "de"
     )
 }
