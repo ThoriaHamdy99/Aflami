@@ -127,14 +127,18 @@ private fun HomeScreenContent(
         derivedStateOf { parentLazyListState.firstVisibleItemScrollOffset }
     }
 
+    LaunchedEffect(state.upcomingMoviesSectionUiState) {
+        childLazyListState.scrollToItem(0)
+        canChildScroll = !parentLazyListState.canScrollForward
+    }
+
     LaunchedEffect(parentLazyListState.isScrollInProgress) {
         canChildScroll = !parentLazyListState.canScrollForward
     }
 
-    LaunchedEffect(childLazyListState.isScrollInProgress) {
-        canChildScroll = childLazyListState.canScrollBackward
+    LaunchedEffect(childLazyListState.isScrollInProgress, !parentLazyListState.canScrollForward) {
+        canChildScroll = childLazyListState.canScrollBackward && !parentLazyListState.canScrollForward
     }
-
 
     val appBarColor by animateColorAsState(
         targetValue = if (scrollOffset > 8) AppTheme.color.surface else Color.Transparent,
