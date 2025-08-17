@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -87,34 +86,44 @@ fun GameCard(
                 shape = RoundedCornerShape(16.dp),
             )
             .clickable(enabled = isPlayable) { onClick() },
-        verticalArrangement = Arrangement.Top,
     ) {
         UnlockPromptContainer(
             isVisible = !isPlayable,
             unlockPrice = unlockPrice,
         )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
-            horizontalArrangement = Arrangement.SpaceBetween,
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
+            GameCardBackgroundShapes(
+                modifier = Modifier
+                    .height(116.dp)
+                    .fillMaxWidth(0.25f)
+                    .align(Alignment.CenterEnd),
+                circleColor = shadowColor
+            )
+            Box(
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                getGameCardImageContentByType(gameCardImageContentType, title).invoke(this)
+            }
+
             Column(
                 modifier = Modifier
-                    .weight(0.6f)
+                    .align(Alignment.TopStart)
                     .padding(horizontal = 12.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
+                    modifier = Modifier,
                     text = title,
                     style = AppTheme.textStyle.title.small,
                     color = AppTheme.color.title,
                 )
 
                 Text(
-                    modifier = Modifier.fillMaxWidth(.7f),
+                    modifier = Modifier.fillMaxWidth(0.65f),
                     text = description,
                     minLines = 2,
                     maxLines = 2,
@@ -123,22 +132,13 @@ fun GameCard(
                     color = AppTheme.color.body,
                 )
 
-                Row(
-                    modifier = Modifier.weight(1f),
+                CircularButton(
+                    modifier = Modifier.padding(top = 4.dp),
+                    onClick = onClick,
+                    clickable = isPlayable
                 ) {
-                    CircularButton(
-                        onClick = onClick,
-                        clickable = isPlayable,
-                        modifier = Modifier.align(Alignment.Bottom)
-                    ) {
-                        if (isPlayable) PlayNowContent() else PlayLockContent()
-                    }
+                    if (isPlayable) PlayNowContent() else PlayLockContent()
                 }
-            }
-
-            Box(modifier = Modifier.weight(0.4f)) {
-                GameCardBackgroundShapes(circleColor = shadowColor)
-                getGameCardImageContentByType(gameCardImageContentType, title).invoke(this)
             }
         }
     }
@@ -200,11 +200,11 @@ private fun GameCardBackgroundShapes(
         BlurredContent(
             blurRadius = 5.dp,
             modifier = Modifier.graphicsLayer {
-                    rotationZ = if (isRtl) -48f else 48f
-                    translationX = if (isRtl) -160f else 150f
-                    scaleY = 2f
-                    scaleX = 1f
-                },
+                rotationZ = if (isRtl) -48f else 48f
+                translationX = if (isRtl) -160f else 150f
+                scaleY = 2f
+                scaleX = 1f
+            }
         ) { RectangleShapeSoftGlow(Modifier.width(52.dp)) }
     }
 }
@@ -223,11 +223,10 @@ private fun getGameCardImageContentByType(
             Image(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
-                    .width(110.dp)
-                    .mirroredContent(LocalLayoutDirection.current)
-                    .graphicsLayer { translationX = -0f },
+                    .height(96.dp)
+                    .mirroredContent(LocalLayoutDirection.current),
                 painter = painterResource(R.drawable.img_game_funclown),
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.FillHeight,
                 contentDescription = contentDescription,
             )
         }
