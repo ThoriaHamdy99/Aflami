@@ -16,7 +16,7 @@ data class GenreGameUiState(
     val isNextEnabled: Boolean = false,
     val selectedAnswerIndex: Int? = null,
     val isAnswerCorrect: Boolean? = null,
-    val error: AflamiException? = null
+    val isNetworkError : Boolean = false
 )
 
 data class GameQuestionUiState(
