@@ -2,14 +2,14 @@ package com.amsterdam.viewmodel.home
 
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.useCase.home.GetContinueWatchingDataUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingDataUseCase.ContinueWatchingData
-import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
-import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
-import com.amsterdam.domain.useCase.home.GetPopularTvShowsUseCase
-import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
-import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
-import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseCase
+import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseCase.ContinueWatchingData
+import com.amsterdam.domain.useCase.mood.GetMoviesByMoodUseCase
+import com.amsterdam.domain.useCase.popular.GetPopularMoviesUseCase
+import com.amsterdam.domain.useCase.popular.GetPopularTvShowsUseCase
+import com.amsterdam.domain.useCase.topRated.GetTopRatedMoviesUseCase
+import com.amsterdam.domain.useCase.topRated.GetTopRatedTvShowsUseCase
+import com.amsterdam.domain.useCase.upcoming.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.Mood
 import com.amsterdam.entity.Movie
