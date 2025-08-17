@@ -79,7 +79,7 @@ fun SettingsDialog(
                         text = stringResource(R.string.logout),
                         style = AppTheme.textStyle.label.medium,
                         color = AppTheme.color.primary,
-                        minLines = 1,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 },
