@@ -29,7 +29,7 @@ fun ProfileInfoSection(username: String, userPoints: Int) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "@$username",
+            text = username,
             style = AppTheme.textStyle.label.medium,
             color = AppTheme.color.body,
             modifier = Modifier

@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,8 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.Text
+import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.divider.HorizontalDivider
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
@@ -35,7 +36,6 @@ import com.amsterdam.domain.utils.RestrictionLevel
 import com.amsterdam.ui.R
 import com.amsterdam.viewmodel.profile.ProfileInteractionListener
 import com.amsterdam.viewmodel.profile.ProfileUiState
-
 
 @Composable
 fun LoggedInContent(
@@ -48,12 +48,12 @@ fun LoggedInContent(
         derivedStateOf { lazyListState.firstVisibleItemScrollOffset }
     }
     val appBarColor by animateColorAsState(
-        targetValue = if (scrollOffset.value > 8) AppTheme.color.surface else Color.Transparent,
+        targetValue = if (lazyListState.firstVisibleItemIndex > 0 || scrollOffset.value > 8) AppTheme.color.surface else Color.Transparent,
         animationSpec = tween(800),
         label = "AppBarScrollColor"
     )
 
-    val showVersion by remember {
+    val isScrolledToEnd by remember {
         derivedStateOf {
             !lazyListState.canScrollForward
         }
@@ -61,16 +61,14 @@ fun LoggedInContent(
 
     ScreenDialogs(state, interactionListener)
 
-    Box {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Column(modifier = Modifier.fillMaxSize()) {
+
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.weight(1f),
                 state = lazyListState,
-                contentPadding = PaddingValues(bottom = 12.dp)
+                contentPadding = PaddingValues(top = 80.dp)
             ) {
                 item { ProfileImageSection(state.userInfo.userAvatarUrl) }
                 item { ProfileInfoSection(state.userInfo.username, state.userInfo.userPoints) }
@@ -90,11 +88,9 @@ fun LoggedInContent(
                     )
                 }
             }
+
             AnimatedVisibility(
-                visible = showVersion,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 12.dp),
+                visible = isScrolledToEnd,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
@@ -103,11 +99,13 @@ fun LoggedInContent(
                     style = AppTheme.textStyle.label.small,
                     color = AppTheme.color.hint,
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp, top = 16.dp),
                     textAlign = TextAlign.Center
                 )
             }
         }
+
         TopAppBar(
             title = {
                 Text(
@@ -119,8 +117,7 @@ fun LoggedInContent(
                         .padding(horizontal = 16.dp, vertical = 13.dp)
                 )
             },
-            modifier = Modifier
-                .background(appBarColor)
+            modifier = Modifier.background(appBarColor)
         )
     }
 }
