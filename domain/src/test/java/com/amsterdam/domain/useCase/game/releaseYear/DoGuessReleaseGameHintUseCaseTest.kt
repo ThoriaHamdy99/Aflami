@@ -1,9 +1,9 @@
 package com.amsterdam.domain.useCase.game.releaseYear
 
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
-import com.amsterdam.domain.model.GameQuestion
 import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.domain.utils.GameQuestion
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery

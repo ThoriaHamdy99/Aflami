@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.movieDetails
 
-import com.amsterdam.domain.model.category.toMovieGenres
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
+import com.amsterdam.domain.utils.category.toMovieGenres
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.ProductionCompany

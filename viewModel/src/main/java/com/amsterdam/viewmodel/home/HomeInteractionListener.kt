@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.home
 
-import com.amsterdam.domain.model.Mood
-import com.amsterdam.domain.model.category.MovieGenre
+import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 
 interface HomeInteractionListener {
@@ -13,7 +13,7 @@ interface HomeInteractionListener {
     fun onChangeUpcomingMovieGenre(genre: MovieGenre)
     fun onClickShowAllToRatedMovies()
 
-    fun onChangeMood(mood: Mood)
+    fun onChangeMood(mood: GetMoviesByMoodUseCase.Mood)
     fun onClickGetNow()
     fun onDismissMoodPickerDialog()
 

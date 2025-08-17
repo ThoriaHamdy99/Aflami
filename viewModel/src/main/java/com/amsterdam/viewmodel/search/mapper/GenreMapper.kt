@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.search.mapper
 
-import com.amsterdam.domain.model.category.MovieGenre
-import com.amsterdam.domain.model.category.TvShowGenre
+import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.Selectable
 import com.amsterdam.viewmodel.shared.uiStates.MovieGenreItemUiState
 import com.amsterdam.viewmodel.shared.uiStates.TvGenreItemUiState

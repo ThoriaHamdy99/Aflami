@@ -1,4 +1,4 @@
-package com.amsterdam.domain.model
+package com.amsterdam.domain.utils
 
 data class AnswerResult(
     val isCorrect: Boolean,

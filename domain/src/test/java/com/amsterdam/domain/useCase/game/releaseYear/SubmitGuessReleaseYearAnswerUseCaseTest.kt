@@ -1,9 +1,9 @@
 package com.amsterdam.domain.useCase.game.releaseYear
 
-import com.amsterdam.domain.model.AnswerResult
-import com.amsterdam.domain.model.GameQuestion
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs

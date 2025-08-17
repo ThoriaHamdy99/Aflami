@@ -1,8 +1,8 @@
 package com.amsterdam.domain.repository
 
-import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase.UserRatedMovie
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie

@@ -3,8 +3,8 @@ package com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genr
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.amsterdam.domain.model.category.MovieGenre
-import com.amsterdam.domain.model.category.TvShowGenre
+import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.TabOption
 
 @Composable

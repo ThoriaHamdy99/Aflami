@@ -1,7 +1,7 @@
 package com.amsterdam.repository.repository
 
-import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.domain.repository.MovieRepository
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Gender

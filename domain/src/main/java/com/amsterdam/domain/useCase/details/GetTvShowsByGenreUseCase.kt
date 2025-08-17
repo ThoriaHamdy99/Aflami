@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.details
 
-import com.amsterdam.domain.model.category.TvShowGenre
 import com.amsterdam.domain.repository.TvShowRepository
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.entity.TvShow
 
 class GetTvShowsByGenreUseCase(

@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.utils.entityHelper
 
-import com.amsterdam.domain.model.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Movie
 import kotlinx.datetime.LocalDate
 

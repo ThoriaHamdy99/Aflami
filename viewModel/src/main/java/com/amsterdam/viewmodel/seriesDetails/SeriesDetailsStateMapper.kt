@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.seriesDetails
 
-import com.amsterdam.domain.model.category.toTvShowGenres
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
+import com.amsterdam.domain.utils.category.toTvShowGenres
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Episode
 import com.amsterdam.entity.ProductionCompany

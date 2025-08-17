@@ -1,9 +1,9 @@
 package com.amsterdam.domain.useCase.game.character
 
-import com.amsterdam.domain.model.AnswerResult
-import com.amsterdam.domain.model.GameQuestion
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty
 
 class SubmitCharacterAnswerUseCase(

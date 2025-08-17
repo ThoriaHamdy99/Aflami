@@ -3,8 +3,8 @@ package com.amsterdam.viewmodel.categoriesDetails.tvShow
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.amsterdam.domain.model.category.TvShowGenre
 import com.amsterdam.domain.useCase.details.GetTvShowsByGenreUseCase
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.entity.TvShow
 import com.amsterdam.paging.BasePagingSource
 import jakarta.inject.Inject

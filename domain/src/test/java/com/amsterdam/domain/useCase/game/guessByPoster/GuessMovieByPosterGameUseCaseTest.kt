@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.game.guessByPoster
 
-import com.amsterdam.domain.model.AnswerResult
-import com.amsterdam.domain.model.GameQuestion
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery

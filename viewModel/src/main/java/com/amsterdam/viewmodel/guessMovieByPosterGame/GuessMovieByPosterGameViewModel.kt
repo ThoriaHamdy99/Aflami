@@ -3,12 +3,12 @@ package com.amsterdam.viewmodel.guessMovieByPosterGame
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NotEnoughPointsException
-import com.amsterdam.domain.model.AnswerResult
-import com.amsterdam.domain.model.GameQuestion
 import com.amsterdam.domain.useCase.game.AddPointsToGameUseCase
 import com.amsterdam.domain.useCase.game.AddSecondToGameTimeUseCase
 import com.amsterdam.domain.useCase.game.CreateGameSessionIdUseCase
 import com.amsterdam.domain.useCase.game.guessByPoster.GuessMovieByPosterGameUseCase
+import com.amsterdam.domain.utils.AnswerResult
+import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.Game
 import com.amsterdam.entity.GameDifficulty
 import com.amsterdam.viewmodel.gameResult.ResultScreenData

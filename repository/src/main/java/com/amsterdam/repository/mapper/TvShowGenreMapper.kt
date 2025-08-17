@@ -1,6 +1,6 @@
 package com.amsterdam.repository.mapper
 
-import com.amsterdam.domain.model.category.TvShowGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.repository.dto.local.TvShowCategoryLocalDto
 
 fun TvShowCategoryLocalDto.toEntity(): TvShowGenre = when (categoryId) {

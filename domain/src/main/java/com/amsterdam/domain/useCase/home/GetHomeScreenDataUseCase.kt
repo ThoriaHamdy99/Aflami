@@ -1,6 +1,6 @@
 package com.amsterdam.domain.useCase.home
 
-import com.amsterdam.domain.model.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.TvShow
 

@@ -1,4 +1,4 @@
-package com.amsterdam.domain.model
+package com.amsterdam.domain.utils
 
 import com.amsterdam.entity.TvShow
 import kotlinx.datetime.Instant

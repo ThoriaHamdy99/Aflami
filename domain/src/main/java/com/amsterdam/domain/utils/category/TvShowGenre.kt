@@ -1,4 +1,4 @@
-package com.amsterdam.domain.model.category
+package com.amsterdam.domain.utils.category
 
 enum class TvShowGenre {
     ALL,

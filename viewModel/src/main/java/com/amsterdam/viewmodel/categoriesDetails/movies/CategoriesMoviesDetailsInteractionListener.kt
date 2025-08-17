@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.categoriesDetails.movies
 
 import androidx.paging.CombinedLoadStates
-import com.amsterdam.domain.model.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 
 interface CategoriesMoviesDetailsInteractionListener {
     fun onClickBack()
