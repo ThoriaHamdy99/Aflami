@@ -65,6 +65,7 @@ internal fun MoviesVerticalGrid(
                             contentScale = ContentScale.Crop,
                             onLoading = { ImageLoadingIndicator() },
                             onError = { ImageErrorIndicator() },
+                            isAdult = movie.isAdult
                         )
                     },
                     movieType = stringResource(R.string.movie),
@@ -112,7 +113,7 @@ internal fun MoviesVerticalGrid(
 private fun MoviesVerticalGridPreview() {
     AflamiTheme {
         MoviesVerticalGrid(
-            movies = emptyFlow<PagingData< SearchMediaItemUiState>>().collectAsLazyPagingItems(),
+            movies = emptyFlow<PagingData<SearchMediaItemUiState>>().collectAsLazyPagingItems(),
             isVisible = true,
             onMovieClicked = {}
         )

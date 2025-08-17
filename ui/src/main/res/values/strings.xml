@@ -114,10 +114,14 @@
     <string name="points_acheived">Points Achieved</string>
     <string name="total_time">Total time</string>
     <string name="finish_game_message">You finished the GAME!</string>
+    <string name="lose_the_game_message">Oops, you lose the GAME!</string>
     <string name="not_enough_points">Not enough points</string>
     <string name="not_enough_points_description">Sorry, you don’t have the enough points to have a hint</string>
     <string name="ok">OK</string>
     <string name="cd_cancel">Cancel</string>
+    <string name="points_as_pts">Pts.</string>
+    <string name="seconds_as_sec">Sec.</string>
+
     <!-- -   -->
     <!-- -   -->
     <string name="loading">Loading...</string>
@@ -232,6 +236,7 @@
 
     <string name="there_is_no_production_company">There is no production company!</string>
     <string name="there_is_no_reviews">There is no reviews!</string>
+    <string name="there_are_no_lists">There are no lists, you can create a new one!</string>
     <string name="there_is_no_similar_content">There is no similar content!</string>
 
     <!-- - Home  -->
@@ -243,7 +248,7 @@
     <string name="there_is_no_gallery">There Is No Gallery</string>
     <string name="there_is_no_company_production">There Is No Company Production</string>
     <string name="there_is_no_seasons">It Seem Like There Is No Seasons Yet</string>
-    <string name="remove_from_list">Remove from list</string>
+    <string name="added">Added</string>
     <string name="no_saved_items_here">No saved items here!</string>
     <string name="no_items_here">No items here!</string>
     <string name="confirm_delete">Are you sure to continue deleting?</string>
@@ -276,6 +281,19 @@
     <string name="when_is_released">When is released?</string>
 
     <string name="oops_there_are_not_enough_points">Oops, there are not enough points</string>
+
+    <string name="minute">%1$s m</string>
+
+    <plurals name="season_count">
+        <item quantity="one">%d Season</item>
+        <item quantity="other">%d Seasons</item>
+    </plurals>
+
+
+    <string name="duration_hours_minutes">%1$s h %2$d m</string>
+    <string name="duration_hours">%1$s h</string>
+    <string name="duration_minutes">%1$s m</string>
+
 
     <string name="no_rated_movies">No rated movies yet!</string>
     <string name="no_rated_movies_description">Open a movie, rate it, your ratings will be displayed here.</string>

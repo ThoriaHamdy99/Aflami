@@ -8,6 +8,8 @@ data class GenreGameUiState(
     val isLoading: Boolean = false,
     val questions: List<GameQuestionUiState> = emptyList(),
     val currentQuestionIndex: Int = 0,
+    val earnedPoints : Int? = null,
+    val gameSessionId : Long = 0,
     val isHintEnabled: Boolean = true,
     val isNotEnoughPointsDialogVisible: Boolean = false,
     val timerUiState: TimerUiState = TimerUiState(),

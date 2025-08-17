@@ -32,10 +32,9 @@ import com.amsterdam.designsystem.components.Scaffold
 import com.amsterdam.designsystem.components.buttons.ConfirmButton
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
-import com.amsterdam.ui.screens.games.component.GameTopBar
 import com.amsterdam.ui.components.PageIndicator
-import com.amsterdam.ui.screens.games.component.AdaptiveAnswersColumn
-import com.amsterdam.ui.screens.games.component.GuessPicture
+import com.amsterdam.ui.screens.games.component.GameQuestionWithImage
+import com.amsterdam.ui.screens.games.component.GameTopBar
 import com.amsterdam.ui.screens.games.component.NotEnoughPointsDialog
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameEffect
@@ -59,10 +58,9 @@ fun GuessCharacterScreen(viewModel: GuessCharacterGameViewModel = hiltViewModel(
                 is GuessCharacterGameEffect.NavigateToGameResult -> {
                     val resultScreenData = effect.resultScreenData
                     navigationManager.toResultScreen(
-                        totalCollectedPoints = resultScreenData.totalCollectedPoints,
-                        totalSpentSeconds = resultScreenData.totalSpentSeconds,
                         gameType = resultScreenData.gameType,
-                        difficulty = resultScreenData.difficulty
+                        difficulty = resultScreenData.difficulty,
+                        gameSessionId = resultScreenData.gameSessionId
                     )
                 }
             }
@@ -125,7 +123,8 @@ private fun GameContent(
             ) {
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize().statusBarsPadding()
+                        .fillMaxSize()
+                        .statusBarsPadding()
                         .padding(bottom = innerPadding.calculateBottomPadding()),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -166,8 +165,8 @@ private fun GameContent(
                         ) { page ->
                             val question = state.questions.getOrNull(page)
                             if (question != null) {
-                                CharacterGameQuestion(
-                                    questionImageModel = question.characterImageUrl,
+                                GameQuestionWithImage(
+                                    question = question.characterImageUrl,
                                     answers = question.characterChoices,
                                     blurRadius = question.blurRadius,
                                     selectedAnswerIndex = state.selectedAnswerIndex,
@@ -176,50 +175,13 @@ private fun GameContent(
                                     isChoicesEnabled = state.isNextEnabled,
                                     onHintClick = interactionListener::onHintClicked,
                                     onSelectAnswer = interactionListener::onSelectAnswer,
+                                    earnedPoint = state.earnedPoints
                                 )
                             }
                         }
                     }
-
                 }
             }
         }
-    }
-}
-
-@Composable
-fun CharacterGameQuestion(
-    questionImageModel: String,
-    answers: List<String>,
-    blurRadius: Int,
-    selectedAnswerIndex: Int?,
-    isAnswerCorrect: Boolean?,
-    isHintEnabled: Boolean,
-    modifier: Modifier = Modifier,
-    isChoicesEnabled: Boolean = true,
-    onHintClick: () -> Unit = {},
-    onSelectAnswer: (Int) -> Unit = {},
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-
-        GuessPicture(
-            blurRadius = blurRadius.dp,
-            points = 10,
-            imageUrl = questionImageModel,
-            isHintVisible = isHintEnabled,
-            onClick = onHintClick,
-        )
-        AdaptiveAnswersColumn(
-            answers,
-            selectedAnswerIndex,
-            isAnswerCorrect,
-            isChoicesEnabled,
-            onSelectAnswer
-        )
-
     }
 }

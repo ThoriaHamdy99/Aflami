@@ -414,12 +414,12 @@ class MovieRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getRandomMoviesWithNotNullDate should return the required number of movies, handling null dates and duplicates, and call the API at least twice`() =
+    fun `getRandomMoviesWithReleaseDate should return the required number of movies, handling null dates and duplicates, and call the API at least twice`() =
         runTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithoutDateResponse andThen moviesWithDateResponse
 
             val result =
-                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullDate(3)
+                movieRemoteDataSourceImpl.getRandomMoviesWithReleaseDate(3)
 
             assertThat(result.size).isEqualTo(3)
             assertThat(result).containsNoDuplicates()
@@ -427,12 +427,12 @@ class MovieRemoteDataSourceImplTest {
         }
 
     @Test
-    fun `getRandomMoviesWithNotNullDate should break the loop and call the API exactly once when enough movies are collected`() =
+    fun `getRandomMoviesWithReleaseDate should break the loop and call the API exactly once when enough movies are collected`() =
         runTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithDateResponse
 
             val result =
-                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullDate(2)
+                movieRemoteDataSourceImpl.getRandomMoviesWithReleaseDate(2)
 
             assertThat(result.size).isEqualTo(2)
             coVerify(exactly = 1) { movieApiService.getPopularMovies(any()) }
@@ -442,12 +442,12 @@ class MovieRemoteDataSourceImplTest {
 
 
     @Test
-    fun `getRandomMoviesWithNotNullPoster should return the required number of movies, handling null posters, and call the API at least twice`() =
+    fun `getRandomMoviesWithPoster should return the required number of movies, handling null posters, and call the API at least twice`() =
         runTest {
             coEvery { movieApiService.getPopularMovies(any()) } returns moviesWithoutPosterResponse andThen moviesWithPosterResponse
 
             val result =
-                movieRemoteDataSourceImpl.getRandomMoviesWithNotNullPoster(3)
+                movieRemoteDataSourceImpl.getRandomMoviesWithPoster(3)
 
             assertThat(result.size).isEqualTo(3)
             coVerify(atLeast = 2) { movieApiService.getPopularMovies(any()) }

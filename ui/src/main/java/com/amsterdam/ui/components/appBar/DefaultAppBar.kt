@@ -97,7 +97,7 @@ private fun DefaultAppBarPreview() {
         DefaultAppBar(
             title = stringResource(R.string.my_account),
             firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
-            lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_sort),
+            lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_add_to_favourite),
             containerColor = AppTheme.color.surface,
         )
     }

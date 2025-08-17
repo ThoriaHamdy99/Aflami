@@ -5,6 +5,7 @@ import com.amsterdam.viewmodel.sharedGame.TimerUiState
 data class GuessCharacterUiState(
     val isLoading: Boolean = true,
     val timerCounter: Int = 0,
+    val gameSessionId : Long = 0,
     val totalCollectedPoints : Int = 0,
     val questions: List<CharacterQuestionUiState> = emptyList(),
     val selectedAnswerIndex: Int? = null,
@@ -12,6 +13,7 @@ data class GuessCharacterUiState(
     val isHintEnabled : Boolean = true,
     val isNotEnoughPointsDialogVisible: Boolean = false,
     val isNextEnabled : Boolean = false,
+    val earnedPoints : Int? = null,
     val questionsCounts: Int = 0,
     val currentQuestionIndex: Int = 0,
     val timerUiState : TimerUiState = TimerUiState()
