@@ -2,7 +2,7 @@ package com.amsterdam.domain.useCase.mood
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.MovieRepository
-import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase.Mood
+import com.amsterdam.domain.useCase.mood.GetMoviesByMoodUseCase.Mood
 import com.amsterdam.domain.useCase.utils.fakeMovieList
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
