@@ -1,6 +1,5 @@
 package com.amsterdam.remotedatasource.datasource
 
-import com.amsterdam.domain.logger.Loggable
 import com.amsterdam.remotedatasource.api.AuthenticationApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.AuthenticationRemoteDataSource
@@ -12,7 +11,7 @@ import javax.inject.Inject
 class AuthenticationRemoteDataSourceImpl @Inject constructor(
     private val json: Json,
     private val authenticationApiService: AuthenticationApiService
-) : AuthenticationRemoteDataSource, Loggable {
+) : AuthenticationRemoteDataSource {
     override suspend fun loginWithPassword(
         username: String,
         password: String,
@@ -25,7 +24,7 @@ class AuthenticationRemoteDataSourceImpl @Inject constructor(
 
     private suspend fun createRequestToken(): AuthenticationRemoteResponse {
         val response =
-            responseCall(logger, { authenticationApiService.createRequestToken() }) {
+            responseCall({ authenticationApiService.createRequestToken() }) {
                 val response = json.decodeFromString<AuthenticationRemoteResponse>(it)
                 response.statusCode!!
             }
@@ -39,7 +38,7 @@ class AuthenticationRemoteDataSourceImpl @Inject constructor(
         requestToken: String,
     ): AuthenticationRemoteResponse {
         val response =
-            responseCall(logger, {
+            responseCall({
                 authenticationApiService.createSessionWithLogin(
                     CreateSessionRemoteDto(
                         username = username,
@@ -56,7 +55,7 @@ class AuthenticationRemoteDataSourceImpl @Inject constructor(
     }
 
     private suspend fun createSession(requestToken: String) =
-        responseCall(logger, { authenticationApiService.createSession(requestToken) }) {
+        responseCall({ authenticationApiService.createSession(requestToken) }) {
             val response = json.decodeFromString<AuthenticationRemoteResponse>(it)
             response.statusCode!!
         }

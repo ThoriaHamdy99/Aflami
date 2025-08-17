@@ -1,6 +1,5 @@
 package com.amsterdam.remotedatasource.datasource
 
-import com.amsterdam.domain.logger.Loggable
 import com.amsterdam.remotedatasource.api.WishListApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.WishListRemoteDataSource
@@ -16,18 +15,18 @@ import javax.inject.Inject
 class WishListRemoteDataSourceImpl @Inject constructor(
     private val wishListApiService: WishListApiService,
     private val json: Json
-) : WishListRemoteDataSource, Loggable {
+) : WishListRemoteDataSource {
     override suspend fun createNewList(
         listName: String,
         language: String,
     ): CreateUserListRemoteResponse {
-        return responseCall(logger = logger, execute = {
+        return responseCall(execute = {
             wishListApiService.createNewList(listName = listName, language = language)
         })
     }
 
     override suspend fun getWishLists(accountId: Int, page: Int): WishListRemoteResponse {
-        return responseCall(logger = logger, { wishListApiService.getWishLists(accountId, page) }) {
+        return responseCall({ wishListApiService.getWishLists(accountId, page) }) {
             val response = json.decodeFromString<AuthenticationRemoteResponse>(it)
             response.statusCode!!
         }
@@ -35,7 +34,6 @@ class WishListRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun addMovieToList(listId: Long, movieId: Long): AddItemToListRemoteResponse {
         return responseCall(
-            logger = logger,
             execute = { wishListApiService.addMediaItemToList(listId, movieId) })
     }
 
@@ -44,7 +42,6 @@ class WishListRemoteDataSourceImpl @Inject constructor(
         page: Int
     ): WishListDetailsRemoteResponse {
         return responseCall(
-            logger = logger,
             { wishListApiService.getMoviesAndTvShowsFromList(listId, page) }) {
             val response = json.decodeFromString<AuthenticationRemoteResponse>(it)
             response.statusCode!!
@@ -56,19 +53,18 @@ class WishListRemoteDataSourceImpl @Inject constructor(
         listId: Long
     ): WishListMovieItemStatusRemoteResponse {
         return responseCall(
-            logger = logger,
             execute = { wishListApiService.checkIsMovieInList(movieId = movieId, listId = listId) })
     }
 
     override suspend fun deleteList(listId: Long) {
-        responseCall(logger = logger, { wishListApiService.deleteList(listId) }) {
+        responseCall({ wishListApiService.deleteList(listId) }) {
             val response = json.decodeFromString<AuthenticationRemoteResponse>(it)
             response.statusCode!!
         }
     }
 
     override suspend fun deleteMovieFromList(listId: Long, movieId: Long) {
-        responseCall(logger = logger, { wishListApiService.removeMovieFromList(listId, movieId) }) {
+        responseCall({ wishListApiService.removeMovieFromList(listId, movieId) }) {
             val response = json.decodeFromString<AuthenticationRemoteResponse>(it)
             response.statusCode!!
         }

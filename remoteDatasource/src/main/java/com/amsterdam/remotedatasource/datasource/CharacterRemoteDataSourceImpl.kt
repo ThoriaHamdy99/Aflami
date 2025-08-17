@@ -1,6 +1,5 @@
 package com.amsterdam.remotedatasource.datasource
 
-import com.amsterdam.domain.logger.Loggable
 import com.amsterdam.remotedatasource.api.CharacterApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.CharacterRemoteDataSource
@@ -10,22 +9,22 @@ import javax.inject.Inject
 
 class CharacterRemoteDataSourceImpl @Inject constructor(
     private val characterApiService: CharacterApiService
-) : CharacterRemoteDataSource, Loggable {
+) : CharacterRemoteDataSource {
 
     override suspend fun getRandomizedTrendingCharacter(requiredNumber: Int): List<RemoteCharacterItemDto> {
         val totalPages = getTrendingCharacters(FIRST_PAGE).totalPages
 
         return (FIRST_PAGE..totalPages)
-                .shuffled()
-                .fold(emptyList()) { accumulatedCharacters, page ->
-                    accumulatedCharacters.takeIf { it.size >= requiredNumber }
+            .shuffled()
+            .fold(emptyList()) { accumulatedCharacters, page ->
+                accumulatedCharacters.takeIf { it.size >= requiredNumber }
                     ?: getTrendingCharacters(page).results
-                            .filter(::onFilterHighQualityCharacterData)
-                            .shuffled()
-                            .distinctBy(RemoteCharacterItemDto::id)
-                            .plus(accumulatedCharacters)
-                            .take(requiredNumber)
-                }
+                        .filter(::onFilterHighQualityCharacterData)
+                        .shuffled()
+                        .distinctBy(RemoteCharacterItemDto::id)
+                        .plus(accumulatedCharacters)
+                        .take(requiredNumber)
+            }
     }
 
     private fun onFilterHighQualityCharacterData(character: RemoteCharacterItemDto): Boolean {
@@ -34,7 +33,6 @@ class CharacterRemoteDataSourceImpl @Inject constructor(
 
     private suspend fun getTrendingCharacters(page: Int): RemoteCharacterResponse {
         return responseCall(
-            logger = logger,
             execute = {
                 characterApiService.getTrendingCharacters(page = page)
             }
