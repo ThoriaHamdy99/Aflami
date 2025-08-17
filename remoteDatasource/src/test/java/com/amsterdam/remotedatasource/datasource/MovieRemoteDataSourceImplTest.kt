@@ -56,7 +56,6 @@ class MovieRemoteDataSourceImplTest {
 
     @Test
     fun `getMoviesByKeyword should throw NetworkException and call the API exactly once when the API call fails`() = runTest {
-
             coEvery {
                 movieApiService.getMoviesByKeyword(
                     MOVIE_TEST_KEYWORD,
@@ -81,7 +80,8 @@ class MovieRemoteDataSourceImplTest {
 
         coEvery { movieApiService.getMoviesByActorId(MOVIE_TEST_ACTOR_ID.toString()) } returns movieResponse
 
-            val movies = movieRemoteDataSourceImpl.getMoviesByActorIds(actorIdsList, MOVIE_TEST_PAGE)
+            val movies =
+                movieRemoteDataSourceImpl.getMoviesByActorIds(actorIdsList, MOVIE_TEST_PAGE)
 
             assertThat(movies).isEqualTo(movieResponse)
             coVerify(exactly = 1) { movieApiService.getMoviesByActorId(MOVIE_TEST_ACTOR_ID.toString()) }
@@ -123,7 +123,12 @@ class MovieRemoteDataSourceImplTest {
     @Test
     fun `getActorIdsByName should return an empty list and call the API exactly once when no actors are found`() =
         runTest {
-            coEvery { movieApiService.getActorIdByName(noActorName, MOVIE_TEST_PAGE) } returns emptyActorSearchResponse
+            coEvery {
+                movieApiService.getActorIdByName(
+                    noActorName,
+                    MOVIE_TEST_PAGE
+                )
+            } returns emptyActorSearchResponse
 
             val actorIds = movieRemoteDataSourceImpl.getActorIdsByName(noActorName, MOVIE_TEST_PAGE)
 
@@ -133,7 +138,6 @@ class MovieRemoteDataSourceImplTest {
 
     @Test
     fun `getActorIdsByName should throw NetworkException and call the API exactly once when the API call fails`() = runTest {
-
             coEvery {
                 movieApiService.getActorIdByName(
                     testActorName,
@@ -144,7 +148,12 @@ class MovieRemoteDataSourceImplTest {
             assertThrows<NetworkException> {
             movieRemoteDataSourceImpl.getActorIdsByName(testActorName, MOVIE_TEST_PAGE)
             }
-            coVerify(exactly = 1) { movieApiService.getActorIdByName(testActorName, MOVIE_TEST_PAGE) }
+            coVerify(exactly = 1) {
+                movieApiService.getActorIdByName(
+                    testActorName,
+                    MOVIE_TEST_PAGE
+                )
+            }
         }
 
     @Test
@@ -318,10 +327,16 @@ class MovieRemoteDataSourceImplTest {
                 )
             } returns movieResponse
 
-            val movies = movieRemoteDataSourceImpl.getMoviesByGenreIds(genreIdsList, MOVIE_TEST_PAGE)
+            val movies =
+                movieRemoteDataSourceImpl.getMoviesByGenreIds(genreIdsList, MOVIE_TEST_PAGE)
 
             assertThat(movies).isEqualTo(movieResponse)
-            coVerify(exactly = 1) { movieApiService.getMoviesByGenreIds(genreIdsList, MOVIE_TEST_PAGE) }
+            coVerify(exactly = 1) {
+                movieApiService.getMoviesByGenreIds(
+                    genreIdsList,
+                    MOVIE_TEST_PAGE
+                )
+            }
         }
 
     @Test
@@ -338,7 +353,12 @@ class MovieRemoteDataSourceImplTest {
         assertThrows<NetworkException> {
             movieRemoteDataSourceImpl.getMoviesByGenreIds(genreIdsList, MOVIE_TEST_PAGE)
             }
-            coVerify(exactly = 1) { movieApiService.getMoviesByGenreIds(genreIdsList, MOVIE_TEST_PAGE) }
+            coVerify(exactly = 1) {
+                movieApiService.getMoviesByGenreIds(
+                    genreIdsList,
+                    MOVIE_TEST_PAGE
+                )
+            }
         }
 
     @Test
@@ -350,7 +370,8 @@ class MovieRemoteDataSourceImplTest {
             )
         } returns movieResponse
 
-        val movies = movieRemoteDataSourceImpl.getMoviesByGenreId(MOVIE_TEST_GENRE_ID, MOVIE_TEST_PAGE)
+        val movies =
+            movieRemoteDataSourceImpl.getMoviesByGenreId(MOVIE_TEST_GENRE_ID, MOVIE_TEST_PAGE)
 
         assertThat(movies).isEqualTo(movieResponse)
         coVerify(exactly = 1) {
@@ -374,7 +395,12 @@ class MovieRemoteDataSourceImplTest {
             val result = movieRemoteDataSourceImpl.setMovieRate(MOVIE_TEST_RATING, MOVIE_TEST_ID)
 
             assertThat(result).isEqualTo(ratingResponse)
-            coVerify(exactly = 1) { movieApiService.postMovieRating(MOVIE_TEST_ID, MOVIE_TEST_RATING) }
+            coVerify(exactly = 1) {
+                movieApiService.postMovieRating(
+                    MOVIE_TEST_ID,
+                    MOVIE_TEST_RATING
+                )
+            }
         }
 
     @Test
