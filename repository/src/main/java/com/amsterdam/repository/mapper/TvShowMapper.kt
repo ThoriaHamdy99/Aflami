@@ -30,7 +30,7 @@ fun TvShowItemRemoteDto.toEntity(
         description = overview,
         posterUrl = imageUrl.orEmpty(),
         airDate = releaseDate.toSafeLocalDate(),
-        categories = genreIds.map { toTvShowGenre(it.toLong()).name },
+        categories = genreIds.map { toTvShowGenre(it.toLong()) },
         rating = voteAverage.toFloat(),
         popularity = popularity,
         seasonCount = seasonCount,

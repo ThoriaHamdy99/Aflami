@@ -1,4 +1,4 @@
-package com.amsterdam.domain.utils.category
+package com.amsterdam.entity.category
 
 enum class MovieGenre {
     ALL,
@@ -22,7 +22,3 @@ enum class MovieGenre {
     MUSIC,
     DOCUMENTARY
 }
-
-fun String.toMovieGenre() = MovieGenre.valueOf(this)
-
-fun List<String>.toMovieGenres() = this.map { it.toMovieGenre() }

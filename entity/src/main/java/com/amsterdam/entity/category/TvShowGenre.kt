@@ -1,4 +1,4 @@
-package com.amsterdam.domain.utils.category
+package com.amsterdam.entity.category
 
 enum class TvShowGenre {
     ALL,
@@ -20,6 +20,3 @@ enum class TvShowGenre {
     DOCUMENTARY
 }
 
-fun String.toTvShowGenre() = TvShowGenre.valueOf(this)
-
-fun List<String>.toTvShowGenres() = this.map { it.toTvShowGenre() }

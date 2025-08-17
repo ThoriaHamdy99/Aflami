@@ -3,7 +3,7 @@ package com.amsterdam.domain.useCase.upcoming
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.useCase.utils.fakeMovieList
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.entity.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -101,21 +101,21 @@ class GetUpcomingMoviesUseCaseTest {
     private val baseMovie = fakeMovieList.first()
 
     private val actionMovie = baseMovie.copy(
-        id = 1L, name = "Action Movie", categories = listOf(MovieGenre.ACTION).map { it.name }
+        id = 1L, name = "Action Movie", categories = listOf(MovieGenre.ACTION)
     )
 
     private val dramaMovie = baseMovie.copy(
-        id = 2L, name = "Drama Movie", categories = listOf(MovieGenre.DRAMA).map { it.name }
+        id = 2L, name = "Drama Movie", categories = listOf(MovieGenre.DRAMA)
     )
 
     private val comedyMovie = baseMovie.copy(
-        id = 3L, name = "Comedy Movie", categories = listOf(MovieGenre.COMEDY).map { it.name }
+        id = 3L, name = "Comedy Movie", categories = listOf(MovieGenre.COMEDY)
     )
 
     private val actionDramaMovie = baseMovie.copy(
         id = 4L,
         name = "Action Drama Movie",
-        categories = listOf(MovieGenre.ACTION, MovieGenre.DRAMA).map { it.name }
+        categories = listOf(MovieGenre.ACTION, MovieGenre.DRAMA)
     )
 
     private val emptyCategoryMovie = baseMovie.copy(
@@ -127,15 +127,15 @@ class GetUpcomingMoviesUseCaseTest {
     private val popularAndWellRatedMovie = baseMovie.copy(
         id = 1L,
         popularity = 150.0,
-        categories = listOf(MovieGenre.ACTION).map { it.name },
+        categories = listOf(MovieGenre.ACTION),
         rating = 8.5f,
     )
 
     private val equallyPopularButLowerRatedMovie = baseMovie.copy(
-        id = 2L, popularity = 150.0, categories = listOf(MovieGenre.ACTION).map { it.name }, rating = 7.0f
+        id = 2L, popularity = 150.0, categories = listOf(MovieGenre.ACTION), rating = 7.0f
     )
 
     private val highRatedButLessPopularMovie = baseMovie.copy(
-        id = 3L, popularity = 100.0, categories = listOf(MovieGenre.ACTION).map { it.name }, rating = 9.0f
+        id = 3L, popularity = 100.0, categories = listOf(MovieGenre.ACTION), rating = 9.0f
     )
 }

@@ -9,9 +9,9 @@ import com.amsterdam.domain.useCase.game.CreateGameSessionIdUseCase
 import com.amsterdam.domain.useCase.game.whichGenre.GuessMovieGenreUseCase
 import com.amsterdam.domain.utils.AnswerResult
 import com.amsterdam.domain.utils.GameQuestion
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Game
 import com.amsterdam.entity.GameDifficulty.DifficultyType
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.gameResult.ResultScreenData
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.sharedGame.TimerUiState

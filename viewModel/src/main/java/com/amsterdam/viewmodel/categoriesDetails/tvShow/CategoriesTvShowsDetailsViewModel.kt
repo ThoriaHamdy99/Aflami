@@ -7,7 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.utils.category.TvShowGenre
+import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel

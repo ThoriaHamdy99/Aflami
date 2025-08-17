@@ -1,5 +1,6 @@
 package com.amsterdam.entity
 
+import com.amsterdam.entity.category.MovieGenre
 import kotlinx.datetime.LocalDate
 
 data class Movie(
@@ -8,7 +9,7 @@ data class Movie(
     val description: String,
     val posterUrl: String,
     val releaseDate: LocalDate?,
-    val categories: List<String>,
+    val categories: List<MovieGenre>,
     val rating: Float,
     val popularity: Double,
     val originCountry: String,

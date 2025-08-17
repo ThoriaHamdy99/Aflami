@@ -1,6 +1,6 @@
 package com.amsterdam.repository.mapper
 
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.dto.local.MovieCategoryLocalDto
 
 fun MovieCategoryLocalDto.toEntity(): MovieGenre = when (categoryId) {

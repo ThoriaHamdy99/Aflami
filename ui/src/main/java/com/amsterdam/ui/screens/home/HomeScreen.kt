@@ -43,7 +43,7 @@ import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.domain.useCase.mood.GetMoviesByMoodUseCase.Mood
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.application.LocalScaffoldBottomPadding

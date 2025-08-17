@@ -13,8 +13,8 @@ import com.amsterdam.domain.useCase.topRated.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.upcoming.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.utils.MovieWatchHistory
 import com.amsterdam.domain.utils.TvShowWatchHistory
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Movie
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.home.HomeUiState.HomeError
 import com.amsterdam.viewmodel.home.HomeUiState.MoodPickerItemUiState
 import com.amsterdam.viewmodel.search.mapper.selectByMovieGenre

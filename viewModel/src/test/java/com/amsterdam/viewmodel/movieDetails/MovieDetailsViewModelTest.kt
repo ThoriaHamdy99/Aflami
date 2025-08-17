@@ -14,10 +14,10 @@ import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language
 import com.amsterdam.domain.utils.SessionType
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.Review
 import com.amsterdam.entity.WishList
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
@@ -604,7 +604,7 @@ class MovieDetailsViewModelTest {
             description = "Description",
             posterUrl = "",
             releaseDate = LocalDate(2023, 1, 1),
-            categories = listOf(MovieGenre.ACTION).map { it.name },
+            categories = listOf(MovieGenre.ACTION),
             rating = 8.0f,
             popularity = 100.0,
             originCountry = "US",

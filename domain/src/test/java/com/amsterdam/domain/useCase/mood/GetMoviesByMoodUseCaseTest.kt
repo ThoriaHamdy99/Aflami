@@ -32,7 +32,7 @@ class GetMoviesByMoodUseCaseTest {
     @Test
     fun `should return movies for the specified mood`() = runTest {
         val expectedGenres = angryMood.movieGenres
-        val moviesForAngryMood = listOf(fakeMovieList.first().copy(categories = expectedGenres.map { it.name }))
+        val moviesForAngryMood = listOf(fakeMovieList.first().copy(categories = expectedGenres))
         coEvery {
             movieRepository.getMoviesByGenres(
                 expectedGenres,

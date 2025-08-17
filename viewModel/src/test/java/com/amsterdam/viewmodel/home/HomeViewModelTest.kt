@@ -6,11 +6,11 @@ import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseC
 import com.amsterdam.domain.useCase.mood.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.popular.GetPopularMoviesUseCase
 import com.amsterdam.domain.useCase.popular.GetPopularTvShowsUseCase
+import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.upcoming.GetUpcomingMoviesUseCase
-import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToMovieDetailsEffect
 import com.amsterdam.viewmodel.home.HomeUiState.HomeError
 import com.amsterdam.viewmodel.home.HomeUiState.MoodPickerItemUiState

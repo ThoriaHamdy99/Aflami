@@ -4,8 +4,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.amsterdam.domain.useCase.details.GetTvShowsByGenreUseCase
-import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.entity.TvShow
+import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.paging.BasePagingSource
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow

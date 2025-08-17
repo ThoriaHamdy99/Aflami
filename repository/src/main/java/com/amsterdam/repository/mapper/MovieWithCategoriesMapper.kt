@@ -13,7 +13,7 @@ fun MovieWithCategories.toEntity(): Movie {
         rating = movie.rating,
         categories = categories
             .distinctBy { it.categoryId }
-            .map { it.toEntity().name },
+            .map { it.toEntity() },
         popularity = movie.popularity,
         runTimeInMinutes = movie.movieLength,
         originCountry = movie.originCountry

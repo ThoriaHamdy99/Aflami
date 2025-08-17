@@ -3,10 +3,8 @@ package com.amsterdam.domain.useCase.game.whichGenre
 import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.utils.GameQuestion
-import com.amsterdam.domain.utils.category.MovieGenre
-import com.amsterdam.domain.utils.category.toMovieGenre
-import com.amsterdam.domain.utils.category.toMovieGenres
 import com.amsterdam.entity.GameDifficulty.DifficultyType
+import com.amsterdam.entity.category.MovieGenre
 
 class GenerateMovieGenreQuestionsUseCase(
     private val getGameDifficultyUseCase: GetGameDifficultyByDifficultyTypeUseCase,
@@ -18,12 +16,12 @@ class GenerateMovieGenreQuestionsUseCase(
         val movies = gameRepository.getRandomMoviesWithReleaseDate(questionsCounts)
 
         return movies.map { movie ->
-            val correctGenre = movie.categories.random().toMovieGenre()
+            val correctGenre = movie.categories.random()
             val wrongGenres =
                 MovieGenre
                     .entries
                     .drop(1)
-                    .filter { !(movie.categories.toMovieGenres().contains(it)) }
+                    .filter { !(movie.categories.contains(it)) }
                     .shuffled()
                     .take(WRONG_ANSWER_COUNT)
             val choices = (listOf(correctGenre) + wrongGenres).shuffled()

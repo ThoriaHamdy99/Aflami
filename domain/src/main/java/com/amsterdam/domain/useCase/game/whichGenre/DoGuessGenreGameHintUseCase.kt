@@ -4,7 +4,7 @@ import com.amsterdam.domain.exceptions.NotEnoughPointsException
 import com.amsterdam.domain.useCase.common.GetTotalUserPointsUseCase
 import com.amsterdam.domain.useCase.game.UpdateUserGamePointsUseCase
 import com.amsterdam.domain.utils.GameQuestion
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.entity.category.MovieGenre
 import kotlinx.coroutines.flow.first
 
 class DoGuessGenreGameHintUseCase(

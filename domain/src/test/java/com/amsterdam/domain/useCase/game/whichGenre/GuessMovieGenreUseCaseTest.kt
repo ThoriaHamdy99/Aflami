@@ -2,8 +2,8 @@ package com.amsterdam.domain.useCase.game.whichGenre
 
 import com.amsterdam.domain.utils.AnswerResult
 import com.amsterdam.domain.utils.GameQuestion
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.GameDifficulty
+import com.amsterdam.entity.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk

@@ -1,7 +1,6 @@
 package com.amsterdam.viewmodel.seriesDetails
 
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
-import com.amsterdam.domain.utils.category.toTvShowGenres
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Episode
 import com.amsterdam.entity.ProductionCompany
@@ -30,7 +29,7 @@ fun TvShowDetails.toUiState(currentLanguage: String): SeriesDetailsUiState {
         posterUrl = tvShow.posterUrl,
         title = tvShow.name,
         airDate = tvShow.airDate.toFormattedString(),
-        categories = tvShow.categories.toTvShowGenres(),
+        categories = tvShow.categories,
         seasonCount = seasons.size,
         originCountry = tvShow.originCountry,
         description = tvShow.description,

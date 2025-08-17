@@ -2,7 +2,7 @@ package com.amsterdam.domain.useCase.details
 
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.useCase.utils.fakeMovieListWithCategories
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.entity.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

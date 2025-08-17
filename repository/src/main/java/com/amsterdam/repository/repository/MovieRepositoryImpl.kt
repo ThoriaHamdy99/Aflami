@@ -3,10 +3,10 @@ package com.amsterdam.repository.repository
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase.UserRatedMovie
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Movie
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.datasource.local.AppLocalPreferences
 import com.amsterdam.repository.datasource.local.CategoryLocalDataSource
 import com.amsterdam.repository.datasource.local.MovieLocalDataSource

@@ -13,8 +13,8 @@ import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.search.RecentSearchesUseCase
-import com.amsterdam.domain.utils.category.MovieGenre
-import com.amsterdam.domain.utils.category.TvShowGenre
+import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.search.keywordSearch.SearchUiState.FilterItemUiState
 import com.amsterdam.viewmodel.search.keywordSearch.SearchUiState.SearchErrorState

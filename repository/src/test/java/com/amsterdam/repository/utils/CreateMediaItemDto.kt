@@ -1,8 +1,8 @@
 package com.amsterdam.repository.utils
 
 import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Movie
+import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.repository.dto.remote.CastAndCrewRemoteResponse
 import com.amsterdam.repository.dto.remote.CastRemoteDto
 import com.amsterdam.repository.dto.remote.EpisodeRemoteDto
