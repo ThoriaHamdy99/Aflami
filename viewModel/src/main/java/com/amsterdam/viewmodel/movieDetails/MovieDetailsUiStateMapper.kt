@@ -35,7 +35,6 @@ fun MovieDetails.toUiState(uiState: MovieDetailsUiState): MovieDetailsUiState {
         rateDialogUiState = RateDialogUiState(selectedStarIndex = userRate),
         isVideoLauncherFailed = uiState.isVideoLauncherFailed,
         isLoading = uiState.isLoading,
-        networkError = uiState.networkError,
         isLoginDialogVisible = uiState.isLoginDialogVisible,
         dialogType = uiState.dialogType,
         isDescriptionExpanded = uiState.isDescriptionExpanded,

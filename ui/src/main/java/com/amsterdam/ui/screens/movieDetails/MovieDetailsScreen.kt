@@ -137,7 +137,7 @@ fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = hiltViewModel()) {
                 MovieDetailsEffect.NavigateToCastsScreenEffect -> {
                     navigationManager.toCast(
                         mediaType = MediaType.MOVIE.name,
-                        mediaId = state.value.movieId
+                        mediaId = state.movieId
                     )
                 }
 

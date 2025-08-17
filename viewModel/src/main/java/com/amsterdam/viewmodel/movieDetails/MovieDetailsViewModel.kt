@@ -106,9 +106,6 @@ class MovieDetailsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getMovieDetails() =
-        getMovieDetailsUseCase(state.value.movieId)
-
     private fun onGetMovieDetailsSuccess(movieDetails: MovieDetails) {
         updateState { movieDetails.toUiState(it) }
     }
