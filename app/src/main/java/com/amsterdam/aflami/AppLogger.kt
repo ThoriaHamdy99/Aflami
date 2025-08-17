@@ -32,15 +32,17 @@ class AppLogger(
 
     override fun error(message: String, throwable: Throwable?) {
         log(Log.ERROR, "🔥", message, throwable)
-        recordTheProblemInFirebaseCrashlytics(throwable, message)
     }
 
-    private fun recordTheProblemInFirebaseCrashlytics(throwable: Throwable?, message: String) {
-        if (throwable != null) {
-            val crashlytics = FirebaseCrashlytics.getInstance()
-            crashlytics.log(message)
-            crashlytics.recordException(throwable)
-        }
+    override fun errorWithCrashlytics(message: String, throwable: Throwable) {
+        recordTheProblemInFirebaseCrashlytics(throwable, message)
+        log(Log.ERROR, "🔥", message, throwable)
+    }
+
+    private fun recordTheProblemInFirebaseCrashlytics(throwable: Throwable, message: String) {
+        val crashlytics = FirebaseCrashlytics.getInstance()
+        crashlytics.log(message)
+        crashlytics.recordException(throwable)
     }
 
     private fun getDetailedSourceInfo(): String {

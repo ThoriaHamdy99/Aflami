@@ -17,4 +17,5 @@ private class NoLogger : Logger {
     override fun info(message: Any) {}
     override fun warning(message: Any) {}
     override fun error(message: String, throwable: Throwable?) {}
+    override fun errorWithCrashlytics(message: String, throwable: Throwable) {}
 }
