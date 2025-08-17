@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.home
 
-import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
+import com.amsterdam.domain.useCase.mood.GetMoviesByMoodUseCase
 import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 

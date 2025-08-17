@@ -2,7 +2,7 @@ package com.amsterdam.viewmodel.home
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase.Mood
+import com.amsterdam.domain.useCase.mood.GetMoviesByMoodUseCase.Mood
 import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.viewmodel.shared.defaultMovieGenres
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
