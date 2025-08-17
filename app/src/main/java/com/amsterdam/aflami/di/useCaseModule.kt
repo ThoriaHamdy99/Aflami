@@ -47,7 +47,6 @@ import com.amsterdam.domain.useCase.game.whichGenre.SubmitGuessMovieGenreAnswerU
 import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
-import com.amsterdam.domain.useCase.home.GetHomeDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
 import com.amsterdam.domain.useCase.home.GetPopularTvShowsUseCase
@@ -248,21 +247,6 @@ object UseCaseModule {
         wishListRepository: WishListRepository
     ): CheckIsMovieInListUseCase = CheckIsMovieInListUseCase(wishListRepository)
 
-    @Provides
-    fun provideGetHomeScreenDataUseCase(
-        getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
-        getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase,
-        getPopularMoviesUseCase: GetPopularMoviesUseCase,
-        getPopularTvShowsUseCase: GetPopularTvShowsUseCase,
-        getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
-    ): GetHomeDataUseCase =
-        GetHomeDataUseCase(
-            getTopRatedMoviesUseCase,
-            getTopRatedTvShowsUseCase,
-            getPopularMoviesUseCase,
-            getPopularTvShowsUseCase,
-            getUpcomingMoviesUseCase
-        )
 
     @Provides
     fun provideGetContinueWatchingScreenDataUseCase(

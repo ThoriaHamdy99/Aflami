@@ -4,8 +4,11 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.utils.Mood
 import com.amsterdam.domain.useCase.home.GetContinueWatchingDataUseCase
-import com.amsterdam.domain.useCase.home.GetHomeDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
+import com.amsterdam.domain.useCase.home.GetPopularMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetPopularTvShowsUseCase
+import com.amsterdam.domain.useCase.home.GetTopRatedMoviesUseCase
+import com.amsterdam.domain.useCase.home.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.entity.category.MovieGenre
@@ -39,9 +42,12 @@ import org.junit.jupiter.api.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
 
-    private val getHomeScreenDataUseCase: GetHomeDataUseCase = mockk(relaxed = true)
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase = mockk(relaxed = true)
     private val getMoviesByMoodUseCase: GetMoviesByMoodUseCase = mockk(relaxed = true)
+    private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase = mockk(relaxed = true)
+    private val getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase = mockk(relaxed = true)
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase = mockk(relaxed = true)
+    private val getPopularTvShowsUseCase: GetPopularTvShowsUseCase = mockk(relaxed = true)
     private lateinit var dispatcherProvider: TestDispatcherProvider
     private lateinit var viewModel: HomeViewModel
     private lateinit var testScope: TestScope
@@ -58,9 +64,12 @@ class HomeViewModelTest {
             getUpcomingMoviesUseCase = getUpcomingMoviesUseCase,
             dispatcherProvider = dispatcherProvider,
             getMoviesByMoodUseCase = getMoviesByMoodUseCase,
-            getHomeScreenDataUseCase = getHomeScreenDataUseCase,
             getContinueWatchingScreenDataUseCase = getContinueWatchingScreenDataUseCase,
             manageLocaleLanguageUseCase = manageLocaleLanguageUseCase,
+            getTopRatedMoviesUseCase = getTopRatedMoviesUseCase,
+            getTopRatedTvShowsUseCase = getTopRatedTvShowsUseCase,
+            getPopularMoviesUseCase = getPopularMoviesUseCase,
+            getPopularTvShowsUseCase = getPopularTvShowsUseCase,
         )
         Dispatchers.setMain(dispatcherProvider.testDispatcher)
     }
@@ -82,13 +91,19 @@ class HomeViewModelTest {
                 getUpcomingMoviesUseCase = getUpcomingMoviesUseCase,
                 dispatcherProvider = dispatcherProvider,
                 getMoviesByMoodUseCase = getMoviesByMoodUseCase,
-                getHomeScreenDataUseCase = getHomeScreenDataUseCase,
                 getContinueWatchingScreenDataUseCase = getContinueWatchingScreenDataUseCase,
                 manageLocaleLanguageUseCase = manageLocaleLanguageUseCase,
+                getTopRatedMoviesUseCase = getTopRatedMoviesUseCase,
+                getTopRatedTvShowsUseCase = getTopRatedTvShowsUseCase,
+                getPopularMoviesUseCase = getPopularMoviesUseCase,
+                getPopularTvShowsUseCase = getPopularTvShowsUseCase,
             )
             advanceUntilIdle()
 
-            coVerify(exactly = 1) { getHomeScreenDataUseCase() }
+            coVerify(exactly = 1) { getTopRatedMoviesUseCase() }
+            coVerify(exactly = 1) { getTopRatedTvShowsUseCase() }
+            coVerify(exactly = 1) { getPopularMoviesUseCase() }
+            coVerify(exactly = 1) { getPopularTvShowsUseCase() }
             coVerify(exactly = 1) { getContinueWatchingScreenDataUseCase(pageSize = 10) }
         }
 
@@ -179,7 +194,7 @@ class HomeViewModelTest {
             clearAllMocks()
             coVerify(exactly = 0) { getUpcomingMoviesUseCase(MovieGenre.ACTION) }
             coVerify(exactly = 0) { getContinueWatchingScreenDataUseCase() }
-            coVerify(exactly = 0) { getHomeScreenDataUseCase() }
+            coVerify(exactly = 0) { getTopRatedMoviesUseCase() }
         }
 
 
