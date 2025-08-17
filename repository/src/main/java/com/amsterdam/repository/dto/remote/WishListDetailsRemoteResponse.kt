@@ -14,4 +14,3 @@ data class WishListDetailsRemoteResponse(
     @SerialName("items") val items: List<WishListItemRemoteDto>,
     @SerialName("poster_path") val posterPath: String?
 )
-

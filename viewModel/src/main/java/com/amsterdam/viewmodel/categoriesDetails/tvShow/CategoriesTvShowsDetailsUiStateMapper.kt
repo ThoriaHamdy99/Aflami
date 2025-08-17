@@ -11,5 +11,6 @@ fun TvShow.toTvShowUiState(): CategoriesTvShowsDetailsUiState.TvShowsUiState {
         posterImageUrl = posterUrl,
         rate = rating.toFormattedRating(),
         yearOfRelease = airDate.toYearString(),
+        isAdult = isAdult
     )
 }

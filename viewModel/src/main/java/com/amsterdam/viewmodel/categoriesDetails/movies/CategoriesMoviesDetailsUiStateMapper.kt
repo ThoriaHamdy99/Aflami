@@ -13,5 +13,6 @@ fun Movie.toMovieUiState(): CategoriesMoviesDetailsUiState.MoviesUiState {
         rate = rating.toFormattedRating(),
         yearOfRelease = releaseDate.toYearString(),
         mediaType = MediaType.MOVIE,
+        isAdult = isAdult
     )
 }

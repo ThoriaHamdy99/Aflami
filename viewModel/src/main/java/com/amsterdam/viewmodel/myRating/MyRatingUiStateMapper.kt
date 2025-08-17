@@ -20,7 +20,8 @@ private fun UserRatedMovie.toRatingMovieUiState(): RatingMovieUiState {
         name = movie.name,
         posterImageUrl = movie.posterUrl,
         yearOfRelease = movie.releaseDate.toFormattedString(),
-        rate = userRate.toString()
+        rate = userRate.toString(),
+        isAdult = movie.isAdult
     )
 }
 

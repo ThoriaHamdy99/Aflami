@@ -24,7 +24,7 @@ data class MovieDetailsUiState(
     val gallery: List<String> = emptyList(),
     val reviews: List<ReviewMovieUiState> = emptyList(),
     val rateDialogUiState: RateDialogUiState = RateDialogUiState(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val networkError: Boolean = false,
     val isLoginDialogVisible: Boolean = false,
     val dialogType: MovieAndSeriesDetailsDialogType? = null,
@@ -33,6 +33,7 @@ data class MovieDetailsUiState(
     val isCreateNewListDialogVisible: Boolean = false,
     val userLists: List<WishListUiState> = emptyList(),
     val listName: String = "",
+    val isUserListsLoading: Boolean = true,
     val isCreateListLoading: Boolean = false,
     val isAddMovieToListLoading: Boolean = false,
     val selectedLists: List<WishListUiState> = emptyList(),
@@ -42,7 +43,8 @@ data class MovieDetailsUiState(
         val rate: String = "",
         val name: String = "",
         val productionYear: String = "",
-        val posterUrl: String = ""
+        val posterUrl: String = "",
+        val isAdult: Boolean = false
     )
 
     data class ReviewMovieUiState(
