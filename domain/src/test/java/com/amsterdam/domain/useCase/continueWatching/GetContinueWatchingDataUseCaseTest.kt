@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase.home
+package com.amsterdam.domain.useCase.continueWatching
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.utils.fakeMovieList
@@ -18,11 +18,11 @@ import kotlinx.datetime.Instant
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class GetContinueWatchingScreenDataUseCaseTest {
+class GetContinueWatchingDataUseCaseTest {
     private val getContinueWatchingMoviesUseCase: GetContinueWatchingMoviesUseCase = mockk()
     private val getContinueWatchingTvShowsUseCase: GetContinueWatchingTvShowsUseCase = mockk()
     private val getContinueWatchingScreenDataUseCase by lazy {
-        GetContinueWatchingScreenDataUseCase(
+        GetContinueWatchingDataUseCase(
             getContinueWatchingMoviesUseCase,
             getContinueWatchingTvShowsUseCase
         )
@@ -53,7 +53,7 @@ class GetContinueWatchingScreenDataUseCaseTest {
         val expectedMovieList = listOf(fakeMovieWatchHistory)
         val expectedTvShowList = listOf(fakeTvShowWatchHistory)
 
-        val continueWatchingDataExpectedResult = GetContinueWatchingScreenDataUseCase.ContinueWatchingScreenData(
+        val continueWatchingDataExpectedResult = GetContinueWatchingDataUseCase.ContinueWatchingData(
             expectedMovieList,
             expectedTvShowList
         )

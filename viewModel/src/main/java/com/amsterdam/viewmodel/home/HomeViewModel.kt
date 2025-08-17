@@ -2,22 +2,26 @@ package com.amsterdam.viewmodel.home
 
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase.ContinueWatchingScreenData
-import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
-import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase.HomeScreenData
-import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
-import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
+import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseCase
+import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseCase.ContinueWatchingData
+import com.amsterdam.domain.useCase.mood.GetMoviesByMoodUseCase
+import com.amsterdam.domain.useCase.popular.GetPopularMoviesUseCase
+import com.amsterdam.domain.useCase.popular.GetPopularTvShowsUseCase
+import com.amsterdam.domain.useCase.topRated.GetTopRatedMoviesUseCase
+import com.amsterdam.domain.useCase.topRated.GetTopRatedTvShowsUseCase
+import com.amsterdam.domain.useCase.upcoming.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.MovieWatchHistory
 import com.amsterdam.domain.utils.TvShowWatchHistory
 import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.utils.Mood
 import com.amsterdam.entity.Movie
 import com.amsterdam.viewmodel.home.HomeUiState.HomeError
 import com.amsterdam.viewmodel.home.HomeUiState.MoodPickerItemUiState
 import com.amsterdam.viewmodel.search.mapper.selectByMovieGenre
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
+import com.amsterdam.viewmodel.utils.HomeData
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import com.amsterdam.viewmodel.utils.getLinearItemsList
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,9 +32,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getHomeScreenDataUseCase: GetHomeScreenDataUseCase,
+    private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
+    private val getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase,
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
+    private val getPopularTvShowsUseCase: GetPopularTvShowsUseCase,
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
-    private val getContinueWatchingScreenDataUseCase: GetContinueWatchingScreenDataUseCase,
+    private val getContinueWatchingScreenDataUseCase: GetContinueWatchingDataUseCase,
     private val getMoviesByMoodUseCase: GetMoviesByMoodUseCase,
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     private val dispatcherProvider: DispatcherProvider,
@@ -48,7 +55,21 @@ class HomeViewModel @Inject constructor(
 
     private fun getHomeScreenData() {
         tryToExecute(
-            action = { getHomeScreenDataUseCase() },
+            action = {
+                val topRatedMovies = getTopRatedMoviesUseCase()
+                val topRatedTvShows = getTopRatedTvShowsUseCase()
+                val popularMovies = getPopularMoviesUseCase()
+                val popularTvShows = getPopularTvShowsUseCase()
+                val upcomingMovies = getUpcomingMoviesUseCase(MovieGenre.ALL)
+                HomeData(
+                    topRatedMovies = topRatedMovies,
+                    topRatedTvShows = topRatedTvShows,
+                    popularMovies = popularMovies,
+                    popularTvShows = popularTvShows,
+                    upComingMovies = upcomingMovies
+                )
+
+            },
             onSuccess = ::onGetHomeScreenDataSuccess,
             onError = ::onError,
             onCompletion = ::onCompletion
@@ -71,7 +92,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun onGetHomeScreenDataSuccess(homeScreenData: HomeScreenData) {
+    private fun onGetHomeScreenDataSuccess(homeScreenData: HomeData) {
         updateState {
             homeScreenData.toHomeUiState(state.value.continueWatchingMediaSectionUiState.mediaItems)
         }
@@ -87,7 +108,7 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun onGetContinueWatchingScreenDataSuccess(continueWatchingData: Flow<ContinueWatchingScreenData>) {
+    private fun onGetContinueWatchingScreenDataSuccess(continueWatchingData: Flow<ContinueWatchingData>) {
         continueWatchingData.onEach {
             updateState { currentState ->
                 currentState.copy(
@@ -284,4 +305,6 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun onCompletion() = updateState { it.copy(isLoading = false) }
+
+
 }

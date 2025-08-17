@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase.home
+package com.amsterdam.domain.useCase.topRated
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.repository.TvShowRepository

@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.safeDrawing
@@ -333,47 +332,38 @@ fun SeriesDetailsContent(
                     .animateContentSize()
             ) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(263.dp)
-                    ) {
-                        if (state.postersUrls.isEmpty()) {
-                            ImageErrorIndicator()
-                        } else {
-                            DetailsPostersPager(
-                                pagerState = pagerState, postersUrl = state.postersUrls
+                    Box(modifier = Modifier.height(293.dp)) {
+                        Box(modifier = Modifier.height(263.dp)) {
+                            if (state.postersUrls.isEmpty()) {
+                                ImageErrorIndicator()
+                            } else {
+                                DetailsPostersPager(
+                                    pagerState = pagerState, postersUrl = state.postersUrls
+                                )
+                            }
+                            RatingChip(
+                                state.rating,
+                                modifier = Modifier
+                                    .align(Alignment.BottomStart)
+                                    .padding(bottom = 4.dp, start = 4.dp)
                             )
                         }
-
-                        RatingChip(
-                            state.rating,
-                            modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(vertical = 4.dp)
-                                .padding(start = 4.dp)
+                        PlayButton(
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                            isActive = state.videoUrl.isNotBlank(),
+                            onClick = seriesDetailsInteractionListener::onPlayVideoClicked
                         )
                     }
                 }
                 item {
                     Column(
                         modifier = Modifier
-                            .fillMaxWidth()
                             .background(AppTheme.color.surface)
+                            .padding(top = 8.dp)
                     ) {
-                        PlayButton(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .offset(y = (-32).dp),
-                            isActive = state.videoUrl.isNotBlank(),
-                            onClick = seriesDetailsInteractionListener::onPlayVideoClicked
-                        )
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .offset(y = (-20).dp)
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-
                             Text(
                                 text = state.title,
                                 style = AppTheme.textStyle.title.large,
@@ -428,13 +418,11 @@ fun SeriesDetailsContent(
                                     .background(AppTheme.color.stroke)
                             )
                             SeriesExtrasSection(
-                                modifier = Modifier
-                                    .padding(top = 12.dp),
+                                modifier = Modifier.padding(top = 12.dp),
                                 extras = state.extraItem,
                                 onClickExtras = seriesDetailsInteractionListener::onClickSeriesExtraItem
                             )
                         }
-
                     }
                 }
                 item {
@@ -488,9 +476,10 @@ fun SeriesDetailsContent(
                 .onSizeChanged { appBarHeight = with(density) { it.height.toDp() } }) {
             DefaultAppBar(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp)
                     .statusBarsPadding(),
-                firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
+                firstOption = if (state.isLoading) null else painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
                 onNavigateBackClicked = seriesDetailsInteractionListener::onNavigateBack,
                 onFirstOptionClicked = seriesDetailsInteractionListener::onClickRate,
             )
@@ -519,6 +508,8 @@ private fun SeriesExtrasSection(
                 icon = painterResource(extrasSectionItemInfo.iconResId),
                 label = stringResource(extrasSectionItemInfo.textResId),
                 isSelected = it.isSelected,
+                labelMinLines = 2,
+                labelMaxLines = 2,
                 onClick = { onClickExtras(it.item) })
         }
     }
@@ -536,19 +527,21 @@ private fun LazyListScope.seasonsSection(
                     season = season,
                     onClickSeasonMenu = { seasonNumber ->
                         interaction.onClickSeasonMenu(seasonNumber)
-                    })
+                    }
+                )
             }
 
             val episodes = if (season.isExpanded) season.episodes else emptyList()
 
             if (season.isLoading) {
-                item { EpisodeCardPlaceholder() }
+                item { EpisodeCardPlaceholder(modifier = Modifier.padding(horizontal = 16.dp)) }
             } else {
                 items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
                     EpisodesMenu(season.seasonNumber, it, interaction::onPlayEpisodeClicked)
                 }
             }
 
+            item { Spacer(Modifier.padding(top = 12.dp)) }
             if (index != seasons.lastIndex) item { HorizontalDivider(color = AppTheme.color.stroke) }
         }
     }
@@ -568,7 +561,8 @@ private fun SeasonHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onClickSeasonMenu(season.seasonNumber) }
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = 16.dp)
+                .padding(top = 12.dp)
                 .animateContentSize(),
             verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -585,14 +579,13 @@ private fun SeasonHeader(
             )
             Icon(
                 modifier = Modifier.size(20.dp),
-                painter = if (season.isExpanded) painterResource(com.amsterdam.designsystem.R.drawable.ic_arrow_up) else painterResource(
+                painter = if (season.isExpanded || season.isLoading) painterResource(com.amsterdam.designsystem.R.drawable.ic_arrow_up) else painterResource(
                     com.amsterdam.designsystem.R.drawable.ic_arrow_down
                 ),
                 contentDescription = null,
                 tint = AppTheme.color.title,
             )
         }
-        HorizontalDivider(color = AppTheme.color.stroke)
     }
 }
 
