@@ -5,6 +5,7 @@ import com.amsterdam.repository.dto.remote.AddItemToListRemoteResponse
 import com.amsterdam.repository.dto.remote.CreateUserListRemoteResponse
 import com.amsterdam.repository.dto.remote.WishListRemoteResponse
 import com.amsterdam.repository.dto.remote.WishListDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.WishListMovieItemStatusRemoteResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -42,6 +43,12 @@ interface WishListApiService {
     suspend fun deleteList(
         @Path("list_id") listId: Long,
     )
+
+    @GET("list/{list_id}/item_status")
+    suspend fun checkIsMovieInList(
+        @Path("list_id") listId: Long,
+        @Query("movie_id") movieId: Long,
+    ): WishListMovieItemStatusRemoteResponse
 
     @RequiresSessionId
     @FormUrlEncoded

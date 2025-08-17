@@ -13,8 +13,9 @@ class AppPreferencesRepositoryImpl @Inject constructor(
 ) : AppPreferencesRepository {
     override fun getAppLanguage(): Flow<String> = preferences.getAppLanguage()
 
-    override suspend fun setAppLanguage(language: String) =
+    override suspend fun setAppLanguage(language: String) {
         preferences.setAppLanguage(language)
+    }
 
     override fun getAppTheme(): Flow<Boolean> {
         return preferences.getAppTheme()
@@ -23,6 +24,7 @@ class AppPreferencesRepositoryImpl @Inject constructor(
     override suspend fun setAppTheme(isDarkTheme: Boolean) {
         preferences.setAppTheme(isDarkTheme)
     }
+
     override suspend fun setOnboardingCompleted(isCompleted: Boolean) {
         preferences.setOnboardingCompleted(isCompleted)
     }

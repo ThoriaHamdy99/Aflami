@@ -6,6 +6,7 @@ import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
 import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
+import com.amsterdam.domain.useCase.list.CheckIsMovieInListUseCase
 import com.amsterdam.domain.useCase.list.CreateNewListUseCase
 import com.amsterdam.domain.useCase.list.GetWishListsUseCase
 import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
@@ -33,8 +34,9 @@ class MovieDetailsViewModel @Inject constructor(
     private val createListUseCase: CreateNewListUseCase,
     private val getsSessionType: GetsSessionType,
     private val setUserRatingUseCase: SetUserMovieRatingUseCase,
+    private val checkIsMovieInListUseCase: CheckIsMovieInListUseCase,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
-    dispatcherProvider: DispatcherProvider
+    dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<MovieDetailsUiState, MovieDetailsEffect>(
     MovieDetailsUiState(),
     dispatcherProvider
@@ -45,10 +47,10 @@ class MovieDetailsViewModel @Inject constructor(
         updateState { it.copy(movieId = movieId) }
 
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach { getMovieDetails() }
-            .launchIn(viewModelScope)
-
-        getMovieDetails()
+            .onEach {
+                getMovieDetails()
+                loadWishLists()
+            }.launchIn(viewModelScope)
     }
 
     private fun getMovieDetails() {
@@ -62,9 +64,53 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     private fun onGetMovieDetailsCompletion() = updateState { it.copy(isLoading = false) }
+    private fun loadWishLists() {
+        tryToExecute(
+            action = ::getWishLists,
+            onCompletion = ::onGetWishListsComplete
+        )
+    }
+
+    private suspend fun getWishLists() {
+        updateState {
+            it.copy(
+                isUserListsLoading = true,
+            )
+        }
+        runIfLoggedIn(
+            onLoggedIn = {
+                val list = getWishListsUseCase().toUiState()
+                val userLists = list
+                    .map { lists ->
+                        lists.copy(
+                            isMovieInList = checkIsMovieInListUseCase(
+                                movieId = state.value.movieId,
+                                listId = lists.id
+                            )
+                        )
+                    }
+                updateState {
+                    it.copy(
+                        userLists = userLists,
+                    )
+                }
+            },
+        )
+    }
+
+    private fun onGetWishListsComplete() {
+        updateState {
+            it.copy(
+                isUserListsLoading = false
+            )
+        }
+    }
+
+    private suspend fun getMovieDetails() =
+        getMovieDetailsUseCase(state.value.movieId)
 
     private fun onGetMovieDetailsSuccess(movieDetails: MovieDetails) {
-        updateState { movieDetails.toUiState() }
+        updateState { movieDetails.toUiState(it) }
     }
 
     override fun onClickMovieExtras(movieExtras: MovieExtras) {
@@ -87,6 +133,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     override fun onClickRetryRequest() {
         getMovieDetails()
+        loadWishLists()
     }
 
     override fun onClickRate() {
@@ -165,7 +212,6 @@ class MovieDetailsViewModel @Inject constructor(
                     updateState {
                         it.copy(
                             isAddToListDialogVisible = true,
-                            userLists = userList.toUiState()
                         )
                     }
                 },
@@ -181,28 +227,44 @@ class MovieDetailsViewModel @Inject constructor(
         updateState { it.copy(isAddMovieToListLoading = true) }
         tryToExecute(
             action = {
-                // Add movie to all selected lists
                 listIds.forEach { listId ->
                     addMovieToListUseCase(movieId = movieId, listId = listId)
                 }
             },
             onSuccess = {
-                sendNewNavigationEffect(MovieDetailsEffect.MovieAddedToListSuccessfully)
+                sendNewEffect(MovieDetailsEffect.MovieAddedToListSuccessfully)
+                setListToAdded(listIds)
             },
             onError = {
                 it.printStackTrace()
-                sendNewNavigationEffect(MovieDetailsEffect.MovieAddedToListError)
+                sendNewEffect(MovieDetailsEffect.MovieAddedToListError)
             },
             onCompletion = {
                 updateState {
                     it.copy(
                         isAddToListDialogVisible = false,
                         isCreateNewListDialogVisible = false,
+                        isAddMovieToListLoading = false,
                         selectedLists = emptyList(),
                     )
                 }
             },
         )
+    }
+
+    private fun setListToAdded(listIds: List<Long>) {
+        val ids = listIds.toHashSet()
+        updateState { state ->
+            state.copy(
+                userLists = state.userLists.map { list ->
+                    if (list.id in ids) {
+                        list.copy(isMovieInList = true, itemCount = list.itemCount + 1)
+                    } else {
+                        list
+                    }
+                }
+            )
+        }
     }
 
     override fun onClickCreateList() {
@@ -227,6 +289,7 @@ class MovieDetailsViewModel @Inject constructor(
             onSuccess = { listId ->
                 sendNewEffect(MovieDetailsEffect.ListCreatedSuccessfully)
                 onSaveMovieToList(state.value.movieId, listOf(listId.toLong()))
+                loadWishLists()
             },
             onError = {
                 sendNewEffect(MovieDetailsEffect.FailedToCreateList)
@@ -249,7 +312,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     private suspend fun runIfLoggedIn(
         onLoggedIn: suspend () -> Unit,
-        onGuest: () -> Unit,
+        onGuest: () -> Unit = {},
     ) {
         if (getsSessionType() != SessionType.GUEST) {
             onLoggedIn()

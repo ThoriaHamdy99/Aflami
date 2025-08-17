@@ -32,6 +32,7 @@ data class MovieDetailsUiState(
     val isCreateNewListDialogVisible: Boolean = false,
     val userLists: List<WishListUiState> = emptyList(),
     val listName: String = "",
+    val isUserListsLoading: Boolean = true,
     val isCreateListLoading: Boolean = false,
     val isAddMovieToListLoading: Boolean = false,
     val selectedLists: List<WishListUiState> = emptyList(),
