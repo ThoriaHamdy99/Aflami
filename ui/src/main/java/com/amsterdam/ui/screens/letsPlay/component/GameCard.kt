@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -76,13 +77,17 @@ fun GameCard(
                 shape = RoundedCornerShape(16.dp),
                 color = shadowColor.copy(alpha = 0.12f),
                 offsetY = 4.dp,
-                blur = 6.dp,
+                blur = 12.dp,
             )
             .clip(RoundedCornerShape(16.dp))
             .background(color = containerColor, shape = RoundedCornerShape(16.dp))
             .border(
                 width = 1.dp,
-                brush = Brush.horizontalGradient(colors = borderColors),
+                brush = Brush.linearGradient(
+                    colors = borderColors,
+                    start = Offset(0f, 0f),
+                    end = Offset(1000f, 1000f)
+                ),
                 shape = RoundedCornerShape(16.dp),
             )
             .clickable(enabled = isPlayable) { onClick() },
