@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
@@ -68,6 +69,8 @@ fun CategoryCard(
                         .weight(1f),
                 style = AppTheme.textStyle.label.medium,
                 text = categoryName,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 color = AppTheme.color.title,
             )
 
