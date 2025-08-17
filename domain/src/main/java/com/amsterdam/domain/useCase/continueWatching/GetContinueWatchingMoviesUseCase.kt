@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase.home
+package com.amsterdam.domain.useCase.continueWatching
 
 import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.entity.MovieWatchHistory

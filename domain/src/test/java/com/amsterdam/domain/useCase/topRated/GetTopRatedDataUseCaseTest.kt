@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase.home
+package com.amsterdam.domain.useCase.topRated
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.utils.fakeMovieList
@@ -11,11 +11,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class GetTopRatedScreenDataUseCaseTest {
+class GetTopRatedDataUseCaseTest {
     private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase = mockk()
     private val getTopRatedTvShowsUseCase: GetTopRatedTvShowsUseCase = mockk()
     private val getTopRatedScreenDataUseCase by lazy {
-        GetTopRatedScreenDataUseCase(getTopRatedMoviesUseCase, getTopRatedTvShowsUseCase)
+        GetTopRatedDataUseCase(getTopRatedMoviesUseCase, getTopRatedTvShowsUseCase)
     }
 
     @Test

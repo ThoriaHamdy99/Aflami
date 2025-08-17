@@ -1,6 +1,5 @@
 package com.amsterdam.viewmodel.home
 
-import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase.HomeScreenData
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.MovieWatchHistory
 import com.amsterdam.entity.TvShow
@@ -14,6 +13,7 @@ import com.amsterdam.viewmodel.home.HomeUiState.TopRatedMoviesUiState
 import com.amsterdam.viewmodel.home.HomeUiState.UpcomingMoviesUiState
 import com.amsterdam.viewmodel.shared.mappers.toFormattedRating
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
+import com.amsterdam.viewmodel.utils.HomeData
 import com.amsterdam.viewmodel.utils.getMixedItemsList
 import com.amsterdam.viewmodel.utils.toYearString
 
@@ -115,7 +115,7 @@ fun TvShowWatchHistory.toContinueWatchingMediaItemUiState(): ContinueWatchingHom
     }
 }
 
-fun HomeScreenData.toHomeUiState(
+fun HomeData.toHomeUiState(
     continueWatchingItems: List<ContinueWatchingHomeItemUiState>
 ): HomeUiState {
     return HomeUiState(

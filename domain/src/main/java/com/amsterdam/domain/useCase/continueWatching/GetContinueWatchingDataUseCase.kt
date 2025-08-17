@@ -1,28 +1,28 @@
-package com.amsterdam.domain.useCase.home
+package com.amsterdam.domain.useCase.continueWatching
 
 import com.amsterdam.entity.MovieWatchHistory
 import com.amsterdam.entity.TvShowWatchHistory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-class GetContinueWatchingScreenDataUseCase(
+class GetContinueWatchingDataUseCase(
     private val getContinueWatchingMoviesUseCase: GetContinueWatchingMoviesUseCase,
     private val getContinueWatchingTvShowsUseCase: GetContinueWatchingTvShowsUseCase,
 ) {
 
-    operator fun invoke(page: Int = 1, pageSize: Int = 20): Flow<ContinueWatchingScreenData> {
+    operator fun invoke(page: Int = 1, pageSize: Int = 20): Flow<ContinueWatchingData> {
         return combine(
             getContinueWatchingMoviesUseCase(page, pageSize / 2),
             getContinueWatchingTvShowsUseCase(page, pageSize / 2)
         ) { moviesWitchHistory, tvShowsWitchHistory ->
-            ContinueWatchingScreenData(
+            ContinueWatchingData(
                 continueWatchingMovies = moviesWitchHistory,
                 continueWatchingTvShows = tvShowsWitchHistory
             )
         }
     }
 
-    data class ContinueWatchingScreenData(
+    data class ContinueWatchingData(
         val continueWatchingMovies: List<MovieWatchHistory>,
         val continueWatchingTvShows: List<TvShowWatchHistory>
     )

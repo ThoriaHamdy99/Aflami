@@ -1,4 +1,4 @@
-package com.amsterdam.domain.useCase.home
+package com.amsterdam.domain.useCase.upcoming
 
 import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.repository.MovieRepository
