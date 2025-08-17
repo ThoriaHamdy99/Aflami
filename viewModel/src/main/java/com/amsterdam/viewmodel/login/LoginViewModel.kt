@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.login
 
+import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.authentication.LoginAsGuestUseCase
 import com.amsterdam.domain.useCase.authentication.LoginWithPasswordUseCase
 import com.amsterdam.domain.useCase.profile.GetAccountDetailsUseCase
@@ -18,8 +19,7 @@ class LoginViewModel @Inject constructor(
     LoginInteractionListener {
 
     override fun onUserNameUpdated(username: String) {
-        resetErrorStateToNull()
-
+        resetErrorsToNull()
         updateState {
             it.copy(
                 username = username,
@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(
     }
 
     override fun onPasswordUpdate(password: String) {
-        resetErrorStateToNull()
+        resetErrorsToNull()
         updateState {
             it.copy(
                 password = password,
@@ -40,38 +40,16 @@ class LoginViewModel @Inject constructor(
 
 
     override fun onShowPasswordClicked() {
-        updateState {
-            it.copy(isPasswordShown = !state.value.isPasswordShown)
-        }
+        updateState { it.copy(isPasswordShown = !state.value.isPasswordShown) }
     }
 
     override fun onLoginClicked() {
         tryToExecute(
             action = ::onLoginStart,
             onSuccess = ::onLoginSuccess,
-            onCompletion = ::onLoginComplete
+            onError = ::onError,
+            onCompletion = ::onComplete
         )
-    }
-
-    override fun onContinueAsGuestClicked() {
-        tryToExecute(
-            action = { onLoginAsGuestStart() },
-            onSuccess = { navigateToHome() },
-            onCompletion = ::onLoginComplete
-        )
-    }
-
-    override fun onForgotPasswordClicked() {
-        sendNewNavigationEffect(LoginEffect.NavigateToResetPassword)
-    }
-
-    override fun onCreateAccountClicked() {
-        sendNewNavigationEffect(LoginEffect.NavigateToRegister)
-    }
-
-    private suspend fun onLoginAsGuestStart() {
-        updateState { it.copy(isLoginButtonLoading = true) }
-        loginAsGuestUseCase()
     }
 
     private suspend fun onLoginStart() {
@@ -86,9 +64,45 @@ class LoginViewModel @Inject constructor(
         )
     }
 
+    override fun onContinueAsGuestClicked() {
+        tryToExecute(
+            action = { onLoginAsGuestStart() },
+            onSuccess = { navigateToHome() },
+            onError = ::onError,
+            onCompletion = ::onComplete
+        )
+    }
+
+    private fun onError(exception: AflamiException){
+        updateLoginErrorUiState(exception.toLoginErrorUiState())
+    }
+
+    private fun onComplete() = updateState { it.copy(isLoginButtonLoading = false) }
+
+    override fun onForgotPasswordClicked() {
+        sendNewNavigationEffect(LoginEffect.NavigateToResetPassword)
+    }
+
+    override fun onCreateAccountClicked() {
+        sendNewNavigationEffect(LoginEffect.NavigateToRegister)
+    }
+
+    private suspend fun onLoginAsGuestStart() {
+        updateState { it.copy(isLoginButtonLoading = true) }
+        loginAsGuestUseCase()
+    }
+
+
     private fun navigateToHome() = sendNewNavigationEffect(LoginEffect.NavigateToHome)
 
-    fun onLoginErrorHandled() = resetErrorStateToNull()
+    fun onLoginErrorHandled() = resetErrorsToNull()
 
-    private fun onLoginComplete() = updateState { it.copy(isLoginButtonLoading = false) }
+    private fun updateLoginErrorUiState(loginError: LoginErrorState?){
+        updateState { it.copy(error = loginError) }
+    }
+
+    private fun resetErrorsToNull(){
+        resetErrorStateToNull()
+        updateLoginErrorUiState(null)
+    }
 }

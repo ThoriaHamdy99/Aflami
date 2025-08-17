@@ -77,6 +77,13 @@ fun LoginScreen(
         }
     }
 
+    LaunchedEffect(state.error) {
+        if (state.error != null) {
+            SnackBarManager.showError(getLoginErrorMessage(state.error, context))
+            viewModel.onLoginErrorHandled()
+        }
+    }
+
     LaunchedEffect(errorState) {
         if (errorState != null) {
             SnackBarManager.showError(getLoginErrorMessage(errorState, context))
