@@ -3,7 +3,7 @@ package com.amsterdam.viewmodel.categories
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import app.cash.turbine.test
-import com.amsterdam.entity.category.TvShowGenre
+import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowDetailsPagingSource
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsArgs
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsUiEffect

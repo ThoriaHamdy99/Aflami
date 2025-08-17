@@ -2,7 +2,7 @@ package com.amsterdam.viewmodel.categories
 
 
 import app.cash.turbine.test
-import com.amsterdam.entity.category.MovieGenre
+import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMovieDetailsArgs
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsPagingSource
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiEffect

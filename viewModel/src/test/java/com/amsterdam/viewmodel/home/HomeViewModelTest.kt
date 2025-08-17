@@ -2,7 +2,6 @@ package com.amsterdam.viewmodel.home
 
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.domain.model.Mood
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
@@ -432,7 +431,7 @@ class HomeViewModelTest {
 
     private val defaultMovieId = 101L
     private val defaultTvId = 101L
-    private val defaultSelectedMood = Mood.ROMANTIC
+    private val defaultSelectedMood = GetMoviesByMoodUseCase.Mood.ROMANTIC
     private val defaultComedyGenre = MovieGenre.COMEDY
     private val defaultActionGenre = MovieGenre.ACTION
 
