@@ -102,7 +102,7 @@ fun GameCard(
         ) {
             Column(
                 modifier = Modifier
-                    .weight(3f)
+                    .weight(0.6f)
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.Start,
@@ -136,7 +136,7 @@ fun GameCard(
                 }
             }
 
-            Box(modifier = Modifier.weight(1f)) {
+            Box(modifier = Modifier.weight(0.4f)) {
                 GameCardBackgroundShapes(circleColor = shadowColor)
                 getGameCardImageContentByType(gameCardImageContentType, title).invoke(this)
             }
@@ -223,11 +223,11 @@ private fun getGameCardImageContentByType(
             Image(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
-                    .fillMaxHeight(.9f)
+                    .width(110.dp)
                     .mirroredContent(LocalLayoutDirection.current)
-                    .graphicsLayer { translationX = -30f },
+                    .graphicsLayer { translationX = -0f },
                 painter = painterResource(R.drawable.img_game_funclown),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillWidth,
                 contentDescription = contentDescription,
             )
         }
@@ -236,9 +236,11 @@ private fun getGameCardImageContentByType(
 
         GameCardImageContentType.CALENDER -> {
             Image(
-                modifier = Modifier.align(alignment = Alignment.BottomCenter),
+                modifier = Modifier
+                    .align(alignment = Alignment.BottomEnd)
+                    .height(88.dp),
                 painter = painterResource(R.drawable.img_game_calender),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillHeight,
                 contentDescription = contentDescription,
             )
         }
@@ -246,10 +248,11 @@ private fun getGameCardImageContentByType(
         GameCardImageContentType.LAWN_CHAIR -> {
             Image(
                 modifier = Modifier
-                    .align(alignment = Alignment.BottomCenter)
+                    .align(alignment = Alignment.BottomEnd)
+                    .height(88.dp)
                     .mirroredContent(LocalLayoutDirection.current),
                 painter = painterResource(R.drawable.img_game_chair_with_popcorn),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillHeight,
                 contentDescription = contentDescription,
             )
         }
