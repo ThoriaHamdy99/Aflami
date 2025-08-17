@@ -1,10 +1,10 @@
 package com.amsterdam.domain.useCase.details
 
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.domain.useCase.common.AddMovieWatchHistoryUseCase
 import com.amsterdam.domain.useCase.utils.fakeMovieList
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Gender
 import com.amsterdam.entity.Movie

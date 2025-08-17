@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.ui.R
-import com.amsterdam.domain.utils.category.MovieGenre
 
 // CAP = MovieGenre.name, MovieGenre.valueOf = Enum
 internal val MovieGenre.uiModel: GenreUiModel

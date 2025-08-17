@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.guessReleseDateGame
 
-import com.amsterdam.domain.utils.GameQuestion
+import com.amsterdam.domain.model.GameQuestion
 import com.amsterdam.viewmodel.guessReleseDateGame.GuessReleaseYearUiState.QuestionUiState
 
 fun GameQuestion<Int>.toQuestionUiStateUiState(): QuestionUiState {

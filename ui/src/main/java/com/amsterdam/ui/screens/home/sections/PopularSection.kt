@@ -42,12 +42,12 @@ import com.amsterdam.designsystem.components.SectionTitle
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.domain.utils.category.MovieGenre
-import com.amsterdam.domain.utils.category.TvShowGenre
+import com.amsterdam.domain.model.category.MovieGenre
+import com.amsterdam.domain.model.category.TvShowGenre
 import com.amsterdam.ui.R
+import com.amsterdam.ui.components.CategoryChip
 import com.amsterdam.ui.screens.home.component.PopularMediaItemCard
 import com.amsterdam.ui.screens.home.sections.placeholder.popularSectionPlaceholder
-import com.amsterdam.ui.components.CategoryChip
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
 import com.amsterdam.viewmodel.home.HomeUiState

@@ -1,10 +1,10 @@
 package com.amsterdam.domain.useCase.details
 
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.model.category.TvShowGenre
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.useCase.common.AddTvShowWatchHistoryUseCase
 import com.amsterdam.domain.useCase.utils.fakeTvShowList
-import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Gender
 import com.amsterdam.entity.ProductionCompany

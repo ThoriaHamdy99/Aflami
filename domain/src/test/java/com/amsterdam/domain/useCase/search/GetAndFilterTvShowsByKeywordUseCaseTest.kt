@@ -1,12 +1,12 @@
 package com.amsterdam.domain.useCase.search
 
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.model.category.TvShowGenre
 import com.amsterdam.domain.repository.TvShowRepository
 import com.amsterdam.domain.useCase.utils.fakeTvShowList
 import com.amsterdam.domain.useCase.utils.fakeTvShowListWithCategories
 import com.amsterdam.domain.useCase.utils.fakeTvShowListWithRatings
 import com.amsterdam.domain.useCase.utils.specificTvShowList
-import com.amsterdam.domain.utils.category.TvShowGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

@@ -3,9 +3,9 @@ package com.amsterdam.viewmodel.categoriesDetails.movies
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.domain.useCase.details.GetMoviesByGenreUseCase
 import com.amsterdam.entity.Movie
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.paging.BasePagingSource
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow

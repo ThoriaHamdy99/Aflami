@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.shared.uiStates
 
-import com.amsterdam.domain.utils.category.TvShowGenre
+import com.amsterdam.domain.model.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.Selectable
 
 data class TvShowGenreItemUiState(

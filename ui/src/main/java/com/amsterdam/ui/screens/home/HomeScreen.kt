@@ -42,8 +42,8 @@ import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
-import com.amsterdam.domain.utils.Mood
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.model.Mood
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.application.LocalScaffoldBottomPadding

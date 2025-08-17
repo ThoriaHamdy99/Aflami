@@ -1,10 +1,10 @@
 package com.amsterdam.repository.repository
 
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.domain.repository.MovieRepository
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Country
 import com.amsterdam.entity.Gender
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
 import com.amsterdam.repository.dto.remote.MovieRemoteResponse
 import com.amsterdam.repository.mapper.toMovieEntityList

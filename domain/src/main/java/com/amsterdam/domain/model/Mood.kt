@@ -1,6 +1,6 @@
-package com.amsterdam.domain.utils
+package com.amsterdam.domain.model
 
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.model.category.MovieGenre
 
 enum class Mood(val movieGenres: List<MovieGenre>) {
     SAD(listOf(MovieGenre.COMEDY)),

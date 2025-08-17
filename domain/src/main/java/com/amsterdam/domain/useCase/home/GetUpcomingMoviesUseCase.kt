@@ -1,8 +1,8 @@
 package com.amsterdam.domain.useCase.home
 
+import com.amsterdam.domain.model.category.MovieGenre
+import com.amsterdam.domain.model.category.toMovieGenres
 import com.amsterdam.domain.repository.MovieRepository
-import com.amsterdam.domain.utils.category.MovieGenre
-import com.amsterdam.domain.utils.category.toMovieGenres
 import com.amsterdam.entity.Movie
 
 class GetUpcomingMoviesUseCase(private val movieRepository: MovieRepository) {

@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.movieDetails
 
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.viewmodel.shared.RateDialogUiState
 import com.amsterdam.viewmodel.shared.Selectable
 import com.amsterdam.viewmodel.shared.movieAndSeriseDetails.MovieAndSeriesDetailsDialogType

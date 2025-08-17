@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.shared
 
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.viewmodel.shared.uiStates.MovieGenreItemUiState
 
 val defaultMovieGenres = MovieGenre.entries.toTypedArray()

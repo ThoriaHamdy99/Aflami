@@ -19,14 +19,14 @@ import com.amsterdam.designsystem.components.ImageLoadingIndicator
 import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.chip.Chip
 import com.amsterdam.designsystem.theme.AppTheme
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalRestrictionLevel
+import com.amsterdam.ui.components.EmptyStateText
 import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.components.adaptiveGrid
 import com.amsterdam.ui.screens.home.sections.placeholder.upcomingMoviesSectionPlaceholder
-import com.amsterdam.ui.components.EmptyStateText
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreIcon
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.ui.utils.toSafetyLevel

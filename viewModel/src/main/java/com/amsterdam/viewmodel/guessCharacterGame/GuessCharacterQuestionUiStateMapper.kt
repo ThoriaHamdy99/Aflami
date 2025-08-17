@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.guessCharacterGame
 
-import com.amsterdam.domain.utils.GameQuestion
+import com.amsterdam.domain.model.GameQuestion
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterUiState.CharacterQuestionUiState
 
 fun GameQuestion<String>.toQuestionUiState(): CharacterQuestionUiState {

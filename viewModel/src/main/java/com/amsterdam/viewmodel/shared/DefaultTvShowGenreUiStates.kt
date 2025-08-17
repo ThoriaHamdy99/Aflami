@@ -1,6 +1,6 @@
 package com.amsterdam.viewmodel.shared
 
-import com.amsterdam.domain.utils.category.TvShowGenre
+import com.amsterdam.domain.model.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.uiStates.TvShowGenreItemUiState
 
 val defaultTvShowGenres = TvShowGenre.entries.toTypedArray()

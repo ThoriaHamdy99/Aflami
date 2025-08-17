@@ -1,11 +1,11 @@
 package com.amsterdam.domain.useCase.game.whichGenre
 
+import com.amsterdam.domain.model.GameQuestion
+import com.amsterdam.domain.model.category.MovieGenre
+import com.amsterdam.domain.model.category.toMovieGenre
+import com.amsterdam.domain.model.category.toMovieGenres
 import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
-import com.amsterdam.domain.utils.GameQuestion
-import com.amsterdam.domain.utils.category.MovieGenre
-import com.amsterdam.domain.utils.category.toMovieGenre
-import com.amsterdam.domain.utils.category.toMovieGenres
 import com.amsterdam.entity.GameDifficulty.DifficultyType
 
 class GenerateMovieGenreQuestionsUseCase(

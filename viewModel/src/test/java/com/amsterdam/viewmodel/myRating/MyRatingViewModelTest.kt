@@ -3,14 +3,14 @@ package com.amsterdam.viewmodel.myRating
 import app.cash.turbine.test
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.exceptions.NoInternetException
+import com.amsterdam.domain.model.category.MovieGenre
+import com.amsterdam.domain.model.category.TvShowGenre
 import com.amsterdam.domain.useCase.myRating.movie.DeleteUserRatedMovieUseCase
 import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase
 import com.amsterdam.domain.useCase.myRating.movie.GetUserRatedMoviesUseCase.UserRatedMovie
 import com.amsterdam.domain.useCase.myRating.tvShow.DeleteUserRatedTvShowUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
-import com.amsterdam.domain.utils.category.MovieGenre
-import com.amsterdam.domain.utils.category.TvShowGenre
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.TvShow
 import com.amsterdam.viewmodel.shared.TabOption

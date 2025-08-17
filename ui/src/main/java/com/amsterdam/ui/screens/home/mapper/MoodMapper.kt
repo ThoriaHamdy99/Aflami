@@ -1,8 +1,8 @@
 package com.amsterdam.ui.screens.home.mapper
 
-import com.amsterdam.domain.utils.Mood
-import com.amsterdam.domain.utils.Mood.SAD
-import com.amsterdam.domain.utils.Mood.entries
+import com.amsterdam.domain.model.Mood
+import com.amsterdam.domain.model.Mood.SAD
+import com.amsterdam.domain.model.Mood.entries
 import com.amsterdam.ui.screens.home.model.CardMood
 
 fun CardMood.toMood(): Mood {

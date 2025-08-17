@@ -1,9 +1,9 @@
 package com.amsterdam.domain.useCase.game.whichGenre
 
-import com.amsterdam.domain.utils.AnswerResult
-import com.amsterdam.domain.utils.GameQuestion
+import com.amsterdam.domain.model.AnswerResult
+import com.amsterdam.domain.model.GameQuestion
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.entity.GameDifficulty
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -28,7 +28,7 @@ class GuessMovieGenreUseCaseTest {
 
         val result = guessMovieGenreUseCase.startGame(difficultyType)
 
-        assertThat(result).isEqualTo(listOf<GameQuestion<MovieGenre>>(testQuestion))
+        assertThat(result).isEqualTo(listOf<com.amsterdam.domain.model.GameQuestion<MovieGenre>>(testQuestion))
     }
 
     @Test

@@ -1,9 +1,9 @@
 package com.amsterdam.domain.useCase.home
 
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.model.MovieWatchHistory
 import com.amsterdam.domain.repository.WatchHistoryRepository
 import com.amsterdam.domain.useCase.utils.fakeMovieList
-import com.amsterdam.domain.utils.MovieWatchHistory
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

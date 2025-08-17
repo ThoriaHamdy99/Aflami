@@ -1,12 +1,12 @@
 package com.amsterdam.domain.repository
 
+import com.amsterdam.domain.model.category.TvShowGenre
 import com.amsterdam.domain.useCase.details.GetTvShowDetailsUseCase.TvShowDetails
 import com.amsterdam.domain.useCase.myRating.tvShow.GetUserRatedTvShowsUseCase.UserRatedTvShow
 import com.amsterdam.entity.Actor
 import com.amsterdam.entity.Episode
 import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
-import com.amsterdam.domain.utils.category.TvShowGenre
 
 interface TvShowRepository {
     suspend fun getPopularTvShows(): List<TvShow>

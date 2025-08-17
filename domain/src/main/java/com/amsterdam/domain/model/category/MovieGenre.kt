@@ -1,4 +1,4 @@
-package com.amsterdam.domain.utils.category
+package com.amsterdam.domain.model.category
 
 enum class MovieGenre {
     ALL,

@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.exceptions.NoInternetException
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.list.AddMovieToListUseCase
@@ -14,7 +15,6 @@ import com.amsterdam.domain.useCase.myRating.movie.SetUserMovieRatingUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language
 import com.amsterdam.domain.utils.SessionType
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.Review
 import com.amsterdam.entity.WishList

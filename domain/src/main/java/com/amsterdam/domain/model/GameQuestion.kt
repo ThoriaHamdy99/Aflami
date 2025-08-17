@@ -1,4 +1,4 @@
-package com.amsterdam.domain.utils
+package com.amsterdam.domain.model
 
 data class GameQuestion<T>(
     val question: String,

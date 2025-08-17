@@ -1,10 +1,10 @@
 package com.amsterdam.viewmodel.home
 
+import com.amsterdam.domain.model.MovieWatchHistory
+import com.amsterdam.domain.model.TvShowWatchHistory
+import com.amsterdam.domain.model.category.toMovieGenre
+import com.amsterdam.domain.model.category.toTvShowGenre
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase.HomeScreenData
-import com.amsterdam.domain.utils.MovieWatchHistory
-import com.amsterdam.domain.utils.TvShowWatchHistory
-import com.amsterdam.domain.utils.category.toMovieGenre
-import com.amsterdam.domain.utils.category.toTvShowGenre
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.TvShow
 import com.amsterdam.viewmodel.home.HomeUiState.ContinueWatchingHomeItemUiState

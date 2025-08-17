@@ -1,4 +1,4 @@
-package com.amsterdam.domain.utils
+package com.amsterdam.domain.model
 
 import com.amsterdam.entity.Movie
 import kotlinx.datetime.Instant

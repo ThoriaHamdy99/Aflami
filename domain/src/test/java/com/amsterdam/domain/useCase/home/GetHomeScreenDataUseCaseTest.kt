@@ -1,8 +1,8 @@
 package com.amsterdam.domain.useCase.home
 
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.domain.useCase.utils.fakeMovieList
 import com.amsterdam.domain.useCase.utils.fakeTvShowList
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

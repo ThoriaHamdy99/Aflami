@@ -1,7 +1,7 @@
 package com.amsterdam.viewmodel.home
 
-import com.amsterdam.domain.utils.Mood
-import com.amsterdam.domain.utils.category.MovieGenre
+import com.amsterdam.domain.model.Mood
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 
 interface HomeInteractionListener {

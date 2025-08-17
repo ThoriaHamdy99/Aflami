@@ -2,6 +2,10 @@ package com.amsterdam.viewmodel.home
 
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.model.Mood
+import com.amsterdam.domain.model.MovieWatchHistory
+import com.amsterdam.domain.model.TvShowWatchHistory
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase.ContinueWatchingScreenData
 import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase
@@ -9,11 +13,7 @@ import com.amsterdam.domain.useCase.home.GetHomeScreenDataUseCase.HomeScreenData
 import com.amsterdam.domain.useCase.home.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.home.GetUpcomingMoviesUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
-import com.amsterdam.domain.utils.Mood
-import com.amsterdam.domain.utils.MovieWatchHistory
-import com.amsterdam.domain.utils.TvShowWatchHistory
 import com.amsterdam.entity.Movie
-import com.amsterdam.domain.utils.category.MovieGenre
 import com.amsterdam.viewmodel.home.HomeUiState.HomeError
 import com.amsterdam.viewmodel.home.HomeUiState.MoodPickerItemUiState
 import com.amsterdam.viewmodel.search.mapper.selectByMovieGenre

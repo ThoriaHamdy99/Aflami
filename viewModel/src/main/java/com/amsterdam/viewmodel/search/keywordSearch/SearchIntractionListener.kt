@@ -1,8 +1,8 @@
 package com.amsterdam.viewmodel.search.keywordSearch
 
 import androidx.paging.CombinedLoadStates
-import com.amsterdam.domain.utils.category.MovieGenre
-import com.amsterdam.domain.utils.category.TvShowGenre
+import com.amsterdam.domain.model.category.MovieGenre
+import com.amsterdam.domain.model.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.TabOption
 
 interface SearchInteractionListener {

@@ -1,8 +1,8 @@
 package com.amsterdam.domain.useCase.game.whichGenre
 
-import com.amsterdam.domain.utils.GameQuestion
+import com.amsterdam.domain.model.GameQuestion
+import com.amsterdam.domain.model.category.MovieGenre
 import com.amsterdam.entity.GameDifficulty
-import com.amsterdam.domain.utils.category.MovieGenre
 
 class GuessMovieGenreUseCase(
     private val generateMovieGenreQuestionsUseCase: GenerateMovieGenreQuestionsUseCase,
