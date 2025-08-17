@@ -60,7 +60,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.Icon
 import com.amsterdam.designsystem.components.ImageErrorIndicator
@@ -72,6 +71,7 @@ import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.CategoryChip
 import com.amsterdam.ui.components.DottedSeparatedRow
@@ -89,8 +89,8 @@ import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.openYouTubeVideo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
-import com.amsterdam.ui.screens.seriesDetails.component.EpisodeCardPlaceholder
 import com.amsterdam.ui.screens.seriesDetails.component.EpisodeCard
+import com.amsterdam.ui.screens.seriesDetails.component.EpisodeCardPlaceholder
 import com.amsterdam.ui.screens.seriesDetails.component.TvShowCastSection
 import com.amsterdam.ui.screens.seriesDetails.component.companyProductionTvShowSection
 import com.amsterdam.ui.screens.seriesDetails.component.moreTvShowLikeSection
@@ -193,12 +193,17 @@ fun SeriesDetailsContent(
     val navigationBarPadding = with(density) { WindowInsets.safeDrawing.getBottom(this).toDp() }
     val contentHeightDp = configuration.screenHeightDp.dp
 
+    LaunchedEffect(state.extraItem) {
+        childLazyListState.scrollToItem(0)
+        canChildScroll = !parentLazyListState.canScrollForward
+    }
+
     LaunchedEffect(parentLazyListState.isScrollInProgress) {
         canChildScroll = !parentLazyListState.canScrollForward
     }
 
-    LaunchedEffect(childLazyListState.isScrollInProgress) {
-        canChildScroll = childLazyListState.canScrollBackward
+    LaunchedEffect(childLazyListState.isScrollInProgress, !parentLazyListState.canScrollForward) {
+        canChildScroll = childLazyListState.canScrollBackward && !parentLazyListState.canScrollForward
     }
 
     val screenWidthDp by remember { mutableStateOf(configuration.screenWidthDp.dp) }
