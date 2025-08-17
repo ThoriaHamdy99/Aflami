@@ -1,5 +1,6 @@
 package com.amsterdam.remotedatasource.datasource
 
+import com.amsterdam.domain.logger.Loggable
 import com.amsterdam.remotedatasource.api.MovieApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
@@ -12,19 +13,25 @@ import javax.inject.Inject
 
 class MovieRemoteDataSourceImpl @Inject constructor(
     private val movieApiService: MovieApiService,
-) : MovieRemoteDataSource {
+) : MovieRemoteDataSource, Loggable {
 
     override suspend fun getMoviesByKeyword(keyword: String, page: Int): MovieRemoteResponse {
-        return responseCall(execute = { movieApiService.getMoviesByKeyword(keyword, page) })
+        return responseCall(
+            logger = logger,
+            execute = { movieApiService.getMoviesByKeyword(keyword, page) })
     }
 
     override suspend fun getMoviesByActorIds(actorIds: List<Int>, page: Int): MovieRemoteResponse {
         val actorIdsAsString = actorIds.joinToString(separator = "|")
-        return responseCall(execute = { movieApiService.getMoviesByActorId(actorIdsAsString) })
+        return responseCall(
+            logger = logger,
+            execute = { movieApiService.getMoviesByActorId(actorIdsAsString) })
     }
 
     override suspend fun getActorIdsByName(name: String, page: Int): List<Int> {
-        return responseCall(execute = { movieApiService.getActorIdByName(name, page) })
+        return responseCall(
+            logger = logger,
+            execute = { movieApiService.getActorIdByName(name, page) })
                 .actors
                 .map { it.id }
     }
@@ -33,7 +40,7 @@ class MovieRemoteDataSourceImpl @Inject constructor(
         countryIsoCode: String,
         page: Int
     ): MovieRemoteResponse {
-        return responseCall(execute = {
+        return responseCall(logger = logger, execute = {
             movieApiService.getMoviesByCountryIsoCode(
                 countryIsoCode,
                 page
@@ -42,37 +49,43 @@ class MovieRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getCastByMovieId(movieId: Long): CastAndCrewRemoteResponse {
-        return responseCall(execute = { movieApiService.getCastByMovieId(movieId) })
+        return responseCall(
+            logger = logger,
+            execute = { movieApiService.getCastByMovieId(movieId) })
     }
 
     override suspend fun getMovieDetailsById(movieId: Long): MovieDetailsRemoteResponse {
-        return responseCall(execute = { movieApiService.getMovieDetailsById(movieId) })
+        return responseCall(
+            logger = logger,
+            execute = { movieApiService.getMovieDetailsById(movieId) })
     }
 
     override suspend fun getPopularMovies(page: Int): MovieRemoteResponse {
-        return responseCall(execute = { movieApiService.getPopularMovies(page) })
+        return responseCall(logger = logger, execute = { movieApiService.getPopularMovies(page) })
     }
 
     override suspend fun getUpcomingMovies(): MovieRemoteResponse {
-        return responseCall(execute = { movieApiService.getUpcomingMovies() })
+        return responseCall(logger = logger, execute = { movieApiService.getUpcomingMovies() })
     }
 
     override suspend fun getTopRatedMovies(page: Int): MovieRemoteResponse {
-        return responseCall(execute = { movieApiService.getTopRatedMovies(page) })
+        return responseCall(logger = logger, execute = { movieApiService.getTopRatedMovies(page) })
     }
 
     override suspend fun getMoviesByGenreIds(
         genresIds: List<Long>,
         page: Int
     ): MovieRemoteResponse {
-        return responseCall(execute = { movieApiService.getMoviesByGenreIds(genresIds, page) })
+        return responseCall(
+            logger = logger,
+            execute = { movieApiService.getMoviesByGenreIds(genresIds, page) })
     }
 
     override suspend fun getMoviesByGenreId(
         genreId: Long,
         page: Int
     ): MovieRemoteResponse {
-        return responseCall(execute = {
+        return responseCall(logger = logger, execute = {
             movieApiService.getMoviesByGenreIds(
                 listOf(genreId),
                 page
@@ -81,7 +94,7 @@ class MovieRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun setMovieRate(rate: Float, movieId: Long): RatingRemoteResponse {
-        return responseCall(execute = {
+        return responseCall(logger = logger, execute = {
             movieApiService.postMovieRating(
                 movieId = movieId,
                 rate = rate
@@ -90,11 +103,13 @@ class MovieRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getRatedMovies(): MovieRemoteResponse {
-        return responseCall(execute = { movieApiService.getRatedMovies() })
+        return responseCall(logger = logger, execute = { movieApiService.getRatedMovies() })
     }
 
     override suspend fun deleteMovieRate(movieId: Long) {
-        responseCall(execute = { movieApiService.deleteMovieRate(movieId = movieId) })
+        responseCall(
+            logger = logger,
+            execute = { movieApiService.deleteMovieRate(movieId = movieId) })
     }
 
     override suspend fun getRandomMoviesWithReleaseDate(requiredMoviesNumber: Int): List<MovieItemRemoteDto> {

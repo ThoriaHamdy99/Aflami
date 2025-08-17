@@ -1,5 +1,6 @@
 package com.amsterdam.remotedatasource.datasource
 
+import com.amsterdam.domain.logger.Loggable
 import com.amsterdam.remotedatasource.api.TvShowsApiService
 import com.amsterdam.remotedatasource.utils.apiHandler.responseCall
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
@@ -13,34 +14,42 @@ import javax.inject.Inject
 
 class TvRemoteDataSourceImpl @Inject constructor(
     private val tvShowsApiService: TvShowsApiService
-) : TvShowsRemoteDataSource {
+) : TvShowsRemoteDataSource, Loggable {
     override suspend fun getPopularTvShows(): TvShowRemoteResponse {
-        return responseCall(execute = { tvShowsApiService.getPopularTvShows() })
+        return responseCall(logger = logger, execute = { tvShowsApiService.getPopularTvShows() })
     }
 
     override suspend fun getTopRatedTvShows(
         page: Int
     ): TvShowRemoteResponse {
-        return responseCall(execute = { tvShowsApiService.getTopRatedTvShows(page) })
+        return responseCall(
+            logger = logger,
+            execute = { tvShowsApiService.getTopRatedTvShows(page) })
     }
 
     override suspend fun getTvShowsByKeyword(keyword: String, page: Int): TvShowRemoteResponse {
-        return responseCall(execute = { tvShowsApiService.getTvShowsByKeyword(keyword, page) })
+        return responseCall(
+            logger = logger,
+            execute = { tvShowsApiService.getTvShowsByKeyword(keyword, page) })
     }
 
     override suspend fun getTvShowDetailsById(tvShowId: Long): TvShowDetailsRemoteResponse {
-        return responseCall(execute = { tvShowsApiService.getTvShowDetailsById(tvShowId) })
+        return responseCall(
+            logger = logger,
+            execute = { tvShowsApiService.getTvShowDetailsById(tvShowId) })
     }
 
     override suspend fun getTvShowCast(tvShowId: Long): CastAndCrewRemoteResponse {
-        return responseCall(execute = { tvShowsApiService.getTvShowCast(tvShowId) })
+        return responseCall(
+            logger = logger,
+            execute = { tvShowsApiService.getTvShowCast(tvShowId) })
     }
 
     override suspend fun getEpisodesBySeasonNumber(
         tvShowId: Long,
         seasonNumber: Int
     ): EpisodeRemoteResponse {
-        return responseCall(execute = {
+        return responseCall(logger = logger, execute = {
             tvShowsApiService.getEpisodesBySeasonNumber(
                 tvShowId,
                 seasonNumber
@@ -49,14 +58,14 @@ class TvRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getRatedTvShows(): TvShowRemoteResponse {
-        return responseCall(execute = { tvShowsApiService.getRatedTvShows() })
+        return responseCall(logger = logger, execute = { tvShowsApiService.getRatedTvShows() })
     }
 
     override suspend fun setTvShowRate(
         rate: Int,
         tvShowId: Long,
     ): RatingRemoteResponse {
-        return responseCall(execute = {
+        return responseCall(logger = logger, execute = {
             tvShowsApiService.postTvRating(
                 tvId = tvShowId,
                 rate = rate.toFloat(),
@@ -65,7 +74,9 @@ class TvRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun deleteTvShowRate(tvShowId: Long) {
-        responseCall(execute = { tvShowsApiService.deleteTvRating(tvId = tvShowId) })
+        responseCall(
+            logger = logger,
+            execute = { tvShowsApiService.deleteTvRating(tvId = tvShowId) })
     }
 
     override suspend fun getEpisodeVideos(
@@ -74,7 +85,7 @@ class TvRemoteDataSourceImpl @Inject constructor(
         episodeNumber: Int
     ): VideoRemoteResponse {
         val actualSeasonNumber = if (seasonNumber <= 0) 1 else seasonNumber
-        return responseCall(execute = {
+        return responseCall(logger = logger, execute = {
             tvShowsApiService.getEpisodeVideos(
                 tvShowId,
                 actualSeasonNumber,
@@ -88,7 +99,7 @@ class TvRemoteDataSourceImpl @Inject constructor(
         genreId: Long,
         page: Int
     ): TvShowRemoteResponse {
-        return responseCall(execute = {
+        return responseCall(logger = logger, execute = {
             tvShowsApiService.getTvShowsByGenreIds(
                 listOf(genreId),
                 page
