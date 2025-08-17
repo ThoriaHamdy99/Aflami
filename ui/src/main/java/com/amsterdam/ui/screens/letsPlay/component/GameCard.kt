@@ -25,7 +25,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +39,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -70,8 +74,15 @@ fun GameCard(
     isPlayable: Boolean = true,
     unlockPrice: String = "",
 ) {
+    var cardHeight by remember { mutableFloatStateOf(0f) }
+    var cardWidth by remember { mutableFloatStateOf(0f) }
+
     Column(
         modifier = modifier
+            .onSizeChanged {
+                cardHeight = it.height.toFloat()
+                cardWidth = it.width.toFloat()
+            }
             .fillMaxWidth()
             .dropShadow(
                 shape = RoundedCornerShape(16.dp),
@@ -86,7 +97,7 @@ fun GameCard(
                 brush = Brush.linearGradient(
                     colors = borderColors,
                     start = Offset(0f, 0f),
-                    end = Offset(1000f, 1000f)
+                    end = Offset(cardWidth, cardHeight)
                 ),
                 shape = RoundedCornerShape(16.dp),
             )
