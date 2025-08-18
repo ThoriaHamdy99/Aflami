@@ -6,10 +6,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.amsterdam.domain.useCase.home.GetContinueWatchingMoviesUseCase
-import com.amsterdam.domain.useCase.home.GetContinueWatchingTvShowsUseCase
-import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingTvShowsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
