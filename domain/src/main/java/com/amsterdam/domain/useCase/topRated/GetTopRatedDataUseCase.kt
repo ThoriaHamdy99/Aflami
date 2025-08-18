@@ -11,14 +11,14 @@ class GetTopRatedDataUseCase(
 
     suspend operator fun invoke(
         page: Int = 1,
-    ) : TopRatedScreenData {
-        return TopRatedScreenData(
+    ) : TopRatedData {
+        return TopRatedData(
             topRatedMovies = getTopRatedMoviesUseCase(page),
             topRatedTvShows = getTopRatedTvShowsUseCase(page),
         )
     }
 
-    data class TopRatedScreenData(
+    data class TopRatedData(
         val topRatedMovies: List<Movie>,
         val topRatedTvShows: List<TvShow>
     )
