@@ -1,6 +1,7 @@
 package com.amsterdam.viewmodel.guessCharacterGame
 
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
+import kotlin.time.Duration
 
 data class GuessCharacterUiState(
     val isLoading: Boolean = true,
@@ -23,7 +24,7 @@ data class GuessCharacterUiState(
         val characterImageUrl: String = "",
         val characterChoices: List<String> = emptyList(),
         val correctAnswer : String = "",
-        val questionDurationSeconds : Int = 0,
+        val questionDurationSeconds : Duration = Duration.ZERO,
         val blurRadius: Int = 8
     )
 }

@@ -1,6 +1,7 @@
 package com.amsterdam.viewmodel.guessReleseDateGame
 
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
+import kotlin.time.Duration
 
 data class GuessReleaseYearUiState(
     val isLoading: Boolean = true,
@@ -23,7 +24,7 @@ data class GuessReleaseYearUiState(
         val movieName: String = "",
         val releaseYearAnswer: List<String> = emptyList(),
         val correctAnswer: String = "",
-        val questionDurationSeconds: Int = 0
+        val questionDurationSeconds: Duration = Duration.ZERO
     )
 }
 

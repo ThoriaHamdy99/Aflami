@@ -9,7 +9,7 @@ fun GameQuestion<Int>.toQuestionUiStateUiState(): QuestionUiState {
         movieName = this.question,
         releaseYearAnswer = this.choices.map { it.toString() },
         correctAnswer = this.correctChoice.toString(),
-        questionDurationSeconds = questionDuration.inWholeSeconds.toInt()
+        questionDurationSeconds = questionDuration
     )
 }
 
@@ -18,7 +18,7 @@ fun QuestionUiState.toMovieReleasedDateQuestion(): GameQuestion<Int> {
         question = this.movieName,
         choices = this.releaseYearAnswer.map { it.toInt() },
         correctChoice = this.correctAnswer.toInt(),
-        questionDuration = questionDurationSeconds.seconds
+        questionDuration = questionDurationSeconds
     )
 }
 
