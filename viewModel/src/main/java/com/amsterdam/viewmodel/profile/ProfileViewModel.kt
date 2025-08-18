@@ -205,7 +205,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun onApplyTheme() {
-        updateState { state -> state.copy(showThemeDialog = false) }
+        onDismissThemeDialog()
         tryToExecute(
             action = { manageAppThemeUseCase.setAppTheme(state.value.isDarkTheme) },
             onSuccess = ::onApplyThemeSuccess,
