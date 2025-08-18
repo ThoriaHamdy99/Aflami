@@ -307,4 +307,6 @@
     <string name="failed_to_delete_your_rating">Oops! We couldn\'t delete your rating.</string>
     <string name="your_rate_deletion_has_been_saved">Your rating has been Deleted!</string>
 
+    <string name="tv_show">Tv Show</string>
+
 </resources>
