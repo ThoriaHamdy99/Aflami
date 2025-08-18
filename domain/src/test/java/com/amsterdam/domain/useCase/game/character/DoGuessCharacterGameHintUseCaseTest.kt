@@ -13,6 +13,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import kotlin.time.Duration.Companion.seconds
 
 class DoGuessCharacterGameHintUseCaseTest {
     private val getTotalUserPointsUseCase: GetTotalUserPointsUseCase = mockk()
@@ -46,6 +47,6 @@ class DoGuessCharacterGameHintUseCaseTest {
         question = "character",
         choices = listOf("john", "man", "woman"),
         correctChoice = "john",
-        questionDuration = 30
+        questionDuration = 30.seconds
     )
 }

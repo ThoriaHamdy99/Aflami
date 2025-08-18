@@ -9,6 +9,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.seconds
 
 class GuessMovieGenreUseCaseTest {
     private val generateMovieGenreQuestionsUseCase: GenerateMovieGenreQuestionsUseCase = mockk()
@@ -54,7 +55,7 @@ class GuessMovieGenreUseCaseTest {
         question = "Test Movie",
         choices = listOf(MovieGenre.ACTION, MovieGenre.DRAMA),
         correctChoice = MovieGenre.ACTION,
-        questionDuration = 30
+        questionDuration = 30.seconds
     )
     private val hintedQuestion = testQuestion.copy(choices = listOf(MovieGenre.ACTION))
     private val answerResult = AnswerResult(true, 10)
