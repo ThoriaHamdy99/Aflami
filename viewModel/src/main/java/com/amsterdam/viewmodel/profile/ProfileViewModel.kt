@@ -151,7 +151,12 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun onClickLanguageSetting() {
-        updateState { state -> state.copy(showLanguageDialog = true) }
+        updateState { state ->
+            state.copy(
+                showLanguageDialog = true,
+                language = state.updatedLanguage
+            )
+        }
     }
 
     override fun onChangeLanguage(language: ManageLocaleLanguageUseCase.Language) {
@@ -159,7 +164,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     override fun onApplyLanguage() {
-        onDismissLanguageDialog()
+        updateState { state -> state.copy(showLanguageDialog = false) }
         tryToExecute(
             action = { manageLocaleLanguageUseCase.setAppLanguage(state.value.language) },
             onSuccess = ::onApplyLanguageSuccess,
@@ -174,24 +179,20 @@ class ProfileViewModel @Inject constructor(
 
     private fun onApplyLanguageSuccess(unit: Unit) {
         updateState { state -> state.copy(updatedLanguage = state.language) }
-        tryToExecute(
-            action = { },
-            onSuccess = { sendNewEffect(ProfileEffect.LanguageChanged) },
-            onError = { sendNewEffect(ProfileEffect.LanguageChanged) }
-        )
+        sendNewEffect(ProfileEffect.LanguageChanged)
     }
 
     override fun onDismissLanguageDialog() {
         updateState { state -> state.copy(showLanguageDialog = false) }
-        tryToExecute(
-            action = { },
-            onSuccess = { updateState { state -> state.copy(language = state.updatedLanguage) } },
-            onError = { updateState { state -> state.copy(language = state.updatedLanguage) } }
-        )
     }
 
     override fun onClickThemeSetting() {
-        updateState { state -> state.copy(showThemeDialog = true) }
+        updateState { state ->
+            state.copy(
+                showThemeDialog = true,
+                isDarkTheme = state.updatedIsDarkTheme
+            )
+        }
     }
 
     override fun onChangeTheme(isDarkTheme: Boolean) {
@@ -219,11 +220,6 @@ class ProfileViewModel @Inject constructor(
 
     override fun onDismissThemeDialog() {
         updateState { state -> state.copy(showThemeDialog = false) }
-        tryToExecute(
-            action = { },
-            onSuccess = { updateState { state -> state.copy(isDarkTheme = state.updatedIsDarkTheme) } },
-            onError = { updateState { state -> state.copy(isDarkTheme = state.updatedIsDarkTheme) } }
-        )
     }
 
     private fun onUserDataNotLoaded(aflamiException: AflamiException) {
