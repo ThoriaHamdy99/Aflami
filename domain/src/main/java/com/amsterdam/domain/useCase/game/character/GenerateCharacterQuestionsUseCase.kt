@@ -27,7 +27,7 @@ class GenerateCharacterQuestionsUseCase(
                 question = correctCharacter.imageUrl,
                 choices = choices,
                 correctChoice = correctCharacter.name,
-                questionTime = gameDifficulty.timeLimitSeconds.seconds
+                questionDuration = gameDifficulty.timeLimitSeconds.seconds
             )
         }
     }

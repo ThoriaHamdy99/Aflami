@@ -54,7 +54,7 @@ class GuessCharacterGameUseCaseTest {
         question = "character",
         choices = listOf("john", "man", "woman"),
         correctChoice = "john",
-        questionTime = 30.seconds
+        questionDuration = 30.seconds
     )
     private val hintedQuestion = movieCharacterQuestion.copy(choices = listOf("john"))
     private val answerResult = AnswerResult(true, 10)

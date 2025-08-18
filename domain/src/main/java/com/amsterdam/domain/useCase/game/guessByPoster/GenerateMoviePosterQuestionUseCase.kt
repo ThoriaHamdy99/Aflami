@@ -27,7 +27,7 @@ class GenerateMoviePosterQuestionsUseCase(
                 question = correctMovie.posterUrl,
                 choices = movieNameChoices,
                 correctChoice = correctMovie.name,
-                questionTime = gameDifficulty.timeLimitSeconds.seconds
+                questionDuration = gameDifficulty.timeLimitSeconds.seconds
             )
         }
     }

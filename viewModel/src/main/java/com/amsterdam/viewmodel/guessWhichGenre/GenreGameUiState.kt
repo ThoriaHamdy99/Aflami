@@ -23,5 +23,5 @@ data class GameQuestionUiState(
     val questionData: String,
     val answers: List<MovieGenre>,
     val correctAnswer: MovieGenre,
-    val questionTime: Duration = Duration.ZERO
+    val questionDuration: Duration = Duration.ZERO
 )

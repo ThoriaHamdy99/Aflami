@@ -54,7 +54,7 @@ class GuessMovieGenreUseCaseTest {
         question = "Test Movie",
         choices = listOf(MovieGenre.ACTION, MovieGenre.DRAMA),
         correctChoice = MovieGenre.ACTION,
-        questionTime = 30
+        questionDuration = 30
     )
     private val hintedQuestion = testQuestion.copy(choices = listOf(MovieGenre.ACTION))
     private val answerResult = AnswerResult(true, 10)

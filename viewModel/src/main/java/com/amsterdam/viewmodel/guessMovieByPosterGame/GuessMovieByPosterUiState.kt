@@ -23,7 +23,7 @@ data class GuessMovieByPosterUiState(
         val posterUrl: String = "",
         val movieNameChoices: List<String> = emptyList(),
         val correctAnswer: String = "",
-        val questionTimeSeconds: Int = 0,
+        val questionDurationSeconds: Int = 0,
         val blurRadius: Int = 8
     )
 }
@@ -33,7 +33,7 @@ fun GameQuestion<String>.toQuestionUiState(): GuessMovieByPosterUiState.Question
         posterUrl = this.question,
         movieNameChoices = this.choices,
         correctAnswer = this.correctChoice,
-        questionTimeSeconds = this.questionTime.inWholeSeconds.toInt()
+        questionDurationSeconds = this.questionDuration.inWholeSeconds.toInt()
     )
 }
 
@@ -42,7 +42,7 @@ fun GuessMovieByPosterUiState.QuestionUiState.toMoviePosterQuestion(): GameQuest
         question = this.posterUrl,
         choices = this.movieNameChoices,
         correctChoice = this.correctAnswer,
-        questionTime = this.questionTimeSeconds.seconds
+        questionDuration = this.questionDurationSeconds.seconds
     )
 }
 

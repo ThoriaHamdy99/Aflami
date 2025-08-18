@@ -21,7 +21,7 @@ class GenerateMovieReleaseYearQuestionsUseCase(
                 question = movie.name,
                 choices = choices,
                 correctChoice = correctYear,
-                questionTime = gameDifficulty.timeLimitSeconds.seconds
+                questionDuration = gameDifficulty.timeLimitSeconds.seconds
             )
         }
     }

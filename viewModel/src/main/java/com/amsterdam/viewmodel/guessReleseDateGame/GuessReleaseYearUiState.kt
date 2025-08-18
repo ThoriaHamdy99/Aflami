@@ -23,7 +23,7 @@ data class GuessReleaseYearUiState(
         val movieName: String = "",
         val releaseYearAnswer: List<String> = emptyList(),
         val correctAnswer: String = "",
-        val questionTimeSeconds: Int = 0
+        val questionDurationSeconds: Int = 0
     )
 }
 

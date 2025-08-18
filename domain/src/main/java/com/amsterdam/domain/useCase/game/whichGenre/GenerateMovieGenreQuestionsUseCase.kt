@@ -13,7 +13,7 @@ class GenerateMovieGenreQuestionsUseCase(
 ) {
     suspend operator fun invoke(difficultyType: DifficultyType): List<GameQuestion<MovieGenre>> {
         val questionsCounts =  getGameDifficultyUseCase(difficultyType).totalQuestions
-        val questionTime = getGameDifficultyUseCase(difficultyType).timeLimitSeconds
+        val questionDuration = getGameDifficultyUseCase(difficultyType).timeLimitSeconds
         val movies = gameRepository.getRandomMoviesWithReleaseDate(questionsCounts)
 
         return movies.map { movie ->
@@ -31,7 +31,7 @@ class GenerateMovieGenreQuestionsUseCase(
                 question = movie.name,
                 choices = choices,
                 correctChoice = correctGenre,
-                questionTime = questionTime.seconds
+                questionDuration = questionDuration.seconds
             )
         }
     }

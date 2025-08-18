@@ -46,7 +46,7 @@ class SubmitCharacterAnswerUseCaseTest {
         question = "character",
         choices = listOf("john", "man", "woman"),
         correctChoice = "john",
-        questionTime = 30
+        questionDuration = 30
     )
     private val expectedCorrectResult = AnswerResult(true, 10)
     private val expectedIncorrectResult = AnswerResult(false, 0)

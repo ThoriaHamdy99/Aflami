@@ -46,7 +46,7 @@ class SubmitGuessMovieByPosterAnswerUseCaseTest {
         question = "Sample Movie",
         choices = listOf("spiderman", "batman", "superman"),
         correctChoice = "spiderman",
-        questionTime = 30
+        questionDuration = 30
     )
     private val expectedCorrectResult = AnswerResult(true, 10)
     private val expectedIncorrectResult = AnswerResult(false, 0)

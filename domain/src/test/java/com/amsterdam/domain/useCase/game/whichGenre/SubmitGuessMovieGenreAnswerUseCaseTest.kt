@@ -47,7 +47,7 @@ class SubmitGuessMovieGenreAnswerUseCaseTest {
         question = "Test Movie",
         choices = listOf(MovieGenre.ACTION, MovieGenre.DRAMA),
         correctChoice = MovieGenre.ACTION,
-        questionTime = 30
+        questionDuration = 30
     )
     private val expectedCorrectResult = AnswerResult(true, 10)
     private val expectedIncorrectResult = AnswerResult(false, 0)

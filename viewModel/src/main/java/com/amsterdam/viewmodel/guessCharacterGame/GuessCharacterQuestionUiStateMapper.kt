@@ -9,7 +9,7 @@ fun GameQuestion<String>.toQuestionUiState(): CharacterQuestionUiState {
         characterImageUrl = this.question,
         characterChoices = this.choices,
         correctAnswer = this.correctChoice,
-        questionTimeSeconds = this.questionTime.inWholeSeconds.toInt()
+        questionDurationSeconds = this.questionDuration.inWholeSeconds.toInt()
     )
 }
 
@@ -18,7 +18,7 @@ fun CharacterQuestionUiState.toCharacterDataQuestion(): GameQuestion<String> {
         question = this.characterImageUrl,
         choices = this.characterChoices,
         correctChoice = this.correctAnswer,
-        questionTime = this.questionTimeSeconds.seconds
+        questionDuration = this.questionDurationSeconds.seconds
     )
 }
 

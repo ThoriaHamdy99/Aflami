@@ -23,7 +23,7 @@ data class GuessCharacterUiState(
         val characterImageUrl: String = "",
         val characterChoices: List<String> = emptyList(),
         val correctAnswer : String = "",
-        val questionTimeSeconds : Int = 0,
+        val questionDurationSeconds : Int = 0,
         val blurRadius: Int = 8
     )
 }

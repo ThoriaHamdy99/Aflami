@@ -47,7 +47,7 @@ class SubmitGuessReleaseYearAnswerUseCaseTest {
         question = "Sample Movie",
         choices = listOf(1972, 1973, 1974),
         correctChoice = 1972,
-        questionTime = 30
+        questionDuration = 30
     )
 
     private val expectedCorrectResult = AnswerResult(true, 10)

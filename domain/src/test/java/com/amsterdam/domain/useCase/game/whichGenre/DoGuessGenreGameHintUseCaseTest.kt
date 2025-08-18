@@ -47,6 +47,6 @@ class DoGuessGenreGameHintUseCaseTest {
         question = "Sample Movie",
         choices = listOf(MovieGenre.ACTION, MovieGenre.DRAMA, MovieGenre.COMEDY),
         correctChoice = MovieGenre.ACTION,
-        questionTime = 30
+        questionDuration = 30
     )
 }

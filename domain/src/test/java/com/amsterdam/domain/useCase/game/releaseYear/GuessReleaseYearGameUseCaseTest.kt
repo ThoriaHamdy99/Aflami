@@ -54,7 +54,7 @@ class GuessReleaseYearGameUseCaseTest {
         question = "Sample Movie",
         choices = listOf(1972, 1973, 1974),
         correctChoice = 1972,
-        questionTime = 30.seconds
+        questionDuration = 30.seconds
     )
     private val hintedQuestion = movieReleasedDateQuestion.copy(choices = listOf(1972))
     private val answerResult = AnswerResult(true, 10)

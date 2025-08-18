@@ -54,7 +54,7 @@ class GuessMovieByPosterGameUseCaseTest {
         question = "Sample Movie",
         choices = listOf("spiderman", "batman", "superman"),
         correctChoice = "spiderman",
-        questionTime = 30.seconds
+        questionDuration = 30.seconds
     )
     private val hintedQuestion = moviePosterQuestion.copy(choices = listOf("spiderman"))
     private val answerResult = AnswerResult(true, 10)

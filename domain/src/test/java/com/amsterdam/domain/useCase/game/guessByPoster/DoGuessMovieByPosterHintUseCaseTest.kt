@@ -46,6 +46,6 @@ class DoGuessMovieByPosterHintUseCaseTest {
         question = "Sample Movie",
         choices = listOf("spiderman", "batman", "superman"),
         correctChoice = "spiderman",
-        questionTime = 30
+        questionDuration = 30
     )
 }
