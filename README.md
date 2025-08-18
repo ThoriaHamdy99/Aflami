@@ -123,14 +123,38 @@
   </tr>
 </table>
 
-> [!Note]
+> [!NOTE]
 >
 > - **Create Your Own Lists:** Add custom lists with titles of your choice to group your favorite movies.
 >
 > - **Add Favorites:** Include any movie from the app into one or more of your custom lists.
 >
 > - **Delete List:** Remove the entire list when you no longer need them.
+## Let's Play
+> ***Challenge yourself and have fun guessing games, characters, and movies!***
+<table>
+  <tr>
+    <td><img width="333" height="720" alt="image" src="https://github.com/user-attachments/assets/67b17160-115a-429b-acc3-6f4119ec7f9b" /></td>
+    <td><img width="333" height="720" alt="image" src="https://github.com/user-attachments/assets/22f64d1e-c40f-4607-b7fc-651ee7b88100" /></td>
+    <td><img width="333" height="720" alt="image" src="https://github.com/user-attachments/assets/d88e67eb-024c-45ea-9e6b-f17207944f97" /></td>
+    <td><img width="333" height="720" alt="image" src="https://github.com/user-attachments/assets/45d6bde5-f46c-4aba-baaf-15e6743c3c51" /></td>
+    <td><img width="333" height="720" alt="image" src="https://github.com/user-attachments/assets/b8792136-8e90-4548-99ab-ad089ba87660" /></td>
+  </tr>
+</table>
 
+> [!NOTE]
+>
+> - **Pick Your Challenge:** Choose your favorite game mode to start playing.
+>
+> - **Guess Character by Image:** Look at the character's image and type the correct name.
+>
+> - **Guess Movie by Poster:** Identify the movie just by looking at its poster.
+>
+> - **Guess Movie Release Date:** Test your knowledge of when a movie was released.
+>
+> - **Guess Movie Genre:** Pick the correct genre for the movie shown.
+>
+> - **Test Your Knowledge Against Time:** Try to answer correctly before the timer runs out.
 # Installation
 
 1. **Clone the repository**
