@@ -71,7 +71,7 @@ class GuessGenreViewModel @Inject constructor(
                 currentQuestion.questionTime,
                 onTimerFinish = ::onMoveToNextQuestion
             )
-                    .collect(::onTimerUpdate)
+                .collect(::onTimerUpdate)
         }
     }
 
@@ -94,7 +94,7 @@ class GuessGenreViewModel @Inject constructor(
     }
 
     override fun onCancelGameClick() {
-        sendNewEffect(GenreGameEffect.CancelGame)
+        sendNewNavigationEffect(GenreGameEffect.CancelGame)
     }
 
     override fun onChooseAnswerClick(answerIndex: Int) {
@@ -110,7 +110,6 @@ class GuessGenreViewModel @Inject constructor(
             },
             onSuccess = { answer -> onAnswerCorrect(answer, answerIndex) },
             onCompletion = timerHandler::stopTimer
-
         )
     }
 
