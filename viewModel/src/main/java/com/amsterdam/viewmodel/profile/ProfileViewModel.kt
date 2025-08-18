@@ -167,7 +167,7 @@ class ProfileViewModel @Inject constructor(
         updateState { state -> state.copy(showLanguageDialog = false) }
         tryToExecute(
             action = { manageLocaleLanguageUseCase.setAppLanguage(state.value.language) },
-            onSuccess = ::onApplyLanguageSuccess,
+            onSuccess = { onApplyLanguageSuccess() },
             onError = ::onApplyLanguageFailure
         )
     }
@@ -177,7 +177,7 @@ class ProfileViewModel @Inject constructor(
         sendNewEffect(ProfileEffect.LanguageNotChanged)
     }
 
-    private fun onApplyLanguageSuccess(unit: Unit) {
+    private fun onApplyLanguageSuccess() {
         updateState { state -> state.copy(updatedLanguage = state.language) }
         sendNewEffect(ProfileEffect.LanguageChanged)
     }
@@ -203,7 +203,7 @@ class ProfileViewModel @Inject constructor(
         onDismissThemeDialog()
         tryToExecute(
             action = { manageAppThemeUseCase.setAppTheme(state.value.isDarkTheme) },
-            onSuccess = ::onApplyThemeSuccess,
+            onSuccess = { onApplyThemeSuccess() },
             onError = ::onApplyThemeFailure
         )
     }
@@ -213,7 +213,7 @@ class ProfileViewModel @Inject constructor(
         sendNewEffect(ProfileEffect.ThemeNotChanged)
     }
 
-    private fun onApplyThemeSuccess(unit: Unit) {
+    private fun onApplyThemeSuccess() {
         updateState { state -> state.copy(updatedIsDarkTheme = state.isDarkTheme) }
         sendNewEffect(ProfileEffect.ThemeChanged)
     }
@@ -264,16 +264,18 @@ class ProfileViewModel @Inject constructor(
             it.copy(settingsState = it.settingsState.copy(isLogoutButtonLoading = true))
         }
         tryToExecute(
-            action = ::onConfirmLogout,
-            onSuccess = ::onConfirmLogoutSuccess,
+            action = { onConfirmLogout() },
+            onSuccess = { onConfirmLogoutSuccess() },
             onError = ::onError,
             onCompletion = ::onConfirmLogoutCompletion
         )
     }
 
-    private suspend fun onConfirmLogout() = logoutUseCase()
+    private suspend fun onConfirmLogout(){
+        logoutUseCase()
+    }
 
-    private fun onConfirmLogoutSuccess(unit: Unit) {
+    private fun onConfirmLogoutSuccess() {
         sendNewNavigationEffect(ProfileEffect.NavigateToLogin)
     }
 
@@ -315,14 +317,14 @@ class ProfileViewModel @Inject constructor(
         }
 
         tryToExecute(
-            action = ::saveRestrictionLevel,
-            onSuccess = ::onSaveRestrictionLevelSuccess,
+            action = { saveRestrictionLevel() },
+            onSuccess = { onSaveRestrictionLevelSuccess() },
             onError = ::onSaveRestrictionLevelError,
             onCompletion = ::onSaveRestrictionLevelCompletion
         )
     }
 
-    private fun onSaveRestrictionLevelSuccess(unit: Unit) {
+    private fun onSaveRestrictionLevelSuccess() {
         sendNewEffect(ProfileEffect.ShowRestrictionLevelUpdateSuccessSnackBar)
     }
 

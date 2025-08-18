@@ -45,8 +45,8 @@ class LoginViewModel @Inject constructor(
 
     override fun onLoginClicked() {
         tryToExecute(
-            action = ::onLoginStart,
-            onSuccess = ::onLoginSuccess,
+            action = { onLoginStart() },
+            onSuccess = { onLoginSuccess() },
             onError = ::onError,
             onCompletion = ::onComplete
         )
@@ -57,7 +57,7 @@ class LoginViewModel @Inject constructor(
         loginWithPasswordUseCase.invoke(state.value.username, state.value.password)
     }
 
-    private fun onLoginSuccess(unit: Unit) {
+    private fun onLoginSuccess() {
         tryToExecute(
             action = getAccountDetailsUseCase::invoke,
             onCompletion = ::navigateToHome,
