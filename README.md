@@ -207,7 +207,7 @@
   <tr>
     <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/c9e6fad4-cc1c-4da9-a547-1516a75c920b" /></td>
     <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/a3e3a3b9-8b43-43a4-a5ce-51d25dc8bc23" /></td>
-    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/1f0b7da8-1d4b-4962-9de7-01e959a359cd" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/4e223dc3-7f75-40ab-ad32-dd89d7e7622b" /></td>
     <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/795eb1c6-a3da-4203-ab71-62ebdb8c30b6" /></td>
   </tr>
 </table>
