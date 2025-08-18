@@ -11,7 +11,7 @@ import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
-import com.amsterdam.viewmodel.utils.entityHelper.createMovie
+import com.amsterdam.viewmodel.utils.helper.createMovie
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

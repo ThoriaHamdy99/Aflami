@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.utils
 
+import io.mockk.clearAllMocks
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
@@ -22,6 +23,7 @@ class TestExtension @OptIn(ExperimentalCoroutinesApi::class) constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun afterEach(context: ExtensionContext?) {
+        clearAllMocks()
         Dispatchers.resetMain()
     }
 

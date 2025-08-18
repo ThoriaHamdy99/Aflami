@@ -137,7 +137,7 @@ class WishListsViewModel @Inject constructor(
         listId: Long,
         listName: String,
     ) {
-        sendNewEffect(ListsEffect.NavigateToListDetails(listId, listName))
+        sendNewNavigationEffect(ListsEffect.NavigateToListDetails(listId, listName))
     }
 
     override fun onClickRetryFetchList() {
@@ -149,8 +149,6 @@ class WishListsViewModel @Inject constructor(
     }
 
     override fun onNavigateToLoginClicked() {
-        sendNewEffect(ListsEffect.NavigateToLogin)
+        sendNewNavigationEffect(ListsEffect.NavigateToLogin)
     }
-
-
 }

@@ -10,7 +10,7 @@ data class TopRatedUiState(
     val isLoading: Boolean = false,
     val error: TopRatedError? = null
 ) {
-    class TopRatedMediaItemUiState(
+    data class TopRatedMediaItemUiState(
         val id: Long = 0,
         val name: String = "",
         val posterImageUrl: String = "",

@@ -3,7 +3,7 @@ package com.amsterdam.viewmodel.search.countrySearch
 import androidx.paging.testing.asSnapshot
 import com.amsterdam.domain.useCase.search.GetMoviesByCountryUseCase
 import com.amsterdam.entity.Country
-import com.amsterdam.viewmodel.utils.entityHelper.createMovie
+import com.amsterdam.viewmodel.utils.helper.createMovie
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
