@@ -19,6 +19,7 @@ import com.amsterdam.entity.Review
 import com.amsterdam.entity.WishList
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState.MovieExtras
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
 import com.google.common.truth.Truth.assertThat
@@ -91,7 +92,7 @@ class MovieDetailsViewModelTest {
         viewModel
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.networkError).isTrue()
+        viewModel.errorState.test { assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError) }
     }
 
     @Test
@@ -138,7 +139,7 @@ class MovieDetailsViewModelTest {
         viewModel
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.networkError).isTrue()
+        viewModel.errorState.test { assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError) }
     }
 
     //endregion
@@ -299,7 +300,6 @@ class MovieDetailsViewModelTest {
         viewModel
 
         viewModel.onClickAddToList()
-        advanceUntilIdle()
 
         assertThat(viewModel.state.value.isAddToListDialogVisible).isFalse()
     }

@@ -14,6 +14,7 @@ import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.TabOption
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
 import com.google.common.truth.Truth.assertThat
@@ -70,7 +71,7 @@ class MyRatingViewModelTest {
         viewModel
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.error).isEqualTo(MyRatingUiState.MyRatingErrorState.NoInternetError)
+        viewModel.errorState.test { assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError) }
     }
 
     //region Tests for Delete Movie

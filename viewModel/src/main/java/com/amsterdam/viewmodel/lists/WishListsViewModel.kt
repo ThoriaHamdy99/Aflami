@@ -6,6 +6,7 @@ import com.amsterdam.domain.useCase.list.CreateNewListUseCase
 import com.amsterdam.domain.useCase.list.GetWishListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
+import com.amsterdam.entity.WishList
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.map
 
 @HiltViewModel
 class WishListsViewModel @Inject constructor(
@@ -34,11 +36,10 @@ class WishListsViewModel @Inject constructor(
                     updateState { it.copy(isUserLoggedIn = true) }
                     manageLocaleLanguageUseCase
                         .getAppLanguage()
-                        .onEach {
-                            loadCustomLists()
-                        }.launchIn(viewModelScope)
+                        .onEach { getCustomLists() }
+                        .launchIn(viewModelScope)
 
-                    loadCustomLists()
+                    getCustomLists()
                 },
                 onGuest = {
                     updateState { it.copy(isUserLoggedIn = false, isLoading = false) }
@@ -47,29 +48,26 @@ class WishListsViewModel @Inject constructor(
         }
     }
 
-    fun loadCustomLists(startLoading: Boolean = true) {
+    fun getCustomLists(startLoading: Boolean = true) {
         startLoading(startLoading)
         tryToExecute(
-            action = { getWishListsUseCase() },
-            onSuccess = { customLists ->
-                updateState {
-                    it.copy(
-                        userLists = customLists.map { it.toWishListItemUiState() },
-                        isLoading = false,
-                        errorUiState = null
-                    )
-                }
-            },
-            onError = { exception ->
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        errorUiState = ListsUiState.ListsErrorState.toListsErrorState(exception),
-                    )
-                }
-            }
+            action = getWishListsUseCase::invoke,
+            onSuccess = ::onGetCustomListsSuccess,
+            onCompletion = ::onGetCustomListsCompletion
         )
     }
+
+    private fun onGetCustomListsSuccess(customLists: List<WishList>){
+        resetErrorStateToNull()
+        updateState {
+            it.copy(
+                userLists = customLists.map { it.toWishListItemUiState() },
+                isLoading = false,
+            )
+        }
+    }
+
+    private fun onGetCustomListsCompletion() = startLoading(start = false)
 
     private fun startLoading(start: Boolean = true) = updateState { it.copy(isLoading = start) }
 
@@ -90,10 +88,7 @@ class WishListsViewModel @Inject constructor(
             runIfLoggedIn(
                 onLoggedIn = {
                     updateState {
-                        it.copy(
-                            isCreateNewListDialogVisible = true,
-                            isUserLoggedIn = true
-                        )
+                        it.copy(isCreateNewListDialogVisible = true, isUserLoggedIn = true)
                     }
                 },
                 onGuest = {
@@ -110,12 +105,10 @@ class WishListsViewModel @Inject constructor(
     override fun onCreateNewListClick() {
         updateState { it.copy(isCreateListLoading = true) }
         tryToExecute(
-            action = {
-                createListUseCase(state.value.listName)
-            },
+            action = { createListUseCase(state.value.listName) },
             onSuccess = {
                 sendNewEffect(ListsEffect.ListCreatedSuccessfully)
-                loadCustomLists()
+                getCustomLists()
             },
             onError = {
                 sendNewEffect(ListsEffect.FailedToCreateList)
@@ -133,15 +126,12 @@ class WishListsViewModel @Inject constructor(
     }
 
 
-    override fun onListClick(
-        listId: Long,
-        listName: String,
-    ) {
-        sendNewNavigationEffect(ListsEffect.NavigateToListDetails(listId, listName))
+    override fun onListClick(listId: Long, listName: String) {
+        sendNewEffect(ListsEffect.NavigateToListDetails(listId, listName))
     }
 
     override fun onClickRetryFetchList() {
-        loadCustomLists()
+        getCustomLists()
     }
 
     override fun onDismiss() {

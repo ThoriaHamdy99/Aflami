@@ -1,6 +1,5 @@
 package com.amsterdam.domain.useCase.topRated
 
-
 import com.amsterdam.entity.Movie
 import com.amsterdam.entity.TvShow
 

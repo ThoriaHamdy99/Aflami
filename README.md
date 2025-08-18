@@ -9,15 +9,25 @@
 # Technologies
 > [!TIP]
 >
-> - **Room Database**
-> - **Preferences Data Store**
-> - **Unit Testing**
-> - **Continuous Integration and Deployment (CI/CD)**
-> - **Kotlin Flows and Coroutines**:
-> - **Pagin3**
-> - **Retrofit and Coil**
-> - **Tensorflow**
-> - **kotlin datetime**
+> - [**Dagger Hilt**](https://developer.android.com/training/dependency-injection/hilt-android)
+> - [**Room Database**](https://developer.android.com/training/data-storage/room)
+> - [**Preferences Data Store**](https://developer.android.com/topic/libraries/architecture/datastore)
+> - [**Retrofit**](https://square.github.io/retrofit/)
+> - [**Coil**](https://github.com/coil-kt/coil#jetpack-compose)
+> - [**Shaded**](https://github.com/mohamedd-hassan/Shaded)
+> - [**Tensorflow**](https://www.tensorflow.org/)
+> - [**Compose Navigation2**](https://developer.android.com/develop/ui/compose/navigation)
+> - [**Paging3**](https://developer.android.com/topic/libraries/architecture/paging/v3-overview)
+> - [**Kotlin Flows**](https://developer.android.com/kotlin/flow)
+> - [**Coroutines**](https://developer.android.com/kotlin/coroutines)
+> - [**kotlin datetime**](https://github.com/Kotlin/kotlinx-datetime)
+> - [**Firebase Crashlytics**](https://firebase.google.com/docs/crashlytics)
+> - [**Firebase App Distribution**](https://firebase.google.com/docs/app-distribution)
+> - [**Firebase ML Kit**](https://firebase.google.com/docs/ml-kit)
+> - [**Linter**](https://developer.android.com/studio/write/lint)
+> - [**Unit Testing**](https://developer.android.com/training/testing/local-tests) || [**Mockk**](https://mockk.io/#getting-started) || [**Junit5**](https://docs.junit.org/current/user-guide/) || [**Truths**](https://truth.dev/)
+> - [**Android Testing**](https://developer.android.com/training/testing/instrumented-tests)
+> - [**Continuous Integration and Deployment (CI/CD)**](https://docs.github.com/en/actions)
 
 # Features
 ## Authentication
@@ -47,6 +57,23 @@
 > - **Top Rating Section:** Discover critically acclaimed movies and TV shows. An "All" button provides access to a more extensive list of top-rated content.
 > - **Mood Picker:** Unsure what to watch? Select your current mood, and Aflami will suggest a movie for you. You can either dive into its details or get another suggestion until you find the perfect match.
 > - **Upcoming Section:** Stay ahead of the curve by browsing upcoming movies and TV shows, conveniently categorized by genre.
+
+## Mood Picker
+> _**When you don't know what to watch, let your mood decide.**_
+<table>
+  <tr>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/a3c08570-aeff-4505-bd60-97db5ecf26cd" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/3f4008c6-f194-4644-aebe-9a4dd958eefe" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/ebcb6c4a-228d-420d-a043-eee93a7a6528" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/a41951cf-c330-4030-ac09-a55537c1ff94" /></td>
+  </tr>
+</table>
+
+> [!Note]
+>
+> - **Choose Your Vibe:** Select an emoji that best represents your current mood.
+> - **Get Instant Suggestions:** Aflami will recommend a movie that matches your chosen vibe.
+> - **Discover or Try Again:** You can tap "View details" to learn more about the suggested film, or select "Get another movie" to receive a new recommendation until you find the perfect one.
 
 ## Advanced Search
 > _**The powerful search functionality allows you to find exactly what you're looking for.**_
@@ -130,6 +157,7 @@
 > - **Add Favorites:** Include any movie from the app into one or more of your custom lists.
 >
 > - **Delete List:** Remove the entire list when you no longer need them.
+
 ## Let's Play
 > ***Challenge yourself and have fun guessing games, characters, and movies!***
 <table>
@@ -141,7 +169,6 @@
     <td><img width="333" height="720" alt="image" src="https://github.com/user-attachments/assets/b8792136-8e90-4548-99ab-ad089ba87660" /></td>
   </tr>
 </table>
-
 > [!NOTE]
 >
 > - **Pick Your Challenge:** Choose your favorite game mode to start playing.
@@ -155,6 +182,24 @@
 > - **Guess Movie Genre:** Pick the correct genre for the movie shown.
 >
 > - **Test Your Knowledge Against Time:** Try to answer correctly before the timer runs out.
+
+## Categories Screens
+> ***Explore a world of entertainment, sorted just for you.***
+<table>
+  <tr>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/c205afb7-dcc0-4f27-b373-b1e5232cc15f" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/70e2444c-d3e4-4f8a-b738-586dbfa79970" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/e62f85b1-d9ad-4214-84e2-c369f7cacfd5" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/12194c86-dd1e-460f-9bf8-bcfbf0f7fac7" /></td>
+  </tr>
+</table>
+
+> [!Note]
+>
+> - **Browse by Type:** Easily switch between dedicated "Movies" and "TV Shows" tabs to find exactly what you're looking for.
+> - **Rich Genre Selection:** Discover content across a wide array of genres, each represented by a unique, intuitive icon.
+> - **Instant Results:** Simply tap on any genre to see a curated list of titles from that category, complete with their poster, title, and rating.
+
 # Installation
 
 1. **Clone the repository**

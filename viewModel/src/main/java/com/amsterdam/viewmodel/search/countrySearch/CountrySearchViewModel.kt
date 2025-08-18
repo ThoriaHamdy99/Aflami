@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.search.GetSuggestedCountriesUseCase
 import com.amsterdam.entity.Country
 import com.amsterdam.viewmodel.search.mapper.toSearchMediaItemUiState
@@ -39,42 +40,42 @@ class CountrySearchViewModel @Inject constructor(
         tryToExecute(
             action = {
                 state.map { it -> it.keywordDebounceValue.trim() }
-                    .debounceSearch(::fetchCountriesByKeyword)
+                    .debounceSearch(::getCountriesByKeyword)
             },
             dispatcher = dispatcherProvider.IO
         )
     }
 
-    private fun fetchCountriesByKeyword(keyword: String) {
+    private fun getCountriesByKeyword(keyword: String) {
         tryToExecute(
             action = { getSuggestedCountriesUseCase(keyword) },
-            onSuccess = ::onFetchCountriesSuccess,
-            onError = ::onFetchError
+            onSuccess = ::onGetCountriesSuccess,
+            onError = ::onGetCountriesError
         )
     }
 
-    private fun onFetchCountriesSuccess(countries: List<Country>) {
+    private fun onGetCountriesSuccess(countries: List<Country>) {
+        resetErrorStateToNull()
         updateState {
             it.copy(
                 suggestedCountries = countries.toUiState(),
                 showSuggestedCountries = true,
-                errorUiState = null
             )
         }
     }
 
-    private fun onFetchError(exception: AflamiException) {
+    private fun onGetCountriesError(exception: AflamiException) {
         updateState {
             it.copy(
                 isLoading = false,
                 showSuggestedCountries = false,
                 movies = emptyFlow(),
-                errorUiState = CountrySearchErrorState.toCountrySearchErrorState(exception),
             )
         }
     }
 
     override fun onChangeSearchKeyword(keyword: String) {
+        resetErrorStateToNull()
         updateState {
             it.copy(
                 keyword = keyword,
@@ -82,7 +83,6 @@ class CountrySearchViewModel @Inject constructor(
                 isLoading = false,
                 selectedCountryIsoCode = "",
                 showSuggestedCountries = false,
-                errorUiState = null,
                 movies = emptyFlow(),
             )
         }
@@ -102,7 +102,7 @@ class CountrySearchViewModel @Inject constructor(
         val hasSelectedCountry = state.value.selectedCountryIsoCode.isNotBlank()
 
         when {
-            !hasSelectedCountry -> fetchCountriesByKeyword(state.value.keyword)
+            !hasSelectedCountry -> getCountriesByKeyword(state.value.keyword)
             hasSelectedCountry -> fetchMoviesByCountry(getSelectedCountry())
         }
     }
@@ -125,10 +125,11 @@ class CountrySearchViewModel @Inject constructor(
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
-        when (val refreshState = loadStates.refresh) {
+        when (loadStates.refresh) {
             is LoadState.Loading -> {
+                resetErrorStateToNull()
                 if (state.value.selectedCountryIsoCode.isNotBlank()) {
-                    updateState { it.copy(isLoading = true, errorUiState = null) }
+                    updateState { it.copy(isLoading = true) }
                 }
             }
 
@@ -137,14 +138,8 @@ class CountrySearchViewModel @Inject constructor(
             }
 
             is LoadState.Error -> {
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        errorUiState = CountrySearchErrorState.toCountrySearchErrorState(
-                            refreshState.error
-                        ),
-                    )
-                }
+                updateState { it.copy(isLoading = false,) }
+                updateErrorStateByException(NetworkException())
             }
         }
     }

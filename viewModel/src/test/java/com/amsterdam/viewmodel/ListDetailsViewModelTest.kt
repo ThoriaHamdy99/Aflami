@@ -13,8 +13,8 @@ import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.viewmodel.listDetails.ListDetailsArgs
 import com.amsterdam.viewmodel.listDetails.ListDetailsEffect
-import com.amsterdam.viewmodel.listDetails.ListDetailsUiState
 import com.amsterdam.viewmodel.listDetails.ListDetailsViewModel
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -36,7 +36,8 @@ import kotlin.test.Test
 class ListDetailsViewModelTest {
 
     private lateinit var viewModel: ListDetailsViewModel
-    private val getListMediaItemsFromListUseCase: GetListMediaItemsFromListUseCase = mockk(relaxed = true)
+    private val getListMediaItemsFromListUseCase: GetListMediaItemsFromListUseCase =
+        mockk(relaxed = true)
     private val removeMovieFromListUseCase: RemoveMovieFromListUseCase = mockk(relaxed = true)
     private val deleteListUseCase: DeleteListUseCase = mockk(relaxed = true)
     private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase = mockk(relaxed = true)
@@ -152,15 +153,12 @@ class ListDetailsViewModelTest {
     fun `onClickRemoveMovie should show success snackbar`() = testScope.runTest {
         coEvery { removeMovieFromListUseCase(any(), any()) } returns Unit
 
-        val effects = mutableListOf<ListDetailsEffect>()
-        val job = launch { viewModel.effect.collect { effects.add(it) } }
+        viewModel.effect.test {
+            viewModel.onClickRemoveMovie(1)
 
-        viewModel.onClickRemoveMovie(1)
-        advanceUntilIdle()
-        job.cancel()
+            assertThat(awaitItem()).isEqualTo(ListDetailsEffect.ShowRemoveMovieSuccessSnackBar)
+        }
 
-        assertThat(viewModel.state.value.error).isNull()
-        assertThat(effects).contains(ListDetailsEffect.ShowRemoveMovieSuccessSnackBar)
     }
 
     @Test
@@ -181,7 +179,7 @@ class ListDetailsViewModelTest {
         advanceUntilIdle()
         job.cancel()
 
-        assertThat(effects.any { it is ListDetailsEffect.ShowErrorSnackbar })
+        assertThat(effects.any { it is ListDetailsEffect.ShowErrorSnackBar })
     }
 
     @Test
@@ -194,7 +192,7 @@ class ListDetailsViewModelTest {
         advanceUntilIdle()
         job.cancel()
 
-        assertThat(effects.any { it is ListDetailsEffect.ShowErrorSnackbar })
+        assertThat(effects.any { it is ListDetailsEffect.ShowErrorSnackBar })
     }
 
     @Test
@@ -251,8 +249,8 @@ class ListDetailsViewModelTest {
         )
         advanceUntilIdle()
 
-        viewModel.state.test {
-            assertThat(awaitItem().error).isEqualTo(ListDetailsUiState.ListDetailsError.NoNetwork)
+        viewModel.errorState.test {
+            assertThat(awaitItem()).isEqualTo(ErrorUiState.UnknownError)
         }
     }
 }

@@ -108,6 +108,9 @@ import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeasonUiState.
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsViewModel
 import com.amsterdam.viewmodel.shared.Selectable
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState.NoInternetError
+import com.amsterdam.viewmodel.shared.errorUiState.isNull
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -120,6 +123,7 @@ fun SeriesDetailsScreen(
     viewModel: SeriesDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
+    val errorState by viewModel.errorState.collectAsState()
     val navigationManager = LocalNavManager.current
     val context = LocalContext.current
     val successRateMessage = stringResource(R.string.your_rating_has_been_saved)
@@ -134,6 +138,7 @@ fun SeriesDetailsScreen(
 
     SeriesDetailsContent(
         state = state,
+        errorState = errorState,
         seriesDetailsInteractionListener = viewModel,
         rateDialogInteractionListener = viewModel
     )
@@ -181,6 +186,7 @@ fun SeriesDetailsScreen(
 @Composable
 fun SeriesDetailsContent(
     state: SeriesDetailsUiState,
+    errorState: ErrorUiState?,
     seriesDetailsInteractionListener: SeriesDetailsInteractionListener,
     rateDialogInteractionListener: RateDialogInteractionListener
 ) {
@@ -279,7 +285,7 @@ fun SeriesDetailsContent(
         }
 
         AnimatedVisibility(
-            state.networkError,
+            visible = errorState is NoInternetError,
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration))
         ) {
@@ -324,7 +330,7 @@ fun SeriesDetailsContent(
         }
 
         AnimatedVisibility(
-            !state.isLoading && !state.networkError,
+            !state.isLoading && errorState.isNull(),
             enter = fadeIn(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration))
         ) {
@@ -624,6 +630,7 @@ private fun SeriesDetailsContentPreview() {
     AflamiTheme {
         SeriesDetailsContent(
             state = SeriesDetailsUiState(),
+            errorState = null,
             seriesDetailsInteractionListener = object : SeriesDetailsInteractionListener {
                 override fun onClickSeriesExtraItem(seriesExtras: SeriesExtras) {}
                 override fun onNavigateBack() {}

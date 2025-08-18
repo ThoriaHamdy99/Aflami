@@ -62,6 +62,8 @@ import com.amsterdam.viewmodel.home.HomeEffect.NavigateToSearchScreenEffect
 import com.amsterdam.viewmodel.home.HomeInteractionListener
 import com.amsterdam.viewmodel.home.HomeUiState
 import com.amsterdam.viewmodel.home.HomeViewModel
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.isNull
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import kotlinx.coroutines.flow.collectLatest
 
@@ -69,6 +71,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hiltViewModel()) {
     val navigationManager = LocalNavManager.current
     val state by homeViewModel.state.collectAsStateWithLifecycle()
+    val errorState by homeViewModel.errorState.collectAsStateWithLifecycle()
 
     val errorGetMoviesByMoodMessage = stringResource(R.string.error_mood_movies_loading)
     LaunchedEffect(Unit) {
@@ -100,14 +103,20 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hil
     }
 
     HomeScreenContent(
-        modifier = modifier, state = state, interactionListener = homeViewModel
+        modifier = modifier,
+        state = state,
+        errorState = errorState,
+        interactionListener = homeViewModel
     )
 }
 
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 private fun HomeScreenContent(
-    state: HomeUiState, interactionListener: HomeInteractionListener, modifier: Modifier = Modifier
+    state: HomeUiState,
+    errorState: ErrorUiState?,
+    interactionListener: HomeInteractionListener,
+    modifier: Modifier = Modifier
 ) {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
@@ -152,7 +161,7 @@ private fun HomeScreenContent(
             .navigationBarsPadding()
             .windowInsetsPadding(WindowInsets(bottom = LocalScaffoldBottomPadding.current))
     ) {
-        if (state.error == HomeUiState.HomeError.NetworkError) {
+        if (errorState is ErrorUiState.NoInternetError) {
             Column(Modifier.fillMaxSize()) {
                 HomeAppBar(
                     onSearchClicked = interactionListener::onClickSearch,
@@ -183,7 +192,7 @@ private fun HomeScreenContent(
                 popularSection(
                     state = state.popularMediaSectionUiState,
                     onClickMediaItem = interactionListener::onClickMediaItem,
-                    isVisible = state.error == null
+                    isVisible = errorState.isNull()
                 )
 
                 continueWatchingSection(
@@ -197,12 +206,12 @@ private fun HomeScreenContent(
                     state = state.topRatedMediaSectionUiState,
                     onClickMediaItem = interactionListener::onClickMediaItem,
                     onClickShowAll = interactionListener::onClickShowAllToRatedMovies,
-                    isVisible = state.error == null,
+                    isVisible = errorState.isNull(),
                 )
 
                 item {
                     AnimatedSectionVisibility(
-                        visible = !state.isLoading && state.error == null,
+                        visible = !state.isLoading && errorState.isNull(),
                         modifier = Modifier.padding(bottom = 24.dp)
                     ) {
                         MoodPickerSection(
@@ -225,7 +234,7 @@ private fun HomeScreenContent(
                             state = state.upcomingMoviesSectionUiState,
                             onChangeMovieGenre = interactionListener::onChangeUpcomingMovieGenre,
                             onMovieClicked = interactionListener::onClickUpcomingMovieCard,
-                            isVisible = !state.isLoading && state.error == null,
+                            isVisible = !state.isLoading && errorState.isNull(),
                             deviceWidth = deviceWidth,
                         )
                     }
@@ -262,7 +271,9 @@ private fun calculateUpcomingMoviesSectionHeightDp(
 private fun HomeScreenPreview() {
     AflamiTheme {
         HomeScreenContent(
-            state = HomeUiState(), interactionListener = object : HomeInteractionListener {
+            state = HomeUiState(),
+            errorState = ErrorUiState.UnknownError,
+            interactionListener = object : HomeInteractionListener {
                 override fun onClickRetryLoading() {}
                 override fun onClickSearch() {}
 

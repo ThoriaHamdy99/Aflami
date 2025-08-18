@@ -3,6 +3,8 @@ package com.amsterdam.viewmodel.shared
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.toErrorUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
@@ -30,9 +32,10 @@ open class BaseViewModel<S, E>(
         .mapNotNull { it.first }
 
     private val _state: MutableStateFlow<S> = MutableStateFlow(initialState)
-
     val state: StateFlow<S> = _state.asStateFlow()
 
+    private val _errorState: MutableStateFlow<ErrorUiState?> = MutableStateFlow(null)
+    val errorState: StateFlow<ErrorUiState?> = _errorState.asStateFlow()
 
     protected fun updateState(updater: (S) -> S) {
         viewModelScope.launch(dispatcherProvider.MainImmediate) {
@@ -56,6 +59,7 @@ open class BaseViewModel<S, E>(
         action: suspend () -> T,
         onSuccess: (T) -> Unit = {},
         onError: (AflamiException) -> Unit = {},
+        withAutoUpdateErrorState: Boolean = true,
         onCompletion: () -> Unit = {},
         dispatcher: CoroutineDispatcher = dispatcherProvider.IO,
     ): Job {
@@ -65,13 +69,25 @@ open class BaseViewModel<S, E>(
                     onSuccess(it)
                 }
             } catch (exception: AflamiException) {
+                if(withAutoUpdateErrorState){ updateErrorStateByException(exception) }
                 onError(exception)
             } catch (_: Exception) {
+                if(withAutoUpdateErrorState){ updateErrorStateByException(AflamiException()) }
                 onError(AflamiException())
             } finally {
                 onCompletion()
             }
         }
+    }
+
+    protected fun updateErrorStateByException(exception: AflamiException?) {
+        viewModelScope.launch(dispatcherProvider.MainImmediate) {
+            _errorState.value = exception?.toErrorUiState()
+        }
+    }
+
+    protected fun resetErrorStateToNull(){
+        _errorState.value = null
     }
 
     private fun <T> Flow<T>.throttleFirstSelective(

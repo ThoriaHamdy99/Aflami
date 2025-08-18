@@ -44,6 +44,7 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val errorState by viewModel.errorState.collectAsState()
     val navigationManager = LocalNavManager.current
     val context = LocalContext.current
 
@@ -82,7 +83,7 @@ fun ProfileScreen(
 
                 ProfileEffect.ShowError -> {
                     SnackBarManager.showError(
-                        message = getProfileErrorMessage(state.profileErrorState, context)
+                        message = getProfileErrorMessage(errorState, context)
                     )
                 }
 

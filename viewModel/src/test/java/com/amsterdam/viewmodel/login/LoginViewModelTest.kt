@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.login
 
+import app.cash.turbine.test
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.authentication.LoginAsGuestUseCase
 import com.amsterdam.domain.useCase.authentication.LoginWithPasswordUseCase
@@ -73,7 +74,7 @@ class LoginViewModelTest {
         advanceUntilIdle()
 
         // Then
-        assertThat(viewModel.state.value.loginError).isNull()
+        viewModel.errorState.test { assertThat(awaitItem()).isNull() }
     }
 
     @Test
@@ -86,7 +87,7 @@ class LoginViewModelTest {
         advanceUntilIdle()
 
         // Then
-        assertThat(viewModel.state.value.loginError).isNull()
+        viewModel.errorState.test { assertThat(awaitItem()).isNull() }
     }
 
     @Test
@@ -97,7 +98,7 @@ class LoginViewModelTest {
         advanceUntilIdle()
 
         // Then
-        assertThat(viewModel.state.value.loginError).isNull()
+        viewModel.errorState.test { assertThat(awaitItem()).isNull() }
     }
 
     @Test
@@ -108,7 +109,7 @@ class LoginViewModelTest {
         advanceUntilIdle()
 
         // Then
-        assertThat(viewModel.state.value.loginError).isNull()
+        viewModel.errorState.test { assertThat(awaitItem()).isNull() }
     }
 
     @Test
@@ -292,6 +293,6 @@ class LoginViewModelTest {
         advanceUntilIdle()
 
         // Then
-        assertThat(viewModel.state.value.loginError).isNotNull()
+        assertThat(viewModel.errorState).isNotNull()
     }
 }
