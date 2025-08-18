@@ -100,13 +100,13 @@ private fun RowScope.CustomCard(
                 text = text,
                 style = AppTheme.textStyle.label.medium,
                 color = AppTheme.color.title,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .weight(1f)
+                    .fillMaxWidth(0.75f)
+                    .weight(1f, false)
                     .padding(12.dp)
             )
-            Spacer(Modifier.width(64.dp))
         }
 
         Image(
