@@ -239,7 +239,9 @@ private fun NoItemFoundContainer(
             NoDataContainer(
                 imageRes = painterResource(no_saved_items),
                 title = stringResource(no_items_here),
-                modifier = Modifier.padding(top = 12.dp)
+                modifier = Modifier.padding(top = 12.dp),
+                imageAlpha = 0.68f,
+                textAlpha = 0.68f
             )
         }
     }
