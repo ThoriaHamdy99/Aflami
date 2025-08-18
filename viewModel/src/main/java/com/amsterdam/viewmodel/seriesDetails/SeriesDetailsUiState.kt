@@ -28,7 +28,7 @@ data class SeriesDetailsUiState(
     val gallery: List<String> = emptyList(),
     val postersUrls: List<String> = emptyList(),
     val productionCompanies: List<ProductionTvShowCompanyUiState> = emptyList(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val hasVideo: Boolean = false,
     val isLoginDialogVisible: Boolean = false,
     val dialogType: MovieAndSeriesDetailsDialogType? = null,
