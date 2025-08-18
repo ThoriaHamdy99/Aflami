@@ -8,6 +8,7 @@ import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedDataUseCase
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
+import com.amsterdam.viewmodel.topRated.TopRatedUiState.TopRatedError
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
 import com.amsterdam.viewmodel.utils.helper.createMovie
@@ -16,8 +17,10 @@ import com.amsterdam.viewmodel.utils.helper.createTvShow
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -41,6 +44,7 @@ class TopRatedViewModelTest {
 
     @BeforeEach
     fun setUp() {
+        every { manageLocaleLanguageUseCase.getAppLanguage() } returns languageFlow
         viewModel
     }
 
@@ -115,12 +119,22 @@ class TopRatedViewModelTest {
         }
 
     @Test
-    fun `onPagingLoadStateChanged should set loading false, when called with error state`() =
+    fun `onPagingLoadStateChanged should set loading false, when called with any exception`() =
         runTest {
-            viewModel.onPagingLoadStateChanged(expectedPagingErrorState)
+            viewModel.onPagingLoadStateChanged(expectedPagingGeneralErrorState)
             advanceUntilIdle()
 
             assertThat(viewModel.state.value.isLoading).isFalse()
+        }
+
+
+    @Test
+    fun `onPagingLoadStateChanged should update error state, when called with NetworkException`() =
+        runTest {
+            viewModel.onPagingLoadStateChanged(expectedPagingNetworkErrorState)
+            advanceUntilIdle()
+
+            assertThat(viewModel.state.value.error).isEqualTo(TopRatedError.NetworkError)
         }
 
     @Test
@@ -169,7 +183,13 @@ class TopRatedViewModelTest {
         state = LoadState.NotLoading(endOfPaginationReached = false)
     )
 
-    private val expectedPagingErrorState = createPagingLoadStates(
+    private val expectedPagingNetworkErrorState = createPagingLoadStates(
+        state = LoadState.Error(error = NetworkException())
+    )
+
+    private val expectedPagingGeneralErrorState = createPagingLoadStates(
         state = LoadState.Error(error = AflamiException())
     )
+
+    val languageFlow = flowOf(ManageLocaleLanguageUseCase.Language.ENGLISH)
 }
