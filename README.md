@@ -30,11 +30,22 @@
 > - [**Continuous Integration and Deployment (CI/CD)**](https://docs.github.com/en/actions)
 
 # Features
+## Onboarding
+> **_A seamless and secure entry into your cinematic adventure._**
+<table>
+  <tr>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/405df016-6f3e-416c-8305-f1b30d6baab0" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/430888f1-715b-4b6c-8bc4-28d8d9802878" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/15a062f2-1b68-49a5-9eb1-dac2da8989d0" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/f6bcf281-4441-4edf-93e7-67f320857934" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/db2b2bab-76ef-4ee8-a458-d4405d455b66" /></td>
+  </tr>
+</table>
+
 ## Authentication
 
 > [!NOTE]
 >
-> - **Splash Screen:** An engaging entry point with an animated icon and text.
 > - **Login:** Secure user login.
 > - **Create Account:** Easy new user registration.
 > - **Forgot Password:** A simple process to recover a forgotten password.
