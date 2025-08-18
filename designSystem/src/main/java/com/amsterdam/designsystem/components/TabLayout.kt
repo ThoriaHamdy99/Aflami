@@ -2,7 +2,6 @@ package com.amsterdam.designsystem.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Tab
@@ -37,7 +36,6 @@ fun TabsLayout(
     modifier: Modifier = Modifier,
     tabTopPadding: Dp = 8.dp,
     tabBottomPadding: Dp = 13.dp,
-    tabsEndSpace: Dp = 16.dp,
     selectedTextColor: Color = AppTheme.color.title,
     unselectedTextColor: Color = AppTheme.color.hint,
     containerColor: Color = AppTheme.color.surface,
@@ -54,28 +52,24 @@ fun TabsLayout(
                 TabRowDefaults.SecondaryIndicator(
                     height = 5.dp,
                     color = indicatorColor,
-                    modifier =
-                        Modifier
-                            .tabIndicatorOffset(list[selectedIndex])
-                            .padding(start = 24.dp, end = 40.dp)
-                            .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
+                    modifier = Modifier
+                        .tabIndicatorOffset(list[selectedIndex])
+                        .padding(horizontal = 24.dp)
+                        .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
                 )
             },
         ) {
             tabs.fastForEachIndexed { index, text ->
                 Tab(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .padding(end = if (index == tabs.lastIndex) 0.dp else tabsEndSpace),
+                    modifier = Modifier.weight(1f),
                     selected = index == selectedIndex,
                     onClick = { onSelectTab(index) },
                     selectedContentColor = selectedTextColor,
                     unselectedContentColor = unselectedTextColor,
                 ) {
                     Text(
-                        modifier =
-                            Modifier.padding(
+                        modifier = Modifier
+                            .padding(
                                 top = tabTopPadding,
                                 bottom = tabBottomPadding,
                             ),
@@ -89,7 +83,9 @@ fun TabsLayout(
             }
         }
         HorizontalDivider(
-            modifier = Modifier.fillMaxWidth().graphicsLayer{ scaleX = 2f },
+            modifier = Modifier
+                .fillMaxWidth()
+                .graphicsLayer { scaleX = 2f },
             thickness = 1.dp,
             color = dividerColor,
         )
