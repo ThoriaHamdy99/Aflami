@@ -1,31 +1,34 @@
 package com.amsterdam.repository.repository
 
-import com.amsterdam.domain.utils.MovieWatchHistory
-import com.amsterdam.domain.utils.TvShowWatchHistory
 import com.amsterdam.repository.datasource.local.AppLocalPreferences
 import com.amsterdam.repository.datasource.local.MovieLocalDataSource
 import com.amsterdam.repository.datasource.local.TvShowLocalDataSource
 import com.amsterdam.repository.datasource.local.WatchHistoryLocalDataSource
 import com.amsterdam.repository.datasource.remote.MovieRemoteDataSource
 import com.amsterdam.repository.datasource.remote.TvShowsRemoteDataSource
+import com.amsterdam.repository.dto.local.MovieLocalDto
 import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
+import com.amsterdam.repository.dto.local.TvShowLocalDto
 import com.amsterdam.repository.dto.local.TvShowWatchHistoryDto
+import com.amsterdam.repository.dto.remote.MovieDetailsRemoteResponse
+import com.amsterdam.repository.dto.remote.TvShowDetailsRemoteResponse
+import com.amsterdam.repository.mapper.toLocalDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class WatchHistoryRepositoryImplTest {
-
-    private lateinit var repository: WatchHistoryRepositoryImpl
 
     private val watchHistoryLocalDataSource: WatchHistoryLocalDataSource = mockk()
     private val movieLocalDataSource: MovieLocalDataSource = mockk()
@@ -33,8 +36,8 @@ class WatchHistoryRepositoryImplTest {
     private val tvShowLocalDataSource: TvShowLocalDataSource = mockk()
     private val tvShowRemoteSource: TvShowsRemoteDataSource = mockk()
     private val preferences: AppLocalPreferences = mockk()
-    private val localTvDataSource: TvShowLocalDataSource = mockk()
 
+    private lateinit var repository: WatchHistoryRepositoryImpl
 
     @BeforeEach
     fun setup() {
@@ -46,105 +49,120 @@ class WatchHistoryRepositoryImplTest {
             tvShowLocalDataSource = tvShowLocalDataSource,
             tvShowRemoteSource = tvShowRemoteSource,
             preferences = preferences,
-            localTvDataSource = localTvDataSource
+            localTvDataSource = tvShowLocalDataSource
         )
-        coEvery { preferences.getAppLanguage() } returns flowOf("en")
-
+        coEvery { preferences.getAppLanguage() } returns flowOf(language)
     }
-
     @Test
-    fun `addMovieToWatchHistory should add movie to watch history`() = runTest {
-        val movieId = 35L
-        coEvery {
-            watchHistoryLocalDataSource.upsertMovieToWatchHistory(
-                any()
-            )
-        } just Runs
+    fun `addMovieToWatchHistory should call local data source to upsert movie`() = runTest {
+        coEvery { watchHistoryLocalDataSource.upsertMovieToWatchHistory(any()) } just Runs
 
-        val result = repository.addMovieToWatchHistory(movieId)
-
-        assertThat(result).isEqualTo(Unit)
+        repository.addMovieToWatchHistory(movieId)
 
         coVerify(exactly = 1) {
             watchHistoryLocalDataSource.upsertMovieToWatchHistory(
-                withArg {
-                    assertThat(it.movieId).isEqualTo(movieId)
+                withArg { movieDto ->
+                    assertThat(movieDto.movieId).isEqualTo(movieId)
                 }
             )
         }
-
     }
 
     @Test
-    fun `getContinueWatchingMovies should return continue watching movies`() = runTest {
-        // Given
-        val page = 1
-        val pageSize = 10
-        val movieHistoryDtoList = listOf<MovieWatchHistoryDto>()
-        val expectedMovies = listOf<MovieWatchHistory>()
+    fun `getContinueWatchingMovies should return movies from local cache when available`() =
+        runTest {
+            coEvery {
+                watchHistoryLocalDataSource.getMoviesWatchHistory(
+                    page,
+                    pageSize
+                )
+            } returns flowOf(listOf(movieWatchHistoryDto))
+            coEvery {
+                movieLocalDataSource.getMovieById(
+                    movieId,
+                    language
+                )
+            } returns fakeMovieLocalDto
 
-        coEvery {
-            watchHistoryLocalDataSource.getMoviesWatchHistory(page, pageSize)
-        } returns flowOf(movieHistoryDtoList)
+            val result = repository.getContinueWatchingMovies(page, pageSize).first()
 
-        // When
-        val result = repository.getContinueWatchingMovies(page, pageSize).first()
-
-        // Then
-        assertThat(result).isEqualTo(expectedMovies)
-
-        coVerify(exactly = 1) {
-            watchHistoryLocalDataSource.getMoviesWatchHistory(page, pageSize)
+            assertThat(result.first().movie.id).isEqualTo(movieId)
+            assertThat(result.first().movie.name).isEqualTo(fakeMovieLocalDto.name)
+            coVerify(exactly = 0) { movieRemoteDataSource.getMovieDetailsById(any()) }
         }
-    }
 
     @Test
-    fun `addTvShowToWatchHistory should add tvShow to watch history`() = runTest {
-        val tvShow = 35L
-        coEvery {
-            watchHistoryLocalDataSource.upsertTvShowToWatchHistory(
-                any()
-            )
+    fun `getContinueWatchingTvShows should return tv shows from local cache when available`() =
+        runTest {
+            coEvery {
+                watchHistoryLocalDataSource.getTvShowsWatchHistory(
+                    page,
+                    pageSize
+                )
+            } returns flowOf(listOf(tvShowWatchHistoryDto))
+            coEvery {
+                tvShowLocalDataSource.getTvShowById(
+                    tvShowId,
+                    language
+                )
+            } returns fakeTvShowLocalDto
 
-        } just Runs
+            val result = repository.getContinueWatchingTvShows(page, pageSize).first()
 
-        val result = repository.addTvShowToWatchHistory(tvShow)
+            assertThat(result.first().tvShow.id).isEqualTo(tvShowId)
+            assertThat(result.first().tvShow.name).isEqualTo(fakeTvShowLocalDto.name)
+            coVerify(exactly = 0) { tvShowRemoteSource.getTvShowDetailsById(any()) }
+        }
 
-        assertThat(result).isEqualTo(Unit)
+    @Test
+    fun `addTvShowToWatchHistory should call local data source to upsert tv show`() = runTest {
+        coEvery { watchHistoryLocalDataSource.upsertTvShowToWatchHistory(any()) } just Runs
+
+        repository.addTvShowToWatchHistory(tvShowId)
 
         coVerify(exactly = 1) {
             watchHistoryLocalDataSource.upsertTvShowToWatchHistory(
-                withArg {
-                    assertThat(it.tvShowId).isEqualTo(tvShow)
+                withArg { tvShowDto ->
+                    assertThat(tvShowDto.tvShowId).isEqualTo(tvShowId)
                 }
             )
         }
-
-    }
-
-    @Test
-    fun `getContinueWatchingTvShow should return continue watching tvShow`() = runTest {
-        // Given
-        val page = 1
-        val pageSize = 10
-        val tvShowHistoryDtoList = listOf<TvShowWatchHistoryDto>()
-        val expectedTvShow = listOf<TvShowWatchHistory>()
-
-        coEvery {
-            watchHistoryLocalDataSource.getTvShowsWatchHistory(page, pageSize)
-        } returns flowOf(tvShowHistoryDtoList)
-
-        // When
-        val result = repository.getContinueWatchingTvShows(page, pageSize).first()
-
-        // Then
-        assertThat(result).isEqualTo(expectedTvShow)
-
-        coVerify(exactly = 1) {
-            watchHistoryLocalDataSource.getTvShowsWatchHistory(page, pageSize)
-        }
     }
 
 
+    private val language = "en"
+    private val movieId = 101L
+    private val tvShowId = 202L
+    private val page = 1
+    private val pageSize = 10
+
+    private val movieWatchHistoryDto = MovieWatchHistoryDto(movieId = movieId)
+    private val tvShowWatchHistoryDto = TvShowWatchHistoryDto(tvShowId = tvShowId)
+
+    private val fakeMovieLocalDto = MovieLocalDto(
+        movieId = movieId,
+        storedLanguage = language,
+        name = "Local Movie",
+        description = "A movie from the local database.",
+        poster = "/local.jpg",
+        releaseDate = LocalDate.parse("2025-01-01"),
+        popularity = 150.5,
+        rating = 8.0f,
+        originCountry = "US",
+        movieLength = 120,
+        isAdult = false
+    )
+
+    private val fakeTvShowLocalDto = TvShowLocalDto(
+        tvShowId = tvShowId,
+        storedLanguage = language,
+        name = "Local TV Show",
+        description = "...",
+        poster = "/local.jpg",
+        airDate = null,
+        rating = 7.0f,
+        popularity = 100.0,
+        seasonCount = 2,
+        originCountry = "US"
+    )
 }
-

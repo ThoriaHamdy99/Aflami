@@ -25,7 +25,6 @@ class CountryRepositoryImplTest {
     private val localDataSource: CountryLocalDataSource = mockk()
     private val remoteDataSource: CountryRemoteDataSource = mockk()
     private val preferences: AppLocalPreferences = mockk()
-    private val testLanguage = "en"
 
     @BeforeEach
     fun setup() {
@@ -38,144 +37,95 @@ class CountryRepositoryImplTest {
     }
 
     @Test
-    fun `Given local countries not empty, When getCountries is called, Then return local countries without calling remote`() =
-        runTest {
-            // Given
-            val localDto1 = CountryLocalDto(
-                isoCode = "US",
-                name = "United States",
-                storedLanguage = testLanguage
-            )
-            val localDto2 =
-                CountryLocalDto(isoCode = "CA", name = "Canada", storedLanguage = testLanguage)
-            val localDtos = listOf(localDto1, localDto2)
-            coEvery { localDataSource.getCountries(testLanguage) } returns localDtos
+    fun `getCountries should return local data when cache is available`() = runTest {
+        coEvery { localDataSource.getCountries(testLanguage) } returns localCountryDtos
 
+        val result = repository.getCountries()
 
-            val expectedCountries = listOf(
-                Country(countryName = "United States", countryIsoCode = "US"),
-                Country(countryName = "Canada", countryIsoCode = "CA")
-            )
-
-            // When
-            val result = repository.getCountries()
-
-            // Then
-            assertThat(result).isEqualTo(expectedCountries)
-            coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
-            coVerify(exactly = 0) { remoteDataSource.getCountries() }
-            coVerify(exactly = 0) { localDataSource.upsertCountries(any()) }
-        }
+        assertThat(result).isEqualTo(expectedLocalCountries)
+        coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
+        coVerify(exactly = 0) { remoteDataSource.getCountries() }
+        coVerify(exactly = 0) { localDataSource.upsertCountries(any()) }
+    }
 
     @Test
-    fun `getCountries should fetch countries from remote and cache them when local is empty`() =
-        runTest {
-            // Given
-            val remoteDto1 = CountryRemoteDto(
-                englishName = "United States",
-                isoCode = "US",
-                nativeName = "الولايات المتحدة"
-            )
-            coEvery { localDataSource.getCountries(testLanguage) } returns emptyList()
-            val remoteCountriesDto = listOf(remoteDto1)
-            coEvery { remoteDataSource.getCountries() } returns remoteCountriesDto
+    fun `getCountries should fetch from remote and cache when local is empty`() = runTest {
+        coEvery { localDataSource.getCountries(testLanguage) } returns emptyList()
+        coEvery { remoteDataSource.getCountries() } returns remoteCountryDtos
+        coJustRun { localDataSource.upsertCountries(localDtosToSave) }
 
-            val localSavedDto1 = CountryLocalDto(
-                isoCode = "US",
-                name = "الولايات المتحدة",
-                storedLanguage = testLanguage
-            )
-            val localSavedCountriesDto = listOf(localSavedDto1)
+        val result = repository.getCountries()
 
-            coJustRun { localDataSource.upsertCountries(localSavedCountriesDto) }
-
-            val expectedCountry1 = Country(countryName = "الولايات المتحدة", countryIsoCode = "US")
-            val expectedCountries = listOf(expectedCountry1)
-
-            // When
-            val result = repository.getCountries()
-
-            // Then
-            assertThat(result).isEqualTo(expectedCountries)
-
-            coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
-            coVerify(exactly = 1) { remoteDataSource.getCountries() }
-            coVerify(exactly = 1) { localDataSource.upsertCountries(localSavedCountriesDto) }
-        }
+        assertThat(result).isEqualTo(expectedCountriesFromRemote)
+        coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
+        coVerify(exactly = 1) { remoteDataSource.getCountries() }
+        coVerify(exactly = 1) { localDataSource.upsertCountries(localDtosToSave) }
+    }
 
     @Test
-    fun `getCountries should handle local source exception by falling back to remote and caching`() =
-        runTest {
-            // Given
-            val localException = RuntimeException("Local DB corrupted!")
-            coEvery { localDataSource.getCountries(testLanguage) } throws localException
+    fun `getCountries should fallback to remote when local source throws exception`() = runTest {
+        coEvery { localDataSource.getCountries(testLanguage) } throws localDbException
+        coEvery { remoteDataSource.getCountries() } returns remoteCountryDtos
+        coJustRun { localDataSource.upsertCountries(localDtosToSave) }
 
-            val remoteDto1 =
-                CountryRemoteDto(englishName = "Canada", isoCode = "CA", nativeName = "كندا")
-            val remoteCountriesDto = listOf(remoteDto1)
-            coEvery { remoteDataSource.getCountries() } returns remoteCountriesDto
+        val result = repository.getCountries()
 
-            val localSavedDto1 =
-                CountryLocalDto(isoCode = "CA", name = "كندا", storedLanguage = testLanguage)
-            val localSavedCountriesDto = listOf(localSavedDto1)
-
-            coJustRun { localDataSource.upsertCountries(localSavedCountriesDto) }
-
-            val expectedCountry1 = Country(countryName = "كندا", countryIsoCode = "CA")
-            val expectedCountries = listOf(expectedCountry1)
-
-            // When
-            val result = repository.getCountries()
-
-            // Then
-            assertThat(result).isEqualTo(expectedCountries)
-
-            coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
-            coVerify(exactly = 1) { remoteDataSource.getCountries() }
-
-            coVerify(exactly = 1) { localDataSource.upsertCountries(localSavedCountriesDto) }
-        }
+        assertThat(result).isEqualTo(expectedCountriesFromRemote)
+        coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
+        coVerify(exactly = 1) { remoteDataSource.getCountries() }
+        coVerify(exactly = 1) { localDataSource.upsertCountries(localDtosToSave) }
+    }
 
     @Test
-    fun `getCountries should throw exception if remote source fails and local is empty`() =
-        runTest {
-            // Given
-            coEvery { localDataSource.getCountries(testLanguage) } returns emptyList()
+    fun `getCountries should throw exception if remote fails and local is empty`() = runTest {
+        coEvery { localDataSource.getCountries(testLanguage) } returns emptyList()
+        coEvery { remoteDataSource.getCountries() } throws remoteNetworkException
 
-            val remoteException = RuntimeException("Network unavailable!")
-            coEvery { remoteDataSource.getCountries() } throws remoteException
-
-            // When & Then
-            val thrownException = assertThrows<RuntimeException> {
-                repository.getCountries()
-            }
-
-            assertThat(thrownException).isEqualTo(remoteException)
-
-            coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
-            coVerify(exactly = 1) { remoteDataSource.getCountries() }
-            coVerify(exactly = 0) { localDataSource.upsertCountries(any()) }
+        val thrownException = assertThrows<RuntimeException> {
+            repository.getCountries()
         }
+
+        assertThat(thrownException).isEqualTo(remoteNetworkException)
+        coVerify(exactly = 0) { localDataSource.upsertCountries(any()) }
+    }
 
     @Test
-    fun `getCountries should throw exception if local source fails and remote also fails`() =
-        runTest {
-            // Given
-            val localException = RuntimeException("DB access denied!")
-            coEvery { localDataSource.getCountries(testLanguage) } throws localException
+    fun `getCountries should throw exception if both local and remote sources fail`() = runTest {
+        coEvery { localDataSource.getCountries(testLanguage) } throws localDbException
+        coEvery { remoteDataSource.getCountries() } throws remoteNetworkException
 
-            val remoteException = RuntimeException("Server error!")
-            coEvery { remoteDataSource.getCountries() } throws remoteException
-
-            // When & Then
-            val thrownException = assertThrows<RuntimeException> {
-                repository.getCountries()
-            }
-
-            assertThat(thrownException).isEqualTo(remoteException)
-
-            coVerify(exactly = 1) { localDataSource.getCountries(testLanguage) }
-            coVerify(exactly = 1) { remoteDataSource.getCountries() }
-            coVerify(exactly = 0) { localDataSource.upsertCountries(any()) }
+        val thrownException = assertThrows<RuntimeException> {
+            repository.getCountries()
         }
+
+        assertThat(thrownException).isEqualTo(remoteNetworkException)
+        coVerify(exactly = 0) { localDataSource.upsertCountries(any()) }
+    }
+
+    private val testLanguage = "en"
+
+    private val localCountryDtos = listOf(
+        CountryLocalDto(isoCode = "US", name = "United States", storedLanguage = testLanguage),
+        CountryLocalDto(isoCode = "CA", name = "Canada", storedLanguage = testLanguage)
+    )
+
+    private val expectedLocalCountries = listOf(
+        Country(countryName = "United States", countryIsoCode = "US"),
+        Country(countryName = "Canada", countryIsoCode = "CA")
+    )
+
+    private val remoteCountryDtos = listOf(
+        CountryRemoteDto(englishName = "United States", isoCode = "US", nativeName = "الولايات المتحدة")
+    )
+
+    private val localDtosToSave = listOf(
+        CountryLocalDto(isoCode = "US", name = "الولايات المتحدة", storedLanguage = testLanguage)
+    )
+
+    private val expectedCountriesFromRemote = listOf(
+        Country(countryName = "الولايات المتحدة", countryIsoCode = "US")
+    )
+
+    private val localDbException = RuntimeException("Local DB corrupted!")
+    private val remoteNetworkException = RuntimeException("Network unavailable!")
 }
