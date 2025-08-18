@@ -8,13 +8,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedDataUseCase
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
-import com.amsterdam.viewmodel.topRated.TopRatedUiState.TopRatedError
 import com.amsterdam.viewmodel.topRated.TopRatedUiState.TopRatedMediaItemUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
