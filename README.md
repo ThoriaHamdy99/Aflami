@@ -18,6 +18,7 @@
 > - **Retrofit and Coil**
 > - **Tensorflow**
 > - **kotlin datetime**
+> - **Linter**
 
 # Features
 ## Authentication
@@ -130,6 +131,23 @@
 > - **Add Favorites:** Include any movie from the app into one or more of your custom lists.
 >
 > - **Delete List:** Remove the entire list when you no longer need them.
+
+## Categories Screens
+> ***Explore a world of entertainment, sorted just for you.***
+<table>
+  <tr>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/c205afb7-dcc0-4f27-b373-b1e5232cc15f" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/70e2444c-d3e4-4f8a-b738-586dbfa79970" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/e62f85b1-d9ad-4214-84e2-c369f7cacfd5" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/12194c86-dd1e-460f-9bf8-bcfbf0f7fac7" /></td>
+  </tr>
+</table>
+
+> [!Note]
+>
+> - **Browse by Type:** Easily switch between dedicated "Movies" and "TV Shows" tabs to find exactly what you're looking for.
+> - **Rich Genre Selection:** Discover content across a wide array of genres, each represented by a unique, intuitive icon.
+> - **Instant Results:** Simply tap on any genre to see a curated list of titles from that category, complete with their poster, title, and rating.
 
 # Installation
 
