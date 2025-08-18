@@ -48,6 +48,23 @@
 > - **Mood Picker:** Unsure what to watch? Select your current mood, and Aflami will suggest a movie for you. You can either dive into its details or get another suggestion until you find the perfect match.
 > - **Upcoming Section:** Stay ahead of the curve by browsing upcoming movies and TV shows, conveniently categorized by genre.
 
+## Mood Picker
+> _**When you don't know what to watch, let your mood decide.**_
+<table>
+  <tr>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/526c3873-2568-4858-bbab-08899f2bb750" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/f62d35c7-3c5a-4857-9d7f-ec2364b66b11" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/8b6aa3f0-a8a4-45c6-b98a-75935a5d7bd2" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/e2c187bc-09f4-4716-9753-2461db0bb3cf" /></td>
+  </tr>
+</table>
+
+> [!Note]
+>
+> - **Choose Your Vibe:** Select an emoji that best represents your current mood.
+> - **Get Instant Suggestions:** Aflami will recommend a movie that matches your chosen vibe.
+> - **Discover or Try Again:** You can tap "View details" to learn more about the suggested film, or select "Get another movie" to receive a new recommendation until you find the perfect one.
+
 ## Advanced Search
 > _**The powerful search functionality allows you to find exactly what you're looking for.**_
 <table>
