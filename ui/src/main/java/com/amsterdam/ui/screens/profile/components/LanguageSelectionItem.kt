@@ -1,6 +1,5 @@
 package com.amsterdam.ui.screens.profile.components
 
-import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,22 +48,21 @@ fun LanguageSelectionItem(
     val shape = RoundedCornerShape(16.dp)
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = backgroundColor,
-                shape = shape,
-            )
-            .border(
-                color = borderColor,
-                width = 1.dp,
-                shape = shape,
-            )
-            .clip(shape)
-            .clickable(onClick = {
-                Log.d("LanguageSelectionItem", "onClick")
-                onClick()
-            })
-            .padding(vertical = 16.dp, horizontal = 12.dp),
+                .fillMaxWidth()
+                .background(
+                    color = backgroundColor,
+                    shape = shape,
+                )
+                .border(
+                    color = borderColor,
+                    width = 1.dp,
+                    shape = shape,
+                )
+                .clip(shape)
+                .clickable(onClick = {
+                    onClick()
+                })
+                .padding(vertical = 16.dp, horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -72,19 +70,18 @@ fun LanguageSelectionItem(
             color = trailerTextColor,
             style = AppTheme.textStyle.label.large,
             modifier = Modifier
-                .padding(start = 12.dp),
+                    .padding(start = 12.dp),
         )
         Text(
             text = text,
             color = AppTheme.color.body,
             style = AppTheme.textStyle.label.large,
             modifier = Modifier
-                .weight(1f)
-                .padding(start = 8.dp)
+                    .weight(1f)
+                    .padding(start = 8.dp)
         )
         RadioButton(
             state = if (isSelected) RadioState.Selected else RadioState.Default,
-            onClick = onClick,
             modifier = Modifier,
         )
     }

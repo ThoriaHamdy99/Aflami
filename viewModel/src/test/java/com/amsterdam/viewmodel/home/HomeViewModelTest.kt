@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.home
 
+import app.cash.turbine.test
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseCase
@@ -12,9 +13,9 @@ import com.amsterdam.domain.useCase.topRated.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.upcoming.GetUpcomingMoviesUseCase
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.home.HomeEffect.NavigateToMovieDetailsEffect
-import com.amsterdam.viewmodel.home.HomeUiState.HomeError
 import com.amsterdam.viewmodel.home.HomeUiState.MoodPickerItemUiState
 import com.amsterdam.viewmodel.home.HomeUiState.UpcomingMoviesUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.helper.createMovie
@@ -36,7 +37,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
@@ -181,12 +181,30 @@ class HomeViewModelTest {
             viewModel.onClickRetryLoading()
             advanceUntilIdle()
 
-            assertThat(viewModel.state.value.error).isInstanceOf(HomeError.NetworkError::class.java)
+            // Then
+            viewModel.errorState.test {
+                assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError)
+            }
         }
 
     @Test
     fun `onClickRetryLoading should do nothing when section lists are not empty`() =
         testScope.runTest {
+            // Given
+            coEvery { getUpcomingMoviesUseCase(any()) } throws NetworkException()
+
+            // When
+            viewModel.onClickRetryLoading()
+            advanceUntilIdle()
+
+            // Then
+            viewModel.errorState.test { assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError) }
+        }
+
+    @Test
+    fun `onClickRetryLoading should do nothing when section lists is not empty`() =
+        testScope.runTest {
+            // When
             viewModel.onClickRetryLoading()
             advanceUntilIdle()
 

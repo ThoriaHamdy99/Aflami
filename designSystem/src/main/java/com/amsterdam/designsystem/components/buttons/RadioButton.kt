@@ -25,48 +25,46 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.designsystem.utils.ripple
 
 enum class RadioState {
-    Default,
-    Selected,
-    Unselected,
+    Default, Selected, Unselected,
 }
 
 @Composable
 fun RadioButton(
     state: RadioState,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
+    onClick: (() -> Unit)? = null,
 ) {
-    val (borderColor, borderWidth) =
-        when (state) {
-            RadioState.Default -> AppTheme.color.disable to 1.dp
-            RadioState.Selected -> AppTheme.color.primary to 6.dp
-            RadioState.Unselected -> AppTheme.color.disable to 6.dp
-        }
+    val (borderColor, borderWidth) = when (state) {
+        RadioState.Default -> AppTheme.color.disable to 1.dp
+        RadioState.Selected -> AppTheme.color.primary to 6.dp
+        RadioState.Unselected -> AppTheme.color.disable to 6.dp
+    }
 
-    val color =
-        when (state) {
-            RadioState.Default -> AppTheme.color.surfaceHigh
-            RadioState.Selected -> Color.Unspecified
-            RadioState.Unselected -> Color.Unspecified
-        }
+    val color = when (state) {
+        RadioState.Default -> AppTheme.color.surfaceHigh
+        RadioState.Selected -> Color.Unspecified
+        RadioState.Unselected -> Color.Unspecified
+    }
 
+    val clickableModifier = onClick?.let {
+        Modifier.clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = ripple(),
+            onClick = onClick,
+            role = Role.RadioButton,
+        )
+    } ?: Modifier
     Box(
-        modifier =
-            modifier
-                .size(18.dp)
-                .clip(CircleShape)
-                .background(color)
-                .border(
-                    width = borderWidth,
-                    color = borderColor,
-                    shape = CircleShape,
-                )
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = ripple(),
-                    onClick = onClick,
-                    role = Role.RadioButton,
-                ),
+        modifier = modifier
+            .size(18.dp)
+            .clip(CircleShape)
+            .background(color)
+            .border(
+                width = borderWidth,
+                color = borderColor,
+                shape = CircleShape,
+            )
+            .then(clickableModifier),
     )
 }
 

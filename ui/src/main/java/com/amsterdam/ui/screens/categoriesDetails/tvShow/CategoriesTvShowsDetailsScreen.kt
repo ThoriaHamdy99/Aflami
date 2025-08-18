@@ -46,12 +46,14 @@ import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetails
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsUiState
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsViewModel
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 
 @Composable
 fun CategoriesTvShowsDetailsScreen(
     viewModel: CategoriesTvShowsDetailsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val errorState by viewModel.errorState.collectAsState()
     val navigationManager = LocalNavManager.current
     val tvShows = state.tvShows.collectAsLazyPagingItems()
 
@@ -76,6 +78,7 @@ fun CategoriesTvShowsDetailsScreen(
     }
     CategoriesTvShowsDetailsContent(
         state = state,
+        errorState = errorState,
         interactionListener = viewModel,
         tvShows = tvShows
     )
@@ -84,6 +87,7 @@ fun CategoriesTvShowsDetailsScreen(
 @Composable
 private fun CategoriesTvShowsDetailsContent(
     state: CategoriesTvShowsDetailsUiState,
+    errorState: ErrorUiState?,
     interactionListener: CategoriesTvShowsDetailsInteractionListener,
     tvShows: LazyPagingItems<CategoriesTvShowsDetailsUiState.TvShowsUiState>
 ) {
@@ -126,24 +130,16 @@ private fun CategoriesTvShowsDetailsContent(
                 }
                 when {
                     state.isLoading -> {
-                        CenterOfScreenContainer(
-                            unneededSpace = 0.dp
-                        ) {
+                        CenterOfScreenContainer(unneededSpace = 0.dp) {
                             AnimatedVisibility(visible = state.isLoading) {
                                 LoadingIndicator()
                             }
                         }
                     }
 
-                    state.errorUiState != null && state.errorUiState is CategoriesTvShowsDetailsUiState.CategoriesTvShowsDetailsErrorState.NoNetworkConnection -> {
-                        CenterOfScreenContainer(
-                            unneededSpace = 0.dp
-                        ) {
-                            NoNetworkContainer(
-                                onClickRetry = {
-                                    interactionListener.onClickRetryRequest()
-                                }
-                            )
+                    errorState is ErrorUiState.NoInternetError -> {
+                        CenterOfScreenContainer(unneededSpace = 0.dp) {
+                            NoNetworkContainer(onClickRetry = interactionListener::onClickRetryRequest)
                         }
                     }
 
@@ -179,15 +175,11 @@ private fun CategoriesTvShowsDetailsContent(
                                     movieRating = tvShow.rate,
                                     onClick = { interactionListener.onClickTvShowCard(tvShow.id) }
                                 )
-
                             }
-
                         }
                     }
                 }
             }
         }
     }
-
 }
-

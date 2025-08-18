@@ -7,8 +7,8 @@ import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedDataUseCase
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
-import com.amsterdam.viewmodel.topRated.TopRatedUiState.TopRatedError
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
 import com.amsterdam.viewmodel.utils.helper.createMovie
@@ -106,7 +106,9 @@ class TopRatedViewModelTest {
             viewModel.onPagingLoadStateChanged(expectedPagingLoadingState)
             advanceUntilIdle()
 
-            assertThat(viewModel.state.value.error).isNull()
+            viewModel.errorState.test {
+                assertThat(awaitItem()).isNull()
+            }
         }
 
     @Test
@@ -134,7 +136,9 @@ class TopRatedViewModelTest {
             viewModel.onPagingLoadStateChanged(expectedPagingNetworkErrorState)
             advanceUntilIdle()
 
-            assertThat(viewModel.state.value.error).isEqualTo(TopRatedError.NetworkError)
+            viewModel.errorState.test {
+                assertThat(awaitItem()).isEqualTo(ErrorUiState.UnknownError)
+            }
         }
 
     @Test

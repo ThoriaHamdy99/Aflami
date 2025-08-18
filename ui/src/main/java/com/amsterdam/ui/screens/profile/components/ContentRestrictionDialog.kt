@@ -146,7 +146,6 @@ private fun RestrictionSelection(
 
             RadioButton(
                 state = if (isSelected) RadioState.Selected else RadioState.Default,
-                onClick = onClick
             )
         }
     }

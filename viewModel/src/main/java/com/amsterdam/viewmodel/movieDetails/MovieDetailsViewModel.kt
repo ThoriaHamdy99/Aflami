@@ -2,8 +2,6 @@ package com.amsterdam.viewmodel.movieDetails
 
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase
 import com.amsterdam.domain.useCase.details.GetMovieDetailsUseCase.MovieDetails
@@ -50,21 +48,22 @@ class MovieDetailsViewModel @Inject constructor(
 
         manageLocaleLanguageUseCase.getAppLanguage()
             .onEach {
-                loadMovieDetails()
+                getMovieDetails()
                 loadWishLists()
             }.launchIn(viewModelScope)
     }
 
-    private fun loadMovieDetails() {
-        updateState { it.copy(isLoading = true, networkError = false) }
+    private fun getMovieDetails() {
+        resetErrorStateToNull()
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
-            action = ::getMovieDetails,
+            action = { getMovieDetailsUseCase(state.value.movieId) },
             onSuccess = ::onGetMovieDetailsSuccess,
-            onError = ::onError,
-            onCompletion = ::onCompletion
+            onCompletion = ::onGetMovieDetailsCompletion
         )
     }
 
+    private fun onGetMovieDetailsCompletion() = updateState { it.copy(isLoading = false) }
     private fun loadWishLists() {
         tryToExecute(
             action = ::getWishLists,
@@ -107,9 +106,6 @@ class MovieDetailsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getMovieDetails() =
-        getMovieDetailsUseCase(state.value.movieId)
-
     private fun onGetMovieDetailsSuccess(movieDetails: MovieDetails) {
         updateState { movieDetails.toUiState(it) }
     }
@@ -133,7 +129,7 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     override fun onClickRetryRequest() {
-        loadMovieDetails()
+        getMovieDetails()
         loadWishLists()
     }
 
@@ -209,7 +205,6 @@ class MovieDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             runIfLoggedIn(
                 onLoggedIn = {
-                    val userList = getWishListsUseCase()
                     updateState {
                         it.copy(
                             isAddToListDialogVisible = true,
@@ -325,16 +320,6 @@ class MovieDetailsViewModel @Inject constructor(
     private fun showMustLoginDialog(dialogType: MovieAndSeriesDetailsDialogType) {
         updateState { it.copy(isLoginDialogVisible = true, dialogType = dialogType) }
     }
-
-    private fun onError(exception: AflamiException) {
-        when (exception) {
-            is NoInternetException -> updateState { it.copy(networkError = true) }
-            is NetworkException -> updateState { it.copy(networkError = true) }
-            else -> {}
-        }
-    }
-
-    private fun onCompletion() = updateState { it.copy(isLoading = false) }
 
     override fun onClickCancelRateDialog() {
         updateState {
