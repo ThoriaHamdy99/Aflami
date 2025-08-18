@@ -9,19 +9,25 @@
 # Technologies
 > [!TIP]
 >
+> - **Dagger Hilt**
 > - **Room Database**
 > - **Preferences Data Store**
-> - **Unit Testing**
-> - **Continuous Integration and Deployment (CI/CD)**
-> - **Kotlin Flows and Coroutines**:
-> - **Pagin3**
-> - **Retrofit and Coil**
+> - [**Retrofit**](https://square.github.io/retrofit/)
+> - **Coil**
+> - [**Shaded**](https://github.com/mohamedd-hassan/Shaded)
 > - **Tensorflow**
-> - **kotlin datetime**
+> - **Compose Navigation2**
+> - [**Paging3**](https://developer.android.com/topic/libraries/architecture/paging/v3-overview)
+> - **Kotlin Flows**
+> - [**Coroutines**](https://developer.android.com/kotlin/coroutines)
+> - [**kotlin datetime**](https://github.com/Kotlin/kotlinx-datetime)
+> - **Unit Testing**
+> - **Android Testing**
+> - **Continuous Integration and Deployment (CI/CD)**
+> - [**Firebase Crashlytics**](https://firebase.google.com/docs/crashlytics)
+> - [**Firebase App Distribution**](https://firebase.google.com/docs/app-distribution)
+> - [**Firebase ML Kit**](https://firebase.google.com/docs/ml-kit)
 > - **Linter**
-> - **Android Test**
-> - **Dagger Hilt**
-> - **Shaded**
 
 # Features
 ## Authentication
