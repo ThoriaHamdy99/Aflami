@@ -13,6 +13,7 @@ import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.seconds
 
 class SubmitGuessMovieByPosterAnswerUseCaseTest {
     private val getGameDifficultyUseCase: GetGameDifficultyByDifficultyTypeUseCase = mockk()
@@ -46,7 +47,7 @@ class SubmitGuessMovieByPosterAnswerUseCaseTest {
         question = "Sample Movie",
         choices = listOf("spiderman", "batman", "superman"),
         correctChoice = "spiderman",
-        questionTime = 30
+        questionDuration = 30.seconds
     )
     private val expectedCorrectResult = AnswerResult(true, 10)
     private val expectedIncorrectResult = AnswerResult(false, 0)

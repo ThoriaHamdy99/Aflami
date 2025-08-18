@@ -4,6 +4,7 @@ import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
+import kotlin.time.Duration.Companion.seconds
 
 class GenerateMovieReleaseYearQuestionsUseCase(
     private val gameRepository: GameRepository,
@@ -20,7 +21,7 @@ class GenerateMovieReleaseYearQuestionsUseCase(
                 question = movie.name,
                 choices = choices,
                 correctChoice = correctYear,
-                questionTime = gameDifficulty.timeLimitSeconds
+                questionDuration = gameDifficulty.timeLimitSeconds.seconds
             )
         }
     }

@@ -68,7 +68,7 @@ class GuessGenreViewModel @Inject constructor(
             state.value.questions[state.value.currentQuestionIndex]
         viewModelScope.launch(dispatcherProvider.Default) {
             timerHandler.startTimer(
-                currentQuestion.questionTime,
+                currentQuestion.questionDuration.inWholeSeconds.toInt(),
                 onTimerFinish = ::onMoveToNextQuestion
             )
                 .collect(::onTimerUpdate)
@@ -82,7 +82,7 @@ class GuessGenreViewModel @Inject constructor(
                     currentTimerCount = remainingSeconds,
                     currentTimerColor = if (remainingSeconds > 5) TimerUiState.TimerColor.GREEN
                     else TimerUiState.TimerColor.RED,
-                    progress = remainingSeconds.toFloat() / it.questions[it.currentQuestionIndex].questionTime
+                    progress = remainingSeconds.toFloat() / it.questions[it.currentQuestionIndex].questionDuration.inWholeSeconds.toInt()
                 )
             )
         }

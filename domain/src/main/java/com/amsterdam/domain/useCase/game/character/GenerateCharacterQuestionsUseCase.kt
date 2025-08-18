@@ -6,6 +6,7 @@ import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
+import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 
 class GenerateCharacterQuestionsUseCase(
@@ -26,7 +27,7 @@ class GenerateCharacterQuestionsUseCase(
                 question = correctCharacter.imageUrl,
                 choices = choices,
                 correctChoice = correctCharacter.name,
-                questionTime = gameDifficulty.timeLimitSeconds
+                questionDuration = gameDifficulty.timeLimitSeconds.seconds
             )
         }
     }
