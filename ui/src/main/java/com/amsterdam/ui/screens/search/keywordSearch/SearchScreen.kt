@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,9 +28,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.LoadingContainer
+import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
@@ -119,6 +120,7 @@ private fun SearchContent(
     BackHandler(enabled = state.keyword.isNotEmpty()) {
         interaction.onClickClearSearch()
     }
+    val density = LocalDensity.current
     var headerHeight by remember { mutableStateOf(0.dp) }
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
@@ -137,7 +139,7 @@ private fun SearchContent(
                 onFilterButtonClicked = interaction::onClickFilterButton,
                 onTabOptionClicked = interaction::onClickTabOption,
                 onSaveSearchHistory = interaction::onSaveSearchHistory,
-                onHeaderSizeChanged = { headerHeight = it.height.dp },
+                onHeaderSizeChanged = { headerHeight = with(density) { it.height.dp } },
                 keyboardController = keyboardController
             )
 
@@ -168,9 +170,7 @@ private fun SearchContent(
             }
 
             AnimatedVisibility(state.keyword.isNotBlank()) {
-                AnimatedVisibility(
-                    selectedItems.itemCount > 0
-                ) {
+                AnimatedVisibility(selectedItems.itemCount > 0) {
                     SuccessMediaItemsSection(
                         onMovieClicked = interaction::onClickMovieCard,
                         onTvShowClicked = interaction::onClickTvShowCard,
@@ -205,7 +205,7 @@ private fun SearchContent(
 
                                 !state.isLoading && errorState.isNull() && isSelectedTabHasNoData -> {
                                     NoDataContainer(
-                                        imageRes = painterResource(com.amsterdam.ui.R.drawable.placeholder_no_result_found),
+                                        imageRes = painterResource(R.drawable.placeholder_no_result_found),
                                         title = stringResource(R.string.no_search_result),
                                         description = stringResource(R.string.no_search_result_description),
                                     )
@@ -218,8 +218,7 @@ private fun SearchContent(
         }
 
         AnimatedVisibility(
-            modifier = Modifier.fillMaxSize(),
-            visible = state.isDialogVisible
+            modifier = Modifier.fillMaxSize(), visible = state.isDialogVisible
         ) {
             val currentFilterState = if (state.selectedTabOption == TabOption.MOVIES) {
                 state.movieFilterItemUiState

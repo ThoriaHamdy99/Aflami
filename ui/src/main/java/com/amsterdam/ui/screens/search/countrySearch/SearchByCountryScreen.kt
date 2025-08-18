@@ -148,7 +148,7 @@ private fun SearchByCountryContent(
                                     !state.isLoading &&
                                     state.selectedCountryIsoCode.isNotBlank() -> NoMoviesFound()
 
-                            movies.itemCount == 0 -> ExploreCountries()
+                            movies.itemCount == 0 -> ExploreCountries(Modifier.padding(horizontal = 16.dp))
 
                             else -> {}
                         }
