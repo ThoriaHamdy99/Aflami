@@ -169,6 +169,7 @@
     <td><img width="333" height="720" alt="image" src="https://github.com/user-attachments/assets/b8792136-8e90-4548-99ab-ad089ba87660" /></td>
   </tr>
 </table>
+
 > [!NOTE]
 >
 > - **Pick Your Challenge:** Choose your favorite game mode to start playing.
