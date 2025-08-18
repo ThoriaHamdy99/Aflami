@@ -106,7 +106,6 @@ kover.reports {
             "*.mapper",
             "*.seriesDetails",
             "*.watchHistory",
-            "*.topRated"
         )
     }
 
