@@ -213,6 +213,41 @@
 > - **Image Viewer:** Ensuring a respectful viewing experience for all users, featuring intelligent content filtering using on-device machine learning to detect and automatically blur potentially inappropriate content according to Islamic cultural guidelines.
 > - **Instant Results:** Simply tap on any genre to see a curated list of titles from that category, complete with their poster, title, and rating.
 
+## Profile Screen
+> ***Manage your account, track progress, and personalize your experience.***
+<table>
+  <tr>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/c9e6fad4-cc1c-4da9-a547-1516a75c920b" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/a3e3a3b9-8b43-43a4-a5ce-51d25dc8bc23" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/4e223dc3-7f75-40ab-ad32-dd89d7e7622b" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/795eb1c6-a3da-4203-ab71-62ebdb8c30b6" /></td>
+  </tr>
+</table>
+
+> [!Note]
+>
+> - **Profile Image:** Upload and display a personal profile picture.  
+> - **Collected Points:** View score points earned from in-app games.  
+> - **App Theme:** Switch between light and dark modes.  
+> - **Language:** Choose between English (EN) and Arabic (AR).  
+> - **Authentication:** Manage password, reset credentials, and set content restrictions (Strict, Moderate, Off).  
+
+ ### Watch History & My Ratings
+> ***Shows recently watched movies and TV shows. Also displays all movies and TV shows you have rated, giving you easy access to review or update your feedback.***
+<table>
+  <tr>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/b446397c-11d7-410a-b36f-36b23b874c51" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/f25a008e-c0ea-4d18-9282-0f2aae112cb2" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/660cf164-a492-4a21-858b-443793c69f98" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/b83a6166-4716-44ef-baf8-fce6100ed1be" /></td>
+  </tr>
+</table>
+
+> [!Note]
+> 
+> - **Watch History:** Shows your recently watched movies and TV shows, allowing you to quickly revisit theme.
+> - **My Ratings:** View all movies and TV shows you’ve rated. Easily review, update, or manage your feedback to track your preferences.
+
 # Installation
 
 1. **Clone the repository**
