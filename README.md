@@ -19,6 +19,9 @@
 > - **Tensorflow**
 > - **kotlin datetime**
 > - **Linter**
+> - **Android Test**
+> - **Dagger Hilt**
+> - **Shaded**
 
 # Features
 ## Authentication
