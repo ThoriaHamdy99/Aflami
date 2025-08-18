@@ -24,7 +24,7 @@ data class MovieDetailsUiState(
     val gallery: List<String> = emptyList(),
     val reviews: List<ReviewMovieUiState> = emptyList(),
     val rateDialogUiState: RateDialogUiState = RateDialogUiState(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val isLoginDialogVisible: Boolean = false,
     val dialogType: MovieAndSeriesDetailsDialogType? = null,
     val isDescriptionExpanded: Boolean = false,
