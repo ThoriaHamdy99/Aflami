@@ -205,7 +205,6 @@ class MovieDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             runIfLoggedIn(
                 onLoggedIn = {
-                    val userList = getWishListsUseCase()
                     updateState {
                         it.copy(
                             isAddToListDialogVisible = true,

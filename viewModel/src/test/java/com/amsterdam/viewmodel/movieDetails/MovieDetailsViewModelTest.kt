@@ -300,7 +300,6 @@ class MovieDetailsViewModelTest {
         viewModel
 
         viewModel.onClickAddToList()
-        advanceUntilIdle()
 
         assertThat(viewModel.state.value.isAddToListDialogVisible).isFalse()
     }
