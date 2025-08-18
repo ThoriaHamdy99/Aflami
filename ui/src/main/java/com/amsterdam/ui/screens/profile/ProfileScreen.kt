@@ -15,10 +15,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.intl.Locale
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.snackBar.SnackBarManager
@@ -45,6 +47,30 @@ fun ProfileScreen(
     val navigationManager = LocalNavManager.current
     val context = LocalContext.current
 
+    val isFirstRun = remember { mutableStateOf(true) }
+
+    LaunchedEffect(Locale.current) {
+        if (!isFirstRun.value) {
+            val finalMessage = when (state.language) {
+                ManageLocaleLanguageUseCase.Language.ENGLISH -> {
+                    context.getString(
+                        R.string.language_changed,
+                        context.getString(R.string.english)
+                    )
+                }
+
+                ManageLocaleLanguageUseCase.Language.ARABIC -> {
+                    context.getString(
+                        R.string.language_changed,
+                        context.getString(R.string.arabic)
+                    )
+                }
+            }
+            SnackBarManager.showSuccess(finalMessage)
+        }
+        isFirstRun.value = false
+    }
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
@@ -60,25 +86,7 @@ fun ProfileScreen(
                     )
                 }
 
-                is ProfileEffect.LanguageChanged -> {
-                    SnackBarManager.showSuccess(
-                        when (state.language) {
-                            ManageLocaleLanguageUseCase.Language.ENGLISH -> {
-                                context.getString(
-                                    R.string.language_changed,
-                                    context.getString(R.string.english)
-                                )
-                            }
-
-                            ManageLocaleLanguageUseCase.Language.ARABIC -> {
-                                context.getString(
-                                    R.string.language_changed,
-                                    context.getString(R.string.arabic)
-                                )
-                            }
-                        },
-                    )
-                }
+                is ProfileEffect.LanguageChanged -> {}
 
                 is ProfileEffect.ThemeChanged -> {
                     SnackBarManager.showSuccess(
