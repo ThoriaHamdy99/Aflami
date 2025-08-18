@@ -7,6 +7,7 @@ data class GuessMovieByPosterUiState(
     val isLoading: Boolean = true,
     val totalCollectedPoints: Int = 0,
     val gameSessionId : Long = 0,
+    val earnedPoints : Int? = null,
     val questions: List<QuestionUiState> = emptyList(),
     val selectedAnswerIndex: Int? = null,
     val isAnswerCorrect: Boolean? = null,
@@ -14,7 +15,8 @@ data class GuessMovieByPosterUiState(
     val isNotEnoughPointsDialogVisible: Boolean = false,
     val isNextEnabled: Boolean = false,
     val currentQuestionIndex: Int = 0,
-    val timerUiState: TimerUiState = TimerUiState()
+    val timerUiState: TimerUiState = TimerUiState(),
+    val isNetworkError : Boolean = false
 ) {
     data class QuestionUiState(
         val posterUrl: String = "",

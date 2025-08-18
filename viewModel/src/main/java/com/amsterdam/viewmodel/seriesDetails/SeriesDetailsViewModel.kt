@@ -110,19 +110,24 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     override fun onClickSeasonMenu(seasonNumber: Int) {
+        var willGetData = false
         updateState { state ->
             val updatedSeasons = state.seasons.map {
-                if (it.seasonNumber == seasonNumber) it.copy(isLoading = true)
+                if (it.seasonNumber == seasonNumber && !it.isExpanded) {
+                    willGetData = true
+                    it.copy(isLoading = true, isExpanded = true)
+                } else if (it.seasonNumber == seasonNumber) it.copy(isExpanded = false)
                 else it
             }
             state.copy(seasons = updatedSeasons)
         }
 
-        tryToExecute(
-            action = { getEpisodesForSeason(seasonNumber) },
-            onSuccess = { episodes -> onGetEpisodesSuccess(seasonNumber, episodes) },
-            onCompletion = ::onCompletion
-        )
+        if (willGetData) {
+            tryToExecute(
+                action = { getEpisodesBySeasonNumberUseCase(state.value.tvShowId, seasonNumber) },
+                onSuccess = { episodes -> onGetEpisodesSuccess(seasonNumber, episodes) },
+            )
+        }
     }
 
     private fun onGetEpisodesSuccess(seasonNumber: Int, episodes: List<Episode>) {
@@ -130,7 +135,6 @@ class SeriesDetailsViewModel @Inject constructor(
             if (it.seasonNumber == seasonNumber) {
                 it.copy(
                     episodes = episodes.toUiState(state.value.currentLanguage),
-                    isExpanded = true,
                     isLoading = false
                 )
             } else {
@@ -186,25 +190,6 @@ class SeriesDetailsViewModel @Inject constructor(
             }
                 ?: sendNewNavigationEffect(SeriesDetailsEffect.ShowEpisodeTrailerNotFound)
         }
-    }
-
-
-    private suspend fun getEpisodesForSeason(seasonNumber: Int): List<Episode> {
-        val currentSeason = state.value.seasons.find { it.seasonNumber == seasonNumber }
-
-        if (currentSeason?.episodes?.isNotEmpty() == true) {
-            val updatedSeasons = state.value.seasons.map {
-                if (it.seasonNumber == seasonNumber) it.copy(
-                    isExpanded = !it.isExpanded,
-                    isLoading = false
-                )
-                else it
-            }
-            updateState { it.copy(seasons = updatedSeasons) }
-            return emptyList()
-        }
-
-        return getEpisodesBySeasonNumberUseCase(state.value.tvShowId, seasonNumber)
     }
 
     private suspend fun runIfLoggedIn(

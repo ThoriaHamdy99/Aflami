@@ -6,6 +6,7 @@ data class GuessReleaseYearUiState(
     val isLoading: Boolean = true,
     val timerCounter: Int = 0,
     val gameSessionId : Long = 0,
+    val earnedPoints : Int? = null,
     val totalCollectedPoints: Int = 0,
     val questions: List<QuestionUiState> = emptyList(),
     val selectedAnswerIndex: Int? = null,
@@ -15,7 +16,8 @@ data class GuessReleaseYearUiState(
     val isNextEnabled: Boolean = false,
     val questionsCounts: Int = 0,
     val currentQuestionIndex: Int = 0,
-    val timerUiState: TimerUiState = TimerUiState()
+    val timerUiState: TimerUiState = TimerUiState(),
+    val isNetworkError : Boolean = false
 ) {
     data class QuestionUiState(
         val movieName: String = "",

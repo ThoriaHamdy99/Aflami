@@ -1,6 +1,6 @@
 package com.amsterdam.repository.mapper
 
-import com.amsterdam.entity.MovieWatchHistory
+import com.amsterdam.domain.utils.MovieWatchHistory
 import com.amsterdam.repository.dto.local.MovieLocalDto
 import com.amsterdam.repository.dto.local.MovieWatchHistoryDto
 import com.google.common.truth.Truth.assertThat
@@ -21,7 +21,7 @@ class MovieWatchHistoryMapperTest {
             assertThat(result).isEqualTo(
                 MovieWatchHistory(
                     movie = expectedMovieEntity,
-                    lastWatchedTime = movieWatchHistoryDto.watchedDate 
+                    lastWatchedTime = movieWatchHistoryDto.watchedDate
                 )
             )
         }
@@ -37,7 +37,8 @@ class MovieWatchHistoryMapperTest {
         rating = 8.5f,
         popularity = 1500.0,
         movieLength = 120,
-        originCountry = "US"
+        originCountry = "US",
+        isAdult = false
     )
 
     private val movieWatchHistoryDto = MovieWatchHistoryDto(

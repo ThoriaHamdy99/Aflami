@@ -18,7 +18,7 @@ class CategoriesViewModel @Inject constructor(
 
     override fun onClickMovieGenreCard(genreName: String) {
         sendNewNavigationEffect(
-            CategoriesUiEffect.NavigateToCategoriesDetailsScreen(
+            CategoriesUiEffect.NavigateToCategoriesMoviesDetailsScreen(
                 genreName,
             )
         )

@@ -5,10 +5,13 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.exceptions.NoInternetException
+import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseCase
 import com.amsterdam.domain.useCase.home.GetContinueWatchingScreenDataUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
-import com.amsterdam.entity.MovieWatchHistory
-import com.amsterdam.entity.TvShowWatchHistory
+import com.amsterdam.domain.utils.MovieWatchHistory
+import com.amsterdam.domain.utils.TvShowWatchHistory
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiState.ContinueWatchingItemUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -24,7 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ContinueWatchingViewModel @Inject constructor(
-    private val getContinueWatchingScreenDataUseCase: GetContinueWatchingScreenDataUseCase,
+    private val getContinueWatchingScreenDataUseCase: GetContinueWatchingDataUseCase,
     manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider
 ) : BaseViewModel<ContinueWatchingUiState, ContinueWatchingEffect>(
