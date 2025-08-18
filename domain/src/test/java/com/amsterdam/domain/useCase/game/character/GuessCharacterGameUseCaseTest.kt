@@ -8,6 +8,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.seconds
 
 class GuessCharacterGameUseCaseTest {
     private val generateCharacterQuestionsUseCase: GenerateCharacterQuestionsUseCase = mockk()
@@ -53,7 +54,7 @@ class GuessCharacterGameUseCaseTest {
         question = "character",
         choices = listOf("john", "man", "woman"),
         correctChoice = "john",
-        questionTime = 30
+        questionTime = 30.seconds
     )
     private val hintedQuestion = movieCharacterQuestion.copy(choices = listOf("john"))
     private val answerResult = AnswerResult(true, 10)

@@ -5,6 +5,7 @@ import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCas
 import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty.DifficultyType
 import com.amsterdam.entity.category.MovieGenre
+import kotlin.time.Duration.Companion.seconds
 
 class GenerateMovieGenreQuestionsUseCase(
     private val getGameDifficultyUseCase: GetGameDifficultyByDifficultyTypeUseCase,
@@ -30,7 +31,7 @@ class GenerateMovieGenreQuestionsUseCase(
                 question = movie.name,
                 choices = choices,
                 correctChoice = correctGenre,
-                questionTime = questionTime
+                questionTime = questionTime.seconds
             )
         }
     }

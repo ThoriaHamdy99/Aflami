@@ -8,6 +8,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.seconds
 
 class GuessMovieByPosterGameUseCaseTest {
     private val generateMoviePosterQuestionsUseCase: GenerateMoviePosterQuestionsUseCase = mockk()
@@ -53,7 +54,7 @@ class GuessMovieByPosterGameUseCaseTest {
         question = "Sample Movie",
         choices = listOf("spiderman", "batman", "superman"),
         correctChoice = "spiderman",
-        questionTime = 30
+        questionTime = 30.seconds
     )
     private val hintedQuestion = moviePosterQuestion.copy(choices = listOf("spiderman"))
     private val answerResult = AnswerResult(true, 10)

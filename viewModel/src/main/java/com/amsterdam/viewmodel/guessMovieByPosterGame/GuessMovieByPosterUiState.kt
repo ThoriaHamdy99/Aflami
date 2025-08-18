@@ -2,6 +2,7 @@ package com.amsterdam.viewmodel.guessMovieByPosterGame
 
 import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
+import kotlin.time.Duration.Companion.seconds
 
 data class GuessMovieByPosterUiState(
     val isLoading: Boolean = true,
@@ -32,7 +33,7 @@ fun GameQuestion<String>.toQuestionUiState(): GuessMovieByPosterUiState.Question
         posterUrl = this.question,
         movieNameChoices = this.choices,
         correctAnswer = this.correctChoice,
-        questionTimeSeconds = this.questionTime
+        questionTimeSeconds = this.questionTime.inWholeSeconds.toInt()
     )
 }
 
@@ -41,7 +42,7 @@ fun GuessMovieByPosterUiState.QuestionUiState.toMoviePosterQuestion(): GameQuest
         question = this.posterUrl,
         choices = this.movieNameChoices,
         correctChoice = this.correctAnswer,
-        questionTime = this.questionTimeSeconds
+        questionTime = this.questionTimeSeconds.seconds
     )
 }
 

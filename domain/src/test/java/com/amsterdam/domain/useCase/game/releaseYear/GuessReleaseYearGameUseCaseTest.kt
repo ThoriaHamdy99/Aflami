@@ -8,6 +8,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.seconds
 
 class GuessReleaseYearGameUseCaseTest {
     private val generateMovieReleaseYearQuestionsUseCase: GenerateMovieReleaseYearQuestionsUseCase = mockk()
@@ -53,7 +54,7 @@ class GuessReleaseYearGameUseCaseTest {
         question = "Sample Movie",
         choices = listOf(1972, 1973, 1974),
         correctChoice = 1972,
-        questionTime = 30
+        questionTime = 30.seconds
     )
     private val hintedQuestion = movieReleasedDateQuestion.copy(choices = listOf(1972))
     private val answerResult = AnswerResult(true, 10)
