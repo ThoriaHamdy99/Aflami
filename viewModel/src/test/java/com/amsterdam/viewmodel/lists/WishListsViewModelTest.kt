@@ -8,7 +8,6 @@ import com.amsterdam.domain.useCase.list.CreateNewListUseCase
 import com.amsterdam.domain.useCase.list.GetWishListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
-import com.amsterdam.entity.UserList
 import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.entity.WishList
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
