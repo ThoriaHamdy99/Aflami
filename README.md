@@ -52,10 +52,10 @@
 > _**When you don't know what to watch, let your mood decide.**_
 <table>
   <tr>
-    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/53ad09fb-7b2e-4a51-b03a-8e746f8a9514" /></td>
-    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/ecb46533-e848-4900-9468-81b6ad25b75a" /></td>
-    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/4ceb3861-1211-4c2a-b53f-deaaaa7edf01" /></td>
-    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/cb289a80-77b0-420e-be73-2e950451add5" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/a3c08570-aeff-4505-bd60-97db5ecf26cd" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/3f4008c6-f194-4644-aebe-9a4dd958eefe" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/ebcb6c4a-228d-420d-a043-eee93a7a6528" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/a41951cf-c330-4030-ac09-a55537c1ff94" /></td>
   </tr>
 </table>
 
