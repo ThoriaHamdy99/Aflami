@@ -9,8 +9,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.domain.useCase.topRated.GetTopRatedDataUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
+import com.amsterdam.domain.useCase.topRated.GetTopRatedDataUseCase
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
@@ -34,9 +34,9 @@ class TopRatedViewModel @Inject constructor(
     init {
         showLoadingState()
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach {
-                getTopRatedScreenData()
-            }.launchIn(viewModelScope)
+                .onEach {
+                    getTopRatedScreenData()
+                }.launchIn(viewModelScope)
 
         getTopRatedScreenData()
     }
@@ -49,11 +49,12 @@ class TopRatedViewModel @Inject constructor(
                     config = PagingConfig(pageSize = 20),
                     pagingSourceFactory = {
                         PagingSource { page ->
-                            val result = getTopRatedScreenDataUseCase(page)
-                            getTopRatedMediaItems(
-                                result.topRatedMovies,
-                                result.topRatedTvShows
-                            )
+                            getTopRatedScreenDataUseCase(page).let { result ->
+                                getTopRatedMediaItems(
+                                    result.topRatedMovies,
+                                    result.topRatedTvShows
+                                )
+                            }
                         }
                     }
                 ).flow.cachedIn(viewModelScope)
@@ -71,19 +72,22 @@ class TopRatedViewModel @Inject constructor(
 
     private fun onError(exception: AflamiException) {
         when (exception) {
-            is NetworkException -> updateState {
-                it.copy(
-                    isLoading = false,
-                    error = TopRatedError.NetworkError
-                )
+            is NetworkException -> {
+                updateState {
+                    it.copy(
+                        isLoading = false,
+                        error = TopRatedError.NetworkError
+                    )
+                }
             }
 
-            else ->
+            else -> {
                 updateState {
                     it.copy(
                         isLoading = false,
                     )
                 }
+            }
         }
     }
 
