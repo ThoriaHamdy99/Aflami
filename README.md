@@ -9,25 +9,25 @@
 # Technologies
 > [!TIP]
 >
-> - **Dagger Hilt**
-> - **Room Database**
-> - **Preferences Data Store**
+> - [**Dagger Hilt**](https://developer.android.com/training/dependency-injection/hilt-android)
+> - [**Room Database**](https://developer.android.com/training/data-storage/room)
+> - [**Preferences Data Store**](https://developer.android.com/topic/libraries/architecture/datastore)
 > - [**Retrofit**](https://square.github.io/retrofit/)
-> - **Coil**
+> - [**Coil**](https://github.com/coil-kt/coil#jetpack-compose)
 > - [**Shaded**](https://github.com/mohamedd-hassan/Shaded)
-> - **Tensorflow**
-> - **Compose Navigation2**
+> - [**Tensorflow**](https://www.tensorflow.org/)
+> - [**Compose Navigation2**](https://developer.android.com/develop/ui/compose/navigation)
 > - [**Paging3**](https://developer.android.com/topic/libraries/architecture/paging/v3-overview)
-> - **Kotlin Flows**
+> - [**Kotlin Flows**](https://developer.android.com/kotlin/flow)
 > - [**Coroutines**](https://developer.android.com/kotlin/coroutines)
 > - [**kotlin datetime**](https://github.com/Kotlin/kotlinx-datetime)
-> - **Unit Testing**
-> - **Android Testing**
-> - **Continuous Integration and Deployment (CI/CD)**
 > - [**Firebase Crashlytics**](https://firebase.google.com/docs/crashlytics)
 > - [**Firebase App Distribution**](https://firebase.google.com/docs/app-distribution)
 > - [**Firebase ML Kit**](https://firebase.google.com/docs/ml-kit)
-> - **Linter**
+> - [**Linter**](https://developer.android.com/studio/write/lint)
+> - [**Unit Testing**](https://developer.android.com/training/testing/local-tests) || [**Mockk**](https://mockk.io/#getting-started) || [**Junit5**](https://docs.junit.org/current/user-guide/) || [**Truths**](https://truth.dev/)
+> - [**Android Testing**](https://developer.android.com/training/testing/instrumented-tests)
+> - [**Continuous Integration and Deployment (CI/CD)**](https://docs.github.com/en/actions)
 
 # Features
 ## Authentication
