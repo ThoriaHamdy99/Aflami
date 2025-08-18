@@ -65,10 +65,9 @@ fun AnswerSelectionItem(
             AnswerStatus.Unselected -> {
                 RadioButton(
                     state = RadioState.Default,
-                    onClick = onClick
                 )
             }
-
+            
             AnswerStatus.Correct, AnswerStatus.Wrong -> {
                 Icon(
                     painter = painterResource(status.icon),
