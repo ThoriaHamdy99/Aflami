@@ -156,7 +156,7 @@ private fun SearchByActorContent(
                         state.keyword.isBlank() -> {
                             NoDataContainer(
                                 modifier = Modifier.padding(horizontal = 24.dp),
-                                imageRes = painterResource(R.drawable.img_suggestion_magician),
+                                imageRes = painterResource(R.drawable.magician_image),
                                 title = stringResource(R.string.find_by_actor),
                                 description = stringResource(R.string.find_by_actor_description)
                             )
