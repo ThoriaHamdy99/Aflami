@@ -12,7 +12,7 @@ import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Lang
 import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
-import com.amsterdam.viewmodel.utils.entityHelper.createMovie
+import com.amsterdam.viewmodel.utils.helper.createMovie
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

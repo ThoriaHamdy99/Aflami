@@ -93,9 +93,9 @@ class WatchHistoryViewModel @Inject constructor(
 
     override fun onClickMediaItem(mediaId: Long, mediaType: MediaType) {
         if (mediaType == MediaType.MOVIE)
-            sendNewEffect(WatchHistoryEffect.NavigateToMovieDetails(mediaId))
+            sendNewNavigationEffect(WatchHistoryEffect.NavigateToMovieDetails(mediaId))
         else
-            sendNewEffect(WatchHistoryEffect.NavigateToTvShowDetails(mediaId))
+            sendNewNavigationEffect(WatchHistoryEffect.NavigateToTvShowDetails(mediaId))
     }
 
     override fun onClickTabOption(option: TabOption) {
@@ -120,7 +120,7 @@ class WatchHistoryViewModel @Inject constructor(
     }
 
     override fun onClickBack() {
-        sendNewEffect(WatchHistoryEffect.NavigateBack)
+        sendNewNavigationEffect(WatchHistoryEffect.NavigateBack)
     }
 
     private fun onCompletion() = updateState { it.copy(isLoading = false) }

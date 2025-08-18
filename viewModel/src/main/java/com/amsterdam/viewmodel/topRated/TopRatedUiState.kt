@@ -9,7 +9,7 @@ data class TopRatedUiState(
     val mediaItems: Flow<PagingData<TopRatedMediaItemUiState>> = emptyFlow(),
     val isLoading: Boolean = false,
 ) {
-    class TopRatedMediaItemUiState(
+    data class TopRatedMediaItemUiState(
         val id: Long = 0,
         val name: String = "",
         val posterImageUrl: String = "",

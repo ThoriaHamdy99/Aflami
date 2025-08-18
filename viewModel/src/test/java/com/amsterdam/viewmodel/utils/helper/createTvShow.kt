@@ -1,4 +1,4 @@
-package com.amsterdam.viewmodel.utils.entityHelper
+package com.amsterdam.viewmodel.utils.helper
 
 import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.TvShowGenre

@@ -8,11 +8,13 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
+import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedDataUseCase
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
+import com.amsterdam.viewmodel.topRated.TopRatedUiState.TopRatedError
 import com.amsterdam.viewmodel.topRated.TopRatedUiState.TopRatedMediaItemUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,9 +34,9 @@ class TopRatedViewModel @Inject constructor(
     init {
         showLoadingState()
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach {
-                getTopRatedScreenData()
-            }.launchIn(viewModelScope)
+                .onEach {
+                    getTopRatedScreenData()
+                }.launchIn(viewModelScope)
 
         getTopRatedScreenData()
     }
@@ -47,15 +49,15 @@ class TopRatedViewModel @Inject constructor(
                     config = PagingConfig(pageSize = 20),
                     pagingSourceFactory = {
                         PagingSource { page ->
-                            val result = getTopRatedScreenDataUseCase(page)
-                            getTopRatedMediaItems(
-                                result.topRatedMovies,
-                                result.topRatedTvShows
-                            )
+                            getTopRatedScreenDataUseCase(page).let { result ->
+                                getTopRatedMediaItems(
+                                    result.topRatedMovies,
+                                    result.topRatedTvShows
+                                )
+                            }
                         }
                     }
-                ).flow
-                    .cachedIn(viewModelScope)
+                ).flow.cachedIn(viewModelScope)
             },
             onSuccess = ::onGetTopRatedMoviesSuccess,
             onCompletion = ::onGetTopRatedMoviesCompletion

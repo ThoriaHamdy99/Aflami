@@ -18,7 +18,7 @@ import com.amsterdam.viewmodel.home.HomeUiState.UpcomingMoviesUiState
 import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
-import com.amsterdam.viewmodel.utils.entityHelper.createMovie
+import com.amsterdam.viewmodel.utils.helper.createMovie
 import com.google.common.truth.Truth.assertThat
 import io.mockk.clearAllMocks
 import io.mockk.coEvery

@@ -139,6 +139,6 @@ class WishListsViewModel @Inject constructor(
     }
 
     override fun onNavigateToLoginClicked() {
-        sendNewEffect(ListsEffect.NavigateToLogin)
+        sendNewNavigationEffect(ListsEffect.NavigateToLogin)
     }
 }

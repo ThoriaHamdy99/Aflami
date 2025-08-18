@@ -77,7 +77,7 @@ class ListDetailsViewModel @Inject constructor(
     }
 
     override fun onClickMovie(movieId: Long) {
-        sendNewEffect(ListDetailsEffect.NavigateToMovieDetailsScreen(movieId))
+        sendNewNavigationEffect(ListDetailsEffect.NavigateToMovieDetailsScreen(movieId))
     }
 
     override fun onClickTvShow(tvShowId: Long) {
@@ -85,7 +85,7 @@ class ListDetailsViewModel @Inject constructor(
     }
 
     override fun onClickBack() {
-        sendNewEffect(ListDetailsEffect.NavigateBack)
+        sendNewNavigationEffect(ListDetailsEffect.NavigateBack)
     }
 
     override fun onClickRetryLoading() {
