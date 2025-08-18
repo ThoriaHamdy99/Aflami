@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.emptyFlow
 data class TopRatedUiState(
     val mediaItems: Flow<PagingData<TopRatedMediaItemUiState>> = emptyFlow(),
     val isLoading: Boolean = false,
-    val error: TopRatedError? = null
 ) {
     data class TopRatedMediaItemUiState(
         val id: Long = 0,
@@ -19,8 +18,4 @@ data class TopRatedUiState(
         val mediaType : MediaType = MediaType.MOVIE,
         val isAdult : Boolean=false
     )
-
-    sealed class TopRatedError {
-        data object NetworkError : TopRatedError()
-    }
 }

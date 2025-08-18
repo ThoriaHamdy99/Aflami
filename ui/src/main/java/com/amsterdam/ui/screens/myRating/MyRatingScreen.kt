@@ -54,9 +54,9 @@ import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.myRating.MyRatingInteractionListener
 import com.amsterdam.viewmodel.myRating.MyRatingUiEffect
 import com.amsterdam.viewmodel.myRating.MyRatingUiState
-import com.amsterdam.viewmodel.myRating.MyRatingUiState.MyRatingErrorState
 import com.amsterdam.viewmodel.myRating.MyRatingViewModel
 import com.amsterdam.viewmodel.shared.TabOption
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -65,6 +65,7 @@ fun MyRatingScreen(
 ) {
     val navigationManager = LocalNavManager.current
     val state by viewModel.state.collectAsState()
+    val errorState by viewModel.errorState.collectAsState()
 
     val currentBackStackEntry = navigationManager.getCurrentBackStackEntryAsState().value
     val savedStateHandle = currentBackStackEntry?.savedStateHandle
@@ -101,12 +102,13 @@ fun MyRatingScreen(
         }
     }
 
-    MyRatingContent(state = state, interaction = viewModel)
+    MyRatingContent(state = state, errorState = errorState, interaction = viewModel)
 }
 
 @Composable
 private fun MyRatingContent(
     state: MyRatingUiState,
+    errorState: ErrorUiState?,
     interaction: MyRatingInteractionListener
 ) {
     val lazyState = rememberLazyGridState()
@@ -117,7 +119,7 @@ private fun MyRatingContent(
     val availableHeight =
         calculateAvailableHeight(appBarHeightPx = appBarHeight, tabsHeightPx = tabsHeight)
     val shouldShowPlaceholder =
-        state.error != null || !state.isLoading || state.movies.isEmpty() || state.tvShows.isEmpty()
+        errorState != null || !state.isLoading || state.movies.isEmpty() || state.tvShows.isEmpty()
 
         LazyVerticalGrid(
             modifier = Modifier
@@ -225,6 +227,7 @@ private fun MyRatingContent(
                 MyRatingPlaceholders(
                     modifier = Modifier.height(availableHeight),
                     state = state,
+                    errorState = errorState,
                     interaction = interaction,
                     isVisible = shouldShowPlaceholder
                 )
@@ -253,6 +256,7 @@ private fun calculateAvailableHeight(
 @Composable
 private fun MyRatingPlaceholders(
     state: MyRatingUiState,
+    errorState: ErrorUiState?,
     interaction: MyRatingInteractionListener,
     isVisible: Boolean,
     modifier: Modifier = Modifier
@@ -263,8 +267,8 @@ private fun MyRatingPlaceholders(
         visible = isVisible
     ) {
         when {
-            state.error != null -> {
-                if (state.error is MyRatingErrorState.NoInternetError) {
+            errorState != null -> {
+                if (errorState is ErrorUiState.NoInternetError) {
                     NoNetworkContainer(
                         modifier = modifier.fillMaxSize(),
                         onClickRetry = interaction::onClickRetryRequest,

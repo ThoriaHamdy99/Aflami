@@ -36,12 +36,12 @@ class ProfileViewModel @Inject constructor(
     dispatcherProvider = dispatcherProvider
 ), ProfileInteractionListener {
     init {
-        loadProfileData()
-        loadSettings()
-        loadRestrictionLevel()
+        getProfileData()
+        getSettings()
+        getRestrictionLevel()
     }
 
-    private fun loadRestrictionLevel() {
+    private fun getRestrictionLevel() {
         viewModelScope.launch {
             manageRestrictionLevelUseCase.getRestrictionLevel().collect { restrictionLevel ->
                 updateState {
@@ -55,7 +55,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun loadProfileData() {
+    private fun getProfileData() {
         updateState { state -> state.copy(isLoading = true) }
         tryToExecute(
             action = { getSessionTypeUseCase() },
@@ -64,7 +64,7 @@ class ProfileViewModel @Inject constructor(
         )
     }
 
-    private fun loadSettings() {
+    private fun getSettings() {
         viewModelScope.launch {
             manageLocaleLanguageUseCase.getAppLanguage().collect { language ->
                 onGetAppLanguage(language)
@@ -119,12 +119,7 @@ class ProfileViewModel @Inject constructor(
         )
     }
 
-    private fun onError(exception: AflamiException) {
-        updateState {
-            it.copy(
-                profileErrorState = ProfileErrorState.toProfileErrorState(exception)
-            )
-        }
+    private fun onError(aflamiException: AflamiException) {
         sendNewEffect(ProfileEffect.ShowError)
     }
 
@@ -236,75 +231,49 @@ class ProfileViewModel @Inject constructor(
 
     override fun onClickSettings() {
         updateState {
-            it.copy(
-                settingsState = it.settingsState.copy(
-                    isSettingsDialogVisible = true,
-                )
-            )
+            it.copy(settingsState = it.settingsState.copy(isSettingsDialogVisible = true))
         }
     }
 
     override fun onDismissSettingsDialog() {
         updateState {
-            it.copy(
-                settingsState = it.settingsState.copy(
-                    isSettingsDialogVisible = false
-                )
-            )
+            it.copy(settingsState = it.settingsState.copy(isSettingsDialogVisible = false))
         }
     }
 
     override fun onDismissLogoutDialog() {
         updateState {
-            it.copy(
-                settingsState = it.settingsState.copy(
-                    isLogoutDialogVisible = false
-                )
-            )
+            it.copy(settingsState = it.settingsState.copy(isLogoutDialogVisible = false))
         }
     }
 
     override fun onDismissContentRestrictionDialog() {
         updateState {
-            it.copy(
-                settingsState = it.settingsState.copy(
-                    isContentRestrictionDialogVisible = false
-                )
-            )
+            it.copy(settingsState = it.settingsState.copy(isContentRestrictionDialogVisible = false))
         }
     }
 
     override fun onClickLogout() {
         updateState {
-            it.copy(
-                settingsState = it.settingsState.copy(
-                    isLogoutDialogVisible = true
-                )
-            )
+            it.copy(settingsState = it.settingsState.copy(isLogoutDialogVisible = true))
         }
     }
 
     override fun onClickConfirmLogout() {
         updateState {
-            it.copy(
-                settingsState = it.settingsState.copy(
-                    isLogoutButtonLoading = true
-                )
-            )
+            it.copy(settingsState = it.settingsState.copy(isLogoutButtonLoading = true))
         }
         tryToExecute(
             action = ::onConfirmLogout,
-            onSuccess = { onConfirmLogoutSuccess() },
+            onSuccess = ::onConfirmLogoutSuccess,
             onError = ::onError,
             onCompletion = ::onConfirmLogoutCompletion
         )
     }
 
-    private suspend fun onConfirmLogout() {
-        logoutUseCase()
-    }
+    private suspend fun onConfirmLogout() = logoutUseCase()
 
-    private fun onConfirmLogoutSuccess() {
+    private fun onConfirmLogoutSuccess(unit: Unit) {
         sendNewNavigationEffect(ProfileEffect.NavigateToLogin)
     }
 
@@ -328,35 +297,25 @@ class ProfileViewModel @Inject constructor(
 
     override fun onClickContentRestriction() {
         updateState {
-            it.copy(
-                settingsState = it.settingsState.copy(
-                    isContentRestrictionDialogVisible = true
-                )
-            )
+            it.copy(settingsState = it.settingsState.copy(isContentRestrictionDialogVisible = true))
         }
     }
 
     override fun onUpdateRestrictionLevel(restrictionLevel: RestrictionLevel) {
         updateState {
-            it.copy(
-                settingsState = it.settingsState.copy(
-                    contentRestrictionLevel = restrictionLevel
-                )
-            )
+            it.copy(settingsState = it.settingsState.copy(contentRestrictionLevel = restrictionLevel))
         }
     }
 
     override fun onSaveRestrictionLevel() {
         updateState {
             it.copy(
-                settingsState = it.settingsState.copy(
-                    isContentRestrictionSaveButtonLoading = true
-                )
+                settingsState = it.settingsState.copy(isContentRestrictionSaveButtonLoading = true)
             )
         }
 
         tryToExecute(
-            action = { saveRestrictionLevel() },
+            action = ::saveRestrictionLevel,
             onSuccess = ::onSaveRestrictionLevelSuccess,
             onError = ::onSaveRestrictionLevelError,
             onCompletion = ::onSaveRestrictionLevelCompletion

@@ -13,7 +13,6 @@ import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.paging.PagingSource
-import com.amsterdam.viewmodel.listDetails.ListDetailsUiState.ListDetailsError
 import com.amsterdam.viewmodel.listDetails.ListDetailsUiState.ListDetailsItemsUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -73,12 +72,8 @@ class ListDetailsViewModel @Inject constructor(
     }
 
     private fun onGetListDetailsSuccess(moviesPagingFlow: Flow<PagingData<ListDetailsItemsUiState>>) {
-        updateState {
-            it.copy(
-                listItems = moviesPagingFlow,
-                error = null
-            )
-        }
+        resetErrorStateToNull()
+        updateState { it.copy(listItems = moviesPagingFlow) }
     }
 
     override fun onClickMovie(movieId: Long) {
@@ -115,28 +110,16 @@ class ListDetailsViewModel @Inject constructor(
     }
 
     private fun onDeleteListSuccess() {
-        updateState {
-            it.copy(
-                showDeleteListDialog = false,
-                isDeleteLoading = false,
-                error = null
-            )
-        }
+        resetErrorStateToNull()
+        updateState { it.copy(showDeleteListDialog = false, isDeleteLoading = false,) }
         sendNewNavigationEffect(ListDetailsEffect.NavigateBack)
         sendNewEffect(ListDetailsEffect.ShowDeletionSuccessSnackBar)
     }
 
     private fun onDeleteListError(exception: AflamiException) {
-        val error = ListDetailsError.toListDetailsError(exception)
         viewModelScope.launch {
-            updateState {
-                it.copy(
-                    error = error,
-                    showDeleteListDialog = false,
-                    isDeleteLoading = false
-                )
-            }
-            sendNewEffect(ListDetailsEffect.ShowErrorSnackbar(error = state.value.error))
+            updateState { it.copy(showDeleteListDialog = false, isDeleteLoading = false) }
+            sendNewEffect(ListDetailsEffect.ShowErrorSnackBar)
         }
     }
 
@@ -150,28 +133,25 @@ class ListDetailsViewModel @Inject constructor(
 
     private fun onRemoveMovieSuccess() {
         currentPagingSource?.invalidate()
-        updateState { it.copy(error = null) }
+        resetErrorStateToNull()
         sendNewEffect(ListDetailsEffect.ShowRemoveMovieSuccessSnackBar)
     }
 
     private fun onRemoveMovieError(exception: AflamiException) {
-        val error = ListDetailsError.toListDetailsError(exception)
         viewModelScope.launch {
-            updateState {
-                it.copy(
-                    error = error,
-                    showDeleteListDialog = false,
-                    isDeleteLoading = false
-                )
-            }
-            sendNewEffect(ListDetailsEffect.ShowErrorSnackbar(error = state.value.error))
+            updateState { it.copy(
+                showDeleteListDialog = false,
+                isDeleteLoading = false
+            ) }
+            sendNewEffect(ListDetailsEffect.ShowErrorSnackBar)
         }
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
         when (loadStates.refresh) {
             is LoadState.Loading -> {
-                updateState { it.copy(isLoading = true, error = null) }
+                resetErrorStateToNull()
+                updateState { it.copy(isLoading = true) }
             }
 
             is LoadState.NotLoading -> {
@@ -179,14 +159,8 @@ class ListDetailsViewModel @Inject constructor(
             }
 
             is LoadState.Error -> {
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        error = ListDetailsError.toListDetailsError(
-                            (loadStates.refresh as LoadState.Error).error
-                        )
-                    )
-                }
+                updateState { it.copy(isLoading = false,) }
+                updateErrorStateByException(AflamiException())
             }
         }
     }

@@ -8,13 +8,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedDataUseCase
 import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
-import com.amsterdam.viewmodel.topRated.TopRatedUiState.TopRatedError
 import com.amsterdam.viewmodel.topRated.TopRatedUiState.TopRatedMediaItemUiState
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -60,8 +58,7 @@ class TopRatedViewModel @Inject constructor(
                 ).flow.cachedIn(viewModelScope)
             },
             onSuccess = ::onGetTopRatedMoviesSuccess,
-            onError = ::onError,
-            onCompletion = ::onCompletion
+            onCompletion = ::onGetTopRatedMoviesCompletion
         )
     }
 
@@ -70,26 +67,7 @@ class TopRatedViewModel @Inject constructor(
         updateState { mediaPagingFlow.toTopRatedUiState() }
     }
 
-    private fun onError(exception: AflamiException) {
-        when (exception) {
-            is NetworkException -> {
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        error = TopRatedError.NetworkError
-                    )
-                }
-            }
-
-            else -> {
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                    )
-                }
-            }
-        }
-    }
+    private fun onGetTopRatedMoviesCompletion() = updateState { it.copy(isLoading = false) }
 
     override fun onClickMediaItem(mediaId: Long, mediaType: MediaType) {
         if (mediaType == MediaType.MOVIE)
@@ -103,10 +81,10 @@ class TopRatedViewModel @Inject constructor(
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
-        when (val refreshState = loadStates.refresh
-        ) {
+        when (loadStates.refresh) {
             is LoadState.Loading -> {
-                updateState { it.copy(isLoading = true, error = null) }
+                resetErrorStateToNull()
+                updateState { it.copy(isLoading = true) }
             }
 
             is LoadState.NotLoading -> {
@@ -115,7 +93,7 @@ class TopRatedViewModel @Inject constructor(
 
             is LoadState.Error -> {
                 updateState { it.copy(isLoading = false) }
-                onError(refreshState.error as AflamiException)
+                updateErrorStateByException(AflamiException())
             }
         }
     }
@@ -124,6 +102,5 @@ class TopRatedViewModel @Inject constructor(
         sendNewNavigationEffect(TopRatedEffect.NavigateBack)
     }
 
-    private fun showLoadingState() = updateState { it.copy(isLoading = true, error = null) }
-    private fun onCompletion() = updateState { it.copy(isLoading = false, error = null) }
+    private fun showLoadingState() = updateState { it.copy(isLoading = true) }
 }

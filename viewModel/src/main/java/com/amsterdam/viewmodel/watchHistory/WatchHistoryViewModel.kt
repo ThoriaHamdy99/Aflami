@@ -6,8 +6,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingTvShowsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
@@ -40,9 +38,8 @@ class WatchHistoryViewModel @Inject constructor(
 
     init {
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach {
-                getMoviesWatchHistoryData()
-            }.launchIn(viewModelScope)
+            .onEach { getMoviesWatchHistoryData() }
+            .launchIn(viewModelScope)
         getMoviesWatchHistoryData()
     }
 
@@ -61,7 +58,6 @@ class WatchHistoryViewModel @Inject constructor(
                     .cachedIn(viewModelScope)
             },
             onSuccess = ::onGetMoviesContinueWatchingDataSuccess,
-            onError = ::onError,
             onCompletion = ::onCompletion
         )
     }
@@ -81,41 +77,18 @@ class WatchHistoryViewModel @Inject constructor(
                     .cachedIn(viewModelScope)
             },
             onSuccess = ::onGetTvShowContinueWatchingDataSuccess,
-            onError = ::onError,
             onCompletion = ::onCompletion
         )
     }
 
-    fun onGetMoviesContinueWatchingDataSuccess(
-        movieItems: Flow<PagingData<WatchHistoryMovieUiState>>
-    ) {
-        updateState { currentState ->
-            currentState.copy(
-                movies = movieItems
-            )
-        }
+    fun onGetMoviesContinueWatchingDataSuccess(movieItems: Flow<PagingData<WatchHistoryMovieUiState>>) {
+        updateState { it.copy(movies = movieItems) }
     }
 
     fun onGetTvShowContinueWatchingDataSuccess(
         tvShowItems: Flow<PagingData<WatchHistoryTvShowUiState>>
     ) {
-        updateState { currentState ->
-            currentState.copy(
-                tvShows = tvShowItems
-            )
-        }
-    }
-
-    private fun onError(exception: AflamiException) {
-        when (exception) {
-            is NoInternetException -> updateState {
-                it.copy(
-                    error = WatchHistoryUiState.WatchHistoryError.NetworkError
-                )
-            }
-
-            else -> {}
-        }
+        updateState { it.copy(tvShows = tvShowItems) }
     }
 
     override fun onClickMediaItem(mediaId: Long, mediaType: MediaType) {

@@ -48,7 +48,6 @@ import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.ui.screens.login.components.getLoginErrorMessage
 import com.amsterdam.ui.screens.login.components.getPasswordTextFieldIcon
 import com.amsterdam.viewmodel.login.LoginEffect
-import com.amsterdam.viewmodel.login.LoginErrorState
 import com.amsterdam.viewmodel.login.LoginInteractionListener
 import com.amsterdam.viewmodel.login.LoginUiState
 import com.amsterdam.viewmodel.login.LoginViewModel
@@ -59,6 +58,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val errorState by viewModel.errorState.collectAsState()
     val navigationManager = LocalNavManager.current
     val context = LocalContext.current
 
@@ -77,11 +77,16 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(state.loginError) {
-        if (state.loginError != null) {
-            SnackBarManager.showError(
-                getLoginErrorMessage(state.loginError, context)
-            )
+    LaunchedEffect(state.error) {
+        if (state.error != null) {
+            SnackBarManager.showError(getLoginErrorMessage(state.error, context))
+            viewModel.onLoginErrorHandled()
+        }
+    }
+
+    LaunchedEffect(errorState) {
+        if (errorState != null) {
+            SnackBarManager.showError(getLoginErrorMessage(errorState, context))
             viewModel.onLoginErrorHandled()
         }
     }
@@ -218,10 +223,7 @@ private fun LoginScreenContent(
 private fun LoginScreenContentPreview() {
     AflamiTheme {
         LoginScreenContent(
-            state = LoginUiState(
-                password = "password",
-                loginError = LoginErrorState.InvalidCredentials,
-            ),
+            state = LoginUiState(password = "password",),
             interactionListener = object : LoginInteractionListener {
                 override fun onUserNameUpdated(username: String) {}
                 override fun onPasswordUpdate(password: String) {}

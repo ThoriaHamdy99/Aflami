@@ -54,23 +54,20 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
         when (val refreshState = loadStates.refresh) {
-            is LoadState.Loading -> updateState { it.copy(isLoading = true, errorUiState = null) }
+            is LoadState.Loading -> {
+                resetErrorStateToNull()
+                updateState { it.copy(isLoading = true) }
+            }
             is LoadState.NotLoading -> updateState { it.copy(isLoading = false) }
             is LoadState.Error -> {
-                updateState { it.copy(isLoading = false) }
                 onFetchError(refreshState.error as AflamiException)
             }
         }
     }
 
     private fun onFetchError(exception: AflamiException) {
-        updateState {
-            it.copy(
-                errorUiState = CategoriesMoviesDetailsUiState.CategoriesDetailsErrorState
-                    .toCategoriesMoviesDetailsErrorState(exception),
-                isLoading = false
-            )
-        }
+        updateErrorStateByException(exception)
+        updateState { it.copy(isLoading = false) }
     }
 
     override fun onClickBack() {
