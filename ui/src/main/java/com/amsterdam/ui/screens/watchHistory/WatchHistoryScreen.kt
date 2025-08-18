@@ -125,8 +125,7 @@ fun WatchHistoryContent(
             DefaultAppBar(
                 title = stringResource(R.string.watch_history),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 5.dp),
+                    .fillMaxWidth(),
                 onNavigateBackClicked = interactionListener::onClickBack
             )
 
