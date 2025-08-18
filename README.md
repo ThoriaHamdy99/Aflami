@@ -199,6 +199,7 @@
 >
 > - **Browse by Type:** Easily switch between dedicated "Movies" and "TV Shows" tabs to find exactly what you're looking for.
 > - **Rich Genre Selection:** Discover content across a wide array of genres, each represented by a unique, intuitive icon.
+> - **Image Viewer:** Ensuring a respectful viewing experience for all users, featuring intelligent content filtering using on-device machine learning to detect and automatically blur potentially inappropriate content according to Islamic cultural guidelines.
 > - **Instant Results:** Simply tap on any genre to see a curated list of titles from that category, complete with their poster, title, and rating.
 
 # Installation
