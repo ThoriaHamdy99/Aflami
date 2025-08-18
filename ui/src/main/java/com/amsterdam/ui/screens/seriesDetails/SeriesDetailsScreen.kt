@@ -57,10 +57,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.CenterOfScreenContainer
 import com.amsterdam.designsystem.components.Icon
 import com.amsterdam.designsystem.components.ImageErrorIndicator
@@ -72,6 +72,7 @@ import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
+import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.CategoryChip
 import com.amsterdam.ui.components.DottedSeparatedRow
@@ -89,15 +90,15 @@ import com.amsterdam.ui.screens.movieDetails.getMovieAndSeriesDetailsDialogTitle
 import com.amsterdam.ui.screens.movieDetails.getSeriesExtrasSectionItemInfo
 import com.amsterdam.ui.screens.openYouTubeVideo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
-import com.amsterdam.ui.screens.seriesDetails.component.EpisodeCardPlaceholder
 import com.amsterdam.ui.screens.seriesDetails.component.EpisodeCard
+import com.amsterdam.ui.screens.seriesDetails.component.EpisodeCardPlaceholder
 import com.amsterdam.ui.screens.seriesDetails.component.TvShowCastSection
 import com.amsterdam.ui.screens.seriesDetails.component.companyProductionTvShowSection
 import com.amsterdam.ui.screens.seriesDetails.component.moreTvShowLikeSection
 import com.amsterdam.ui.screens.seriesDetails.component.reviewTvShowSection
-import com.amsterdam.ui.screens.seriesDetails.mappers.formatSeasonText
 import com.amsterdam.ui.screens.seriesDetails.mappers.toLocalizedString
 import com.amsterdam.ui.utils.SavedStateKeys.REFRESH_AFTER_RATING
+import com.amsterdam.ui.utils.withEnglishDigits
 import com.amsterdam.viewmodel.myRating.RateDialogInteractionListener
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsEffect
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsInteractionListener
@@ -193,12 +194,17 @@ fun SeriesDetailsContent(
     val navigationBarPadding = with(density) { WindowInsets.safeDrawing.getBottom(this).toDp() }
     val contentHeightDp = configuration.screenHeightDp.dp
 
+    LaunchedEffect(state.extraItem) {
+        childLazyListState.scrollToItem(0)
+        canChildScroll = !parentLazyListState.canScrollForward
+    }
+
     LaunchedEffect(parentLazyListState.isScrollInProgress) {
         canChildScroll = !parentLazyListState.canScrollForward
     }
 
-    LaunchedEffect(childLazyListState.isScrollInProgress) {
-        canChildScroll = childLazyListState.canScrollBackward
+    LaunchedEffect(childLazyListState.isScrollInProgress, !parentLazyListState.canScrollForward) {
+        canChildScroll = childLazyListState.canScrollBackward && !parentLazyListState.canScrollForward
     }
 
     val screenWidthDp by remember { mutableStateOf(configuration.screenWidthDp.dp) }
@@ -387,10 +393,11 @@ fun SeriesDetailsContent(
 
                             DottedSeparatedRow(
                                 state.airDate,
-                                formatSeasonText(
-                                    context = LocalContext.current,
-                                    seasonCount = state.seasonCount
-                                ),
+                                pluralStringResource(
+                                    R.plurals.season_count,
+                                    state.seasonCount,
+                                    state.seasonCount
+                                ).withEnglishDigits(),
                                 state.originCountry,
                                 modifier = Modifier
                                     .padding(top = 8.dp)
@@ -572,7 +579,7 @@ private fun SeasonHeader(
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = "${season.episodeCount} ${stringResource(R.string.episodes)}",
+                text = "${season.episodeCount} ${pluralStringResource(R.plurals.episodes, season.episodeCount)}",
                 color = AppTheme.color.hint,
                 style = AppTheme.textStyle.label.small,
                 modifier = Modifier.padding(end = 4.dp)

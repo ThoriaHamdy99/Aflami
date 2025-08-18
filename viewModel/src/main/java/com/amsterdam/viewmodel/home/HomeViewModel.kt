@@ -7,14 +7,13 @@ import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseC
 import com.amsterdam.domain.useCase.mood.GetMoviesByMoodUseCase
 import com.amsterdam.domain.useCase.popular.GetPopularMoviesUseCase
 import com.amsterdam.domain.useCase.popular.GetPopularTvShowsUseCase
+import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedMoviesUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedTvShowsUseCase
 import com.amsterdam.domain.useCase.upcoming.GetUpcomingMoviesUseCase
-import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
-import com.amsterdam.domain.utils.Mood
+import com.amsterdam.domain.utils.MovieWatchHistory
+import com.amsterdam.domain.utils.TvShowWatchHistory
 import com.amsterdam.entity.Movie
-import com.amsterdam.entity.MovieWatchHistory
-import com.amsterdam.entity.TvShowWatchHistory
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.home.HomeUiState.HomeError
 import com.amsterdam.viewmodel.home.HomeUiState.MoodPickerItemUiState
@@ -200,7 +199,7 @@ class HomeViewModel @Inject constructor(
         sendNewNavigationEffect(HomeEffect.NavigateToTopRatedMoviesEffect)
     }
 
-    override fun onChangeMood(mood: Mood) {
+    override fun onChangeMood(mood: GetMoviesByMoodUseCase.Mood) {
         updateState {
             it.copy(
                 moodPickerUiState = it.moodPickerUiState.copy(

@@ -1,7 +1,7 @@
 package com.amsterdam.domain.useCase.continueWatching
 
 import com.amsterdam.domain.repository.WatchHistoryRepository
-import com.amsterdam.entity.MovieWatchHistory
+import com.amsterdam.domain.utils.MovieWatchHistory
 import kotlinx.coroutines.flow.Flow
 
 class GetContinueWatchingMoviesUseCase (private val watchHistoryRepository: WatchHistoryRepository) {

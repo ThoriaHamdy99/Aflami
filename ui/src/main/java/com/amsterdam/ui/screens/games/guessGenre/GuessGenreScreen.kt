@@ -90,23 +90,15 @@ private fun GameScreenContent(
             .fillMaxSize()
             .navigationBarsPadding(),
         bottomBar = {
-            Box(
+            ConfirmButton(
+                title = stringResource(R.string.next),
+                onClick = interactionListener::onMoveToNextQuestion,
+                isEnabled = state.isNextEnabled,
+                isLoading = false,
+                isNegative = false,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                ConfirmButton(
-                    title = stringResource(R.string.next),
-                    onClick = interactionListener::onMoveToNextQuestion,
-                    isEnabled = state.isNextEnabled,
-                    isLoading = false,
-                    isNegative = false,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-            }
+            )
         }
     ) { innerPadding ->
 
@@ -150,7 +142,8 @@ private fun GameScreenContent(
             ) {
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize().statusBarsPadding()
+                        .fillMaxSize()
+                        .statusBarsPadding()
                         .padding(bottom = innerPadding.calculateBottomPadding())
                 ) {
                     item {
