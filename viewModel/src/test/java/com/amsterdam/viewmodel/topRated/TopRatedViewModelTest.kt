@@ -106,7 +106,9 @@ class TopRatedViewModelTest {
             viewModel.onPagingLoadStateChanged(expectedPagingLoadingState)
             advanceUntilIdle()
 
-            assertThat(viewModel.errorState).isNull()
+            viewModel.errorState.test {
+                assertThat(awaitItem()).isNull()
+            }
         }
 
     @Test
@@ -134,7 +136,9 @@ class TopRatedViewModelTest {
             viewModel.onPagingLoadStateChanged(expectedPagingNetworkErrorState)
             advanceUntilIdle()
 
-            assertThat(viewModel.errorState).isEqualTo(ErrorUiState.NoInternetError)
+            viewModel.errorState.test {
+                assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError)
+            }
         }
 
     @Test
