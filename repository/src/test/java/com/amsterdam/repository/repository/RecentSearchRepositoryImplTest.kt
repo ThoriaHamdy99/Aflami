@@ -28,31 +28,20 @@ class RecentSearchRepositoryImplTest {
     @BeforeEach
     fun setup() {
         clearAllMocks()
-
         mockkObject(Clock.System)
         every { Clock.System.now() } returns fixedCurrentTime
-
         repository = RecentSearchRepositoryImpl(
             recentSearchLocalDataSource = recentSearchLocalDataSource,
         )
-
     }
-
 
     @Test
     fun `getAllRecentSearches should return mapped BY_KEYWORD searches from local source`() =
         runTest {
-            // Given
-            val searchLocalDto1 = SearchLocalDto("movie1")
-            val searchLocalDto2 = SearchLocalDto("movie2")
-            val localSearches = listOf(searchLocalDto1, searchLocalDto2)
-            val expectedKeywords = listOf("movie1", "movie2")
-            coEvery { recentSearchLocalDataSource.getRecentSearches() } returns localSearches
+            coEvery { recentSearchLocalDataSource.getRecentSearches() } returns fakeLocalSearches
 
-            // When
             val result = repository.getAllRecentSearches()
 
-            // Then
             assertThat(result).isEqualTo(expectedKeywords)
             coVerify(exactly = 1) { recentSearchLocalDataSource.getRecentSearches() }
         }
@@ -60,75 +49,80 @@ class RecentSearchRepositoryImplTest {
     @Test
     fun `getAllRecentSearches should return empty list if no BY_KEYWORD searches exist locally`() =
         runTest {
-            // Given
             coEvery { recentSearchLocalDataSource.getRecentSearches() } returns emptyList()
 
-            // When
             val result = repository.getAllRecentSearches()
 
-            // Then
             assertThat(result).isEmpty()
             coVerify(exactly = 1) { recentSearchLocalDataSource.getRecentSearches() }
         }
 
     @Test
     fun `deleteAllRecentSearches should call local source to delete all searches`() = runTest {
-        // Given
         coJustRun { recentSearchLocalDataSource.deleteRecentSearches() }
 
-        // When
         repository.deleteAllRecentSearches()
 
-        // Then
         coVerify(exactly = 1) { recentSearchLocalDataSource.deleteRecentSearches() }
     }
 
     @Test
     fun `getAllRecentSearches should propagate exception if local source fails`() = runTest {
-        // Given
-        val expectedException = RuntimeException("DB read error!")
-        coEvery { recentSearchLocalDataSource.getRecentSearches() } throws expectedException
+        coEvery { recentSearchLocalDataSource.getRecentSearches() } throws fakeDbReadException
 
-        // When
         val thrownException = assertThrows<RuntimeException> {
             repository.getAllRecentSearches()
         }
 
-        // Then
-        assertThat(thrownException).isEqualTo(expectedException)
+        assertThat(thrownException).isEqualTo(fakeDbReadException)
         coVerify(exactly = 1) { recentSearchLocalDataSource.getRecentSearches() }
     }
 
     @Test
     fun `deleteAllRecentSearches should propagate exception if local source fails`() = runTest {
-        // Given
-        val expectedException = RuntimeException("DB delete error!")
-        coEvery { recentSearchLocalDataSource.deleteRecentSearches() } throws expectedException
+        coEvery { recentSearchLocalDataSource.deleteRecentSearches() } throws fakeDbDeleteException
 
-        // When
         val thrownException = assertThrows<RuntimeException> {
             repository.deleteAllRecentSearches()
         }
 
-        // Then
-        assertThat(thrownException).isEqualTo(expectedException)
+        assertThat(thrownException).isEqualTo(fakeDbDeleteException)
         coVerify(exactly = 1) { recentSearchLocalDataSource.deleteRecentSearches() }
     }
 
     @Test
     fun `addRecentSearch should propagate exception if local source upsert fails`() = runTest {
-        // Given
-        val keyword = "failing add"
-        val expectedException = RuntimeException("Upsert failed!")
-        coEvery { recentSearchLocalDataSource.upsertRecentSearch(any()) } throws expectedException
+        coEvery { recentSearchLocalDataSource.upsertRecentSearch(any()) } throws fakeUpsertFailedException
 
-        // When
         val thrownException = assertThrows<RuntimeException> {
-            repository.addRecentSearch(keyword)
+            repository.addRecentSearch(failingAddKeyword)
         }
 
-        // Then
-        assertThat(thrownException).isEqualTo(expectedException)
+        assertThat(thrownException).isEqualTo(fakeUpsertFailedException)
         coVerify(exactly = 1) { recentSearchLocalDataSource.upsertRecentSearch(any()) }
     }
+
+    @Test
+    fun `deleteRecentSearch should call local source to delete by keyword`() = runTest {
+        coJustRun { recentSearchLocalDataSource.deleteRecentSearchByKeyword(keywordToDelete) }
+
+        repository.deleteRecentSearch(keywordToDelete)
+
+        coVerify(exactly = 1) { recentSearchLocalDataSource.deleteRecentSearchByKeyword(keywordToDelete) }
+    }
+
+    private val fakeLocalSearches = listOf(
+        SearchLocalDto("movie1"),
+        SearchLocalDto("movie2")
+    )
+
+    private val expectedKeywords = listOf("movie1", "movie2")
+
+    private val keywordToDelete = "movie to delete"
+
+    private val failingAddKeyword = "failing add"
+
+    private val fakeDbReadException = RuntimeException("DB read error!")
+    private val fakeDbDeleteException = RuntimeException("DB delete error!")
+    private val fakeUpsertFailedException = RuntimeException("Upsert failed!")
 }

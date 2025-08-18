@@ -1,7 +1,6 @@
 package com.amsterdam.viewmodel.search.keywordSearch
 
 import androidx.paging.PagingData
-import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.viewmodel.search.uiState.SearchMediaItemUiState
 import com.amsterdam.viewmodel.shared.Selectable
@@ -22,7 +21,6 @@ data class SearchUiState(
     val movieFilterItemUiState: FilterItemUiState = FilterItemUiState(),
     val tvShowFilterItemUiState: FilterItemUiState = FilterItemUiState(),
     val isLoading: Boolean = false,
-    val errorUiState: SearchErrorState? = null,
 ) {
 
     data class FilterItemUiState(
@@ -44,18 +42,6 @@ data class SearchUiState(
                                 isSelected = index == 0,
                             ),
                     )
-                }
-        }
-    }
-
-    sealed interface SearchErrorState {
-        data object NoNetworkConnection : SearchErrorState
-        data object UnknownError : SearchErrorState
-        companion object {
-            fun toSearchErrorState(exception: Throwable): SearchErrorState =
-                when (exception) {
-                    is NetworkException -> NoNetworkConnection
-                    else -> UnknownError
                 }
         }
     }

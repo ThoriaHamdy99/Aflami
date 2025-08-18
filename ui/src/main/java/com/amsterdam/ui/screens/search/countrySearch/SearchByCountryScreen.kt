@@ -36,7 +36,6 @@ import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
 import com.amsterdam.ui.application.LocalNavManager
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
-import com.amsterdam.ui.navigation.Route.MovieDetails
 import com.amsterdam.ui.screens.search.countrySearch.components.CountriesDropdownMenu
 import com.amsterdam.ui.screens.search.countrySearch.components.CountrySearchField
 import com.amsterdam.ui.screens.search.countrySearch.components.ExploreCountries
@@ -44,11 +43,12 @@ import com.amsterdam.ui.screens.search.countrySearch.components.MoviesVerticalGr
 import com.amsterdam.ui.screens.search.countrySearch.components.NoMoviesFound
 import com.amsterdam.viewmodel.search.countrySearch.CountryItemUiState
 import com.amsterdam.viewmodel.search.countrySearch.CountrySearchEffect
-import com.amsterdam.viewmodel.search.countrySearch.CountrySearchErrorState
 import com.amsterdam.viewmodel.search.countrySearch.CountrySearchInteractionListener
 import com.amsterdam.viewmodel.search.countrySearch.CountrySearchUiState
 import com.amsterdam.viewmodel.search.countrySearch.CountrySearchViewModel
 import com.amsterdam.viewmodel.search.uiState.SearchMediaItemUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState.NoInternetError
 import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
@@ -57,6 +57,7 @@ internal fun SearchByCountryScreen(
 ) {
     val navigationManager = LocalNavManager.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val errorUiState by viewModel.errorState.collectAsStateWithLifecycle()
     val movies = state.movies.collectAsLazyPagingItems()
     LaunchedEffect(movies.loadState) {
         viewModel.onPagingLoadStateChanged(movies.loadState)
@@ -75,6 +76,7 @@ internal fun SearchByCountryScreen(
 
     SearchByCountryContent(
         state = state,
+        errorState = errorUiState,
         movies = movies,
         interactionListener = viewModel,
     )
@@ -83,6 +85,7 @@ internal fun SearchByCountryScreen(
 @Composable
 private fun SearchByCountryContent(
     state: CountrySearchUiState,
+    errorState: ErrorUiState?,
     movies: LazyPagingItems<SearchMediaItemUiState>,
     interactionListener: CountrySearchInteractionListener,
 ) {
@@ -113,7 +116,7 @@ private fun SearchByCountryContent(
             if (
                 state.keyword.isNotBlank() &&
                 !state.isLoading &&
-                state.errorUiState == null &&
+                errorState == null &&
                 movies.itemCount != 0 &&
                 !state.showSuggestedCountries
             ) {
@@ -133,7 +136,7 @@ private fun SearchByCountryContent(
                     CenterOfScreenContainer(unneededSpace = headerHeight) {
                         when {
                             state.isLoading -> LoadingContainer()
-                            state.errorUiState is CountrySearchErrorState.NoNetworkConnection -> {
+                            errorState is NoInternetError -> {
                                 NoNetworkContainer(
                                     modifier = Modifier.padding(vertical = 8.dp),
                                     onClickRetry = interactionListener::onClickRetry
@@ -171,6 +174,7 @@ private fun SearchByCriteriaPreview() {
     AflamiTheme {
         SearchByCountryContent(
             state = CountrySearchUiState(),
+            errorState = null,
             movies = emptyFlow<PagingData< SearchMediaItemUiState>>().collectAsLazyPagingItems(),
             interactionListener = object : CountrySearchInteractionListener {
                 override fun onChangeSearchKeyword(keyword: String) {}

@@ -5,14 +5,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.MovieWatchHistory
 import com.amsterdam.domain.utils.TvShowWatchHistory
 import com.amsterdam.paging.PagingSource
-import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiState.ContinueWatchingError
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiState.ContinueWatchingItemUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
@@ -38,9 +35,8 @@ class ContinueWatchingViewModel @Inject constructor(
 
     init {
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach {
-                getContinueWatchingData()
-            }.launchIn(viewModelScope)
+            .onEach { getContinueWatchingData() }
+            .launchIn(viewModelScope)
     }
 
     private fun getContinueWatchingData() {
@@ -70,28 +66,13 @@ class ContinueWatchingViewModel @Inject constructor(
                 ).flow.cachedIn(viewModelScope)
             },
             onSuccess = ::onGetContinueWatchingScreenDataSuccess,
-            onError = ::onError,
             onCompletion = ::onCompletion
         )
     }
 
     fun onGetContinueWatchingScreenDataSuccess(mediaItems: Flow<PagingData<ContinueWatchingItemUiState>>) {
         updateState { currentState ->
-            currentState.copy(
-                continueMediaItemUiStates = mediaItems
-            )
-        }
-    }
-
-    private fun onError(exception: AflamiException) {
-        when (exception) {
-            is NoInternetException -> updateState {
-                it.copy(
-                    error = ContinueWatchingError.NetworkError
-                )
-            }
-
-            else -> {}
+            currentState.copy(continueMediaItemUiStates = mediaItems)
         }
     }
 
@@ -102,13 +83,9 @@ class ContinueWatchingViewModel @Inject constructor(
             sendNewNavigationEffect(ContinueWatchingEffect.NavigateToTvShowDetailsEffect(mediaId))
     }
 
-    override fun onClickRetryLoading() {
-        getContinueWatchingData()
-    }
+    override fun onClickRetryLoading() = getContinueWatchingData()
 
-    override fun onClickBack() {
-        sendNewNavigationEffect(ContinueWatchingEffect.NavigateBack)
-    }
+    override fun onClickBack() = sendNewNavigationEffect(ContinueWatchingEffect.NavigateBack)
 
     private fun onCompletion() = updateState { it.copy(isLoading = false) }
 }

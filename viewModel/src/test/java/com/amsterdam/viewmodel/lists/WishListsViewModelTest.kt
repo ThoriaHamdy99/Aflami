@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.lists
 
+import app.cash.turbine.test
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
@@ -7,6 +8,7 @@ import com.amsterdam.domain.useCase.list.CreateNewListUseCase
 import com.amsterdam.domain.useCase.list.GetWishListsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.SessionType
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.entity.WishList
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
@@ -26,6 +28,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.jvm.java
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class WishListsViewModelTest {
@@ -121,7 +124,6 @@ class WishListsViewModelTest {
         assertThat(state.userLists[0].name).isEqualTo("Favorites")
         assertThat(state.userLists[1].name).isEqualTo("Watchlist")
         assertThat(state.isLoading).isFalse()
-        assertThat(state.errorUiState).isNull()
     }
 
     @Test
@@ -137,7 +139,6 @@ class WishListsViewModelTest {
         val state = viewModel.state.value
         assertThat(state.userLists).isEmpty()
         assertThat(state.isLoading).isFalse()
-        assertThat(state.errorUiState).isNull()
     }
 
     @Test
@@ -149,27 +150,21 @@ class WishListsViewModelTest {
        
         advanceUntilIdle()
 
-       
-        val state = viewModel.state.value
-        assertThat(state.isLoading).isFalse()
-        assertThat(state.errorUiState).isNotNull()
-        assertThat(state.errorUiState).isInstanceOf(ListsUiState.ListsErrorState.NoNetworkConnection::class.java)
+        viewModel.errorState.test {
+            assertThat(awaitItem()).isEqualTo(ErrorUiState.NoInternetError)
+        }
     }
 
     @Test
     fun `should handle unknown error when loading custom lists`() = testScope.runTest {
-       
         coEvery { getsSessionType() } returns SessionType.LOGGED_IN
         coEvery { getWishListsUseCase() } throws AflamiException()
-
        
         advanceUntilIdle()
 
-       
-        val state = viewModel.state.value
-        assertThat(state.isLoading).isFalse()
-        assertThat(state.errorUiState).isNotNull()
-        assertThat(state.errorUiState).isInstanceOf(ListsUiState.ListsErrorState.UnknownError::class.java)
+        viewModel.errorState.test {
+            assertThat(awaitItem()).isEqualTo(ErrorUiState.UnknownError)
+        }
     }
 
     @Test

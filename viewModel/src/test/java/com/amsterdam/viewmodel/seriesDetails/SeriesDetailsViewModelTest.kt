@@ -16,6 +16,7 @@ import com.amsterdam.entity.Season
 import com.amsterdam.entity.TvShow
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsUiState.SeriesExtras
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -133,7 +134,6 @@ class SeriesDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        assertThat(viewModel.state.value.networkError).isTrue()
         assertThat(viewModel.state.value.isLoading).isFalse()
     }
 
@@ -147,8 +147,7 @@ class SeriesDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        assertThat(viewModel.state.value.networkError).isTrue()
-        assertThat(viewModel.state.value.isLoading).isFalse()
+        assertThat(viewModel.errorState).isEqualTo(ErrorUiState.NoInternetError)
     }
 
     @Test
@@ -191,7 +190,7 @@ class SeriesDetailsViewModelTest {
         every { testArgs.tvShowId } returns tvShowId
         coEvery { getTvShowDetailsUseCase.invoke(any()) } throws NoInternetException()
         advanceUntilIdle()
-        assertThat(viewModel.state.value.networkError).isTrue()
+        assertThat(viewModel.errorState).isEqualTo(ErrorUiState.NoInternetError)
 
         // When
         mockSuccessfulTvShowDetails()
@@ -200,7 +199,7 @@ class SeriesDetailsViewModelTest {
 
         // Then
         coVerify(exactly = 2) { getTvShowDetailsUseCase.invoke(tvShowId) }
-        assertThat(viewModel.state.value.networkError).isFalse()
+        assertThat(viewModel.errorState).isNull()
         assertThat(viewModel.state.value.isLoading).isFalse()
     }
 

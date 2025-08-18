@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import kotlin.time.Duration.Companion.seconds
 
 class DoGuessReleaseGameHintUseCaseTest {
     private val getTotalUserPointsUseCase: GetTotalUserPointsUseCase = mockk()
@@ -46,6 +47,6 @@ class DoGuessReleaseGameHintUseCaseTest {
         question = "Sample Movie",
         choices = listOf(1972, 1973, 1974),
         correctChoice = 1972,
-        questionTime = 30
+        questionDuration = 30.seconds
     )
 }

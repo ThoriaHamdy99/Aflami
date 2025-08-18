@@ -1,10 +1,9 @@
 package com.amsterdam.viewmodel.home
 
-import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.mood.GetMoviesByMoodUseCase.Mood
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.shared.defaultMovieGenres
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.shared.uiStates.MovieGenreItemUiState
 import kotlinx.datetime.Clock
@@ -17,7 +16,6 @@ data class HomeUiState(
     val continueWatchingMediaSectionUiState: ContinueWatchingMediaSectionUiState = ContinueWatchingMediaSectionUiState(),
     val moodPickerUiState: MoodPickerUiState = MoodPickerUiState(),
     val isLoading: Boolean = true,
-    val error: HomeError? = null
 ) {
     data class PopularMediaSectionUiState(
         val mediaItems: List<PopularMediaItemUiState> = emptyList(),
@@ -60,7 +58,7 @@ data class HomeUiState(
         val movies: List<MoodPickerItemUiState> = emptyList(),
         val isLoadingMovies: Boolean = false,
         val openMovieDialog: Boolean = false,
-        val error: HomeError? = null
+        val error: ErrorUiState? = null
     )
 
     data class PopularMediaItemUiState(
@@ -113,18 +111,4 @@ data class HomeUiState(
         val mediaType: MediaType = MediaType.MOVIE,
         val isAdult: Boolean = false
     )
-
-    sealed class HomeError {
-        data object NetworkError : HomeError()
-        data object UnknownError : HomeError()
-
-        companion object {
-            fun toHomeErrorUiState(exception: AflamiException): HomeError {
-                return when (exception) {
-                    is NetworkException -> NetworkError
-                    else -> UnknownError
-                }
-            }
-        }
-    }
 }

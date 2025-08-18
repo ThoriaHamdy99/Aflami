@@ -2,6 +2,7 @@ package com.amsterdam.viewmodel.guessWhichGenre
 
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
+import kotlin.time.Duration
 
 data class GenreGameUiState(
     val isLoading: Boolean = false,
@@ -22,5 +23,5 @@ data class GameQuestionUiState(
     val questionData: String,
     val answers: List<MovieGenre>,
     val correctAnswer: MovieGenre,
-    val questionTime: Int = 0
+    val questionDuration: Duration = Duration.ZERO
 )

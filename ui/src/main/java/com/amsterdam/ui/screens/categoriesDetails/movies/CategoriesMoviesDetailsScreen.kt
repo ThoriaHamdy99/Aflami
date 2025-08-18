@@ -46,12 +46,14 @@ import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsI
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiState
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsViewModel
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 
 @Composable
 fun CategoriesMoviesDetailsScreen(
     viewModel: CategoriesMoviesDetailsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val errorState by viewModel.errorState.collectAsState()
     val navigationManager = LocalNavManager.current
     val movies = state.movies.collectAsLazyPagingItems()
     LaunchedEffect(
@@ -77,6 +79,7 @@ fun CategoriesMoviesDetailsScreen(
     }
     CategoriesMoviesDetailsContent(
         state = state,
+        errorState = errorState,
         interaction = viewModel,
         movies = movies
 
@@ -86,6 +89,7 @@ fun CategoriesMoviesDetailsScreen(
 @Composable
 private fun CategoriesMoviesDetailsContent(
     state: CategoriesMoviesDetailsUiState,
+    errorState: ErrorUiState?,
     interaction: CategoriesMoviesDetailsInteractionListener,
     movies: LazyPagingItems<CategoriesMoviesDetailsUiState.MoviesUiState>
 ) {
@@ -134,27 +138,23 @@ private fun CategoriesMoviesDetailsContent(
                     CenterOfScreenContainer(
                         unneededSpace = 0.dp
                     ) {
-                       AnimatedVisibility(visible = state.isLoading) {
+                        AnimatedVisibility(visible = state.isLoading) {
                             LoadingIndicator()
                         }
                     }
                 }
 
-                state.errorUiState != null && state.errorUiState is CategoriesMoviesDetailsUiState.CategoriesDetailsErrorState.NoNetworkConnection -> {
-                    CenterOfScreenContainer(
-                        unneededSpace = 0.dp
-                    ) {
-                        NoNetworkContainer(
-                            onClickRetry = {
-                                interaction.onClickRetryRequest()
-                            }
-                        )
+                errorState is ErrorUiState.NoInternetError -> {
+                    CenterOfScreenContainer(unneededSpace = 0.dp) {
+                        NoNetworkContainer(onClickRetry = interaction::onClickRetryRequest)
                     }
                 }
 
                 else -> {
                     LazyColumn(
-                        modifier = Modifier.fillMaxHeight(),
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(movies.itemCount) { index ->
@@ -173,7 +173,6 @@ private fun CategoriesMoviesDetailsContent(
                                         onError = {
                                             ImageErrorIndicator()
                                         },
-                                        isAdult = movie.isAdult
                                     )
                                 },
                                 movieTitle = movie.name,
@@ -182,12 +181,11 @@ private fun CategoriesMoviesDetailsContent(
                                 movieRating = movie.rate,
                                 onClick = { interaction.onClickMovieCard(movie.id) }
                             )
-
                         }
-
                     }
                 }
             }
         }
     }
 }
+

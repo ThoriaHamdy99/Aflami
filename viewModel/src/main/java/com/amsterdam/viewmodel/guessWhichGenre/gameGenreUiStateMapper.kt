@@ -7,12 +7,12 @@ fun GameQuestionUiState.toQuestion() = GameQuestion(
     question = questionData,
     choices = answers,
     correctChoice = correctAnswer,
-    questionTime = questionTime
+    questionDuration = questionDuration
 )
 
 fun GameQuestion<MovieGenre>.toUiState() = GameQuestionUiState(
     questionData = question,
     answers = choices,
     correctAnswer = correctChoice,
-    questionTime = questionTime
+    questionDuration = questionDuration
 )

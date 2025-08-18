@@ -13,14 +13,10 @@ class CategoriesViewModel @Inject constructor(
     (CategoriesUiState(), dispatcherProvider), CategoriesInteractionListener {
 
     override fun onChangeTabOption(tabOption: TabOption) {
-        updateState {
-            it.copy(selectedTabOption = tabOption)
-        }
+        updateState { it.copy(selectedTabOption = tabOption) }
     }
 
-    override fun onClickMovieGenreCard(
-        genreName: String,
-    ) {
+    override fun onClickMovieGenreCard(genreName: String) {
         sendNewNavigationEffect(
             CategoriesUiEffect.NavigateToCategoriesMoviesDetailsScreen(
                 genreName,
@@ -30,10 +26,7 @@ class CategoriesViewModel @Inject constructor(
 
     override fun onClickTvShowGenreCard(genreName: String) {
         sendNewNavigationEffect(
-            CategoriesUiEffect.NavigateToCategoriesTvShowsDetailsScreen(
-                genreName,
-            )
+            CategoriesUiEffect.NavigateToCategoriesTvShowsDetailsScreen(genreName)
         )
     }
 }
-

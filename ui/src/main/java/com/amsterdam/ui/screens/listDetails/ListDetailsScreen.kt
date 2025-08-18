@@ -48,6 +48,7 @@ import com.amsterdam.viewmodel.listDetails.ListDetailsEffect
 import com.amsterdam.viewmodel.listDetails.ListDetailsInteractionListener
 import com.amsterdam.viewmodel.listDetails.ListDetailsUiState
 import com.amsterdam.viewmodel.listDetails.ListDetailsViewModel
+import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -56,6 +57,7 @@ fun ListsDetailsScreen(viewModel: ListDetailsViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val navigationManager = LocalNavManager.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
     val movies = state.listItems.collectAsLazyPagingItems()
     LaunchedEffect(movies.loadState) {
         viewModel.onPagingLoadStateChanged(movies.loadState)
@@ -84,10 +86,8 @@ fun ListsDetailsScreen(viewModel: ListDetailsViewModel = hiltViewModel()) {
                     SnackBarManager.showSuccess(context.getString(R.string.movie_deleted_successfully))
                 }
 
-                is ListDetailsEffect.ShowErrorSnackbar -> {
-                    SnackBarManager.showError(
-                        getListDetailsErrorMessage(state.error, context)
-                    )
+                is ListDetailsEffect.ShowErrorSnackBar -> {
+                    SnackBarManager.showError(getListDetailsErrorMessage(errorState, context))
                 }
 
             }
@@ -96,6 +96,7 @@ fun ListsDetailsScreen(viewModel: ListDetailsViewModel = hiltViewModel()) {
 
     ListDetailsContent(
         state = state,
+        errorState = errorState,
         listener = viewModel
     )
 }
@@ -103,6 +104,7 @@ fun ListsDetailsScreen(viewModel: ListDetailsViewModel = hiltViewModel()) {
 @Composable
 private fun ListDetailsContent(
     state: ListDetailsUiState,
+    errorState: ErrorUiState?,
     listener: ListDetailsInteractionListener
 ) {
 
@@ -157,7 +159,7 @@ private fun ListDetailsContent(
                     }
                 }
 
-                !isLoading && error != null && listMediaItems.itemCount == 0-> {
+                !isLoading && errorState is ErrorUiState.NoInternetError && listMediaItems.itemCount == 0-> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -217,6 +219,7 @@ private fun ListDetailsScreenPreview() {
     AflamiTheme {
         ListDetailsContent(
             state = ListDetailsUiState(),
+            errorState = null,
             listener = object : ListDetailsInteractionListener {
                 override fun onClickBack() {}
                 override fun onClickRetryLoading() {}

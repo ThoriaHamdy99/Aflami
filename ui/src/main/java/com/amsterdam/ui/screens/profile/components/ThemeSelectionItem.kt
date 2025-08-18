@@ -20,9 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.components.Icon
+import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.components.buttons.RadioButton
 import com.amsterdam.designsystem.components.buttons.RadioState
-import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.designsystem.utils.ThemeAndLocalePreviews
@@ -37,8 +37,8 @@ fun ThemeSelectionItem(
     onClick: () -> Unit = {}
 ) {
     val backgroundColor = animateColorAsState(
-            if (isSelected) AppTheme.color.primaryVariant else AppTheme.color.surface
-        )
+        if (isSelected) AppTheme.color.primaryVariant else AppTheme.color.surface
+    )
     val iconColor = animateColorAsState(
         if (isSelected) AppTheme.color.primary else AppTheme.color.body
     )
@@ -48,19 +48,19 @@ fun ThemeSelectionItem(
     val shape = RoundedCornerShape(16.dp)
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = backgroundColor.value,
-                shape = shape,
-            )
-            .border(
-                color = borderColor.value,
-                width = 1.dp,
-                shape = shape,
-            )
-            .clip(shape)
-            .clickable(onClick = onClick)
-            .padding(vertical = 16.dp, horizontal = 12.dp),
+                .fillMaxWidth()
+                .background(
+                    color = backgroundColor.value,
+                    shape = shape,
+                )
+                .border(
+                    color = borderColor.value,
+                    width = 1.dp,
+                    shape = shape,
+                )
+                .clip(shape)
+                .clickable(onClick = onClick)
+                .padding(vertical = 16.dp, horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -73,12 +73,11 @@ fun ThemeSelectionItem(
             color = AppTheme.color.body,
             style = AppTheme.textStyle.label.large,
             modifier = Modifier
-                .weight(1f)
-                .padding(start = 8.dp)
+                    .weight(1f)
+                    .padding(start = 8.dp)
         )
         RadioButton(
             state = if (isSelected) RadioState.Selected else RadioState.Default,
-            onClick = onClick,
             modifier = Modifier,
         )
     }

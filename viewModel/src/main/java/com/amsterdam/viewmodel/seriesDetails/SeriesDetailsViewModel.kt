@@ -2,8 +2,6 @@ package com.amsterdam.viewmodel.seriesDetails
 
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NetworkException
-import com.amsterdam.domain.exceptions.NoInternetException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
 import com.amsterdam.domain.useCase.details.GetEpisodeVideosUseCase
 import com.amsterdam.domain.useCase.details.GetEpisodesBySeasonNumberUseCase
@@ -47,26 +45,26 @@ class SeriesDetailsViewModel @Inject constructor(
         manageLocaleLanguageUseCase.getAppLanguage()
             .onEach { language ->
                 updateState { it.copy(currentLanguage = language.value) }
-                loadTvShowDetails()
-            }.launchIn(viewModelScope)
+                getTvShowDetails()
+            }
+            .launchIn(viewModelScope)
     }
 
-    private fun loadTvShowDetails() {
-        updateState { it.copy(isLoading = true, networkError = false) }
+    private fun getTvShowDetails() {
+        resetErrorStateToNull()
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
-            action = ::getTvShowDetails,
+            action = { getTvShowDetailsUseCase(state.value.tvShowId) },
             onSuccess = ::onGetTvShowDetailsSuccess,
-            onError = ::onError,
+            onCompletion = ::onCompletion
         )
-    }
-
-    private suspend fun getTvShowDetails(): TvShowDetails {
-        return getTvShowDetailsUseCase(state.value.tvShowId)
     }
 
     private fun onGetTvShowDetailsSuccess(tvShowDetails: TvShowDetails) {
         updateState { tvShowDetails.toUiState(state.value.currentLanguage) }
     }
+
+    private fun onCompletion() = updateState { it.copy(isLoading = false) }
 
     override fun onClickSeriesExtraItem(seriesExtras: SeriesExtras) {
         updateState { state ->
@@ -83,7 +81,7 @@ class SeriesDetailsViewModel @Inject constructor(
     }
 
     override fun onClickRetryButton() {
-        loadTvShowDetails()
+        getTvShowDetails()
     }
 
     override fun onClickShowAllCast() {
@@ -128,7 +126,6 @@ class SeriesDetailsViewModel @Inject constructor(
             tryToExecute(
                 action = { getEpisodesBySeasonNumberUseCase(state.value.tvShowId, seasonNumber) },
                 onSuccess = { episodes -> onGetEpisodesSuccess(seasonNumber, episodes) },
-                onError = ::onError,
             )
         }
     }
@@ -210,25 +207,6 @@ class SeriesDetailsViewModel @Inject constructor(
         updateState { it.copy(isLoginDialogVisible = true, dialogType = dialogType) }
     }
 
-    private fun onError(exception: AflamiException) {
-        when (exception) {
-            is NoInternetException -> updateState {
-                it.copy(
-                    isLoading = false,
-                    networkError = true
-                )
-            }
-
-            is NetworkException -> updateState {
-                it.copy(
-                    isLoading = false,
-                    networkError = true
-                )
-            }
-
-            else -> {}
-        }
-    }
 
     override fun onClickCancelRateDialog() {
         updateState {

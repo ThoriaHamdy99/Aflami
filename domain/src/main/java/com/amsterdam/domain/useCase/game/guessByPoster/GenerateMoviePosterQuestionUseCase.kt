@@ -4,6 +4,7 @@ import com.amsterdam.domain.repository.GameRepository
 import com.amsterdam.domain.useCase.game.GetGameDifficultyByDifficultyTypeUseCase
 import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.entity.GameDifficulty
+import kotlin.time.Duration.Companion.seconds
 
 
 class GenerateMoviePosterQuestionsUseCase(
@@ -26,7 +27,7 @@ class GenerateMoviePosterQuestionsUseCase(
                 question = correctMovie.posterUrl,
                 choices = movieNameChoices,
                 correctChoice = correctMovie.name,
-                questionTime = gameDifficulty.timeLimitSeconds
+                questionDuration = gameDifficulty.timeLimitSeconds.seconds
             )
         }
     }
