@@ -48,7 +48,7 @@ fun CategoriesScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navigationManager = LocalNavManager.current
-    CategoriesScreenContent(interaction = viewModel, state = state)
+    CategoriesScreenContent(interactionListener = viewModel, state = state)
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -71,7 +71,7 @@ fun CategoriesScreen(
 
 @Composable
 private fun CategoriesScreenContent(
-    interaction: CategoriesInteractionListener, state: CategoriesUiState,
+    interactionListener: CategoriesInteractionListener, state: CategoriesUiState,
 ) {
     val lazyState = rememberLazyGridState()
     var appBarHeight by remember { mutableIntStateOf(0) }
@@ -99,7 +99,7 @@ private fun CategoriesScreenContent(
                     stringResource(R.string.movies), stringResource(R.string.tv_shows)
                 ),
                 selectedIndex = state.selectedTabOption.index,
-                onSelectTab = { index -> interaction.onChangeTabOption(TabOption.entries[index]) },
+                onSelectTab = { index -> interactionListener.onChangeTabOption(TabOption.entries[index]) },
             )
             LazyVerticalGrid(
                 modifier = Modifier
@@ -122,7 +122,7 @@ private fun CategoriesScreenContent(
                                 categoryName = stringResource(movieGenre.displayName),
                                 categoryImage = painterResource(movieGenre.imageRes),
                                 onClick = {
-                                    interaction.onClickMovieGenreCard(genre)
+                                    interactionListener.onClickMovieGenreCard(genre)
                                 })
                         }
                     }
@@ -135,7 +135,7 @@ private fun CategoriesScreenContent(
                                 categoryName = stringResource(tvShowGenre.displayName),
                                 categoryImage = painterResource(tvShowGenre.imageRes),
                                 onClick = {
-                                    interaction.onClickTvShowGenreCard(genre)
+                                    interactionListener.onClickTvShowGenreCard(genre)
                                 })
                         }
                     }
