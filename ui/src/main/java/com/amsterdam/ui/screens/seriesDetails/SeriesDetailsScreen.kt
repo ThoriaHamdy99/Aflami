@@ -456,7 +456,7 @@ fun SeriesDetailsContent(
                                 SeriesExtras.SEASONS -> {
                                     seasonsSection(
                                         seasons = state.seasons,
-                                        interaction = seriesDetailsInteractionListener
+                                        interactionListener = seriesDetailsInteractionListener
                                     )
                                 }
 
@@ -533,7 +533,7 @@ private fun SeriesExtrasSection(
 }
 
 private fun LazyListScope.seasonsSection(
-    seasons: List<SeasonUiState>, interaction: SeriesDetailsInteractionListener
+    seasons: List<SeasonUiState>, interactionListener: SeriesDetailsInteractionListener
 ) {
     if (seasons.isEmpty()) {
         item { EmptyStateText(stringResource(R.string.there_is_no_seasons)) }
@@ -543,7 +543,7 @@ private fun LazyListScope.seasonsSection(
                 SeasonHeader(
                     season = season,
                     onClickSeasonMenu = { seasonNumber ->
-                        interaction.onClickSeasonMenu(seasonNumber)
+                        interactionListener.onClickSeasonMenu(seasonNumber)
                     }
                 )
             }
@@ -554,7 +554,7 @@ private fun LazyListScope.seasonsSection(
                 item { EpisodeCardPlaceholder(modifier = Modifier.padding(horizontal = 16.dp)) }
             } else {
                 items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
-                    EpisodesMenu(season.seasonNumber, it, interaction::onPlayEpisodeClicked)
+                    EpisodesMenu(season.seasonNumber, it, interactionListener::onPlayEpisodeClicked)
                 }
             }
 
@@ -590,11 +590,10 @@ private fun SeasonHeader(
             )
             Text(
                 text = pluralStringResource(
-                        R.plurals.episodes,
-                        season.episodeCount,
-                        season.episodeCount
-                    ).withEnglishDigits()
-                ,
+                    R.plurals.episodes,
+                    season.episodeCount,
+                    season.episodeCount
+                ).withEnglishDigits(),
                 color = AppTheme.color.hint,
                 style = AppTheme.textStyle.label.small,
                 modifier = Modifier.padding(end = 4.dp)
