@@ -261,7 +261,7 @@
    In the project root, open or create a `local.properties` file and add the following:
 
    ```properties
-   apiKey="YOUR_TOKEN"
+   apiKey="YOUR_API_KEY"
    baseUrl="https://api.themoviedb.org/3/"
    baseImageUrl="https://image.tmdb.org/t/p/w500"
    ndkDir="~/Library/Android/sdk/ndk"
