@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.movieDetails
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
@@ -223,6 +224,7 @@ class MovieDetailsViewModel @Inject constructor(
         movieId: Long,
         listIds: List<Long>,
     ) {
+        Log.d("tag", "called on Save")
         updateState { it.copy(isAddMovieToListLoading = true) }
         tryToExecute(
             action = {
@@ -232,6 +234,7 @@ class MovieDetailsViewModel @Inject constructor(
             },
             onSuccess = {
                 sendNewEffect(MovieDetailsEffect.MovieAddedToListSuccessfully)
+                Log.d("tag", "called on Save")
                 setListToAdded(listIds)
             },
             onError = {
@@ -252,11 +255,10 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     private fun setListToAdded(listIds: List<Long>) {
-        val ids = listIds.toHashSet()
         updateState { state ->
             state.copy(
                 userLists = state.userLists.map { list ->
-                    if (list.id in ids) {
+                    if (list.id in listIds) {
                         list.copy(isMovieInList = true, itemCount = list.itemCount + 1)
                     } else {
                         list
@@ -289,6 +291,7 @@ class MovieDetailsViewModel @Inject constructor(
                 sendNewEffect(MovieDetailsEffect.ListCreatedSuccessfully)
                 onSaveMovieToList(state.value.movieId, listOf(listId.toLong()))
                 loadWishLists()
+                setListToAdded(listOf(listId.toLong()))
             },
             onError = {
                 sendNewEffect(MovieDetailsEffect.FailedToCreateList)
