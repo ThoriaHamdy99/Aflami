@@ -188,7 +188,9 @@ internal fun FilterDialog(
                 isEnabled = true,
                 isLoading = false,
                 isNegative = false,
-                modifier = Modifier.padding(horizontal = 12.dp),
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .fillMaxWidth(),
             )
         }
     }

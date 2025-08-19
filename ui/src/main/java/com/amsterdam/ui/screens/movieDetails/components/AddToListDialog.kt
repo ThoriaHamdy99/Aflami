@@ -198,6 +198,7 @@ private fun ActionButtonsSection(
         )
 
         OutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.create_list),
             onClick = onCreateNewList,
             isEnabled = true,

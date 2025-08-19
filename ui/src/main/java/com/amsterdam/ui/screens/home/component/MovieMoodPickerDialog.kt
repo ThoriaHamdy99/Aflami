@@ -119,7 +119,7 @@ private fun DialogContent(
             isEnabled = true,
             isLoading = false,
             isNegative = false,
-            modifier = Modifier.padding(vertical = 12.dp)
+            modifier = Modifier.padding(vertical = 12.dp).fillMaxWidth()
         )
     }
 }

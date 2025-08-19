@@ -11,8 +11,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,8 +45,7 @@ internal fun BaseButton(
     title: String? = null,
     icon: (@Composable (tint: Color) -> Unit)? = null,
     iconSize: Dp = 20.dp,
-    height: Dp = 56.dp,
-    width: Dp = Dp.Unspecified,
+    height: Dp = 56.dp
 ) {
     val backGroundColor =
         animateButtonBrush(
@@ -68,8 +67,6 @@ internal fun BaseButton(
             modifier
                 .clip(RoundedCornerShape(16.dp))
                 .clipToBounds()
-                .width(width)
-                .fillMaxWidth()
                 .height(height)
                 .background(backGroundColor)
                 .clickable(
@@ -77,7 +74,8 @@ internal fun BaseButton(
                     indication = ripple(),
                     onClick = onClick,
                     enabled = isEnabled && !isLoading,
-                ),
+                )
+                .padding(horizontal = 24.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
