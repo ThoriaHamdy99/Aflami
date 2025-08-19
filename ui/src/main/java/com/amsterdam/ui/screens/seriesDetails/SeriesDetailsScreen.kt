@@ -593,7 +593,7 @@ private fun SeasonHeader(
                         R.plurals.episodes,
                         season.episodeCount,
                         season.episodeCount
-                    )
+                    ).withEnglishDigits()
                 ,
                 color = AppTheme.color.hint,
                 style = AppTheme.textStyle.label.small,
