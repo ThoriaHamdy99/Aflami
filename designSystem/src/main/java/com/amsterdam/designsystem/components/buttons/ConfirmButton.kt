@@ -1,6 +1,7 @@
 package com.amsterdam.designsystem.components.buttons
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,7 +29,7 @@ fun ConfirmButton(
         isEnabled = isEnabled,
         isNegative = isNegative,
         isSecondary = false,
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         colors = colors,
     )
 }

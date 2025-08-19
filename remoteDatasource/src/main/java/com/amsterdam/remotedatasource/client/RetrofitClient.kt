@@ -34,7 +34,7 @@ class RetrofitClient(
 
 ) {
     private companion object {
-        private const val TOKEN_HEADER_NAME = "Authorization"
+        private const val API_KEY_PARAM_NAME = "api_key"
         private const val LANGUAGE_PARAM_NAME = "language"
         private const val SESSION_PARAM_NAME = "session_id"
     }
@@ -70,9 +70,13 @@ class RetrofitClient(
                 }
             }
 
+            originalHttpUrlBuilder.addQueryParameter(
+                API_KEY_PARAM_NAME,
+                BuildConfig.API_KEY
+            )
+
             val newRequest = originalRequest.newBuilder()
                 .url(originalHttpUrlBuilder.build())
-                .header(TOKEN_HEADER_NAME, "Bearer ${BuildConfig.BEARER_TOKEN}")
                 .build()
 
             chain.proceed(newRequest)
