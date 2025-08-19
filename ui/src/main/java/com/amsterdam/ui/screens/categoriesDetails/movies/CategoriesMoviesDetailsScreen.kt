@@ -35,11 +35,13 @@ import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
+import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreIcon
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
+import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsInteractionListener
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiState
@@ -91,6 +93,7 @@ private fun CategoriesMoviesDetailsContent(
     interaction: CategoriesMoviesDetailsInteractionListener,
     movies: LazyPagingItems<CategoriesMoviesDetailsUiState.MoviesUiState>
 ) {
+    val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     Column(
         Modifier
             .fillMaxSize()
@@ -164,6 +167,7 @@ private fun CategoriesMoviesDetailsContent(
                                     SafeImageView(
                                         model = movie.posterImageUrl,
                                         contentDescription = movie.name,
+                                        safetyLevel = safetyLevel,
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier.fillMaxWidth(),
                                         onLoading = {
