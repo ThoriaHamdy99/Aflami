@@ -240,8 +240,8 @@
     <string name="rate_message">Select how much you like it</string>
     <string name="add_to_list">Add to list</string>
     <plurals name="episodes">
-        <item quantity="one">%d episode</item>
-        <item quantity="other">%d episodes</item>
+        <item quantity="one">%1$d episode</item>
+        <item quantity="other">%1$d episodes</item>
     </plurals>
     <string name="season">Season</string>
     <string name="seasons">Seasons</string>

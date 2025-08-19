@@ -269,10 +269,11 @@
         <item quantity="zero">لا توجد حلقات</item>
         <item quantity="one">حلقة واحدة</item>
         <item quantity="two">حلقتان</item>
-        <item quantity="few">حلقات</item>
-        <item quantity="many">حلقة</item>
-        <item quantity="other">حلقات</item>
+        <item quantity="few">%1$d حلقات</item>
+        <item quantity="many">%1$d حلقة</item>
+        <item quantity="other">%1$d حلقة</item>
     </plurals>
+
     <string name="season">موسم</string>
     <string name="seasons">مواسم</string>
     <string name="country_tour_image_description">صورة جولة في البلد</string>
