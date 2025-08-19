@@ -204,8 +204,7 @@ private fun ActionButtonsSection(
             isEnabled = true,
             isLoading = false,
             isNegative = false,
-            colors = ButtonDefaults.buttonColors(containerColor = AppTheme.color.primaryVariant),
-            modifier = Modifier.fillMaxWidth()
+            colors = ButtonDefaults.buttonColors(containerColor = AppTheme.color.primaryVariant)
             )
     }
 }

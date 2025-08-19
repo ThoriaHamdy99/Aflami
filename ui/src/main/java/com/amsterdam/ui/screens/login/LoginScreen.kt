@@ -189,7 +189,6 @@ private fun LoginScreenContent(
                     isEnabled = true,
                     isLoading = false,
                     isNegative = false,
-                    modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = AppTheme.color.primaryVariant)
                 )
             }
