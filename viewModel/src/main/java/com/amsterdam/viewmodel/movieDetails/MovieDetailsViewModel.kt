@@ -1,6 +1,5 @@
 package com.amsterdam.viewmodel.movieDetails
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
@@ -226,7 +225,6 @@ class MovieDetailsViewModel @Inject constructor(
         movieId: Long,
         listIds: List<Long>,
     ) {
-        Log.d("tag", "called on Save")
         updateState { it.copy(isAddMovieToListLoading = true) }
         tryToExecute(
             action = {
@@ -236,7 +234,6 @@ class MovieDetailsViewModel @Inject constructor(
             },
             onSuccess = {
                 sendNewEffect(MovieDetailsEffect.MovieAddedToListSuccessfully)
-                Log.d("tag", "called on Save")
                 setListToAdded(listIds)
             },
             onError = {
