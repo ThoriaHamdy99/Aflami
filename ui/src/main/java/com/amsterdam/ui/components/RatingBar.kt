@@ -72,7 +72,7 @@ fun RatingBar(
                 modifier =
                     Modifier
                         .size(starSize)
-                        .then(if (useEqualSpacing) Modifier.weight(1f) else Modifier)
+                        .weight(1f)
                         .graphicsLayer(translationY = translateY.value)
                         .clickable(
                             onClick = { onRatingStarChanged(starIndex) },
