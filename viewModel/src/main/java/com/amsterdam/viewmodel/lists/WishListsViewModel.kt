@@ -33,19 +33,23 @@ class WishListsViewModel @Inject constructor(
         viewModelScope.launch {
             runIfLoggedIn(
                 onLoggedIn = {
-                    updateState { it.copy(isUserLoggedIn = true) }
-                    manageLocaleLanguageUseCase
-                        .getAppLanguage()
-                        .onEach { getCustomLists() }
-                        .launchIn(viewModelScope)
-
-                    getCustomLists()
+                    initializeLoggedInUser(manageLocaleLanguageUseCase)
                 },
                 onGuest = {
                     updateState { it.copy(isUserLoggedIn = false, isLoading = false) }
                 },
             )
         }
+    }
+
+    private fun initializeLoggedInUser(manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase) {
+        updateState { it.copy(isUserLoggedIn = true) }
+        manageLocaleLanguageUseCase
+            .getAppLanguage()
+            .onEach { getCustomLists() }
+            .launchIn(viewModelScope)
+
+        getCustomLists()
     }
 
     fun getCustomLists(startLoading: Boolean = true) {
@@ -57,7 +61,7 @@ class WishListsViewModel @Inject constructor(
         )
     }
 
-    private fun onGetCustomListsSuccess(customLists: List<WishList>){
+    private fun onGetCustomListsSuccess(customLists: List<WishList>) {
         resetErrorStateToNull()
         updateState {
             it.copy(

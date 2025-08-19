@@ -64,7 +64,7 @@ class SeriesDetailsViewModel @Inject constructor(
         updateState { tvShowDetails.toUiState(state.value.currentLanguage) }
     }
 
-    private fun onCompletion() = updateState { it.copy(isRetryLoading = false,isLoading = false) }
+    private fun onCompletion() = updateState { it.copy(isRetryLoading = false, isLoading = false) }
 
     override fun onClickSeriesExtraItem(seriesExtras: SeriesExtras) {
         updateState { state ->
@@ -91,20 +91,22 @@ class SeriesDetailsViewModel @Inject constructor(
     override fun onClickRate() {
         viewModelScope.launch {
             runIfLoggedIn(
-                onLoggedIn = {
-                    val userRate = state.value.rateDialogUiState.selectedStarIndex
-                    updateState {
-                        it.copy(
-                            rateDialogUiState = RateDialogUiState(
-                                isVisible = true,
-                                isSubmittingEnabled = false,
-                                selectedStarIndex = userRate,
-                                previousStarIndex = userRate
-                            )
-                        )
-                    }
-                },
+                onLoggedIn = { showUserRatingDialog() },
                 onGuest = { showMustLoginDialog(MovieAndSeriesDetailsDialogType.Rate) }
+            )
+        }
+    }
+
+    private fun showUserRatingDialog() {
+        val userRate = state.value.rateDialogUiState.selectedStarIndex
+        updateState {
+            it.copy(
+                rateDialogUiState = RateDialogUiState(
+                    isVisible = true,
+                    isSubmittingEnabled = false,
+                    selectedStarIndex = userRate,
+                    previousStarIndex = userRate
+                )
             )
         }
     }
