@@ -44,7 +44,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     init {
         val movieId = args.movieId
-        updateState { it.copy(movieId = movieId,isLoading = true) }
+        updateState { it.copy(movieId = movieId, isLoading = true) }
 
         manageLocaleLanguageUseCase.getAppLanguage()
             .onEach { language ->
@@ -79,24 +79,26 @@ class MovieDetailsViewModel @Inject constructor(
             )
         }
         runIfLoggedIn(
-            onLoggedIn = {
-                val list = getWishListsUseCase().toUiState()
-                val userLists = list
-                    .map { lists ->
-                        lists.copy(
-                            isMovieInList = checkIsMovieInListUseCase(
-                                movieId = state.value.movieId,
-                                listId = lists.id
-                            )
-                        )
-                    }
-                updateState {
-                    it.copy(
-                        userLists = userLists,
-                    )
-                }
-            },
+            onLoggedIn = { loadUserWishListsWithMovieStatus() },
         )
+    }
+
+    private suspend fun loadUserWishListsWithMovieStatus() {
+        val list = getWishListsUseCase().toUiState()
+        val userLists = list
+            .map { lists ->
+                lists.copy(
+                    isMovieInList = checkIsMovieInListUseCase(
+                        movieId = state.value.movieId,
+                        listId = lists.id
+                    )
+                )
+            }
+        updateState {
+            it.copy(
+                userLists = userLists,
+            )
+        }
     }
 
     private fun onGetWishListsComplete() {
