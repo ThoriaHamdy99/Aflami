@@ -210,7 +210,6 @@
 >
 > - **Browse by Type:** Easily switch between dedicated "Movies" and "TV Shows" tabs to find exactly what you're looking for.
 > - **Rich Genre Selection:** Discover content across a wide array of genres, each represented by a unique, intuitive icon.
-> - **Image Viewer:** Ensuring a respectful viewing experience for all users, featuring intelligent content filtering using on-device machine learning to detect and automatically blur potentially inappropriate content according to Islamic cultural guidelines.
 > - **Instant Results:** Simply tap on any genre to see a curated list of titles from that category, complete with their poster, title, and rating.
 
 ## Profile Screen
@@ -247,6 +246,27 @@
 > 
 > - **Watch History:** Shows your recently watched movies and TV shows, allowing you to quickly revisit theme.
 > - **My Ratings:** View all movies and TV shows you’ve rated. Easily review, update, or manage your feedback to track your preferences.
+
+ ### Islamic Image Loader
+> ***Ensuring a respectful viewing experience for all users, featuring intelligent content filtering using on-device machine learning to detect and automatically blur potentially inappropriate content according to Islamic cultural guidelines.
+<table>
+  <tr>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/b446397c-11d7-410a-b36f-36b23b874c51" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/f25a008e-c0ea-4d18-9282-0f2aae112cb2" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/660cf164-a492-4a21-858b-443793c69f98" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/b83a6166-4716-44ef-baf8-fce6100ed1be" /></td>
+  </tr>
+</table>
+
+> [!Note]
+> 
+> AI-driven content detection aligned with Islamic guidelines
+
+> Intelligent image blurring for sensitive material
+
+> Coil-based image loading with customizable transformations
+
+> Adjustable sensitivity settings
 
 # Installation
 
