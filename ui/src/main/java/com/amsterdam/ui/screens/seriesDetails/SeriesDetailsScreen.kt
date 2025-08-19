@@ -589,12 +589,12 @@ private fun SeasonHeader(
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = "${season.episodeCount} ${
-                    pluralStringResource(
+                text = pluralStringResource(
                         R.plurals.episodes,
+                        season.episodeCount,
                         season.episodeCount
                     )
-                }",
+                ,
                 color = AppTheme.color.hint,
                 style = AppTheme.textStyle.label.small,
                 modifier = Modifier.padding(end = 4.dp)
