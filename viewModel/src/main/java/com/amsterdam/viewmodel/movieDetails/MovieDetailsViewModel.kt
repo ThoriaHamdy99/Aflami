@@ -1,5 +1,6 @@
 package com.amsterdam.viewmodel.movieDetails
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.authentication.GetsSessionType
@@ -84,7 +85,9 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     private suspend fun loadUserWishListsWithMovieStatus() {
+        Log.d("details", "loadUserWishListsWithMovieStatus: start of load wish list")
         val list = getWishListsUseCase().toUiState()
+        Log.d("details", "loadUserWishListsWithMovieStatus: lists loaded")
         val userLists = list
             .map { lists ->
                 lists.copy(
@@ -94,7 +97,9 @@ class MovieDetailsViewModel @Inject constructor(
                     )
                 )
             }
+        Log.d("details", "loadUserWishListsWithMovieStatus: lists mapped")
         updateState {
+            Log.d("details", "loadUserWishListsWithMovieStatus: state updated")
             it.copy(
                 userLists = userLists,
             )
@@ -225,14 +230,17 @@ class MovieDetailsViewModel @Inject constructor(
         movieId: Long,
         listIds: List<Long>,
     ) {
+        Log.d("details", "onSaveMovieToList: started")
         updateState { it.copy(isAddMovieToListLoading = true) }
         tryToExecute(
             action = {
+                Log.d("details", "onSaveMovieToList: in action")
                 listIds.forEach { listId ->
                     addMovieToListUseCase(movieId = movieId, listId = listId)
                 }
             },
             onSuccess = {
+                Log.d("details", "onSaveMovieToList: in onSuccess")
                 sendNewEffect(MovieDetailsEffect.MovieAddedToListSuccessfully)
                 setListToAdded(listIds)
             },
@@ -254,9 +262,11 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     private fun setListToAdded(listIds: List<Long>) {
+        Log.d("details", "setListToAdded: started")
         updateState { state ->
             state.copy(
                 userLists = state.userLists.map { list ->
+                    Log.d("details", "setListToAdded: updating $list state")
                     if (list.id in listIds) {
                         list.copy(isMovieInList = true, itemCount = list.itemCount + 1)
                     } else {
@@ -289,8 +299,7 @@ class MovieDetailsViewModel @Inject constructor(
             onSuccess = { listId ->
                 sendNewEffect(MovieDetailsEffect.ListCreatedSuccessfully)
                 onSaveMovieToList(state.value.movieId, listOf(listId.toLong()))
-                loadWishLists()
-                setListToAdded(listOf(listId.toLong()))
+                setNewList(listId.toLong(), state.value.listName)
             },
             onError = {
                 sendNewEffect(MovieDetailsEffect.FailedToCreateList)
@@ -305,6 +314,23 @@ class MovieDetailsViewModel @Inject constructor(
                 }
             },
         )
+    }
+
+    private fun setNewList(listId: Long, listName: String){
+        val newWishList = state.value.userLists.toMutableList()
+        newWishList.add(
+            WishListUiState(
+                id = listId,
+                name = listName,
+                itemCount = 0,
+                isMovieInList = true
+            )
+        )
+        updateState {
+            it.copy(
+                userLists = newWishList
+            )
+        }
     }
 
     override fun onSelectedListChange(selectedLists: List<WishListUiState>) {
