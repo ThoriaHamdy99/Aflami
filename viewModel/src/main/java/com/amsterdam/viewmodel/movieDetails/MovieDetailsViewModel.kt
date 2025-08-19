@@ -288,8 +288,8 @@ class MovieDetailsViewModel @Inject constructor(
             },
             onSuccess = { listId ->
                 sendNewEffect(MovieDetailsEffect.ListCreatedSuccessfully)
-                onSaveMovieToList(state.value.movieId, listOf(listId.toLong()))
                 setNewList(listId.toLong(), state.value.listName)
+                onSaveMovieToList(state.value.movieId, listOf(listId.toLong()))
             },
             onError = {
                 sendNewEffect(MovieDetailsEffect.FailedToCreateList)
