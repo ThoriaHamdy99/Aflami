@@ -119,6 +119,7 @@ internal fun FilterDialog(
                 modifier = Modifier.padding(top = 8.dp, bottom = 12.dp),
                 selectedStarIndex = filterState.selectedStarIndex,
                 onRatingStarChanged = interaction::onChangeRatingStar,
+                useEqualSpacing = false
             )
             Text(
                 text = stringResource(R.string.genre),

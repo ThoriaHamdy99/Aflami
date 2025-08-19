@@ -288,9 +288,8 @@ class MovieDetailsViewModel @Inject constructor(
             },
             onSuccess = { listId ->
                 sendNewEffect(MovieDetailsEffect.ListCreatedSuccessfully)
+                setNewList(listId.toLong(), state.value.listName)
                 onSaveMovieToList(state.value.movieId, listOf(listId.toLong()))
-                loadWishLists()
-                setListToAdded(listOf(listId.toLong()))
             },
             onError = {
                 sendNewEffect(MovieDetailsEffect.FailedToCreateList)
@@ -305,6 +304,23 @@ class MovieDetailsViewModel @Inject constructor(
                 }
             },
         )
+    }
+
+    private fun setNewList(listId: Long, listName: String){
+        val newWishList = state.value.userLists.toMutableList()
+        newWishList.add(
+            WishListUiState(
+                id = listId,
+                name = listName,
+                itemCount = 0,
+                isMovieInList = true
+            )
+        )
+        updateState {
+            it.copy(
+                userLists = newWishList
+            )
+        }
     }
 
     override fun onSelectedListChange(selectedLists: List<WishListUiState>) {
