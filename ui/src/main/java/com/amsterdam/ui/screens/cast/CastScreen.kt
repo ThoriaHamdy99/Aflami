@@ -42,11 +42,9 @@ import com.amsterdam.imageviewer.classification.SafetyLevel
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
-import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
-import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.cast.CastInteractionListener
 import com.amsterdam.viewmodel.cast.CastUiEffect
 import com.amsterdam.viewmodel.cast.CastUiState
@@ -68,14 +66,14 @@ fun CastScreen(viewModel: CastViewModel = hiltViewModel()) {
         }
     }
 
-    CastContent(state = state, errorState = errorState, interaction = viewModel)
+    CastContent(state = state, errorState = errorState, interactionListener = viewModel)
 }
 
 @Composable
 private fun CastContent(
     state: CastUiState,
     errorState: ErrorUiState?,
-    interaction: CastInteractionListener,
+    interactionListener: CastInteractionListener,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -91,7 +89,7 @@ private fun CastContent(
         DefaultAppBar(
             modifier = Modifier.padding(horizontal = 16.dp),
             title = stringResource(R.string.cast),
-            onNavigateBackClicked = interaction::onClickNavigateBack,
+            onNavigateBackClicked = interactionListener::onClickNavigateBack,
         )
 
         AnimatedContent(
@@ -117,7 +115,7 @@ private fun CastContent(
                 errorState == ErrorUiState.NoInternetError -> {
                     NoNetworkContainer(
                         modifier = Modifier.fillMaxSize(),
-                        onClickRetry = interaction::onClickRetrySearch,
+                        onClickRetry = interactionListener::onClickRetrySearch,
                         showRetryLoading = state.isRetryLoading
                     )
                 }
