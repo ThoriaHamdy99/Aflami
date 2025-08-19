@@ -3,13 +3,15 @@ package com.amsterdam.viewmodel.search.countrySearch
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
-import com.amsterdam.domain.exceptions.NetworkException
+import com.amsterdam.domain.useCase.search.GetMoviesByCountryUseCase
 import com.amsterdam.domain.useCase.search.GetSuggestedCountriesUseCase
 import com.amsterdam.entity.Country
+import com.amsterdam.paging.PagingSource
 import com.amsterdam.viewmodel.search.mapper.toSearchMediaItemUiState
 import com.amsterdam.viewmodel.search.uiState.SearchMediaItemUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -25,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CountrySearchViewModel @Inject constructor(
     private val getSuggestedCountriesUseCase: GetSuggestedCountriesUseCase,
-    private val countrySearchPagingSource: CountrySearchPagingSource,
+    private val getMoviesByCountryUseCase: GetMoviesByCountryUseCase,
     private val dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<CountrySearchUiState, CountrySearchEffect>(
     CountrySearchUiState(),
@@ -95,7 +97,7 @@ class CountrySearchViewModel @Inject constructor(
                 selectedCountryIsoCode = country.countryIsoCode,
             )
         }
-        fetchMoviesByCountry(getSelectedCountry())
+        getMoviesByCountry(getSelectedCountry())
     }
 
     override fun onClickRetry() {
@@ -103,19 +105,25 @@ class CountrySearchViewModel @Inject constructor(
 
         when {
             !hasSelectedCountry -> getCountriesByKeyword(state.value.keyword)
-            hasSelectedCountry -> fetchMoviesByCountry(getSelectedCountry())
+            hasSelectedCountry -> getMoviesByCountry(getSelectedCountry())
         }
     }
 
-    private fun fetchMoviesByCountry(selectedCountry: Country) {
+    private fun getMoviesByCountry(selectedCountry: Country) {
         updateState { it.copy(isLoading = true, showSuggestedCountries = false) }
         tryToExecute(
             action = {
-                countrySearchPagingSource.getMovies(selectedCountry)
-                    .map { pagingData -> pagingData.map { it.toSearchMediaItemUiState() } }
-                    .cachedIn(viewModelScope)
+                Pager(
+                    config = PagingConfig(pageSize = 20),
+                    pagingSourceFactory = {
+                        PagingSource { page ->
+                            getMoviesByCountryUseCase(selectedCountry, page)
+                                .map { it.toSearchMediaItemUiState() }
+                        }
+                    },
+                ).flow.cachedIn(viewModelScope)
             },
-            onSuccess = ::onFetchMoviesSuccess,
+            onSuccess = ::onGetMoviesSuccess,
         )
     }
 
@@ -125,7 +133,7 @@ class CountrySearchViewModel @Inject constructor(
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
-        when (loadStates.refresh) {
+        when (val refreshState = loadStates.refresh) {
             is LoadState.Loading -> {
                 resetErrorStateToNull()
                 if (state.value.selectedCountryIsoCode.isNotBlank()) {
@@ -138,8 +146,8 @@ class CountrySearchViewModel @Inject constructor(
             }
 
             is LoadState.Error -> {
-                updateState { it.copy(isLoading = false,) }
-                updateErrorStateByException(NetworkException())
+                updateState { it.copy(isLoading = false) }
+                updateErrorStateByException(refreshState.error as AflamiException?)
             }
         }
     }
@@ -150,7 +158,7 @@ class CountrySearchViewModel @Inject constructor(
         }.toCountry()
     }
 
-    private fun onFetchMoviesSuccess(movies: Flow<PagingData<SearchMediaItemUiState>>) {
+    private fun onGetMoviesSuccess(movies: Flow<PagingData<SearchMediaItemUiState>>) {
         updateState {
             it.copy(
                 movies = movies,

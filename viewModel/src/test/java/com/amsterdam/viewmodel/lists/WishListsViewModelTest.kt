@@ -281,7 +281,7 @@ class WishListsViewModelTest {
 
        
         advanceUntilIdle() // Wait for initial calls to complete
-        viewModel.onClickRetryFetchList()
+        viewModel.onClickRetry()
         advanceUntilIdle()
 
        

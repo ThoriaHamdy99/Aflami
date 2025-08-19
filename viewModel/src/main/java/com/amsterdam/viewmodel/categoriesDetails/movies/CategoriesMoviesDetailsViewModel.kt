@@ -69,12 +69,12 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
 
             is LoadState.NotLoading -> updateState { it.copy(isLoading = false) }
             is LoadState.Error -> {
-                onFetchError(refreshState.error as AflamiException)
+                onGetError(refreshState.error as AflamiException)
             }
         }
     }
 
-    private fun onFetchError(exception: AflamiException) {
+    private fun onGetError(exception: AflamiException) {
         updateErrorStateByException(exception)
         updateState { it.copy(isLoading = false) }
     }
