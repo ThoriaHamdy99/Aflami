@@ -188,7 +188,7 @@ private fun ListsScreenContent(
                                     Modifier
                                         .fillMaxSize()
                                         .verticalScroll(rememberScrollState()),
-                                    onClickRetry = interaction::onClickRetryFetchList,
+                                    onClickRetry = interaction::onClickRetry,
                             )
                         }
 
@@ -258,7 +258,7 @@ private fun ListsScreenPreview_Loading() {
                     ) {
                     }
 
-                    override fun onClickRetryFetchList() {}
+                    override fun onClickRetry() {}
 
                     override fun onDismiss() {
                     }
@@ -298,7 +298,7 @@ private fun ListsScreenPreview_Empty() {
                     ) {
                     }
 
-                    override fun onClickRetryFetchList() {}
+                    override fun onClickRetry() {}
 
                     override fun onDismiss() {
                     }
@@ -364,7 +364,7 @@ private fun ListsScreenPreview_WithData() {
                     ) {
                     }
 
-                    override fun onClickRetryFetchList() {}
+                    override fun onClickRetry() {}
 
                     override fun onDismiss() {
                     }
@@ -404,7 +404,7 @@ private fun ListsScreenPreview_Error() {
                     ) {
                     }
 
-                    override fun onClickRetryFetchList() {}
+                    override fun onClickRetry() {}
 
                     override fun onDismiss() {
                     }

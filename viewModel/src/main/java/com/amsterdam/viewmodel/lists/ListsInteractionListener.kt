@@ -6,7 +6,7 @@ interface ListsInteractionListener {
     fun onCreateNewListClick()
 
     fun onListClick(listId: Long, listName: String)
-    fun onClickRetryFetchList()
+    fun onClickRetry()
     fun onDismiss()
     fun onNavigateToLoginClicked()
 }
