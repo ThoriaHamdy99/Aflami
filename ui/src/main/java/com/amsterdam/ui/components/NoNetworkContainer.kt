@@ -59,7 +59,9 @@ fun NoNetworkContainer(
             isEnabled = true,
             isLoading = showRetryLoading,
             isNegative = false,
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .fillMaxWidth(),
         )
     }
 }

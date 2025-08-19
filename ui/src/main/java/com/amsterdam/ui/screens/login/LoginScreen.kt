@@ -183,6 +183,7 @@ private fun LoginScreenContent(
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
                 OutlinedButton(
+                    modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.continue_as_guest),
                     onClick = interactionListener::onContinueAsGuestClicked,
                     isEnabled = true,
