@@ -324,9 +324,9 @@
     </plurals>
 
 
-    <string name="duration_hours_minutes">%1$s h %2$s m</string>
-    <string name="duration_hours">%1$s h</string>
-    <string name="duration_minutes">%1$s m</string>
+    <string name="duration_hours_minutes">%1$sh %2$sm</string>
+    <string name="duration_hours">%1$sh</string>
+    <string name="duration_minutes">%1$sm</string>
 
 
     <string name="no_rated_movies">No rated movies yet!</string>
