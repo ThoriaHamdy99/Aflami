@@ -3,14 +3,11 @@ package com.amsterdam.viewmodel.topRated
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.topRated.GetTopRatedDataUseCase
-import com.amsterdam.paging.PagingSource
+import com.amsterdam.paging.createPagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import com.amsterdam.viewmodel.topRated.TopRatedUiState.TopRatedMediaItemUiState
@@ -43,25 +40,19 @@ class TopRatedViewModel @Inject constructor(
         showLoadingState()
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getTopRatedScreenDataUseCase(page).let { result ->
-                                getTopRatedMediaItems(
-                                    result.topRatedMovies,
-                                    result.topRatedTvShows
-                                )
-                            }
-                        }
+                createPagingSource(scope = viewModelScope) { page ->
+                    getTopRatedScreenDataUseCase(page).let { result ->
+                        getTopRatedMediaItems(
+                            result.topRatedMovies,
+                            result.topRatedTvShows
+                        )
                     }
-                ).flow.cachedIn(viewModelScope)
+                }
             },
             onSuccess = ::onGetTopRatedMoviesSuccess,
             onCompletion = ::onGetTopRatedMoviesCompletion
         )
     }
-
 
     private fun onGetTopRatedMoviesSuccess(mediaPagingFlow: Flow<PagingData<TopRatedMediaItemUiState>>) {
         updateState { mediaPagingFlow.toTopRatedUiState() }

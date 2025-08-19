@@ -1,15 +1,12 @@
 package com.amsterdam.viewmodel.watchHistory
 
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import androidx.paging.map
 import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingMoviesUseCase
 import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingTvShowsUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
-import com.amsterdam.paging.PagingSource
+import com.amsterdam.paging.createPagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.TabOption
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
@@ -38,8 +35,8 @@ class WatchHistoryViewModel @Inject constructor(
 
     init {
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach { getMoviesWatchHistoryData() }
-            .launchIn(viewModelScope)
+                .onEach { getMoviesWatchHistoryData() }
+                .launchIn(viewModelScope)
         getMoviesWatchHistoryData()
     }
 
@@ -47,15 +44,11 @@ class WatchHistoryViewModel @Inject constructor(
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getContinueWatchingMoviesUseCase(page = page, pageSize = 20).first()
-                        }
-                    }
-                ).flow.map { it.map { it.movie.toWatchHistoryItemUiState() } }
-                    .cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    getContinueWatchingMoviesUseCase(page = page, pageSize = 20).first()
+                }.map { pagingData ->
+                    pagingData.map { it.movie.toWatchHistoryItemUiState() }
+                }
             },
             onSuccess = ::onGetMoviesContinueWatchingDataSuccess,
             onCompletion = ::onCompletion
@@ -66,15 +59,11 @@ class WatchHistoryViewModel @Inject constructor(
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getContinueWatchingTvShowsUseCase(page = page, pageSize = 20).first()
-                        }
-                    }
-                ).flow.map { it.map { it.tvShow.toWatchHistoryItemUiState() } }
-                    .cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    getContinueWatchingTvShowsUseCase(page = page, pageSize = 20).first()
+                }.map { pagingData ->
+                    pagingData.map { it.tvShow.toWatchHistoryItemUiState() }
+                }
             },
             onSuccess = ::onGetTvShowContinueWatchingDataSuccess,
             onCompletion = ::onCompletion
