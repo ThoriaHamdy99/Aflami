@@ -100,6 +100,7 @@ import com.amsterdam.ui.screens.seriesDetails.component.moreTvShowLikeSection
 import com.amsterdam.ui.screens.seriesDetails.component.reviewTvShowSection
 import com.amsterdam.ui.screens.seriesDetails.mappers.toLocalizedString
 import com.amsterdam.ui.utils.SavedStateKeys.REFRESH_AFTER_RATING
+import com.amsterdam.ui.utils.topGradient
 import com.amsterdam.ui.utils.withEnglishDigits
 import com.amsterdam.viewmodel.myRating.RateDialogInteractionListener
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsEffect
@@ -456,7 +457,7 @@ fun SeriesDetailsContent(
                                 SeriesExtras.SEASONS -> {
                                     seasonsSection(
                                         seasons = state.seasons,
-                                        interaction = seriesDetailsInteractionListener
+                                        interactionListener = seriesDetailsInteractionListener
                                     )
                                 }
 
@@ -493,6 +494,7 @@ fun SeriesDetailsContent(
                 .onSizeChanged { appBarHeight = with(density) { it.height.toDp() } }) {
             DefaultAppBar(
                 modifier = Modifier
+                    .topGradient()
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 8.dp)
                     .statusBarsPadding(),
@@ -533,7 +535,7 @@ private fun SeriesExtrasSection(
 }
 
 private fun LazyListScope.seasonsSection(
-    seasons: List<SeasonUiState>, interaction: SeriesDetailsInteractionListener
+    seasons: List<SeasonUiState>, interactionListener: SeriesDetailsInteractionListener
 ) {
     if (seasons.isEmpty()) {
         item { EmptyStateText(stringResource(R.string.there_is_no_seasons)) }
@@ -543,7 +545,7 @@ private fun LazyListScope.seasonsSection(
                 SeasonHeader(
                     season = season,
                     onClickSeasonMenu = { seasonNumber ->
-                        interaction.onClickSeasonMenu(seasonNumber)
+                        interactionListener.onClickSeasonMenu(seasonNumber)
                     }
                 )
             }
@@ -554,7 +556,7 @@ private fun LazyListScope.seasonsSection(
                 item { EpisodeCardPlaceholder(modifier = Modifier.padding(horizontal = 16.dp)) }
             } else {
                 items(episodes, key = { "${it.id}-${season.episodes.indexOf(it)}-${index}" }) {
-                    EpisodesMenu(season.seasonNumber, it, interaction::onPlayEpisodeClicked)
+                    EpisodesMenu(season.seasonNumber, it, interactionListener::onPlayEpisodeClicked)
                 }
             }
 
@@ -590,11 +592,10 @@ private fun SeasonHeader(
             )
             Text(
                 text = pluralStringResource(
-                        R.plurals.episodes,
-                        season.episodeCount,
-                        season.episodeCount
-                    ).withEnglishDigits()
-                ,
+                    R.plurals.episodes,
+                    season.episodeCount,
+                    season.episodeCount
+                ).withEnglishDigits(),
                 color = AppTheme.color.hint,
                 style = AppTheme.textStyle.label.small,
                 modifier = Modifier.padding(end = 4.dp)

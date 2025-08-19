@@ -21,7 +21,7 @@ class WishListsViewModel @Inject constructor(
     private val getWishListsUseCase: GetWishListsUseCase,
     private val createListUseCase: CreateNewListUseCase,
     private val getsSessionType: GetsSessionType,
-    manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
+    private val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase,
     dispatcherProvider: DispatcherProvider,
 ) : BaseViewModel<ListsUiState, ListsEffect>(
     ListsUiState(),
@@ -31,21 +31,32 @@ class WishListsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            runIfLoggedIn(
-                onLoggedIn = {
-                    updateState { it.copy(isUserLoggedIn = true) }
-                    manageLocaleLanguageUseCase
-                        .getAppLanguage()
-                        .onEach { getCustomLists() }
-                        .launchIn(viewModelScope)
-
-                    getCustomLists()
-                },
-                onGuest = {
-                    updateState { it.copy(isUserLoggedIn = false, isLoading = false) }
-                },
-            )
+            checkAndInitializeUserSession()
         }
+    }
+    private fun checkAndInitializeUserSession() {
+        tryToExecute(
+            action = {determineUserAuthenticationState()},
+        )
+    }
+    private suspend fun determineUserAuthenticationState(){
+        runIfLoggedIn(
+            onLoggedIn = {
+                configureLoggedInUserSession()
+            },
+            onGuest = {
+                updateState { it.copy(isUserLoggedIn = false, isLoading = false) }
+            },
+        )
+    }
+    private fun configureLoggedInUserSession() {
+        updateState { it.copy(isUserLoggedIn = true) }
+        manageLocaleLanguageUseCase
+            .getAppLanguage()
+            .onEach { getCustomLists() }
+            .launchIn(viewModelScope)
+
+        getCustomLists()
     }
 
     fun getCustomLists(startLoading: Boolean = true) {
@@ -57,7 +68,7 @@ class WishListsViewModel @Inject constructor(
         )
     }
 
-    private fun onGetCustomListsSuccess(customLists: List<WishList>){
+    private fun onGetCustomListsSuccess(customLists: List<WishList>) {
         resetErrorStateToNull()
         updateState {
             it.copy(

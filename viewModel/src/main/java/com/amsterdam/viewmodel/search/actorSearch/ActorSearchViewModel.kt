@@ -3,14 +3,11 @@ package com.amsterdam.viewmodel.search.actorSearch
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
-import com.amsterdam.paging.PagingSource
+import com.amsterdam.paging.createPagingSource
 import com.amsterdam.viewmodel.search.mapper.toSearchMediaItemUiState
 import com.amsterdam.viewmodel.search.uiState.SearchMediaItemUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -39,9 +36,9 @@ class ActorSearchViewModel @Inject constructor(
 
     init {
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach {
-                observeActorSearchQuery()
-            }.launchIn(viewModelScope)
+                .onEach {
+                    observeActorSearchQuery()
+                }.launchIn(viewModelScope)
 
         observeActorSearchQuery()
     }
@@ -54,15 +51,10 @@ class ActorSearchViewModel @Inject constructor(
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getMoviesByActorUseCase(query, page)
-                                .map { it.toSearchMediaItemUiState() }
-                        }
-                    },
-                ).flow.cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    getMoviesByActorUseCase(query, page)
+                            .map { it.toSearchMediaItemUiState() }
+                }
             },
             onSuccess = ::handleSearchResults
         )

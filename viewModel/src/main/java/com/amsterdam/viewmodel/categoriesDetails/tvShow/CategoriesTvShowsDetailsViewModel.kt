@@ -3,14 +3,11 @@ package com.amsterdam.viewmodel.categoriesDetails.tvShow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.details.GetTvShowsByGenreUseCase
 import com.amsterdam.entity.category.TvShowGenre
-import com.amsterdam.paging.PagingSource
+import com.amsterdam.paging.createPagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -91,15 +88,10 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
         updateState { it.copy(isRetryLoading = true) }
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getTvShowsByGenreUseCase(state.value.selectedGenre, page)
-                                    .map { it.toTvShowUiState() }
-                        }
-                    }
-                ).flow.cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    getTvShowsByGenreUseCase(state.value.selectedGenre, page)
+                            .map { it.toTvShowUiState() }
+                }
             },
             onSuccess = ::onGetTvShowsByGenreSuccess,
             onCompletion = ::onCompletion

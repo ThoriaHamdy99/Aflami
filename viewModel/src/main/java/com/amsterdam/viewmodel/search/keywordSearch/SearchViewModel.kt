@@ -3,11 +3,7 @@ package com.amsterdam.viewmodel.search.keywordSearch
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.search.GetAndFilterMoviesByKeywordUseCase
@@ -15,7 +11,7 @@ import com.amsterdam.domain.useCase.search.GetAndFilterTvShowsByKeywordUseCase
 import com.amsterdam.domain.useCase.search.RecentSearchesUseCase
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.entity.category.TvShowGenre
-import com.amsterdam.paging.PagingSource
+import com.amsterdam.paging.createPagingSource
 import com.amsterdam.viewmodel.search.keywordSearch.SearchUiState.FilterItemUiState
 import com.amsterdam.viewmodel.search.mapper.getSelectedGenreType
 import com.amsterdam.viewmodel.search.mapper.selectByMovieGenre
@@ -31,7 +27,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -51,9 +46,9 @@ class SearchViewModel @Inject constructor(
 
     init {
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach {
-                observeSearchKeywordChanges()
-            }.launchIn(viewModelScope)
+                .onEach {
+                    observeSearchKeywordChanges()
+                }.launchIn(viewModelScope)
 
         getRecentSearches()
         observeSearchKeywordChanges()
@@ -92,20 +87,14 @@ class SearchViewModel @Inject constructor(
         startLoading()
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getAndFilterMoviesByKeywordUseCase(
-                                keyword = keyword,
-                                page = page,
-                                rating = state.value.movieFilterItemUiState.selectedStarIndex,
-                                movieGenre = state.value.movieFilterItemUiState.selectableMovieGenres.getSelectedGenreType()
-                            )
-                        }
-                    },
-                ).flow.map { pagingData -> pagingData.map { it.toSearchMediaItemUiState() } }
-                    .cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    getAndFilterMoviesByKeywordUseCase(
+                        keyword = keyword,
+                        page = page,
+                        rating = state.value.movieFilterItemUiState.selectedStarIndex,
+                        movieGenre = state.value.movieFilterItemUiState.selectableMovieGenres.getSelectedGenreType()
+                    ).map { it.toSearchMediaItemUiState() }
+                }
             },
             onSuccess = ::onGetMoviesSuccess
         )
@@ -119,20 +108,14 @@ class SearchViewModel @Inject constructor(
         startLoading()
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getAndFilterTvShowsByKeywordUseCase(
-                                keyword = keyword,
-                                page = page,
-                                rating = state.value.tvShowFilterItemUiState.selectedStarIndex,
-                                tvGenre = state.value.tvShowFilterItemUiState.selectableTvShowGenres.getSelectedGenreType()
-                            )
-                        }
-                    },
-                ).flow.map { pagingData -> pagingData.map { it.toSearchMediaItemUiState() } }
-                    .cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    getAndFilterTvShowsByKeywordUseCase(
+                        keyword = keyword,
+                        page = page,
+                        rating = state.value.tvShowFilterItemUiState.selectedStarIndex,
+                        tvGenre = state.value.tvShowFilterItemUiState.selectableTvShowGenres.getSelectedGenreType()
+                    ).map { it.toSearchMediaItemUiState() }
+                }
             },
             onSuccess = ::onGetTvShowsSuccess
         )
@@ -146,20 +129,14 @@ class SearchViewModel @Inject constructor(
         val currentMovieFilterState = state.value.movieFilterItemUiState
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getAndFilterMoviesByKeywordUseCase(
-                                keyword = state.value.keyword,
-                                page = page,
-                                rating = currentMovieFilterState.selectedStarIndex,
-                                movieGenre = currentMovieFilterState.selectableMovieGenres.getSelectedGenreType(),
-                            )
-                        }
-                    },
-                ).flow.map { pagingData -> pagingData.map { it.toSearchMediaItemUiState() } }
-                    .cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    getAndFilterMoviesByKeywordUseCase(
+                        keyword = state.value.keyword,
+                        page = page,
+                        rating = currentMovieFilterState.selectedStarIndex,
+                        movieGenre = currentMovieFilterState.selectableMovieGenres.getSelectedGenreType(),
+                    ).map { it.toSearchMediaItemUiState() }
+                }
             },
             onSuccess = ::onMoviesFilteredSuccess,
             onCompletion = ::onClickCancel,
@@ -179,22 +156,14 @@ class SearchViewModel @Inject constructor(
         val currentTvShowFilterState = state.value.tvShowFilterItemUiState
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getAndFilterTvShowsByKeywordUseCase(
-                                keyword = state.value.keyword,
-                                page = page,
-                                rating = currentTvShowFilterState.selectedStarIndex,
-                                tvGenre = currentTvShowFilterState.selectableTvShowGenres.getSelectedGenreType(),
-                            )
-                        }
-                    },
-                ).flow
-                    .map { pagingData ->
-                        pagingData.map { it.toSearchMediaItemUiState() }
-                    }.cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    getAndFilterTvShowsByKeywordUseCase(
+                        keyword = state.value.keyword,
+                        page = page,
+                        rating = currentTvShowFilterState.selectedStarIndex,
+                        tvGenre = currentTvShowFilterState.selectableTvShowGenres.getSelectedGenreType(),
+                    ).map { it.toSearchMediaItemUiState() }
+                }
             },
             onSuccess = ::onTvShowsFilteredSuccess,
             onError = ::onGetError,
@@ -281,7 +250,7 @@ class SearchViewModel @Inject constructor(
     override fun onClickClearRecentSearch(keyword: String) {
         tryToExecute(
             action = { recentSearchesUseCase.deleteRecentSearch(searchKeyword = keyword) },
-            onSuccess = { getRecentSearches(startLoading = false)},
+            onSuccess = { getRecentSearches(startLoading = false) },
             onError = ::onGetError,
         )
     }
@@ -329,7 +298,7 @@ class SearchViewModel @Inject constructor(
 
             is LoadState.Error -> {
                 updateErrorStateByException(AflamiException())
-                updateState { it.copy(isLoading = false,) }
+                updateState { it.copy(isLoading = false) }
             }
         }
     }

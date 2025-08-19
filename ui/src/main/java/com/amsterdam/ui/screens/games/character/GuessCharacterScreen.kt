@@ -40,6 +40,7 @@ import com.amsterdam.ui.screens.games.component.NotEnoughPointsDialog
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameEffect
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameViewModel
+import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterInteractionListener
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterUiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -74,7 +75,7 @@ fun GuessCharacterScreen(viewModel: GuessCharacterGameViewModel = hiltViewModel(
 @Composable
 private fun GameContent(
     state: GuessCharacterUiState,
-    interactionListener: GuessCharacterGameViewModel,
+    interactionListener: GuessCharacterInteractionListener,
 ) {
     val pagerState = rememberPagerState(pageCount = { state.questions.size })
     val scope = rememberCoroutineScope()

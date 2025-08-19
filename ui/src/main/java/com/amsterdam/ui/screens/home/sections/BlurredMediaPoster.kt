@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.imageviewer.classification.SafetyLevel
 import com.amsterdam.imageviewer.ui.SafeImageView
+import com.amsterdam.ui.utils.topGradient
 import io.sifr.shaded.blurProcessor.BlurEdgeTreatment
 import io.sifr.shaded.modifiers.blur
 
@@ -44,16 +45,7 @@ fun BlurredMediaPoster(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(86.dp)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xCC000000),
-                            Color.Transparent
-                        ),
-                        startY = 0f,
-                        endY = Float.POSITIVE_INFINITY
-                    )
-                )
+                .topGradient()
         )
 
         Box(

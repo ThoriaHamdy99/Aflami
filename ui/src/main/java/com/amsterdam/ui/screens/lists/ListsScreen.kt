@@ -105,7 +105,7 @@ fun ListsScreen(
         modifier = modifier,
         state = state,
         errorState = errorState,
-        interaction = viewModel,
+        interactionListener = viewModel,
     )
 }
 
@@ -114,7 +114,7 @@ private fun ListsScreenContent(
     modifier: Modifier = Modifier,
     state: ListsUiState,
     errorState: ErrorUiState?,
-    interaction: ListsInteractionListener,
+    interactionListener: ListsInteractionListener,
 ) {
     val animationDuration by remember { mutableIntStateOf(1000) }
     Box(
@@ -132,9 +132,9 @@ private fun ListsScreenContent(
             CreateNewListDialog(
                 isCreateListLoading = state.isCreateListLoading,
                 listName = state.listName,
-                onListNameChange = interaction::onListNameChange,
-                onCreateListClick = interaction::onCreateNewListClick,
-                onDismiss = interaction::onDismiss,
+                onListNameChange = interactionListener::onListNameChange,
+                onCreateListClick = interactionListener::onCreateNewListClick,
+                onDismiss = interactionListener::onDismiss,
             )
         }
 
@@ -145,7 +145,7 @@ private fun ListsScreenContent(
         ) {
             NotLoggedInContent(
                 stringResource(com.amsterdam.ui.R.string.lists),
-                interaction::onNavigateToLoginClicked,
+                interactionListener::onNavigateToLoginClicked,
             )
         }
 
@@ -166,7 +166,7 @@ private fun ListsScreenContent(
                     showNavigateBackButton = false,
                     title = stringResource(com.amsterdam.ui.R.string.lists),
                     lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_add),
-                    onLastOptionClicked = interaction::onClickAddList,
+                    onLastOptionClicked = interactionListener::onClickAddList,
                 )
 
                 AnimatedContent(
@@ -188,7 +188,7 @@ private fun ListsScreenContent(
                                     Modifier
                                         .fillMaxSize()
                                         .verticalScroll(rememberScrollState()),
-                                    onClickRetry = interaction::onClickRetry,
+                                    onClickRetry = interactionListener::onClickRetry,
                             )
                         }
 
@@ -218,7 +218,7 @@ private fun ListsScreenContent(
                                         modifier = Modifier.size(156.dp, 147.dp),
                                         list = userList,
                                         onClick = {
-                                            interaction.onListClick(
+                                            interactionListener.onListClick(
                                                 listId = userList.id.toLong(),
                                                 listName = userList.name.trim(),
                                             )
@@ -241,7 +241,7 @@ private fun ListsScreenPreview_Loading() {
         ListsScreenContent(
             state = ListsUiState(isLoading = true),
             errorState = null,
-            interaction =
+            interactionListener =
                 object : ListsInteractionListener {
                     override fun onClickAddList() {
                     }
@@ -281,7 +281,7 @@ private fun ListsScreenPreview_Empty() {
                     isLoading = false,
                     userLists = emptyList(),
                 ),
-            interaction =
+            interactionListener =
                 object : ListsInteractionListener {
                     override fun onClickAddList() {
                     }
@@ -347,7 +347,7 @@ private fun ListsScreenPreview_WithData() {
                             ),
                         ),
                 ),
-            interaction =
+            interactionListener =
                 object : ListsInteractionListener {
                     override fun onClickAddList() {
                     }
@@ -387,7 +387,7 @@ private fun ListsScreenPreview_Error() {
                     isLoading = false,
                     userLists = emptyList(),
                 ),
-            interaction =
+            interactionListener =
                 object : ListsInteractionListener {
                     override fun onClickAddList() {
                     }

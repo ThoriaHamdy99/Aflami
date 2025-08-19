@@ -3,15 +3,12 @@ package com.amsterdam.viewmodel.search.countrySearch
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.search.GetMoviesByCountryUseCase
 import com.amsterdam.domain.useCase.search.GetSuggestedCountriesUseCase
 import com.amsterdam.entity.Country
-import com.amsterdam.paging.PagingSource
+import com.amsterdam.paging.createPagingSource
 import com.amsterdam.viewmodel.search.mapper.toSearchMediaItemUiState
 import com.amsterdam.viewmodel.search.uiState.SearchMediaItemUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
@@ -42,7 +39,7 @@ class CountrySearchViewModel @Inject constructor(
         tryToExecute(
             action = {
                 state.map { it -> it.keywordDebounceValue.trim() }
-                    .debounceSearch(::getCountriesByKeyword)
+                        .debounceSearch(::getCountriesByKeyword)
             },
             dispatcher = dispatcherProvider.IO
         )
@@ -113,15 +110,10 @@ class CountrySearchViewModel @Inject constructor(
         updateState { it.copy(isLoading = true, showSuggestedCountries = false) }
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getMoviesByCountryUseCase(selectedCountry, page)
-                                .map { it.toSearchMediaItemUiState() }
-                        }
-                    },
-                ).flow.cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    getMoviesByCountryUseCase(selectedCountry, page)
+                            .map { it.toSearchMediaItemUiState() }
+                }
             },
             onSuccess = ::onGetMoviesSuccess,
         )
