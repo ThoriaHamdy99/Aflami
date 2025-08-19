@@ -303,6 +303,7 @@ fun SeriesDetailsContent(
                 ) {
                     NoNetworkContainer(
                         onClickRetry = seriesDetailsInteractionListener::onClickRetryButton,
+                        showRetryLoading = state.isRetryLoading
                     )
                 }
             }

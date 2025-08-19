@@ -44,7 +44,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     init {
         val movieId = args.movieId
-        updateState { it.copy(movieId = movieId) }
+        updateState { it.copy(movieId = movieId,isLoading = true) }
 
         manageLocaleLanguageUseCase.getAppLanguage()
             .onEach { language ->
@@ -56,7 +56,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     private fun getMovieDetails() {
         resetErrorStateToNull()
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isRetryLoading = true) }
         tryToExecute(
             action = { getMovieDetailsUseCase(state.value.movieId) },
             onSuccess = ::onGetMovieDetailsSuccess,
@@ -102,7 +102,9 @@ class MovieDetailsViewModel @Inject constructor(
     private fun onGetWishListsComplete() {
         updateState {
             it.copy(
-                isUserListsLoading = false
+                isUserListsLoading = false,
+                isRetryLoading = false,
+                isLoading = false
             )
         }
     }

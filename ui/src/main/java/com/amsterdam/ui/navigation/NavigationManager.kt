@@ -42,8 +42,8 @@ class NavigationManager(
 
     fun toLetsPlay(clearBackStack: Boolean = false) {
         navController.navigate(Route.Tab.LetsPlay) {
-            if (clearBackStack) popUpTo(Route.Tab.Home) {
-                inclusive = false
+            if (clearBackStack) popUpTo(Route.Tab.LetsPlay) {
+                inclusive = true
             }
         }
     }

@@ -38,7 +38,8 @@ data class MovieDetailsUiState(
     val isCreateListLoading: Boolean = false,
     val isAddMovieToListLoading: Boolean = false,
     val selectedLists: List<WishListUiState> = emptyList(),
-    val currentLanguage: String = Locale.getDefault().language
+    val currentLanguage: String = Locale.getDefault().language,
+    val isRetryLoading : Boolean = false
 ) {
     data class SimilarMovieUiState(
         val movieId: Long,

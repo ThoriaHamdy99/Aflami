@@ -134,7 +134,9 @@ private fun CategoriesTvShowsDetailsContent(
 
                     errorState is ErrorUiState.NoInternetError -> {
                         CenterOfScreenContainer(unneededSpace = 0.dp) {
-                            NoNetworkContainer(onClickRetry = interactionListener::onClickRetryRequest)
+                            NoNetworkContainer(onClickRetry = interactionListener::onClickRetryRequest,
+                                showRetryLoading = state.isRetryLoading
+                            )
                         }
                     }
 

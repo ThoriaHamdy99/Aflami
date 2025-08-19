@@ -3,7 +3,6 @@ package com.amsterdam.viewmodel.guessMovieByPosterGame
 import com.amsterdam.domain.utils.GameQuestion
 import com.amsterdam.viewmodel.sharedGame.TimerUiState
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 data class GuessMovieByPosterUiState(
     val isLoading: Boolean = true,
@@ -18,7 +17,8 @@ data class GuessMovieByPosterUiState(
     val isNextEnabled: Boolean = false,
     val currentQuestionIndex: Int = 0,
     val timerUiState: TimerUiState = TimerUiState(),
-    val isNetworkError : Boolean = false
+    val isNetworkError : Boolean = false,
+    val isRetryLoading : Boolean = false
 ) {
     data class QuestionUiState(
         val posterUrl: String = "",

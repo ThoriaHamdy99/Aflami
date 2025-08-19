@@ -44,7 +44,7 @@ class SeriesDetailsViewModel @Inject constructor(
 
         manageLocaleLanguageUseCase.getAppLanguage()
             .onEach { language ->
-                updateState { it.copy(currentLanguage = language.value) }
+                updateState { it.copy(currentLanguage = language.value, isLoading = true) }
                 getTvShowDetails()
             }
             .launchIn(viewModelScope)
@@ -52,7 +52,7 @@ class SeriesDetailsViewModel @Inject constructor(
 
     private fun getTvShowDetails() {
         resetErrorStateToNull()
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isRetryLoading = true) }
         tryToExecute(
             action = { getTvShowDetailsUseCase(state.value.tvShowId) },
             onSuccess = ::onGetTvShowDetailsSuccess,
@@ -64,7 +64,7 @@ class SeriesDetailsViewModel @Inject constructor(
         updateState { tvShowDetails.toUiState(state.value.currentLanguage) }
     }
 
-    private fun onCompletion() = updateState { it.copy(isLoading = false) }
+    private fun onCompletion() = updateState { it.copy(isRetryLoading = false,isLoading = false) }
 
     override fun onClickSeriesExtraItem(seriesExtras: SeriesExtras) {
         updateState { state ->

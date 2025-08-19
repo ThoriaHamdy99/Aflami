@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.designsystem.components.ImageErrorIndicator
 import com.amsterdam.designsystem.components.ImageLoadingIndicator
+import com.amsterdam.designsystem.components.LoadingContainer
 import com.amsterdam.designsystem.components.TabsLayout
 import com.amsterdam.designsystem.components.snackBar.SnackBarManager
 import com.amsterdam.designsystem.theme.AppTheme
@@ -48,7 +49,6 @@ import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.components.NoDataContainer
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
-import com.amsterdam.ui.screens.myRating.placeholders.mediaCardsPlaceholder
 import com.amsterdam.ui.utils.SavedStateKeys
 import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.myRating.MyRatingInteractionListener
@@ -121,107 +121,116 @@ private fun MyRatingContent(
     val shouldShowPlaceholder =
         errorState != null || !state.isLoading || state.movies.isEmpty() || state.tvShows.isEmpty()
 
-        LazyVerticalGrid(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(AppTheme.color.surface)
-                .statusBarsPadding()
-                .systemBarsPadding()
-                .animateContentSize(),
-            state = lazyState,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(bottom = 16.dp, start = 16.dp, end = 16.dp),
-            columns = GridCells.Adaptive(160.dp)
-        ) {
-            item {
-                DefaultAppBar(
-                    modifier = Modifier
-                        .onSizeChanged { appBarHeight = it.height },
-                    title = stringResource(R.string.my_rating),
-                    onNavigateBackClicked = interaction::onClickNavigateBack,
-                )
-            }
+    LazyVerticalGrid(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppTheme.color.surface)
+            .statusBarsPadding()
+            .systemBarsPadding()
+            .animateContentSize(),
+        state = lazyState,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(bottom = 16.dp, start = 16.dp, end = 16.dp),
+        columns = GridCells.Adaptive(160.dp)
+    ) {
+        item {
+            DefaultAppBar(
+                modifier = Modifier
+                    .onSizeChanged { appBarHeight = it.height },
+                title = stringResource(R.string.my_rating),
+                onNavigateBackClicked = interaction::onClickNavigateBack,
+            )
+        }
 
-            stickyHeader {
-                TabsLayout(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onSizeChanged { tabsHeight = it.height },
-                    tabs = listOf(
-                        stringResource(R.string.movies),
-                        stringResource(R.string.tv_shows)
-                    ),
-                    selectedIndex = state.selectedTabOption.index,
-                    onSelectTab = { index -> interaction.onChangeTabOption(TabOption.entries[index]) },
-                )
-            }
+        stickyHeader {
+            TabsLayout(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onSizeChanged { tabsHeight = it.height },
+                tabs = listOf(
+                    stringResource(R.string.movies),
+                    stringResource(R.string.tv_shows)
+                ),
+                selectedIndex = state.selectedTabOption.index,
+                onSelectTab = { index -> interaction.onChangeTabOption(TabOption.entries[index]) },
+            )
+        }
 
-            val isMovieTabSelected = state.selectedTabOption.index == TabOption.MOVIES.index
-            val isTvShowTabSelected = state.selectedTabOption.index == TabOption.TV_SHOWS.index
+        val isMovieTabSelected = state.selectedTabOption.index == TabOption.MOVIES.index
+        val isTvShowTabSelected = state.selectedTabOption.index == TabOption.TV_SHOWS.index
 
-            when {
-                state.isLoading && !state.isRetryLoading -> mediaCardsPlaceholder()
-
-                state.movies.isNotEmpty() && isMovieTabSelected -> {
-                    items(state.movies, key = { it.id }) { movie ->
-                        with(movie) {
-                            MediaCard(
-                                modifier = Modifier
-                                    .padding(top = 8.dp)
-                                    .animateItem(),
-                                movieImage = {
-                                    SafeImageView(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentDescription = name,
-                                        model = posterImageUrl,
-                                        safetyLevel = safetyLevel,
-                                        onLoading = { ImageLoadingIndicator() },
-                                        onError = { ImageErrorIndicator() },
-                                        isAdult = isAdult
-                                    )
-                                },
-                                movieType = stringResource(R.string.movies),
-                                movieYear = yearOfRelease,
-                                movieTitle = name,
-                                movieRating = rate,
-                                topIcon = painterResource(com.amsterdam.designsystem.R.drawable.ic_star_off),
-                                onTopIconClick = { interaction.onClickDeleteMyMovieRatingIcon(id) },
-                                onClick = { interaction.onClickMovieCard(id) }
-                            )
-                        }
+        when {
+            state.isLoading && !state.isRetryLoading ->
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    AnimatedVisibility(state.isLoading) {
+                        LoadingContainer(modifier = Modifier
+                            .height(availableHeight)
+                            .fillMaxSize())
                     }
                 }
 
-                state.tvShows.isNotEmpty() && isTvShowTabSelected -> {
-                    items(state.tvShows, key = { it.id }) { movie ->
-                        with(movie) {
-                            MediaCard(
-                                modifier = Modifier
-                                    .padding(top = 8.dp)
-                                    .animateItem(),
-                                movieImage = {
-                                    SafeImageView(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentDescription = name,
-                                        safetyLevel = safetyLevel,
-                                        model = posterImageUrl,
-                                        onLoading = { ImageLoadingIndicator() },
-                                        onError = { ImageErrorIndicator() },
-                                        isAdult = isAdult
-                                    )
-                                },
-                                movieType = stringResource(R.string.tv_shows),
-                                movieYear = yearOfRelease,
-                                movieTitle = name,
-                                movieRating = rate,
-                                topIcon = painterResource(com.amsterdam.designsystem.R.drawable.ic_star_off),
-                                onTopIconClick = { interaction.onClickDeleteMyTvShowRatingIcon(id) },
-                                onClick = { interaction.onClickTvShowCard(id) }
-                            )
-                        }
+            state.movies.isNotEmpty() && isMovieTabSelected -> {
+                items(state.movies, key = { it.id }) { movie ->
+                    with(movie) {
+                        MediaCard(
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .animateItem(),
+                            movieImage = {
+                                SafeImageView(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentDescription = name,
+                                    model = posterImageUrl,
+                                    safetyLevel = safetyLevel,
+                                    onLoading = { ImageLoadingIndicator() },
+                                    onError = { ImageErrorIndicator() },
+                                    isAdult = isAdult
+                                )
+                            },
+                            movieType = stringResource(R.string.movies),
+                            movieYear = yearOfRelease,
+                            movieTitle = name,
+                            movieRating = rate,
+                            topIcon = painterResource(com.amsterdam.designsystem.R.drawable.ic_star_off),
+                            onTopIconClick = { interaction.onClickDeleteMyMovieRatingIcon(id) },
+                            onClick = { interaction.onClickMovieCard(id) }
+                        )
                     }
                 }
             }
+
+            state.tvShows.isNotEmpty() && isTvShowTabSelected -> {
+                items(state.tvShows, key = { it.id }) { movie ->
+                    with(movie) {
+                        MediaCard(
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .animateItem(),
+                            movieImage = {
+                                SafeImageView(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentDescription = name,
+                                    safetyLevel = safetyLevel,
+                                    model = posterImageUrl,
+                                    onLoading = { ImageLoadingIndicator() },
+                                    onError = { ImageErrorIndicator() },
+                                    isAdult = isAdult
+                                )
+                            },
+                            movieType = stringResource(R.string.tv_shows),
+                            movieYear = yearOfRelease,
+                            movieTitle = name,
+                            movieRating = rate,
+                            topIcon = painterResource(com.amsterdam.designsystem.R.drawable.ic_star_off),
+                            onTopIconClick = { interaction.onClickDeleteMyTvShowRatingIcon(id) },
+                            onClick = { interaction.onClickTvShowCard(id) }
+                        )
+                    }
+                }
+            }
+        }
+        if ((state.movies.isNotEmpty() && state.selectedTabOption == TabOption.MOVIES) ||
+            (state.tvShows.isNotEmpty() && state.selectedTabOption == TabOption.TV_SHOWS)) return@LazyVerticalGrid
 
             item(span = { GridItemSpan(maxLineSpan) }) {
                 MyRatingPlaceholders(
@@ -232,7 +241,7 @@ private fun MyRatingContent(
                     isVisible = shouldShowPlaceholder
                 )
             }
-        }
+    }
 }
 
 @Composable

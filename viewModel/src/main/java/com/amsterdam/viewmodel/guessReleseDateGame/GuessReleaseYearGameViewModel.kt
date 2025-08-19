@@ -36,11 +36,12 @@ class GuessReleaseYearGameViewModel @Inject constructor(
     private val difficultyType = DifficultyType.valueOf(args.difficulty)
 
     init {
+        updateState { it.copy(isLoading = true) }
         getQuestions()
     }
 
     private fun getQuestions() {
-        updateState { it.copy(isLoading = true, isNetworkError = false) }
+        updateState { it.copy(isRetryLoading = true, isNetworkError = false) }
         tryToExecute(
             action = ::startTheGame,
             onSuccess = ::onSuccessGetQuestions,
@@ -69,7 +70,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
                 currentQuestion.questionDurationSeconds.inWholeSeconds.toInt(),
                 onTimerFinish = ::onMoveToNextQuestion
             )
-                    .collect(::onTimerUpdate)
+                .collect(::onTimerUpdate)
         }
     }
 
@@ -89,7 +90,7 @@ class GuessReleaseYearGameViewModel @Inject constructor(
     }
 
     private fun onCompletion() {
-        updateState { it.copy(isLoading = false) }
+        updateState { it.copy(isLoading = false, isRetryLoading = false) }
     }
 
     override fun onHintClicked() {

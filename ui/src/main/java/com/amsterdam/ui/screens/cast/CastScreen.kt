@@ -117,6 +117,7 @@ private fun CastContent(
                     NoNetworkContainer(
                         modifier = Modifier.fillMaxSize(),
                         onClickRetry = interaction::onClickRetrySearch,
+                        showRetryLoading = state.isRetryLoading
                     )
                 }
 

@@ -114,6 +114,7 @@ private fun GameScreenContent(
             ) {
                 NoNetworkContainer(
                     onClickRetry = interactionListener::onClickRetryLoading,
+                    showRetryLoading = state.isRetryLoading
                 )
             }
         }

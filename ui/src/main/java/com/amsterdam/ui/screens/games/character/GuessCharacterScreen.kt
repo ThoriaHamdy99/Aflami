@@ -113,6 +113,7 @@ private fun GameContent(
             ) {
                 NoNetworkContainer(
                     onClickRetry = interactionListener::onClickRetryLoading,
+                    showRetryLoading = state.isRetryLoading
                 )
             }
         }

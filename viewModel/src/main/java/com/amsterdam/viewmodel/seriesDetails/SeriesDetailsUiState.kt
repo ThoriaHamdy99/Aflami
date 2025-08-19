@@ -34,7 +34,8 @@ data class SeriesDetailsUiState(
     val dialogType: MovieAndSeriesDetailsDialogType? = null,
     val rateDialogUiState: RateDialogUiState = RateDialogUiState(),
     val isDescriptionExpanded: Boolean = false,
-    val currentLanguage: String = Locale.getDefault().language
+    val currentLanguage: String = Locale.getDefault().language,
+    val isRetryLoading : Boolean = false
 ) {
     enum class SeriesExtras {
         SEASONS,

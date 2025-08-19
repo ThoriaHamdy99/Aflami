@@ -34,13 +34,14 @@ class ContinueWatchingViewModel @Inject constructor(
     ContinueWatchingInteractionListener {
 
     init {
+        updateState { it.copy(isLoading = true) }
         manageLocaleLanguageUseCase.getAppLanguage()
             .onEach { getContinueWatchingData() }
             .launchIn(viewModelScope)
     }
 
     private fun getContinueWatchingData() {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isRetryLoading = true) }
         tryToExecute(
             action = {
                 Pager(
@@ -87,5 +88,5 @@ class ContinueWatchingViewModel @Inject constructor(
 
     override fun onClickBack() = sendNewNavigationEffect(ContinueWatchingEffect.NavigateBack)
 
-    private fun onCompletion() = updateState { it.copy(isLoading = false) }
+    private fun onCompletion() = updateState { it.copy(isLoading = false, isRetryLoading = false) }
 }
