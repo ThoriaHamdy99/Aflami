@@ -74,7 +74,7 @@ fun GuessCharacterScreen(viewModel: GuessCharacterGameViewModel = hiltViewModel(
 @Composable
 private fun GameContent(
     state: GuessCharacterUiState,
-    interactionListener: GuessCharacterGameViewModel,
+    guessCharacterGameViewModel: GuessCharacterGameViewModel,
 ) {
     val pagerState = rememberPagerState(pageCount = { state.questions.size })
     val scope = rememberCoroutineScope()
@@ -90,7 +90,7 @@ private fun GameContent(
         bottomBar = {
             ConfirmButton(
                 title = stringResource(R.string.next),
-                onClick = interactionListener::onMoveToNextQuestion,
+                onClick = guessCharacterGameViewModel::onMoveToNextQuestion,
                 isEnabled = state.isNextEnabled,
                 isLoading = false,
                 isNegative = false,
@@ -112,7 +112,7 @@ private fun GameContent(
                 contentAlignment = Alignment.Center
             ) {
                 NoNetworkContainer(
-                    onClickRetry = interactionListener::onClickRetryLoading,
+                    onClickRetry = guessCharacterGameViewModel::onClickRetryLoading,
                     showRetryLoading = state.isRetryLoading
                 )
             }
@@ -122,8 +122,8 @@ private fun GameContent(
             LoginBackground()
             AnimatedVisibility(state.isNotEnoughPointsDialogVisible) {
                 NotEnoughPointsDialog(
-                    onConfirm = interactionListener::dismissNotEnoughPointsDialog,
-                    onDismiss = interactionListener::dismissNotEnoughPointsDialog,
+                    onConfirm = guessCharacterGameViewModel::dismissNotEnoughPointsDialog,
+                    onDismiss = guessCharacterGameViewModel::dismissNotEnoughPointsDialog,
                 )
             }
             AnimatedVisibility(
@@ -152,7 +152,7 @@ private fun GameContent(
                             GameTopBar(
                                 title = stringResource(R.string.guess_character_game_title),
                                 timerUiState = state.timerUiState,
-                                onCancelGameClick = interactionListener::onCloseButtonClicked,
+                                onCancelGameClick = guessCharacterGameViewModel::onCloseButtonClicked,
                                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                             )
 
@@ -192,8 +192,8 @@ private fun GameContent(
                                     isAnswerCorrect = state.isAnswerCorrect,
                                     isHintEnabled = state.isHintEnabled,
                                     isChoicesEnabled = state.isNextEnabled,
-                                    onHintClick = interactionListener::onHintClicked,
-                                    onSelectAnswer = interactionListener::onSelectAnswer,
+                                    onHintClick = guessCharacterGameViewModel::onHintClicked,
+                                    onSelectAnswer = guessCharacterGameViewModel::onSelectAnswer,
                                     earnedPoint = state.earnedPoints
                                 )
                             }
