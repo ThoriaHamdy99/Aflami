@@ -268,7 +268,7 @@
    movieSignUp="https://www.themoviedb.org/signup"
    movieResetPassword="https://www.themoviedb.org/reset-password"
    ```
-   > To obtain your `YOUR_TOKEN`:
+   > To obtain your `YOUR_API_KEY`:
    >
    > 1. Create an account at [The Movie Database (TMDB)](https://www.themoviedb.org/signup)
    > 2. Go to **Settings → API** in your TMDB account
