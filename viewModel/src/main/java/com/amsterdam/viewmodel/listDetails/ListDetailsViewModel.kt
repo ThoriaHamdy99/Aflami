@@ -134,16 +134,18 @@ class ListDetailsViewModel @Inject constructor(
 
     private fun onRemoveMovieError(exception: AflamiException) {
         viewModelScope.launch {
-            updateState { it.copy(
-                showDeleteListDialog = false,
-                isDeleteLoading = false
-            ) }
+            updateState {
+                it.copy(
+                    showDeleteListDialog = false,
+                    isDeleteLoading = false
+                )
+            }
             sendNewEffect(ListDetailsEffect.ShowErrorSnackBar)
         }
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
-        when (val refreshState =loadStates.refresh) {
+        when (val refreshState = loadStates.refresh) {
             is LoadState.Loading -> {
                 resetErrorStateToNull()
                 updateState { it.copy(isLoading = true) }
@@ -154,7 +156,7 @@ class ListDetailsViewModel @Inject constructor(
             }
 
             is LoadState.Error -> {
-                updateState { it.copy(isLoading = false,) }
+                updateState { it.copy(isLoading = false) }
                 updateErrorStateByException(refreshState.error as AflamiException?)
             }
         }
