@@ -145,7 +145,7 @@ private fun ListsScreenContent(
             exit = fadeOut(tween(animationDuration)),
         ) {
             NotLoggedInContent(
-                stringResource(com.amsterdam.ui.R.string.lists),
+                stringResource(R.string.lists),
                 interactionListener::onNavigateToLoginClicked,
             )
         }
@@ -165,7 +165,7 @@ private fun ListsScreenContent(
                 DefaultAppBar(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     showNavigateBackButton = false,
-                    title = stringResource(com.amsterdam.ui.R.string.lists),
+                    title = stringResource(R.string.lists),
                     lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_add),
                     onLastOptionClicked = interactionListener::onClickAddList,
                 )
@@ -196,9 +196,9 @@ private fun ListsScreenContent(
                         lists.isEmpty() -> {
                             NoDataContainer(
                                 modifier = Modifier.fillMaxSize(),
-                                title = stringResource(com.amsterdam.ui.R.string.no_list_yet),
-                                description = stringResource(com.amsterdam.ui.R.string.no_list_description),
-                                imageRes = painterResource(id = com.amsterdam.ui.R.drawable.placeholder_no_saved_items),
+                                title = stringResource(R.string.no_list_yet),
+                                description = stringResource(R.string.no_list_description),
+                                imageRes = painterResource(id = R.drawable.placeholder_no_saved_items),
                                 imageAlpha = 0.64f,
                             )
                         }
