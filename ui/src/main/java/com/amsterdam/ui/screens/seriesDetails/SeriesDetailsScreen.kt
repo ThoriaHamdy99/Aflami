@@ -100,6 +100,7 @@ import com.amsterdam.ui.screens.seriesDetails.component.moreTvShowLikeSection
 import com.amsterdam.ui.screens.seriesDetails.component.reviewTvShowSection
 import com.amsterdam.ui.screens.seriesDetails.mappers.toLocalizedString
 import com.amsterdam.ui.utils.SavedStateKeys.REFRESH_AFTER_RATING
+import com.amsterdam.ui.utils.topGradient
 import com.amsterdam.ui.utils.withEnglishDigits
 import com.amsterdam.viewmodel.myRating.RateDialogInteractionListener
 import com.amsterdam.viewmodel.seriesDetails.SeriesDetailsEffect
@@ -493,6 +494,7 @@ fun SeriesDetailsContent(
                 .onSizeChanged { appBarHeight = with(density) { it.height.toDp() } }) {
             DefaultAppBar(
                 modifier = Modifier
+                    .topGradient()
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 8.dp)
                     .statusBarsPadding(),
