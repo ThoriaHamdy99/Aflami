@@ -121,7 +121,10 @@ private fun GameScreenContent(
 
         Box {
             LoginBackground()
-            AnimatedVisibility(state.isNotEnoughPointsDialogVisible) {
+            AnimatedVisibility(
+                state.isNotEnoughPointsDialogVisible,
+                exit = fadeOut(animationSpec = tween(0))
+            ) {
                 NotEnoughPointsDialog(
                     onConfirm = interactionListener::dismissNotEnoughPointsDialog,
                     onDismiss = interactionListener::dismissNotEnoughPointsDialog,
