@@ -130,7 +130,7 @@ class WishListsViewModel @Inject constructor(
         sendNewEffect(ListsEffect.NavigateToListDetails(listId, listName))
     }
 
-    override fun onClickRetryFetchList() {
+    override fun onClickRetry() {
         getCustomLists()
     }
 

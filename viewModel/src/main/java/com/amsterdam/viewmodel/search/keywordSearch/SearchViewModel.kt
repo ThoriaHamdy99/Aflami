@@ -78,12 +78,12 @@ class SearchViewModel @Inject constructor(
 
     private fun onSearchKeywordChanged(keyword: String) {
         when (state.value.selectedTabOption) {
-            TabOption.MOVIES -> fetchMoviesByKeyword(keyword)
-            TabOption.TV_SHOWS -> fetchTvShowsByKeyword(keyword)
+            TabOption.MOVIES -> getMoviesByKeyword(keyword)
+            TabOption.TV_SHOWS -> getTvShowsByKeyword(keyword)
         }
     }
 
-    private fun fetchMoviesByKeyword(keyword: String) {
+    private fun getMoviesByKeyword(keyword: String) {
         startLoading()
         tryToExecute(
             action = {
@@ -96,15 +96,15 @@ class SearchViewModel @Inject constructor(
                     ).map { it.toSearchMediaItemUiState() }
                 }
             },
-            onSuccess = ::onFetchMoviesSuccess
+            onSuccess = ::onGetMoviesSuccess
         )
     }
 
-    private fun onFetchMoviesSuccess(movies: Flow<PagingData<SearchMediaItemUiState>>) {
+    private fun onGetMoviesSuccess(movies: Flow<PagingData<SearchMediaItemUiState>>) {
         updateState { it.copy(movies = movies) }
     }
 
-    private fun fetchTvShowsByKeyword(keyword: String) {
+    private fun getTvShowsByKeyword(keyword: String) {
         startLoading()
         tryToExecute(
             action = {
@@ -117,11 +117,11 @@ class SearchViewModel @Inject constructor(
                     ).map { it.toSearchMediaItemUiState() }
                 }
             },
-            onSuccess = ::onFetchTvShowsSuccess
+            onSuccess = ::onGetTvShowsSuccess
         )
     }
 
-    private fun onFetchTvShowsSuccess(tvShows: Flow<PagingData<SearchMediaItemUiState>>) {
+    private fun onGetTvShowsSuccess(tvShows: Flow<PagingData<SearchMediaItemUiState>>) {
         updateState { it.copy(tvShows = tvShows) }
     }
 
@@ -166,7 +166,7 @@ class SearchViewModel @Inject constructor(
                 }
             },
             onSuccess = ::onTvShowsFilteredSuccess,
-            onError = ::onFetchError,
+            onError = ::onGetError,
             onCompletion = ::onClickCancel,
         )
     }
@@ -180,7 +180,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun onFetchError(exception: AflamiException) {
+    private fun onGetError(exception: AflamiException) {
         updateState { it.copy(isLoading = false) }
     }
 
@@ -212,7 +212,7 @@ class SearchViewModel @Inject constructor(
         tryToExecute(
             action = { recentSearchesUseCase.addRecentSearch(keyword) },
             onSuccess = { getRecentSearches() },
-            onError = ::onFetchError,
+            onError = ::onGetError,
         )
     }
 
@@ -251,7 +251,7 @@ class SearchViewModel @Inject constructor(
         tryToExecute(
             action = { recentSearchesUseCase.deleteRecentSearch(searchKeyword = keyword) },
             onSuccess = { getRecentSearches(startLoading = false) },
-            onError = ::onFetchError,
+            onError = ::onGetError,
         )
     }
 
@@ -260,7 +260,7 @@ class SearchViewModel @Inject constructor(
         tryToExecute(
             action = { recentSearchesUseCase.deleteRecentSearches() },
             onSuccess = ::onClearAllRecentSearchesSuccess,
-            onError = ::onFetchError,
+            onError = ::onGetError,
         )
     }
 
