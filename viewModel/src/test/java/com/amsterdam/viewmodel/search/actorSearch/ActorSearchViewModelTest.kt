@@ -3,12 +3,12 @@ package com.amsterdam.viewmodel.search.actorSearch
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
-import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase.Language
+import com.amsterdam.domain.useCase.search.GetMoviesByActorUseCase
 import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
 import com.amsterdam.viewmodel.utils.TestDispatcherProvider
 import com.amsterdam.viewmodel.utils.TestExtension
@@ -32,12 +32,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestExtension::class)
 class ActorSearchViewModelTest {
 
-    private val actorSearchPagingSource: ActorSearchPagingSource = mockk()
+    private val getMoviesByActorUseCase: GetMoviesByActorUseCase = mockk()
     private  val manageLocaleLanguageUseCase: ManageLocaleLanguageUseCase = mockk()
 
     private val viewModel by lazy {
         ActorSearchViewModel(
-            actorSearchPagingSource,
+            getMoviesByActorUseCase,
             manageLocaleLanguageUseCase,
             TestDispatcherProvider()
         )
@@ -54,14 +54,6 @@ class ActorSearchViewModelTest {
         advanceUntilIdle()
 
         coVerify { manageLocaleLanguageUseCase.getAppLanguage() }
-    }
-
-    @Test
-    fun `should call getMovies from actorPagingSource when keyword changes`() = runTest {
-        viewModel.onUserSearchChange("Tom Hanks")
-        advanceUntilIdle()
-
-        coVerify { actorSearchPagingSource.getMovies("Tom Hanks") }
     }
 
     @Test
@@ -102,7 +94,7 @@ class ActorSearchViewModelTest {
     @Test
     fun `executeActorSearch should set loading state to true`() = runTest {
         val query = "Tom Hanks"
-        coEvery { actorSearchPagingSource.getMovies(query) } returns emptyFlow()
+        coEvery { getMoviesByActorUseCase(query) } returns emptyList()
 
         viewModel.onUserSearchChange(query)
         advanceTimeBy(300)
@@ -115,7 +107,7 @@ class ActorSearchViewModelTest {
     fun `handleSearchResults should update movies in state`() = runTest {
         val query = "Tom Hanks"
         val movies = listOf(createMovie(id = 1, name = "Forrest Gump"))
-        coEvery { actorSearchPagingSource.getMovies(query) } returns flowOf(PagingData.from(movies))
+        coEvery { getMoviesByActorUseCase(query) } returns movies
 
         viewModel.onUserSearchChange(query)
         advanceTimeBy(300)
@@ -131,18 +123,6 @@ class ActorSearchViewModelTest {
         viewModel.effect.test {
             assertThat(awaitItem()).isEqualTo(ActorSearchEffect.NavigateBack)
         }
-    }
-
-    @Test
-    fun `onClickRetrySearch should set loading state and execute search`() = runTest {
-        val keyword = "Tom Hanks"
-        viewModel.onUserSearchChange(keyword)
-        advanceUntilIdle()
-
-        viewModel.onClickRetrySearch()
-        advanceUntilIdle()
-
-        coVerify { actorSearchPagingSource.getMovies(keyword) }
     }
 
     @Test
@@ -215,7 +195,7 @@ class ActorSearchViewModelTest {
     fun `debounce search should only execute after delay`() = runTest {
         val keyword = "Tom"
         val updateKeyword = "Tom hanks"
-        coEvery { actorSearchPagingSource.getMovies(keyword) } returns emptyFlow()
+        coEvery { getMoviesByActorUseCase(keyword) } returns emptyList()
 
         viewModel.onUserSearchChange(keyword)
         advanceTimeBy(200)
@@ -233,7 +213,7 @@ class ActorSearchViewModelTest {
     @Test
     fun `search should handle use case exception gracefully`() = runTest {
         val keyword = "Tom Hanks"
-        coEvery { actorSearchPagingSource.getMovies(keyword) } throws AflamiException()
+        coEvery { getMoviesByActorUseCase(keyword) } throws AflamiException()
 
         viewModel.onUserSearchChange(keyword)
         advanceUntilIdle()
