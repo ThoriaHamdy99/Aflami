@@ -143,7 +143,7 @@ class ListDetailsViewModel @Inject constructor(
     }
 
     override fun onPagingLoadStateChanged(loadStates: CombinedLoadStates) {
-        when (loadStates.refresh) {
+        when (val refreshState =loadStates.refresh) {
             is LoadState.Loading -> {
                 resetErrorStateToNull()
                 updateState { it.copy(isLoading = true) }
@@ -154,8 +154,8 @@ class ListDetailsViewModel @Inject constructor(
             }
 
             is LoadState.Error -> {
-                updateState { it.copy(isLoading = false) }
-                updateErrorStateByException(AflamiException())
+                updateState { it.copy(isLoading = false,) }
+                updateErrorStateByException(refreshState.error as AflamiException?)
             }
         }
     }

@@ -6,6 +6,7 @@ import androidx.paging.LoadStates
 import app.cash.turbine.test
 import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.domain.exceptions.NoInternetException
+import com.amsterdam.domain.useCase.search.GetMoviesByCountryUseCase
 import com.amsterdam.domain.useCase.search.GetSuggestedCountriesUseCase
 import com.amsterdam.entity.Country
 import com.amsterdam.viewmodel.shared.errorUiState.ErrorUiState
@@ -16,7 +17,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -32,12 +32,12 @@ import org.junit.jupiter.params.provider.MethodSource
 class SearchByCountryViewModelTest {
 
     private val getSuggestedCountriesUseCase: GetSuggestedCountriesUseCase = mockk(relaxed = true)
-    private val countrySearchPagingSource: CountrySearchPagingSource = mockk(relaxed = true)
+    private val getMoviesByCountryUseCase: GetMoviesByCountryUseCase = mockk(relaxed = true)
 
     private val viewModel by lazy {
         CountrySearchViewModel(
             getSuggestedCountriesUseCase,
-            countrySearchPagingSource,
+            getMoviesByCountryUseCase,
             TestDispatcherProvider()
         )
     }
@@ -142,16 +142,6 @@ class SearchByCountryViewModelTest {
         viewModel.state.test {
             assertThat(awaitItem().suggestedCountries).isEqualTo(fakeCountries.toUiState())
         }
-    }
-
-    @Test
-    fun `should call getMovies from countryPagingSource when country selected`() = runTest {
-        coEvery { countrySearchPagingSource.getMovies(any()) } returns emptyFlow()
-
-        viewModel.onSelectCountry(Country("Netherlands", "NL").toUiState())
-        advanceUntilIdle()
-
-        coVerify { countrySearchPagingSource.getMovies(any()) }
     }
 
     @Test
