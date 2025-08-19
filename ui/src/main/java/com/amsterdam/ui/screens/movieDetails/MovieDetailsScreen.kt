@@ -309,6 +309,7 @@ fun MovieContent(
         AnimatedVisibility(
             modifier = Modifier,
             visible = state.isCreateNewListDialogVisible,
+            exit = fadeOut(animationSpec = tween(0))
         ) {
             CreateNewListDialog(
                 isCreateListLoading = state.isCreateListLoading,
@@ -332,6 +333,7 @@ fun MovieContent(
         AnimatedVisibility(
             modifier = Modifier,
             visible = state.isAddToListDialogVisible,
+            exit = fadeOut(animationSpec = tween(0))
         ) {
             AddToListDialog(
                 userLists = state.userLists,

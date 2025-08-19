@@ -24,8 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.Text
+import com.amsterdam.designsystem.components.TopAppBar
 import com.amsterdam.designsystem.components.divider.HorizontalDivider
 import com.amsterdam.designsystem.theme.AflamiTheme
 import com.amsterdam.designsystem.theme.AppTheme
@@ -129,7 +129,8 @@ private fun ScreenDialogs(
     interactionListener: ProfileInteractionListener
 ) {
     AnimatedVisibility(
-        state.settingsState.isSettingsDialogVisible
+        state.settingsState.isSettingsDialogVisible,
+        exit = fadeOut(animationSpec = tween(0))
     ) {
         SettingsDialog(
             onChangePasswordClick = interactionListener::onClickForgotPassword,
@@ -140,7 +141,8 @@ private fun ScreenDialogs(
     }
 
     AnimatedVisibility(
-        state.settingsState.isLogoutDialogVisible
+        state.settingsState.isLogoutDialogVisible,
+        exit = fadeOut(animationSpec = tween(0))
     ) {
         LogoutDialog(
             isLogoutButtonLoading = state.settingsState.isLogoutButtonLoading,
@@ -150,7 +152,8 @@ private fun ScreenDialogs(
     }
 
     AnimatedVisibility(
-        state.settingsState.isContentRestrictionDialogVisible
+        state.settingsState.isContentRestrictionDialogVisible,
+        exit = fadeOut(animationSpec = tween(0))
     ) {
         ContentRestrictionDialog(
             isSaveButtonLoading = state.settingsState.isContentRestrictionSaveButtonLoading,
@@ -163,8 +166,7 @@ private fun ScreenDialogs(
 
     AnimatedVisibility(
         state.showLanguageDialog,
-        enter = fadeIn(tween(2000)),
-        exit = fadeOut(tween(2000)),
+        exit = fadeOut(tween(0)),
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             LanguageDialog(
@@ -178,8 +180,7 @@ private fun ScreenDialogs(
 
     AnimatedVisibility(
         state.showThemeDialog,
-        enter = fadeIn(tween(2000)),
-        exit = fadeOut(tween(2000)),
+        exit = fadeOut(tween(0)),
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             ThemeDialog(

@@ -128,6 +128,7 @@ private fun ListsScreenContent(
         AnimatedVisibility(
             modifier = Modifier,
             visible = state.isCreateNewListDialogVisible,
+            exit = fadeOut(animationSpec = tween(0))
         ) {
             CreateNewListDialog(
                 isCreateListLoading = state.isCreateListLoading,
