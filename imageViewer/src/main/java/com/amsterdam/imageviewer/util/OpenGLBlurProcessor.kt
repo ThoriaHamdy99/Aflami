@@ -255,11 +255,12 @@ internal class OpenGLBlurProcessor {
         val tempBitmap = createBitmap(width, height)
         tempBitmap.copyPixelsFromBuffer(pixelBuffer)
 
-        val matrix = android.graphics.Matrix()
-        matrix.preScale(1.0f, -1.0f)
-        val outputBitmap = Bitmap.createBitmap(tempBitmap, 0, 0, width, height, matrix, false)
+        val outputBitmap = Bitmap.createBitmap(
+            tempBitmap, 0, 0, width, height
+        )
 
         tempBitmap.recycle()
+
         return outputBitmap
     }
 
