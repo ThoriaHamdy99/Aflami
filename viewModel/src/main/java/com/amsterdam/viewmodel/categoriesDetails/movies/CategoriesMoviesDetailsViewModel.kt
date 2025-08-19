@@ -3,14 +3,11 @@ package com.amsterdam.viewmodel.categoriesDetails.movies
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.details.GetMoviesByGenreUseCase
 import com.amsterdam.entity.category.MovieGenre
-import com.amsterdam.paging.PagingSource
+import com.amsterdam.paging.createPagingSource
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,15 +33,10 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
         updateState { it.copy(isRetryLoading = true) }
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            getMoviesByGenreIdUseCase(state.value.selectedGenre, page)
-                                    .map { it.toMovieUiState() }
-                        }
-                    }
-                ).flow.cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    getMoviesByGenreIdUseCase(state.value.selectedGenre, page)
+                            .map { it.toMovieUiState() }
+                }
             },
             onSuccess = ::onGetMoviesByGenreSuccess,
             onCompletion = ::onCompletion

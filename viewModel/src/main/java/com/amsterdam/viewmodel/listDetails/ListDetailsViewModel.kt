@@ -3,16 +3,14 @@ package com.amsterdam.viewmodel.listDetails
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.amsterdam.domain.exceptions.AflamiException
 import com.amsterdam.domain.useCase.list.DeleteListUseCase
 import com.amsterdam.domain.useCase.list.GetListMediaItemsFromListUseCase
 import com.amsterdam.domain.useCase.list.RemoveMovieFromListUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.paging.PagingSource
+import com.amsterdam.paging.createPagingSource
 import com.amsterdam.viewmodel.listDetails.ListDetailsUiState.ListDetailsItemsUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.utils.dispatcher.DispatcherProvider
@@ -44,8 +42,8 @@ class ListDetailsViewModel @Inject constructor(
             )
         }
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach { loadListDetails() }
-            .launchIn(viewModelScope)
+                .onEach { loadListDetails() }
+                .launchIn(viewModelScope)
 
         loadListDetails()
     }
@@ -56,16 +54,13 @@ class ListDetailsViewModel @Inject constructor(
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 10),
-                    pagingSourceFactory = {
-                        currentPagingSource = PagingSource { page ->
-                            getListMediaItemsFromListUseCase(state.value.listId, page)
-                                .toListDetailsItemUiState()
-                        }
-                        currentPagingSource!!
-                    }
-                ).flow.cachedIn(viewModelScope)
+                createPagingSource(
+                    scope = viewModelScope,
+                    onPagingSource = { currentPagingSource = it }
+                ) { page ->
+                    getListMediaItemsFromListUseCase(state.value.listId, page)
+                            .toListDetailsItemUiState()
+                }
             },
             onSuccess = ::onGetListDetailsSuccess
         )
@@ -111,7 +106,7 @@ class ListDetailsViewModel @Inject constructor(
 
     private fun onDeleteListSuccess() {
         resetErrorStateToNull()
-        updateState { it.copy(showDeleteListDialog = false, isDeleteLoading = false,) }
+        updateState { it.copy(showDeleteListDialog = false, isDeleteLoading = false) }
         sendNewNavigationEffect(ListDetailsEffect.NavigateBack)
         sendNewEffect(ListDetailsEffect.ShowDeletionSuccessSnackBar)
     }
@@ -159,7 +154,7 @@ class ListDetailsViewModel @Inject constructor(
             }
 
             is LoadState.Error -> {
-                updateState { it.copy(isLoading = false,) }
+                updateState { it.copy(isLoading = false) }
                 updateErrorStateByException(AflamiException())
             }
         }

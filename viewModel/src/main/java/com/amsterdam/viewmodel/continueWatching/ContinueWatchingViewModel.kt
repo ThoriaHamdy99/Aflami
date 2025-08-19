@@ -1,15 +1,12 @@
 package com.amsterdam.viewmodel.continueWatching
 
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.amsterdam.domain.useCase.continueWatching.GetContinueWatchingDataUseCase
 import com.amsterdam.domain.useCase.preferences.ManageLocaleLanguageUseCase
 import com.amsterdam.domain.utils.MovieWatchHistory
 import com.amsterdam.domain.utils.TvShowWatchHistory
-import com.amsterdam.paging.PagingSource
+import com.amsterdam.paging.createPagingSource
 import com.amsterdam.viewmodel.continueWatching.ContinueWatchingUiState.ContinueWatchingItemUiState
 import com.amsterdam.viewmodel.shared.BaseViewModel
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
@@ -36,35 +33,28 @@ class ContinueWatchingViewModel @Inject constructor(
     init {
         updateState { it.copy(isLoading = true) }
         manageLocaleLanguageUseCase.getAppLanguage()
-            .onEach { getContinueWatchingData() }
-            .launchIn(viewModelScope)
+                .onEach { getContinueWatchingData() }
+                .launchIn(viewModelScope)
     }
 
     private fun getContinueWatchingData() {
         updateState { it.copy(isRetryLoading = true) }
         tryToExecute(
             action = {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        PagingSource { page ->
-                            val continueWatchingScreenData = getContinueWatchingScreenDataUseCase(
-                                page = page,
-                                pageSize = 20
-                            ).first()
-
-                            val mergedItems = getLinearItemsList(
-                                continueWatchingScreenData.continueWatchingMovies,
-                                continueWatchingScreenData.continueWatchingTvShows,
-                                MovieWatchHistory::toContinueWatchingItemUiState,
-                                TvShowWatchHistory::toContinueWatchingItemUiState
-                            )
-                                .sortedByDescending { it.dateAdded }
-                                .take(10)
-                            mergedItems
-                        }
-                    }
-                ).flow.cachedIn(viewModelScope)
+                createPagingSource(scope = viewModelScope) { page ->
+                    val continueWatchingScreenData = getContinueWatchingScreenDataUseCase(
+                        page = page,
+                        pageSize = 20
+                    ).first()
+                    getLinearItemsList(
+                        continueWatchingScreenData.continueWatchingMovies,
+                        continueWatchingScreenData.continueWatchingTvShows,
+                        MovieWatchHistory::toContinueWatchingItemUiState,
+                        TvShowWatchHistory::toContinueWatchingItemUiState
+                    )
+                            .sortedByDescending { it.dateAdded }
+                            .take(10)
+                }
             },
             onSuccess = ::onGetContinueWatchingScreenDataSuccess,
             onCompletion = ::onCompletion

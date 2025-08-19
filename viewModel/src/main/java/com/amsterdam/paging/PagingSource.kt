@@ -1,7 +1,32 @@
 package com.amsterdam.paging
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import androidx.paging.cachedIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+
+
+fun <T : Any> createPagingSource(
+    pageSize: Int = 20,
+    scope: CoroutineScope,
+    onPagingSource: ((com.amsterdam.paging.PagingSource<T>) -> Unit)? = null,
+    action: suspend (page: Int) -> List<T>,
+): Flow<PagingData<T>> {
+    return Pager(
+        config = PagingConfig(pageSize = pageSize),
+        pagingSourceFactory = {
+            PagingSource { page ->
+                action(page)
+            }.also {
+                onPagingSource?.invoke(it)
+            }
+        }
+    ).flow.cachedIn(scope)
+}
 
 class PagingSource<T : Any>(
     private val fetch: suspend (page: Int) -> List<T>,
@@ -29,7 +54,7 @@ class PagingSource<T : Any>(
 }
 
 // Temp, until replace all paging sources in all viewmodels
-abstract class BasePagingSource<T: Any>() : PagingSource<Int, T>() {
+abstract class BasePagingSource<T : Any>() : PagingSource<Int, T>() {
 
     protected abstract suspend fun fetch(page: Int): List<T>
 
