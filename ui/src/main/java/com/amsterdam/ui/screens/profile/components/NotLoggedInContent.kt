@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -123,9 +122,7 @@ private fun LoginSection(
             )
 
             OutlinedButton(
-                modifier = Modifier
-                    .padding(top = 24.dp)
-                    .width(95.dp),
+                modifier = Modifier.padding(top = 24.dp),
                 title = stringResource(R.string.login),
                 onClick = onClickLogin,
                 isEnabled = true,
