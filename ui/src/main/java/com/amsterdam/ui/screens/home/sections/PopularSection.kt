@@ -115,7 +115,7 @@ fun LazyListScope.popularSection(
                             animationSpec = tween(500, easing = FastOutSlowInEasing)
                         ) { page ->
                             DisplayMediaGenres(
-                                mediaItem = state.mediaItems[page % state.mediaItems.size]
+                                mediaItemUiState = state.mediaItems[page % state.mediaItems.size]
                             )
                         }
                     }
@@ -127,7 +127,7 @@ fun LazyListScope.popularSection(
 
 @Composable
 private fun DisplayMediaGenres(
-    mediaItem: PopularMediaItemUiState,
+    mediaItemUiState: PopularMediaItemUiState,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -138,8 +138,8 @@ private fun DisplayMediaGenres(
         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        items(mediaItem.categories) { category ->
-            if (mediaItem.type == MediaType.MOVIE) {
+        items(mediaItemUiState.categories) { category ->
+            if (mediaItemUiState.type == MediaType.MOVIE) {
                 MovieGenre.entries.find { it.name.equals(category, ignoreCase = true) }
                     ?.let { genre ->
                         CategoryChip(categoryName = getMovieGenreLabel(genre))
