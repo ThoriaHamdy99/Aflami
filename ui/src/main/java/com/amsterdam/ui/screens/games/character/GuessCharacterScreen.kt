@@ -40,6 +40,7 @@ import com.amsterdam.ui.screens.games.component.NotEnoughPointsDialog
 import com.amsterdam.ui.screens.login.components.LoginBackground
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameEffect
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterGameViewModel
+import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterInteractionListener
 import com.amsterdam.viewmodel.guessCharacterGame.GuessCharacterUiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -74,7 +75,7 @@ fun GuessCharacterScreen(viewModel: GuessCharacterGameViewModel = hiltViewModel(
 @Composable
 private fun GameContent(
     state: GuessCharacterUiState,
-    guessCharacterGameViewModel: GuessCharacterGameViewModel,
+    interactionListener: GuessCharacterInteractionListener,
 ) {
     val pagerState = rememberPagerState(pageCount = { state.questions.size })
     val scope = rememberCoroutineScope()
@@ -90,7 +91,7 @@ private fun GameContent(
         bottomBar = {
             ConfirmButton(
                 title = stringResource(R.string.next),
-                onClick = guessCharacterGameViewModel::onMoveToNextQuestion,
+                onClick = interactionListener::onMoveToNextQuestion,
                 isEnabled = state.isNextEnabled,
                 isLoading = false,
                 isNegative = false,
@@ -112,7 +113,7 @@ private fun GameContent(
                 contentAlignment = Alignment.Center
             ) {
                 NoNetworkContainer(
-                    onClickRetry = guessCharacterGameViewModel::onClickRetryLoading,
+                    onClickRetry = interactionListener::onClickRetryLoading,
                     showRetryLoading = state.isRetryLoading
                 )
             }
@@ -122,8 +123,8 @@ private fun GameContent(
             LoginBackground()
             AnimatedVisibility(state.isNotEnoughPointsDialogVisible) {
                 NotEnoughPointsDialog(
-                    onConfirm = guessCharacterGameViewModel::dismissNotEnoughPointsDialog,
-                    onDismiss = guessCharacterGameViewModel::dismissNotEnoughPointsDialog,
+                    onConfirm = interactionListener::dismissNotEnoughPointsDialog,
+                    onDismiss = interactionListener::dismissNotEnoughPointsDialog,
                 )
             }
             AnimatedVisibility(
@@ -152,7 +153,7 @@ private fun GameContent(
                             GameTopBar(
                                 title = stringResource(R.string.guess_character_game_title),
                                 timerUiState = state.timerUiState,
-                                onCancelGameClick = guessCharacterGameViewModel::onCloseButtonClicked,
+                                onCancelGameClick = interactionListener::onCloseButtonClicked,
                                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                             )
 
@@ -192,8 +193,8 @@ private fun GameContent(
                                     isAnswerCorrect = state.isAnswerCorrect,
                                     isHintEnabled = state.isHintEnabled,
                                     isChoicesEnabled = state.isNextEnabled,
-                                    onHintClick = guessCharacterGameViewModel::onHintClicked,
-                                    onSelectAnswer = guessCharacterGameViewModel::onSelectAnswer,
+                                    onHintClick = interactionListener::onHintClicked,
+                                    onSelectAnswer = interactionListener::onSelectAnswer,
                                     earnedPoint = state.earnedPoints
                                 )
                             }
