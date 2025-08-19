@@ -102,14 +102,14 @@ fun MyRatingScreen(
         }
     }
 
-    MyRatingContent(state = state, errorState = errorState, interaction = viewModel)
+    MyRatingContent(state = state, errorState = errorState, interactionListener = viewModel)
 }
 
 @Composable
 private fun MyRatingContent(
     state: MyRatingUiState,
     errorState: ErrorUiState?,
-    interaction: MyRatingInteractionListener
+    interactionListener: MyRatingInteractionListener
 ) {
     val lazyState = rememberLazyGridState()
 
@@ -138,7 +138,7 @@ private fun MyRatingContent(
                 modifier = Modifier
                     .onSizeChanged { appBarHeight = it.height },
                 title = stringResource(R.string.my_rating),
-                onNavigateBackClicked = interaction::onClickNavigateBack,
+                onNavigateBackClicked = interactionListener::onClickNavigateBack,
             )
         }
 
@@ -152,7 +152,7 @@ private fun MyRatingContent(
                     stringResource(R.string.tv_shows)
                 ),
                 selectedIndex = state.selectedTabOption.index,
-                onSelectTab = { index -> interaction.onChangeTabOption(TabOption.entries[index]) },
+                onSelectTab = { index -> interactionListener.onChangeTabOption(TabOption.entries[index]) },
             )
         }
 
@@ -192,8 +192,8 @@ private fun MyRatingContent(
                             movieTitle = name,
                             movieRating = rate,
                             topIcon = painterResource(com.amsterdam.designsystem.R.drawable.ic_star_off),
-                            onTopIconClick = { interaction.onClickDeleteMyMovieRatingIcon(id) },
-                            onClick = { interaction.onClickMovieCard(id) }
+                            onTopIconClick = { interactionListener.onClickDeleteMyMovieRatingIcon(id) },
+                            onClick = { interactionListener.onClickMovieCard(id) }
                         )
                     }
                 }
@@ -222,8 +222,8 @@ private fun MyRatingContent(
                             movieTitle = name,
                             movieRating = rate,
                             topIcon = painterResource(com.amsterdam.designsystem.R.drawable.ic_star_off),
-                            onTopIconClick = { interaction.onClickDeleteMyTvShowRatingIcon(id) },
-                            onClick = { interaction.onClickTvShowCard(id) }
+                            onTopIconClick = { interactionListener.onClickDeleteMyTvShowRatingIcon(id) },
+                            onClick = { interactionListener.onClickTvShowCard(id) }
                         )
                     }
                 }
@@ -237,7 +237,7 @@ private fun MyRatingContent(
                     modifier = Modifier.height(availableHeight),
                     state = state,
                     errorState = errorState,
-                    interaction = interaction,
+                    interaction = interactionListener,
                     isVisible = shouldShowPlaceholder
                 )
             }

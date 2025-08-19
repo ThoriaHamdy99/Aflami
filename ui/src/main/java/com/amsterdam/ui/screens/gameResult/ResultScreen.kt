@@ -79,14 +79,14 @@ fun ResultScreen(
 
     ResultScreenContent(
         state = state,
-        listener = viewModel
+        interactionListener = viewModel
     )
 }
 
 @Composable
 fun ResultScreenContent(
     state: ResultUiState,
-    listener: ResultInteractionListener
+    interactionListener: ResultInteractionListener
 ) {
     Scaffold(
         modifier = Modifier
@@ -102,7 +102,7 @@ fun ResultScreenContent(
             ) {
                 ConfirmButton(
                     title = stringResource(R.string.back_to_menue),
-                    onClick = listener::onClickBackToMenu,
+                    onClick = interactionListener::onClickBackToMenu,
                     isEnabled = true,
                     isLoading = false,
                     isNegative = false,
@@ -110,7 +110,7 @@ fun ResultScreenContent(
                 )
                 OutlinedButton(
                     title = stringResource(R.string.play_again),
-                    onClick = listener::onClickPlayAgain,
+                    onClick = interactionListener::onClickPlayAgain,
                     isEnabled = true,
                     isLoading = false,
                     isNegative = false,
@@ -134,7 +134,7 @@ fun ResultScreenContent(
             ) {
                 GameResultAppBar(
                     gameType = state.gameType,
-                    onCloseClicked = listener::onClickClose
+                    onCloseClicked = interactionListener::onClickClose
                 )
 
                 Column(
@@ -182,7 +182,7 @@ fun ResultScreenContent(
 private fun ResultScreenPreview() {
     ResultScreenContent(
         state = ResultUiState(points = 110, timeInSeconds = 110),
-        listener = object : ResultInteractionListener {
+        interactionListener = object : ResultInteractionListener {
             override fun onClickPlayAgain() {}
             override fun onClickBackToMenu() {}
             override fun onClickClose() {}

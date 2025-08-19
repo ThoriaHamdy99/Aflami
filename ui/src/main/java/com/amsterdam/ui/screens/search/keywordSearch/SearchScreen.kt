@@ -102,7 +102,7 @@ internal fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
         errorState = errorState,
         movies = movieFlow,
         tvShows = tvShowFlow,
-        interaction = viewModel,
+        interactionListener = viewModel,
         filterInteraction = viewModel,
     )
 }
@@ -114,11 +114,11 @@ private fun SearchContent(
     errorState: ErrorUiState?,
     movies: LazyPagingItems<SearchMediaItemUiState>,
     tvShows: LazyPagingItems<SearchMediaItemUiState>,
-    interaction: SearchInteractionListener,
+    interactionListener: SearchInteractionListener,
     filterInteraction: FilterInteractionListener,
 ) {
     BackHandler(enabled = state.keyword.isNotEmpty()) {
-        interaction.onClickClearSearch()
+        interactionListener.onClickClearSearch()
     }
     val density = LocalDensity.current
     var headerHeight by remember { mutableStateOf(0.dp) }
@@ -134,11 +134,11 @@ private fun SearchContent(
             SearchScreenHeaderSection(
                 keyword = state.keyword,
                 selectedTabOption = state.selectedTabOption,
-                onNavigateBackClicked = interaction::onClickNavigateBack,
-                onKeywordValuedChanged = interaction::onChangeSearchKeyword,
-                onFilterButtonClicked = interaction::onClickFilterButton,
-                onTabOptionClicked = interaction::onClickTabOption,
-                onSaveSearchHistory = interaction::onSaveSearchHistory,
+                onNavigateBackClicked = interactionListener::onClickNavigateBack,
+                onKeywordValuedChanged = interactionListener::onChangeSearchKeyword,
+                onFilterButtonClicked = interactionListener::onClickFilterButton,
+                onTabOptionClicked = interactionListener::onClickTabOption,
+                onSaveSearchHistory = interactionListener::onSaveSearchHistory,
                 onHeaderSizeChanged = { headerHeight = with(density) { it.height.dp } },
                 keyboardController = keyboardController
             )
@@ -150,15 +150,15 @@ private fun SearchContent(
                         .verticalScroll(rememberScrollState())
                 ) {
                     SuggestionsHubSection(
-                        onWorldSearchCardClicked = interaction::onClickWorldSearchCard,
-                        onActorSearchCardClicked = interaction::onClickActorSearchCard
+                        onWorldSearchCardClicked = interactionListener::onClickWorldSearchCard,
+                        onActorSearchCardClicked = interactionListener::onClickActorSearchCard
                     )
 
                     RecentSearchesSection(
                         state = state,
-                        onAllRecentSearchesCleared = interaction::onClickClearAllRecentSearches,
-                        onRecentSearchClicked = interaction::onClickRecentSearch,
-                        onRecentSearchCleared = interaction::onClickClearRecentSearch
+                        onAllRecentSearchesCleared = interactionListener::onClickClearAllRecentSearches,
+                        onRecentSearchClicked = interactionListener::onClickRecentSearch,
+                        onRecentSearchCleared = interactionListener::onClickClearRecentSearch
                     )
                 }
             }
@@ -172,8 +172,8 @@ private fun SearchContent(
             AnimatedVisibility(state.keyword.isNotBlank()) {
                 AnimatedVisibility(selectedItems.itemCount > 0) {
                     SuccessMediaItemsSection(
-                        onMovieClicked = interaction::onClickMovieCard,
-                        onTvShowClicked = interaction::onClickTvShowCard,
+                        onMovieClicked = interactionListener::onClickMovieCard,
+                        onTvShowClicked = interactionListener::onClickTvShowCard,
                         selectedItems = selectedItems
                     )
                 }
@@ -200,7 +200,7 @@ private fun SearchContent(
                                 }
 
                                 errorState is NoInternetError -> {
-                                    NoNetworkContainer(onClickRetry = interaction::onClickRetryRequest)
+                                    NoNetworkContainer(onClickRetry = interactionListener::onClickRetryRequest)
                                 }
 
                                 !state.isLoading && errorState.isNull() && isSelectedTabHasNoData -> {

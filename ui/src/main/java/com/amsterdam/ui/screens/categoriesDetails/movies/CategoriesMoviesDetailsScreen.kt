@@ -80,7 +80,7 @@ fun CategoriesMoviesDetailsScreen(
     CategoriesMoviesDetailsContent(
         state = state,
         errorState = errorState,
-        interaction = viewModel,
+        interactionListener = viewModel,
         movies = movies
 
     )
@@ -90,7 +90,7 @@ fun CategoriesMoviesDetailsScreen(
 private fun CategoriesMoviesDetailsContent(
     state: CategoriesMoviesDetailsUiState,
     errorState: ErrorUiState?,
-    interaction: CategoriesMoviesDetailsInteractionListener,
+    interactionListener: CategoriesMoviesDetailsInteractionListener,
     movies: LazyPagingItems<CategoriesMoviesDetailsUiState.MoviesUiState>
 ) {
     val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
@@ -103,7 +103,7 @@ private fun CategoriesMoviesDetailsContent(
     ) {
         DefaultAppBar(
             title = stringResource(R.string.movies),
-            onNavigateBackClicked = interaction::onClickBack
+            onNavigateBackClicked = interactionListener::onClickBack
         )
         Row(
             modifier = Modifier
@@ -125,7 +125,7 @@ private fun CategoriesMoviesDetailsContent(
                         icon = getMovieGenreIcon(genre),
                         label = getMovieGenreLabel(genre),
                         isSelected = genreItem.selectableMovieGenre.isSelected,
-                        onClick = { interaction.onClickGenre(genre) },
+                        onClick = { interactionListener.onClickGenre(genre) },
                     )
                 }
 
@@ -144,7 +144,7 @@ private fun CategoriesMoviesDetailsContent(
                 errorState is ErrorUiState.NoInternetError -> {
                     CenterOfScreenContainer(unneededSpace = 0.dp) {
                         NoNetworkContainer(
-                            onClickRetry = interaction::onClickRetryRequest,
+                            onClickRetry = interactionListener::onClickRetryRequest,
                             showRetryLoading = state.isRetryLoading
                         )
                     }
@@ -182,7 +182,7 @@ private fun CategoriesMoviesDetailsContent(
                                 movieType = stringResource(R.string.movie),
                                 movieYear = movie.yearOfRelease,
                                 movieRating = movie.rate,
-                                onClick = { interaction.onClickMovieCard(movie.id) }
+                                onClick = { interactionListener.onClickMovieCard(movie.id) }
                             )
                         }
                     }
