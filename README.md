@@ -259,13 +259,10 @@
 
 > [!Note]
 > 
-> AI-driven content detection aligned with Islamic guidelines
-
-> Intelligent image blurring for sensitive material
-
-> Coil-based image loading with customizable transformations
-
-> Adjustable sensitivity settings
+> - AI-driven content detection aligned with Islamic guidelines
+> - Intelligent image blurring for sensitive material
+> - Coil-based image loading with customizable transformations
+> - Adjustable sensitivity settings
 
 # Installation
 
