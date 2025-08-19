@@ -248,7 +248,7 @@
 > - **My Ratings:** View all movies and TV shows you’ve rated. Easily review, update, or manage your feedback to track your preferences.
 
  ### Islamic Image Viewer
-> ***Ensuring a respectful viewing experience for all users, featuring intelligent content filtering using on-device machine learning to detect and automatically blur potentially inappropriate content according to Islamic cultural guidelines.
+> ***Ensuring a respectful viewing experience for all users, featuring intelligent content filtering using on-device machine learning to detect and automatically blur potentially inappropriate content according to Islamic cultural guidelines.***
 <table>
   <tr>
     <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/07774693-5f5a-4e52-a80f-854e6ef8c60c" /></td>
