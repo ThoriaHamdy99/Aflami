@@ -251,10 +251,9 @@
 > ***Ensuring a respectful viewing experience for all users, featuring intelligent content filtering using on-device machine learning to detect and automatically blur potentially inappropriate content according to Islamic cultural guidelines.
 <table>
   <tr>
-    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/b446397c-11d7-410a-b36f-36b23b874c51" /></td>
-    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/f25a008e-c0ea-4d18-9282-0f2aae112cb2" /></td>
-    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/660cf164-a492-4a21-858b-443793c69f98" /></td>
-    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/b83a6166-4716-44ef-baf8-fce6100ed1be" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/07774693-5f5a-4e52-a80f-854e6ef8c60c" /></td>
+    <td><img width="400" height="762" alt="image" src="https://github.com/user-attachments/assets/238e4675-83b1-4131-a624-87b61b39d718" /></td>
+    <td><img width="400" height="762" alt="image" src="https://21e9c914-62cc-438a-8458-be86ea4f4bb6" /></td>
   </tr>
 </table>
 
