@@ -247,7 +247,7 @@
 > - **Watch History:** Shows your recently watched movies and TV shows, allowing you to quickly revisit theme.
 > - **My Ratings:** View all movies and TV shows you’ve rated. Easily review, update, or manage your feedback to track your preferences.
 
- ### Islamic Image Loader
+ ### Islamic Image Viewer
 > ***Ensuring a respectful viewing experience for all users, featuring intelligent content filtering using on-device machine learning to detect and automatically blur potentially inappropriate content according to Islamic cultural guidelines.
 <table>
   <tr>
