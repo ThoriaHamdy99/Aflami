@@ -281,18 +281,18 @@
    In the project root, open or create a `local.properties` file and add the following:
 
    ```properties
-   bearerToken="YOUR_TOKEN"
+   apiKey="YOUR_API_KEY"
    baseUrl="https://api.themoviedb.org/3/"
    baseImageUrl="https://image.tmdb.org/t/p/w500"
    ndkDir="~/Library/Android/sdk/ndk"
    movieSignUp="https://www.themoviedb.org/signup"
    movieResetPassword="https://www.themoviedb.org/reset-password"
    ```
-   > To obtain your `YOUR_TOKEN`:
+   > To obtain your `YOUR_API_KEY`:
    >
    > 1. Create an account at [The Movie Database (TMDB)](https://www.themoviedb.org/signup)
    > 2. Go to **Settings → API** in your TMDB account
-   > 3. Generate a **Read Access Token (v3)** and paste it as `bearerToken` above.
+   > 3. Generate a **API Key** and paste it as `apiKey` above.
 
 4. **Build and run** the project on an emulator or physical device.
 

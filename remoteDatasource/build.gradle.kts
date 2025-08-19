@@ -2,7 +2,7 @@ import java.util.Properties
 
 val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
-var bearerToken: String = properties.getProperty("bearerToken") ?: ""
+var apiKey: String = properties.getProperty("apiKey") ?: ""
 val baseUrl: String = properties.getProperty("baseUrl") ?: ""
 
 plugins {
@@ -18,7 +18,7 @@ android {
     buildFeatures { buildConfig = true }
 
     defaultConfig {
-        buildConfigField("String", "BEARER_TOKEN", bearerToken)
+        buildConfigField("String", "API_KEY", apiKey)
         buildConfigField("String", "BASE_URL", baseUrl)
     }
     lint {

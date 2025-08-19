@@ -33,11 +33,11 @@ jobs:
 
       - name: Create local.properties
         env:
-          BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
+          API_KEY: ${{ secrets.API_KEY }}
           BASE_URL: ${{ secrets.BASE_URL }}
           REGISTER_URL: ${{ secrets.REGISTER_URL }}
         run: |
-          echo bearerToken=\"$BEARER_TOKEN\" > local.properties
+          echo apiKey=\"$API_KEY\" > local.properties
           echo baseUrl=\"$BASE_URL\" >> local.properties
           echo baseImageUrl=\"${{ secrets.BASE_IMAGE_URL }}\" >> local.properties
           echo movieSignUp=\"${{ secrets.REGISTER_URL }}\" >> local.properties
