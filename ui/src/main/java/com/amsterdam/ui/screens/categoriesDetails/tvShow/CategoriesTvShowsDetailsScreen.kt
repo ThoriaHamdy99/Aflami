@@ -35,11 +35,13 @@ import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.imageviewer.ui.SafeImageView
 import com.amsterdam.ui.R
 import com.amsterdam.ui.application.LocalNavManager
+import com.amsterdam.ui.application.LocalRestrictionLevel
 import com.amsterdam.ui.components.MediaCard
 import com.amsterdam.ui.components.NoNetworkContainer
 import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreIcon
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getTvShowGenreLabel
+import com.amsterdam.ui.utils.toSafetyLevel
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsInteractionListener
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.tvShow.CategoriesTvShowsDetailsUiState
@@ -89,6 +91,7 @@ private fun CategoriesTvShowsDetailsContent(
     interactionListener: CategoriesTvShowsDetailsInteractionListener,
     tvShows: LazyPagingItems<CategoriesTvShowsDetailsUiState.TvShowsUiState>
 ) {
+    val safetyLevel = LocalRestrictionLevel.current.toSafetyLevel()
     Box(
         modifier = Modifier
                 .fillMaxSize()
@@ -158,6 +161,7 @@ private fun CategoriesTvShowsDetailsContent(
                                             model = tvShow.posterImageUrl,
                                             contentDescription = tvShow.name,
                                             contentScale = ContentScale.Crop,
+                                            safetyLevel = safetyLevel,
                                             modifier = Modifier.fillMaxWidth(),
                                             onLoading = {
                                                 ImageLoadingIndicator()

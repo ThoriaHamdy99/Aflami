@@ -26,6 +26,13 @@ fun SafeImageView(
 ) {
     val state = FirebaseNsfwModelManager.downloadState
     val context = LocalContext.current.applicationContext
+
+    val offImageRequest =
+        ImageRequest.Builder(context)
+            .allowHardware(false)
+            .data(model)
+            .build()
+
     val imageRequest =
         ImageRequest
             .Builder(context)
@@ -39,7 +46,7 @@ fun SafeImageView(
             .build()
 
     when (safetyLevel) {
-        SafetyLevel.STRICT -> when (state) {
+        SafetyLevel.MODERATE -> when (state) {
             is ModelDownloadState.Success -> {
                 SubcomposeAsyncImage(
                     model = imageRequest,
@@ -68,7 +75,7 @@ fun SafeImageView(
             }
         }
 
-        SafetyLevel.MODERATE -> {
+        SafetyLevel.STRICT -> {
             when (state) {
                 is ModelDownloadState.Success -> {
                     SubcomposeAsyncImage(
@@ -101,7 +108,7 @@ fun SafeImageView(
 
         SafetyLevel.OFF -> {
             SubcomposeAsyncImage(
-                model = imageRequest,
+                model = offImageRequest,
                 contentDescription = contentDescription,
                 modifier = modifier,
                 contentScale = contentScale,
