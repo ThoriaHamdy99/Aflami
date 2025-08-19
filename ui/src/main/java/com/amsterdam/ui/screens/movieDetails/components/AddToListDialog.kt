@@ -1,5 +1,6 @@
 package com.amsterdam.ui.screens.movieDetails.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -7,15 +8,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -35,6 +36,7 @@ import com.amsterdam.ui.components.EmptyStateText
 import com.amsterdam.ui.utils.withEnglishDigits
 import com.amsterdam.viewmodel.movieDetails.WishListUiState
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun AddToListDialog(
     userLists: List<WishListUiState>,
@@ -46,10 +48,11 @@ fun AddToListDialog(
     onCreateNewList: () -> Unit = {},
     onDismiss: () -> Unit = {},
 ) {
+    val maxDialogHeight = (LocalConfiguration.current.screenHeightDp * 0.8).dp
     Dialog(
         onDismiss = onDismiss,
-        scrollable = false,
-        modifier = modifier,
+        scrollable = true,
+        modifier = modifier.heightIn(max = maxDialogHeight),
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(24.dp),
@@ -59,11 +62,11 @@ fun AddToListDialog(
                 onDismiss = onDismiss,
             )
             if (userLists.isNotEmpty()) {
-                LazyColumn(
+                Column(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(userLists) { userList ->
+                    userLists.forEach { userList ->
                         SelectionListItem(
                             listName = userList.name,
                             itemCount = userList.itemCount,
@@ -146,7 +149,8 @@ private fun SelectionListItem(
                 color = AppTheme.color.body,
             )
 
-            val listItemCount = pluralStringResource(R.plurals.item_count, itemCount, itemCount).withEnglishDigits()
+            val listItemCount =
+                pluralStringResource(R.plurals.item_count, itemCount, itemCount).withEnglishDigits()
             Text(
                 text = listItemCount,
                 style = AppTheme.textStyle.label.small,
@@ -205,7 +209,7 @@ private fun ActionButtonsSection(
             isLoading = false,
             isNegative = false,
             colors = ButtonDefaults.buttonColors(containerColor = AppTheme.color.primaryVariant)
-            )
+        )
     }
 }
 
