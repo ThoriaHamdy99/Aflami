@@ -2,9 +2,9 @@ package com.amsterdam.viewmodel.categories
 
 
 import app.cash.turbine.test
+import com.amsterdam.domain.useCase.details.GetMoviesByGenreUseCase
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMovieDetailsArgs
-import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsPagingSource
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiEffect
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsUiState
 import com.amsterdam.viewmodel.categoriesDetails.movies.CategoriesMoviesDetailsViewModel
@@ -44,13 +44,12 @@ class MainDispatcherExtension(
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainDispatcherExtension::class)
 class CategoriesMoviesDetailsViewModelTest {
-    private val categoriesMoviesDetailsPagingSource: CategoriesMoviesDetailsPagingSource =
-        mockk(relaxed = true)
+    private val getMoviesByGenreIdUseCase: GetMoviesByGenreUseCase = mockk(relaxed = true)
     private val args: CategoriesMovieDetailsArgs = mockk(relaxed = true)
 
     private val viewModel by lazy {
         CategoriesMoviesDetailsViewModel(
-            categoriesMoviesDetailsPagingSource,
+            getMoviesByGenreIdUseCase,
             categoriesMovieDetailsArgs = args,
             dispatcherProvider = TestDispatcherProvider()
         )
