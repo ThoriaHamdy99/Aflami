@@ -180,7 +180,7 @@ private fun LoginScreenContent(
                     isEnabled = state.isLoginButtonEnabled,
                     isLoading = state.isLoginButtonLoading,
                     isNegative = false,
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
                 )
                 OutlinedButton(
                     title = stringResource(R.string.continue_as_guest),
@@ -188,6 +188,7 @@ private fun LoginScreenContent(
                     isEnabled = true,
                     isLoading = false,
                     isNegative = false,
+                    modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = AppTheme.color.primaryVariant)
                 )
             }

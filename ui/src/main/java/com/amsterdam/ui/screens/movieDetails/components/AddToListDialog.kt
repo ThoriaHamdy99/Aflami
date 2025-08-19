@@ -194,7 +194,7 @@ private fun ActionButtonsSection(
             isEnabled = selectedList.isNotEmpty(),
             isLoading = isAddMovieToListLoading,
             isNegative = false,
-            modifier = Modifier,
+            modifier = Modifier.fillMaxWidth(),
         )
 
         OutlinedButton(
@@ -204,7 +204,8 @@ private fun ActionButtonsSection(
             isLoading = false,
             isNegative = false,
             colors = ButtonDefaults.buttonColors(containerColor = AppTheme.color.primaryVariant),
-        )
+            modifier = Modifier.fillMaxWidth()
+            )
     }
 }
 
