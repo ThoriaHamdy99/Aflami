@@ -93,10 +93,10 @@ private fun CategoriesMoviesDetailsContent(
 ) {
     Column(
         Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
-                .padding(horizontal = 16.dp)
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .padding(horizontal = 16.dp)
     ) {
         DefaultAppBar(
             title = stringResource(R.string.movies),
@@ -104,9 +104,9 @@ private fun CategoriesMoviesDetailsContent(
         )
         Row(
             modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
-                    .weight(1f),
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+                .weight(1f),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.Top
         ) {
@@ -140,7 +140,10 @@ private fun CategoriesMoviesDetailsContent(
 
                 errorState is ErrorUiState.NoInternetError -> {
                     CenterOfScreenContainer(unneededSpace = 0.dp) {
-                        NoNetworkContainer(onClickRetry = interaction::onClickRetryRequest)
+                        NoNetworkContainer(
+                            onClickRetry = interaction::onClickRetryRequest,
+                            showRetryLoading = state.isRetryLoading
+                        )
                     }
                 }
 
@@ -148,8 +151,8 @@ private fun CategoriesMoviesDetailsContent(
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(242.dp),
                         modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f),
+                            .fillMaxHeight()
+                            .weight(1f),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                     ) {

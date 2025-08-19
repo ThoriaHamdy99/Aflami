@@ -18,7 +18,8 @@ data class GuessCharacterUiState(
     val earnedPoints : Int? = null,
     val questionsCounts: Int = 0,
     val currentQuestionIndex: Int = 0,
-    val timerUiState : TimerUiState = TimerUiState()
+    val timerUiState : TimerUiState = TimerUiState(),
+    val isRetryLoading : Boolean = false
 ) {
     data class CharacterQuestionUiState(
         val characterImageUrl: String = "",

@@ -25,12 +25,13 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
     dispatcherProvider
 ), CategoriesMoviesDetailsInteractionListener {
     init {
+        updateState { it.copy(isLoading = true) }
         getInitialGenre()
         loadMoviesForSelectedGenre()
     }
 
     private fun loadMoviesForSelectedGenre() {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isRetryLoading = true) }
         tryToExecute(
             action = {
                 categoriesMoviesDetailsPagingSource.getMovies(state.value.selectedGenre)
@@ -107,5 +108,5 @@ class CategoriesMoviesDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun onCompletion() = updateState { it.copy(isLoading = false) }
+    private fun onCompletion() = updateState { it.copy(isLoading = false, isRetryLoading = false) }
 }

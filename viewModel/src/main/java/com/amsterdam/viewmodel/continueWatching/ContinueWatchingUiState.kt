@@ -1,6 +1,5 @@
 package com.amsterdam.viewmodel.continueWatching
 
-import androidx.annotation.BoolRes
 import androidx.paging.PagingData
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
 import kotlinx.coroutines.flow.Flow
@@ -11,6 +10,7 @@ import kotlinx.datetime.Instant
 data class ContinueWatchingUiState(
     val continueMediaItemUiStates: Flow<PagingData<ContinueWatchingItemUiState>> = emptyFlow(),
     val isLoading: Boolean = false,
+    val isRetryLoading : Boolean = false
 ) {
     data class ContinueWatchingItemUiState(
         val id: Long = 0,

@@ -1,7 +1,6 @@
 package com.amsterdam.viewmodel.categoriesDetails.movies
 
 import androidx.paging.PagingData
-import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.entity.category.MovieGenre
 import com.amsterdam.viewmodel.shared.defaultMovieGenres
 import com.amsterdam.viewmodel.shared.uiStates.MediaType
@@ -15,6 +14,7 @@ data class CategoriesMoviesDetailsUiState(
     val movieGenres: List<MovieGenreItemUiState> = defaultMovieGenres,
     val movies: Flow<PagingData<MoviesUiState>> = emptyFlow(),
     val isLoading: Boolean = false,
+    val isRetryLoading : Boolean = false
 ) {
     data class MoviesUiState(
         val id: Long = 0,

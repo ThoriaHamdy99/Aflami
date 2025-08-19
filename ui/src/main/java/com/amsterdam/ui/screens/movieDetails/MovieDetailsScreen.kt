@@ -299,6 +299,7 @@ fun MovieContent(
                 CenterOfScreenContainer(unneededSpace = appBarHeight) {
                     NoNetworkContainer(
                         onClickRetry = movieDetailsInteractionListener::onClickRetryRequest,
+                        showRetryLoading = state.isRetryLoading
                     )
                 }
             }

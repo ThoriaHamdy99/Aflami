@@ -125,6 +125,7 @@ private fun GuessByPosterContent(
             ) {
                 NoNetworkContainer(
                     onClickRetry = interactionListener::onClickRetryLoading,
+                    showRetryLoading = state.isRetryLoading
                 )
             }
         }

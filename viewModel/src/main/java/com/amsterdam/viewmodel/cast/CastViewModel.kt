@@ -19,11 +19,12 @@ class CastViewModel @Inject constructor(
     CastInteractionListener {
 
     init {
+        updateState { it.copy(isLoading = true) }
         getCast()
     }
 
     private fun getCast() {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isRetryLoading = true) }
         tryToExecute(
             action = ::getCastList,
             onSuccess = ::onGetCastSuccess,
@@ -43,7 +44,7 @@ class CastViewModel @Inject constructor(
         resetErrorStateToNull()
     }
 
-    private fun onGetCastCompletion() = updateState { it.copy(isLoading = false) }
+    private fun onGetCastCompletion() = updateState { it.copy(isLoading = false, isRetryLoading = false) }
 
     override fun onClickNavigateBack() = sendNewNavigationEffect(CastUiEffect.NavigateBack)
 

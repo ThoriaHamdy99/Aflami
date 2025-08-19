@@ -104,7 +104,8 @@ fun ContinueWatchingContent(
                 contentAlignment = Alignment.Center
             ) {
                 NoNetworkContainer(
-                    onClickRetry = interactionListener::onClickRetryLoading
+                    onClickRetry = interactionListener::onClickRetryLoading,
+                    showRetryLoading = state.isRetryLoading
                 )
             }
         }

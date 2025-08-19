@@ -1,7 +1,6 @@
 package com.amsterdam.viewmodel.categoriesDetails.tvShow
 
 import androidx.paging.PagingData
-import com.amsterdam.domain.exceptions.NetworkException
 import com.amsterdam.entity.category.TvShowGenre
 import com.amsterdam.viewmodel.shared.defaultTvShowGenres
 import com.amsterdam.viewmodel.shared.uiStates.TvShowGenreItemUiState
@@ -13,6 +12,7 @@ data class CategoriesTvShowsDetailsUiState(
     val tvShowGenres: List<TvShowGenreItemUiState> = defaultTvShowGenres,
     val tvShows: Flow<PagingData<TvShowsUiState>> = emptyFlow(),
     val isLoading: Boolean = false,
+    val isRetryLoading : Boolean = false
 ) {
     data class TvShowsUiState(
         val id: Long = 0,

@@ -26,6 +26,7 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
 ), CategoriesTvShowsDetailsInteractionListener {
 
     init {
+        updateState { it.copy(isLoading = true) }
         getInitialGenre()
         loadTvShowsForSelectedGenre()
     }
@@ -84,7 +85,7 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
     }
 
     private fun loadTvShowsForSelectedGenre() {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isRetryLoading = true) }
         tryToExecute(
             action = {
                 categoriesTvShowDetailsPagingSource.getTvShows(state.value.selectedGenre)
@@ -107,7 +108,7 @@ class CategoriesTvShowsDetailsViewModel @Inject constructor(
         updateUiStateForSelectedGenre(initialGenre)
     }
 
-    private fun onCompletion() = updateState { it.copy(isLoading = false) }
+    private fun onCompletion() = updateState { it.copy(isLoading = false, isRetryLoading = false) }
 
 }
 
