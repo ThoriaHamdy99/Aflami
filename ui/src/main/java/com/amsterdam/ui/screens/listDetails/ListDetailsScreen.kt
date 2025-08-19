@@ -98,7 +98,7 @@ fun ListsDetailsScreen(viewModel: ListDetailsViewModel = hiltViewModel()) {
     ListDetailsContent(
         state = state,
         errorState = errorState,
-        listener = viewModel
+        interactionListener = viewModel
     )
 }
 
@@ -106,7 +106,7 @@ fun ListsDetailsScreen(viewModel: ListDetailsViewModel = hiltViewModel()) {
 private fun ListDetailsContent(
     state: ListDetailsUiState,
     errorState: ErrorUiState?,
-    listener: ListDetailsInteractionListener
+    interactionListener: ListDetailsInteractionListener
 ) {
     val density = LocalDensity.current
     val listMediaItems = state.listItems.collectAsLazyPagingItems()
@@ -133,8 +133,8 @@ private fun ListDetailsContent(
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp),
             lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_delete),
             lastOptionIconTint = AppTheme.color.redAccent,
-            onLastOptionClicked = listener::onClickDeleteList,
-            onNavigateBackClicked = listener::onClickBack,
+            onLastOptionClicked = interactionListener::onClickDeleteList,
+            onNavigateBackClicked = interactionListener::onClickBack,
         )
 
         val gridState = rememberLazyGridState()
@@ -166,7 +166,7 @@ private fun ListDetailsContent(
                         contentAlignment = Alignment.Center
                     ) {
                         NoNetworkContainer(
-                            onClickRetry = listener::onClickRetryLoading
+                            onClickRetry = interactionListener::onClickRetryLoading
                         )
                     }
                 }
@@ -196,9 +196,9 @@ private fun ListDetailsContent(
                         listMediaItems = listMediaItems,
                         gridState = gridState,
                         modifier = Modifier.weight(1f),
-                        onClickMovie = listener::onClickMovie,
-                        onClickTvShow = listener::onClickTvShow,
-                        onClickRemoveItem = listener::onClickRemoveMovie
+                        onClickMovie = interactionListener::onClickMovie,
+                        onClickTvShow = interactionListener::onClickTvShow,
+                        onClickRemoveItem = interactionListener::onClickRemoveMovie
                     )
                 }
             }
@@ -207,8 +207,8 @@ private fun ListDetailsContent(
         if(state.showDeleteListDialog){
             DeleteListDialog(
                 isLoading = state.isDeleteLoading,
-                onDismiss = listener::onDeleteListDialogDismiss,
-                onConfirm = listener::onDeleteListConfirmed
+                onDismiss = interactionListener::onDeleteListDialogDismiss,
+                onConfirm = interactionListener::onDeleteListConfirmed
             )
         }
     }
@@ -221,7 +221,7 @@ private fun ListDetailsScreenPreview() {
         ListDetailsContent(
             state = ListDetailsUiState(),
             errorState = null,
-            listener = object : ListDetailsInteractionListener {
+            interactionListener = object : ListDetailsInteractionListener {
                 override fun onClickBack() {}
                 override fun onClickRetryLoading() {}
                 override fun onClickMovie(movieId: Long) {}
