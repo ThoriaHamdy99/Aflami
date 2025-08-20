@@ -32,6 +32,7 @@ internal val lightThemeColors = AflamiColorScheme(
     backgroundCircles = Color(0x3dd85895),
     profileOverlay = Color(0x80faf5f7),
     dialogBackground = Color(0x1A000000),
+    gradientColor = Color(0xCC000000),
     overlayGradient = listOf(Color(0x00faf5f7), Color(0xFFFAF5F7)),
     streakGradient = listOf(Color(0xFFD85895), Color(0x52d85895)),
     pointsOverlayGradient = listOf(Color(0xFF7D1C4A), Color(0xFFD02C7A)),

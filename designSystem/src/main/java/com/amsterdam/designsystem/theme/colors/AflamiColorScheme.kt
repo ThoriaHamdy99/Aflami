@@ -35,6 +35,7 @@ data class AflamiColorScheme(
     val backgroundCircles: Color,
     val profileOverlay: Color,
     val dialogBackground: Color,
+    val gradientColor: Color,
     val overlayGradient: List<Color>,
     val streakGradient: List<Color>,
     val pointsOverlayGradient: List<Color>,

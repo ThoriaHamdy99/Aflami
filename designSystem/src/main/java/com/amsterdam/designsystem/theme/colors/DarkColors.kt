@@ -32,6 +32,7 @@ internal val darkThemeColors = AflamiColorScheme(
     backgroundCircles = Color(0x14ffffff),
     profileOverlay = Color(0x800D090B),
     dialogBackground = Color(0x1A000000),
+    gradientColor = Color(0xCC000000),
     overlayGradient = listOf(Color(0x000D090B), Color(0xFF0D090B)),
     streakGradient = listOf(Color(0x80ffffff), Color(0x1fffffff)),
     pointsOverlayGradient = listOf(Color(0xFF3B0D23), Color(0xFF7D1C4A)),
