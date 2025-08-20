@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.amsterdam.ui.R
 import com.amsterdam.designsystem.components.TabsLayout
-import com.amsterdam.designsystem.components.Text
 import com.amsterdam.designsystem.theme.AppTheme
 import com.amsterdam.ui.application.LocalNavManager
+import com.amsterdam.ui.components.appBar.DefaultAppBar
 import com.amsterdam.ui.screens.categories.components.CategoryCard
 import com.amsterdam.ui.screens.categoriesDetails.GenreMovieUiModel
 import com.amsterdam.ui.screens.categoriesDetails.GenreTvShowUiModel
@@ -79,17 +79,14 @@ private fun CategoriesScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
             .navigationBarsPadding()
     ) {
-        Column(Modifier.fillMaxSize()) {
-            Text(
+        Column(Modifier.fillMaxSize().statusBarsPadding()) {
+            DefaultAppBar(
                 modifier = Modifier
-                    .padding(vertical = 13.dp, horizontal = 16.dp)
-                    .onSizeChanged { appBarHeight = it.height },
-                text = stringResource(R.string.categories),
-                style = AppTheme.textStyle.title.large,
-                color = AppTheme.color.title
+                    .onSizeChanged { appBarHeight = it.height }.padding(horizontal = 16.dp),
+                title = stringResource(R.string.categories),
+                showNavigateBackButton = false
             )
             TabsLayout(
                 modifier = Modifier

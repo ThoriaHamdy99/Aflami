@@ -68,7 +68,7 @@ fun LoggedInContent(
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize().statusBarsPadding(),
                 state = lazyListState,
                 contentPadding = PaddingValues(bottom = 40.dp)
             ) {
@@ -115,7 +115,7 @@ fun LoggedInContent(
                     color = AppTheme.color.title,
                     modifier = Modifier
                         .statusBarsPadding()
-                        .padding(horizontal = 16.dp, vertical = 13.dp)
+                        .padding(horizontal = 16.dp)
                 )
             },
             modifier = Modifier.background(appBarColor)

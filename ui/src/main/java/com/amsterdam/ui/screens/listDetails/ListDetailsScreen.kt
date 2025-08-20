@@ -130,7 +130,7 @@ private fun ListDetailsContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .onSizeChanged { headerHeight = with(density) { it.height.dp } }
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp),
+                .padding(horizontal = 16.dp),
             lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_delete),
             lastOptionIconTint = AppTheme.color.redAccent,
             onLastOptionClicked = interactionListener::onClickDeleteList,

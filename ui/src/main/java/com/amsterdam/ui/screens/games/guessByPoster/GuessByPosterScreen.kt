@@ -170,8 +170,7 @@ private fun GuessByPosterContent(
                             title = topBarTitle,
                             timerUiState = state.timerUiState,
                             modifier = Modifier.padding(
-                                horizontal = 16.dp,
-                                vertical = 8.dp
+                                horizontal = 16.dp
                             ),
                             onCancelGameClick = interactionListener::onCloseButtonClicked
                         )

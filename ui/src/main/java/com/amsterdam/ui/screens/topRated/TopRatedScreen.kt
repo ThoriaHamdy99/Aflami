@@ -118,7 +118,7 @@ private fun TopRatedContent(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize().statusBarsPadding()
         ) {
             DefaultAppBar(
                 title = stringResource(R.string.top_rating),
@@ -126,7 +126,7 @@ private fun TopRatedContent(
                     .fillMaxWidth()
                     .background(appBarColor)
                     .statusBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp)
                     .onSizeChanged { headerHeight = with(density) { it.height.dp } },
                 onNavigateBackClicked = interactionListener::onClickBack
             )

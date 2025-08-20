@@ -157,7 +157,7 @@ private fun GameContent(
                                 title = stringResource(R.string.guess_character_game_title),
                                 timerUiState = state.timerUiState,
                                 onCancelGameClick = interactionListener::onCloseButtonClicked,
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                modifier = Modifier.padding(horizontal = 16.dp),
                             )
 
                             Row(
