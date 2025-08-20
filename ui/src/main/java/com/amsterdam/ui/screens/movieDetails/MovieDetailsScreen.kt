@@ -89,8 +89,8 @@ import com.amsterdam.ui.screens.movieDetails.components.reviewMovieSection
 import com.amsterdam.ui.screens.openYouTubeVideo
 import com.amsterdam.ui.screens.search.keywordSearch.sections.filterDialog.genre.getMovieGenreLabel
 import com.amsterdam.ui.screens.seriesDetails.mappers.toLocalizedString
+import com.amsterdam.ui.utils.GradientBox
 import com.amsterdam.ui.utils.SavedStateKeys.REFRESH_AFTER_RATING
-import com.amsterdam.ui.utils.topGradient
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsEffect
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsInteractionListener
 import com.amsterdam.viewmodel.movieDetails.MovieDetailsUiState
@@ -386,6 +386,7 @@ fun MovieContent(
                             DetailsPostersPager(
                                 pagerState = pagerState, postersUrl = state.moviePostersUrl
                             )
+                            GradientBox()
                         }
 
                         RatingChip(
@@ -512,7 +513,6 @@ fun MovieContent(
         ) {
             DefaultAppBar(
                 modifier = Modifier
-                    .topGradient()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .statusBarsPadding()
                     .zIndex(10f),
