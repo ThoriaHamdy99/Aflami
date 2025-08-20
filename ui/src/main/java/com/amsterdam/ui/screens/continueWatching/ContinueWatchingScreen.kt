@@ -79,7 +79,7 @@ fun ContinueWatchingContent(
             title = stringResource(R.string.recently_watched),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = 16.dp),
             onNavigateBackClicked = interactionListener::onClickBack
         )
 

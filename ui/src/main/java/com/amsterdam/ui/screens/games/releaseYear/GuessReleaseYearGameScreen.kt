@@ -154,7 +154,7 @@ private fun GameContent(
                             title = stringResource(R.string.release_game_title),
                             timerUiState = state.timerUiState,
                             onCancelGameClick = interactionListener::onClickClose,
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                            modifier = Modifier.padding(horizontal = 16.dp),
                         )
 
                         Row(
