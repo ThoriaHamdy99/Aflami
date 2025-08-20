@@ -1,7 +1,10 @@
 package com.amsterdam.ui.components.appBar
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -41,13 +44,15 @@ fun DefaultAppBar(
         title =
             title.takeIf { it.isNotBlank() }?.let { text ->
                 {
-                    Text(
-                        text = text,
-                        color = AppTheme.color.title,
-                        style = AppTheme.textStyle.title.large,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Box(Modifier.height(40.dp), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = text,
+                            color = AppTheme.color.title,
+                            style = AppTheme.textStyle.title.large,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             },
         leadingIcon =
@@ -99,6 +104,18 @@ private fun DefaultAppBarPreview() {
             firstOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_star),
             lastOption = painterResource(com.amsterdam.designsystem.R.drawable.ic_outlined_add_to_favourite),
             containerColor = AppTheme.color.surface,
+        )
+    }
+}
+
+@ThemeAndLocalePreviews
+@Composable
+private fun DefaultAppBaarPreview() {
+    AflamiTheme {
+        DefaultAppBar(
+            title = stringResource(R.string.my_account),
+            containerColor = AppTheme.color.surface,
+            showNavigateBackButton = false
         )
     }
 }
