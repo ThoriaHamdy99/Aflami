@@ -4,64 +4,8 @@ on:
   pull_request:
     branches: [ develop, main ]
 
-# BEST PRACTICE: Add a concurrency group to cancel old runs on new commits.
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
 jobs:
-  # This job runs first to determine which modules were affected by the changes.
-  changed-modules:
-    runs-on: ubuntu-latest
-    outputs:
-      changed_modules: ${{ steps.changes.outputs.modules }}
-      has_changes: ${{ steps.changes.outputs.has_changes }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v44
-        with:
-          files: |
-            **/*
-
-      - name: Determine changed modules
-        id: changes
-        run: |
-          ALL_MODULES='localDatasource viewModel remoteDatasource domain'
-          CHANGED_FILES="${{ steps.changed-files.outputs.all_changed_files }}"
-
-          if grep -qE '^build.gradle.kts|^settings.gradle.kts|^gradle/|^\.github/' <<< "$CHANGED_FILES"; then
-            echo "Core project file changed. Testing all modules."
-            JSON_ARRAY=$(echo $ALL_MODULES | jq -R 'split(" ")' | jq -c '.')
-          else
-            CHANGED_MODULE_DIRS=$(echo "$CHANGED_FILES" | awk -F/ '{print $1}' | sort -u | uniq)
-            FINAL_MODULES=""
-            for module in $CHANGED_MODULE_DIRS; do
-              if [[ " $ALL_MODULES " =~ " $module " ]]; then
-                FINAL_MODULES="$FINAL_MODULES $module"
-              fi
-            done
-            JSON_ARRAY=$(echo "$FINAL_MODULES" | sed 's/^ *//g' | jq -R 'split(" ")' | jq -c '.')
-          fi
-
-          if [ "$(echo $JSON_ARRAY | jq 'length')" -gt 0 ]; then
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "modules=$(echo $JSON_ARRAY | jq -c .)" >> $GITHUB_OUTPUT
-            echo "Detected changes in modules: $(echo $JSON_ARRAY)"
-          else
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "modules=[]" >> $GITHUB_OUTPUT
-            echo "No changed modules detected."
-          fi
-
   test:
-    needs: changed-modules
-    if: needs.changed-modules.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -69,7 +13,7 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        module: ${{ fromJSON(needs.changed-modules.outputs.changed_modules) }}
+        module: [ localDatasource, viewModel, remoteDatasource, domain ]
       fail-fast: false
 
     steps:
@@ -81,32 +25,15 @@ jobs:
           java-version: 17
           cache: gradle
 
-      # FIX: Check if the secrets exist before trying to use them to avoid cryptic errors.
-      - name: Load Google Service file
-        if: secrets.FIREBASE_JSON != ''
-        env:
-          DATA: ${{ secrets.FIREBASE_JSON }}
-        run: |
-          mkdir -p app # Ensure the 'app' directory exists
-          echo $DATA | base64 -di > app/google-services.json
-
-      - name: Create local.properties
-        if: secrets.API_KEY != ''
-        env:
-          API_KEY: ${{ secrets.API_KEY }}
-          BASE_URL: ${{ secrets.BASE_URL }}
-        run: |
-          echo apiKey=\"$API_KEY\" > local.properties
-          echo baseUrl=\"$BASE_URL\" >> local.properties
-          echo baseImageUrl=\"${{ secrets.BASE_IMAGE_URL }}\" >> local.properties
-          echo movieSignUp=\"${{ secrets.REGISTER_URL }}\" >> local.properties
-          echo movieResetPassword=\"${{ secrets.RESET_PASSWORD_URL }}\" >> local.properties
-
       - name: Grant execute permissions for gradlew
         run: chmod +x gradlew
 
-      - name: Run Tests and Kover Verification for ${{ matrix.module }}
-        run: ./gradlew :${{ matrix.module }}:clean :${{ matrix.module }}:koverVerify --build-cache
+      - name: Clean Project
+        run: ./gradlew clean
+
+      - name: Run Test And Kover Verification for ${{ matrix.module }}
+        run: ./gradlew :${{ matrix.module }}:koverVerify --build-cache
+        continue-on-error: false
 
       - name: Generate coverage report for ${{ matrix.module }}
         run: ./gradlew :${{ matrix.module }}:koverXmlReport
@@ -126,15 +53,13 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: coverage-report-${{ matrix.module }}
-          # FIX: Be more specific about the report path to avoid uploading unnecessary files.
-          path: ${{ matrix.module }}/build/reports/kover/report.xml
+          name: ${{ matrix.module }}-coverage-report
+          path: ${{ matrix.module }}/build/reports/kover/**/*.xml
 
   coverage:
     runs-on: ubuntu-latest
-    needs: [test, changed-modules]
-    # FIX: Run this job 'always()' so it can report on failures, not just success.
-    if: always() && needs.changed-modules.outputs.has_changes == 'true'
+    needs: test
+    if: github.event_name == 'pull_request'
     permissions:
       contents: read
       pull-requests: write
@@ -143,8 +68,7 @@ jobs:
       - name: Download All Coverage Reports
         uses: actions/download-artifact@v4
         with:
-          # FIX: The pattern should match the upload name.
-          pattern: "coverage-report-*"
+          pattern: "*-coverage-report"
           path: coverage-reports
 
       - name: List coverage reports directory
@@ -153,10 +77,14 @@ jobs:
       - name: Post Combined Coverage Comment
         uses: mi-kas/kover-report@v1.9
         with:
-          # FIX: The glob pattern was incorrect. This recursive glob will find the
-          # report.xml file no matter how deep it is inside the downloaded artifact folders.
-          path: coverage-reports/**/*.xml
+          path: |
+            coverage-reports/localDatasource-coverage-report/report.xml
+            coverage-reports/viewModel-coverage-report/report.xml
+            coverage-reports/remoteDatasource-coverage-report/report.xml
+            coverage-reports/domain-coverage-report/report.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "🛡️ Total Code Coverage Report"
           update-comment: true
           min-coverage-overall: 80
+          min-coverage-changed-files: 80
+          coverage-counter-type: LINE
