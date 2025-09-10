@@ -12,7 +12,7 @@ class GetMovieDetailsUseCase (
     private val addWatchHistoryUseCase: AddMovieWatchHistoryUseCase,
 ) {
     suspend operator fun invoke(movieId: Long): MovieDetails {
-        return movieRepository.getMovieDetailsById(movieId).also { addWatchHistoryUseCase(movieId) }
+        return movieRepository.getMovieDetailsById(movieId)
     }
 
     data class MovieDetails(
