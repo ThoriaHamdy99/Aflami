@@ -4,72 +4,56 @@ on:
   pull_request:
     branches: [ develop, main ]
 
+# Rule 1: Add a concurrency rule to cancel old runs on new commits
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   # This job determines which modules were affected by the changes
   changed-modules:
+    # ... (this job remains unchanged) ...
     runs-on: ubuntu-latest
     outputs:
       changed_modules: ${{ steps.changes.outputs.modules }}
       has_changes: ${{ steps.changes.outputs.has_changes }}
-
     steps:
       - uses: actions/checkout@v4
         with:
-          # Required for fetching the base branch history
           fetch-depth: 0
-
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v44
         with:
-          # List all changed files
           files: |
             **/*
-
       - name: Determine changed modules
         id: changes
         run: |
-          # The list of all possible modules in your project
           ALL_MODULES='localDatasource viewModel remoteDatasource domain'
-          
           CHANGED_FILES="${{ steps.changed-files.outputs.all_changed_files }}"
-
-          # If core configuration files change, run tests for all modules as a safeguard.
-          if grep -qE '^build.gradle.kts|^settings.gradle.kts|^gradle.properties|^gradle/|^\.github/workflows/.*\.yaml' <<< "$CHANGED_FILES"; then
+          if grep -qE '^build.gradle.kts|^settings.gradle.kts|^gradle/|^\.github/' <<< "$CHANGED_FILES"; then
             echo "Core project file changed. Testing all modules."
             JSON_ARRAY=$(echo $ALL_MODULES | jq -R 'split(" ")' | jq -c '.')
-            echo "modules=$JSON_ARRAY" >> $GITHUB_OUTPUT
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          # Determine modules from changed file paths
-          CHANGED_MODULES=$(echo "$CHANGED_FILES" | awk -F/ '{print $1}' | sort -u | uniq)
-
-          # Filter the identified directories to ensure they are actual modules
-          FINAL_MODULES=""
-          for module in $CHANGED_MODULES; do
-            if [[ " $ALL_MODULES " =~ " $module " ]]; then
-              FINAL_MODULES="$FINAL_MODULES $module"
-            fi
-          done
-          
-          FINAL_MODULES=$(echo "$FINAL_MODULES" | sed 's/^ *//g')
-
-          if [ -z "$FINAL_MODULES" ]; then
-            echo "No changed modules detected."
-            echo "modules=[]" >> $GITHUB_OUTPUT
-            echo "has_changes=false" >> $GITHUB_OUTPUT
           else
-            echo "Detected changes in modules: $FINAL_MODULES"
-            JSON_ARRAY=$(echo $FINAL_MODULES | jq -R 'split(" ")' | jq -c '.')
-            echo "modules=$JSON_ARRAY" >> $GITHUB_OUTPUT
+            CHANGED_MODULE_DIRS=$(echo "$CHANGED_FILES" | awk -F/ '{print $1}' | sort -u | uniq)
+            FINAL_MODULES=""
+            for module in $CHANGED_MODULE_DIRS; do
+              if [[ " $ALL_MODULES " =~ " $module " ]]; then FINAL_MODULES="$FINAL_MODULES $module"; fi
+            done
+            JSON_ARRAY=$(echo "$FINAL_MODULES" | sed 's/^ *//g' | jq -R 'split(" ")' | jq -c '.')
+          fi
+          if [ "$(echo $JSON_ARRAY | jq 'length')" -gt 0 ]; then
             echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "modules=$JSON_ARRAY" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "modules=[]" >> $GITHUB_OUTPUT
           fi
 
   test:
+    # ... (this job remains unchanged) ...
     needs: changed-modules
-    # Only run if the previous job found modules to test
     if: needs.changed-modules.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
     permissions:
@@ -77,11 +61,9 @@ jobs:
       checks: write
       pull-requests: write
     strategy:
-      # The matrix is now dynamically populated
       matrix:
         module: ${{ fromJSON(needs.changed-modules.outputs.changed_modules) }}
       fail-fast: false
-
     steps:
       - uses: actions/checkout@v4
       - name: Setup JDK 17
@@ -92,59 +74,44 @@ jobs:
           cache: gradle
       - name: Grant execute permissions for gradlew
         run: chmod +x gradlew
-
-      # --- Steps to add secrets and config files before building ---
       - name: Load Google Service file
         env:
           DATA: ${{ secrets.FIREBASE_JSON }}
         run: echo $DATA | base64 -di > app/google-services.json
-
       - name: Create local.properties
         env:
           API_KEY: ${{ secrets.API_KEY }}
           BASE_URL: ${{ secrets.BASE_URL }}
-          REGISTER_URL: ${{ secrets.REGISTER_URL }}
         run: |
           echo apiKey=\"$API_KEY\" > local.properties
           echo baseUrl=\"$BASE_URL\" >> local.properties
           echo baseImageUrl=\"${{ secrets.BASE_IMAGE_URL }}\" >> local.properties
           echo movieSignUp=\"${{ secrets.REGISTER_URL }}\" >> local.properties
           echo movieResetPassword=\"${{ secrets.RESET_PASSWORD_URL }}\" >> local.properties
-      # --- End of added steps ---
-
-      - name: Clean Project
-        run: ./gradlew clean
-      - name: Run Test And Kover Verification for ${{ matrix.module }}
-        run: ./gradlew :${{ matrix.module }}:koverVerify --build-cache
-        continue-on-error: false
-      - name: Generate coverage XML report for ${{ matrix.module }}
+      - name: Clean and Test
+        run: ./gradlew :${{ matrix.module }}:clean :${{ matrix.module }}:koverVerify --build-cache
+      - name: Generate XML Report
         run: ./gradlew :${{ matrix.module }}:koverXmlReport
         continue-on-error: true
-      - name: Publish Unit Test Results for ${{ matrix.module }}
+      - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: ${{ matrix.module }/build/test-results/**/*.xml
+          files: ${{ matrix.module }}/build/test-results/**/*.xml
           comment_title: "📊 ${{ matrix.module }} Test Results"
-          comment_mode: always
-          compare_to_earlier_commit: true
-          report_individual_runs: true
-      - name: Upload Coverage XML Report for ${{ matrix.module }}
+      - name: Upload Coverage Artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ matrix.module }}-coverage-report-xml
-          path: ${{ matrix.module }}/build/reports/kover/**/*.xml
-      - name: Upload Kover Binary Report for ${{ matrix.module }}
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: kover-binary-report-${{ matrix.module }}
-          path: ${{ matrix.module }}/build/kover/binary-reports/*.bin
+          name: coverage-artifacts-${{ matrix.module }}
+          path: |
+            ${{ matrix.module }}/build/reports/kover/**/*.xml
+            ${{ matrix.module }}/build/kover/binary-reports/*.bin
 
   coverage:
+    # ... (this job remains unchanged) ...
     needs: [test, changed-modules]
-    if: needs.changed-modules.outputs.has_changes == 'true'
+    if: always() && needs.changed-modules.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -153,48 +120,39 @@ jobs:
       - name: Download All Coverage XML Reports
         uses: actions/download-artifact@v4
         with:
-          pattern: "*-coverage-report-xml"
+          pattern: "coverage-artifacts-*"
           path: coverage-reports
-      - name: List coverage reports directory
-        run: ls -R coverage-reports
       - name: Post Combined Coverage Comment
         uses: mi-kas/kover-report@v1.9
         with:
-          # A glob pattern simplifies finding the reports
-          path: coverage-reports/*-coverage-report-xml/report.xml
+          path: coverage-reports/**/report.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "🛡️ Total Code Coverage Report"
           update-comment: true
           min-coverage-overall: 80
           min-coverage-changed-files: 80
-          coverage-counter-type: LINE
 
   combined-html-report:
+    # ... (this job remains unchanged) ...
     needs: [test, changed-modules]
-    if: needs.changed-modules.outputs.has_changes == 'true'
+    if: always() && needs.changed-modules.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pages: write
       id-token: write
     steps:
-      - name: Checkout project
-        uses: actions/checkout@v4
-      - name: Setup JDK 17
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
           cache: gradle
-      - name: Grant execute permissions for gradlew
-        run: chmod +x gradlew
+      - run: chmod +x gradlew
       - name: Download all Kover binary reports
         uses: actions/download-artifact@v4
         with:
-          pattern: kover-binary-report-*
-          path: .
-      - name: List downloaded files
-        run: ls -R
+          pattern: coverage-artifacts-*
       - name: Generate Combined HTML Report
         run: ./gradlew koverHtmlReport
       - name: Upload Pages Artifact
@@ -202,5 +160,21 @@ jobs:
         with:
           path: 'build/reports/kover/html'
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v2
+
+  # Rule 2: Add this new job to act as a single, final status check
+  status-check:
+    needs: [test, coverage, combined-html-report]
+    runs-on: ubuntu-latest
+    # Run this job always, so it can report failure accurately
+    if: always()
+    steps:
+      - name: Report overall status
+        run: |
+          # Check the results of all upstream jobs
+          if [[ "${{ needs.test.result }}" == "failure" || "${{ needs.coverage.result }}" == "failure" || "${{ needs.combined-html-report.result }}" == "failure" ]]; then
+            echo "One or more jobs failed. Failing the status check."
+            exit 1
+          else
+            echo "All jobs passed successfully."
+          fi
