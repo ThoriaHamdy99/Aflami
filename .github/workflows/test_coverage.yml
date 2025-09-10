@@ -5,16 +5,81 @@ on:
     branches: [ develop, main ]
 
 jobs:
+  # This job determines which modules were affected by the changes
+  changed-modules:
+    runs-on: ubuntu-latest
+    outputs:
+      changed_modules: ${{ steps.changes.outputs.modules }}
+      has_changes: ${{ steps.changes.outputs.has_changes }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Required for fetching the base branch history
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          # List all changed files
+          files: |
+            **/*
+
+      - name: Determine changed modules
+        id: changes
+        run: |
+          # The list of all possible modules in your project
+          ALL_MODULES='localDatasource viewModel remoteDatasource domain'
+          
+          CHANGED_FILES="${{ steps.changed-files.outputs.all_changed_files }}"
+
+          # If core configuration files change, run tests for all modules as a safeguard.
+          if grep -qE '^build.gradle.kts|^settings.gradle.kts|^gradle.properties|^gradle/|^\.github/workflows/.*\.yaml' <<< "$CHANGED_FILES"; then
+            echo "Core project file changed. Testing all modules."
+            JSON_ARRAY=$(echo $ALL_MODULES | jq -R 'split(" ")' | jq -c '.')
+            echo "modules=$JSON_ARRAY" >> $GITHUB_OUTPUT
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Determine modules from changed file paths
+          CHANGED_MODULES=$(echo "$CHANGED_FILES" | awk -F/ '{print $1}' | sort -u | uniq)
+
+          # Filter the identified directories to ensure they are actual modules
+          FINAL_MODULES=""
+          for module in $CHANGED_MODULES; do
+            if [[ " $ALL_MODULES " =~ " $module " ]]; then
+              FINAL_MODULES="$FINAL_MODULES $module"
+            fi
+          done
+          
+          FINAL_MODULES=$(echo "$FINAL_MODULES" | sed 's/^ *//g')
+
+          if [ -z "$FINAL_MODULES" ]; then
+            echo "No changed modules detected."
+            echo "modules=[]" >> $GITHUB_OUTPUT
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "Detected changes in modules: $FINAL_MODULES"
+            JSON_ARRAY=$(echo $FINAL_MODULES | jq -R 'split(" ")' | jq -c '.')
+            echo "modules=$JSON_ARRAY" >> $GITHUB_OUTPUT
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
   test:
+    needs: changed-modules
+    # Only run if the previous job found modules to test
+    if: needs.changed-modules.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       checks: write
       pull-requests: write
     strategy:
+      # The matrix is now dynamically populated
       matrix:
-        module: [ localDatasource, viewModel, remoteDatasource, domain ]
-
+        module: ${{ fromJSON(needs.changed-modules.outputs.changed_modules) }}
       fail-fast: false
 
     steps:
@@ -25,7 +90,10 @@ jobs:
           distribution: 'temurin'
           java-version: 17
           cache: gradle
+      - name: Grant execute permissions for gradlew
+        run: chmod +x gradlew
 
+      # --- Steps to add secrets and config files before building ---
       - name: Load Google Service file
         env:
           DATA: ${{ secrets.FIREBASE_JSON }}
@@ -42,68 +110,97 @@ jobs:
           echo baseImageUrl=\"${{ secrets.BASE_IMAGE_URL }}\" >> local.properties
           echo movieSignUp=\"${{ secrets.REGISTER_URL }}\" >> local.properties
           echo movieResetPassword=\"${{ secrets.RESET_PASSWORD_URL }}\" >> local.properties
-
-      - name: Grant execute permissions for gradlew
-        run: chmod +x gradlew
+      # --- End of added steps ---
 
       - name: Clean Project
         run: ./gradlew clean
-
       - name: Run Test And Kover Verification for ${{ matrix.module }}
         run: ./gradlew :${{ matrix.module }}:koverVerify --build-cache
         continue-on-error: false
-
-      - name: Generate coverage report for ${{ matrix.module }}
+      - name: Generate coverage XML report for ${{ matrix.module }}
         run: ./gradlew :${{ matrix.module }}:koverXmlReport
         continue-on-error: true
-
       - name: Publish Unit Test Results for ${{ matrix.module }}
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: ${{ matrix.module }}/build/test-results/**/*.xml
+          files: ${{ matrix.module }/build/test-results/**/*.xml
           comment_title: "📊 ${{ matrix.module }} Test Results"
           comment_mode: always
           compare_to_earlier_commit: true
           report_individual_runs: true
-
-      - name: Upload Coverage Report for ${{ matrix.module }}
+      - name: Upload Coverage XML Report for ${{ matrix.module }}
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ${{ matrix.module }}-coverage-report
+          name: ${{ matrix.module }}-coverage-report-xml
           path: ${{ matrix.module }}/build/reports/kover/**/*.xml
+      - name: Upload Kover Binary Report for ${{ matrix.module }}
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kover-binary-report-${{ matrix.module }}
+          path: ${{ matrix.module }}/build/kover/binary-reports/*.bin
 
   coverage:
+    needs: [test, changed-modules]
+    if: needs.changed-modules.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
-    needs: test
-    if: github.event_name == 'pull_request'
     permissions:
       contents: read
       pull-requests: write
-
     steps:
-      - name: Download All Coverage Reports
+      - name: Download All Coverage XML Reports
         uses: actions/download-artifact@v4
         with:
-          pattern: "*-coverage-report"
+          pattern: "*-coverage-report-xml"
           path: coverage-reports
-
       - name: List coverage reports directory
         run: ls -R coverage-reports
-
       - name: Post Combined Coverage Comment
         uses: mi-kas/kover-report@v1.9
         with:
-          path: |
-            coverage-reports/localDatasource-coverage-report/report.xml
-            coverage-reports/viewModel-coverage-report/report.xml
-            coverage-reports/remoteDatasource-coverage-report/report.xml
-            coverage-reports/domain-coverage-report/report.xml
-
+          # A glob pattern simplifies finding the reports
+          path: coverage-reports/*-coverage-report-xml/report.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "🛡️ Total Code Coverage Report"
           update-comment: true
           min-coverage-overall: 80
           min-coverage-changed-files: 80
           coverage-counter-type: LINE
+
+  combined-html-report:
+    needs: [test, changed-modules]
+    if: needs.changed-modules.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: gradle
+      - name: Grant execute permissions for gradlew
+        run: chmod +x gradlew
+      - name: Download all Kover binary reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: kover-binary-report-*
+          path: .
+      - name: List downloaded files
+        run: ls -R
+      - name: Generate Combined HTML Report
+        run: ./gradlew koverHtmlReport
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: 'build/reports/kover/html'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
